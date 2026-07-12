@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# React
+node_modules/
+dist/
+build/
+
+# Secret keys
+.env
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# ChromaDB
+chroma_db/
+vector_store/
+
+# PDF data
+data/*.pdf
+
+# Windows
+Thumbs.db
