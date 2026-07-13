@@ -21,8 +21,14 @@ build/
 chroma_db/
 vector_store/
 
-# PDF data
-data/*.pdf
+# Tous les fichiers PDF
+*.pdf
 
 # Windows
 Thumbs.db
+
+# Données pédagogiques privées
+data/raw/
+data/sample/
+data/processed/
+*.pdf
