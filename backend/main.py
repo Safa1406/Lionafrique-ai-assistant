@@ -1,0 +1,85 @@
+from pathlib import Path
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from services.pdf_service import extract_pdf_pages, get_pdf_summary
+
+
+app = FastAPI(
+    title="API de l'assistant pédagogique LionAfrique",
+    description="Backend de l'assistant pédagogique LionAfrique",
+    version="1.0.0",
+)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+SAMPLE_PDF_PATH = (
+    PROJECT_ROOT
+    / "data"
+    / "sample"
+    / "les_aliments_partie_2.pdf"
+)
+
+
+@app.get("/")
+def home():
+    return {
+        "message": "Le backend LionAfrique fonctionne correctement."
+    }
+
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "ok"
+    }
+
+
+@app.get("/documents/test")
+def test_document():
+    try:
+        summary = get_pdf_summary(SAMPLE_PDF_PATH)
+        pages = extract_pdf_pages(SAMPLE_PDF_PATH)
+
+        preview = pages[0]["text"][:500] if pages else ""
+
+        return {
+            "status": "success",
+            "message": "Le document PDF a été analysé avec succès.",
+            "source": summary["source"],
+            "total_pages": summary["total_pages"],
+            "pages_with_text": summary["pages_with_text"],
+            "empty_pages": summary["empty_pages"],
+            "preview": preview,
+        }
+
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error),
+        ) from error
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+    except Exception as error:
+        print(f"Erreur inattendue : {error}")
+
+        raise HTTPException(
+            status_code=500,
+            detail="Une erreur est survenue pendant l'analyse du document.",
+        ) from error
