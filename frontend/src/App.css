@@ -1,52 +1,165 @@
 .app {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: #f5f5f5;
+  padding: 40px 20px;
 }
 
-.card {
+.assistant-container {
   width: 100%;
-  max-width: 600px;
-  padding: 40px;
-  border: 1px solid #dddddd;
-  border-radius: 16px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.assistant-header {
+  margin-bottom: 28px;
   text-align: center;
-  background: white;
-  color: #222222;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-.card h1 {
-  margin: 0 0 24px;
-  font-size: clamp(32px, 5vw, 52px);
-  line-height: 1.1;
+.school-name {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #4963d6;
 }
 
-.card p {
+.assistant-header h1 {
+  margin: 0 0 12px;
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1.15;
+  color: #1e293b;
+}
+
+.assistant-header p {
+  margin: 0;
+  color: #64748b;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+}
+
+.search-form label {
+  font-weight: 700;
+  color: #334155;
+}
+
+.search-form textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  resize: vertical;
+  font: inherit;
   line-height: 1.6;
+  color: #1e293b;
+  background: #f8fafc;
+  box-sizing: border-box;
 }
 
-.card button {
-  margin-top: 20px;
-  padding: 12px 24px;
+.search-form textarea:focus {
+  border-color: #4963d6;
+  outline: 3px solid rgba(73, 99, 214, 0.15);
+}
+
+.search-form button {
+  align-self: flex-end;
+  min-width: 160px;
+  padding: 13px 24px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 700;
+  color: #ffffff;
+  background: #4963d6;
   cursor: pointer;
-  font-size: 16px;
 }
 
-.card button:disabled {
+.search-form button:hover:not(:disabled) {
+  background: #364db8;
+}
+
+.search-form button:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.65;
 }
 
-.status {
-  margin-top: 24px;
-  padding: 14px;
-  border-radius: 8px;
-  background: #f0f0f0;
-  font-weight: 600;
+.status-message {
+  margin: 20px 0;
+  padding: 14px 18px;
+  border-radius: 10px;
+  text-align: center;
+  color: #334155;
+  background: #eaf0ff;
+}
+
+.results-section h2 {
+  margin: 28px 0 16px;
+  color: #1e293b;
+}
+
+.results-list {
+  display: grid;
+  gap: 18px;
+}
+
+.result-card {
+  padding: 22px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+.result-header,
+.result-source {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.result-header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 700;
+}
+
+.result-text {
+  margin: 18px 0;
+  line-height: 1.75;
+  color: #334155;
+}
+
+.result-source {
+  padding-top: 14px;
+  border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 600px) {
+  .app {
+    padding: 24px 14px;
+  }
+
+  .search-form {
+    padding: 18px;
+  }
+
+  .search-form button {
+    width: 100%;
+  }
+
+  .result-header,
+  .result-source {
+    flex-direction: column;
+  }
 }
