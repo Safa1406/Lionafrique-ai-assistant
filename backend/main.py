@@ -2,8 +2,24 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
 from services.pdf_service import extract_pdf_pages, get_pdf_summary
+from services.vector_store_service import search_similar_chunks
+
+
+class SearchRequest(BaseModel):
+    question: str = Field(
+        min_length=2,
+        description="Question posée par l'utilisateur.",
+    )
+
+    number_of_results: int = Field(
+        default=3,
+        ge=1,
+        le=10,
+        description="Nombre de segments à retourner.",
+    )
 
 
 app = FastAPI(
@@ -81,5 +97,48 @@ def test_document():
 
         raise HTTPException(
             status_code=500,
-            detail="Une erreur est survenue pendant l'analyse du document.",
+            detail=(
+                "Une erreur est survenue pendant "
+                "l'analyse du document."
+            ),
+        ) from error
+
+
+@app.post("/search")
+def search_documents(request: SearchRequest):
+    try:
+        results = search_similar_chunks(
+            question=request.question,
+            number_of_results=request.number_of_results,
+        )
+
+        return {
+            "status": "success",
+            "message": (
+                "La recherche sémantique "
+                "a été effectuée avec succès."
+            ),
+            "question": request.question,
+            "number_of_results": len(results),
+            "results": results,
+        }
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+    except Exception as error:
+        print(
+            "Erreur pendant la recherche sémantique : "
+            f"{error}"
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Une erreur est survenue "
+                "pendant la recherche."
+            ),
         ) from error

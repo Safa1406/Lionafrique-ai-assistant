@@ -32,3 +32,6 @@ data/raw/
 data/sample/
 data/processed/
 *.pdf
+
+# Base vectorielle locale
+backend/chroma_db/
