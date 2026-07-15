@@ -1,3 +1,4 @@
+from services.text_cleaner import clean_extracted_text
 from pathlib import Path
 
 import fitz
@@ -24,7 +25,8 @@ def extract_pdf_pages(pdf_path: str | Path) -> list[dict]:
 
     with fitz.open(path) as document:
         for page_index, page in enumerate(document):
-            text = page.get_text("text").strip()
+            raw_text = page.get_text("text")
+            text = clean_extracted_text(raw_text)
 
             extracted_pages.append(
                 {
