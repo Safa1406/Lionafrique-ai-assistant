@@ -5,29 +5,32 @@ const API_URL = "http://127.0.0.1:8000";
 
 function App() {
   const [question, setQuestion] = useState("");
-  const [results, setResults] = useState([]);
+  const [answer, setAnswer] = useState("");
+  const [sources, setSources] = useState([]);
   const [message, setMessage] = useState(
-    "Posez une question sur le contenu des documents pédagogiques."
+    "Posez une question sur les cours disponibles."
   );
   const [loading, setLoading] = useState(false);
 
-  const handleSearch = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const cleanedQuestion = question.trim();
 
     if (cleanedQuestion.length < 2) {
       setMessage("Veuillez saisir une question valide.");
-      setResults([]);
+      setAnswer("");
+      setSources([]);
       return;
     }
 
     setLoading(true);
-    setMessage("Recherche dans les documents en cours...");
-    setResults([]);
+    setMessage("Génération de la réponse en cours...");
+    setAnswer("");
+    setSources([]);
 
     try {
-      const response = await fetch(`${API_URL}/search`, {
+      const response = await fetch(`${API_URL}/ask`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,29 +45,20 @@ function App() {
 
       if (!response.ok) {
         throw new Error(
-          data.detail || "Une erreur est survenue pendant la recherche."
+          data.detail ||
+            "Une erreur est survenue pendant la génération."
         );
       }
 
-      const searchResults = data.results ?? [];
-
-      setResults(searchResults);
-
-      if (searchResults.length === 0) {
-        setMessage(
-          "Aucun passage pertinent n'a été trouvé dans les documents."
-        );
-      } else {
-        setMessage(
-          `${searchResults.length} passage(s) pertinent(s) trouvé(s).`
-        );
-      }
+      setAnswer(data.answer || "");
+      setSources(data.sources || []);
+      setMessage("La réponse a été générée avec succès.");
     } catch (error) {
-      console.error("Erreur de recherche :", error);
+      console.error("Erreur de génération :", error);
 
       setMessage(
         error.message ||
-          "La connexion au serveur a échoué. Vérifiez que FastAPI est actif."
+          "La connexion au serveur a échoué."
       );
     } finally {
       setLoading(false);
@@ -78,11 +72,12 @@ function App() {
           <p className="school-name">LIONAFRIQUE</p>
           <h1>Assistant pédagogique intelligent</h1>
           <p>
-            Recherchez une information dans les cours disponibles.
+            Posez une question et obtenez une réponse basée sur
+            les documents pédagogiques.
           </p>
         </header>
 
-        <form className="search-form" onSubmit={handleSearch}>
+        <form className="search-form" onSubmit={handleSubmit}>
           <label htmlFor="question">
             Votre question
           </label>
@@ -90,14 +85,18 @@ function App() {
           <textarea
             id="question"
             value={question}
-            onChange={(event) => setQuestion(event.target.value)}
+            onChange={(event) =>
+              setQuestion(event.target.value)
+            }
             placeholder="Exemple : Quels sont les rôles des aliments ?"
             rows="4"
             disabled={loading}
           />
 
           <button type="submit" disabled={loading}>
-            {loading ? "Recherche en cours..." : "Rechercher"}
+            {loading
+              ? "Génération en cours..."
+              : "Envoyer la question"}
           </button>
         </form>
 
@@ -105,45 +104,27 @@ function App() {
           {message}
         </div>
 
-        {results.length > 0 && (
-          <section className="results-section">
-            <h2>Passages trouvés</h2>
+        {answer && (
+          <section className="answer-card">
+            <h2>Réponse</h2>
 
-            <div className="results-list">
-              {results.map((result, index) => (
-                <article
-                  className="result-card"
-                  key={result.chunk_id}
-                >
-                  <div className="result-header">
-                    <span>Résultat {index + 1}</span>
-
-                    <span>
-                      Pertinence :{" "}
-                      {Number(result.distance).toFixed(4)}
-                    </span>
-                  </div>
-
-                  <p className="result-text">
-                    {result.text}
-                  </p>
-
-                  <footer className="result-source">
-                    <span>
-                      Source : {result.source}
-                    </span>
-
-                    <span>
-                      Page : {result.page}
-                    </span>
-
-                    <span>
-                      Segment : {result.chunk_number}
-                    </span>
-                  </footer>
-                </article>
-              ))}
+            <div className="answer-text">
+              {answer}
             </div>
+
+            {sources.length > 0 && (
+              <div className="sources-section">
+                <h3>Sources</h3>
+
+                <ul>
+                  {sources.map((source, index) => (
+                    <li key={`${source.file}-${source.page}-${index}`}>
+                      {source.file} — Page {source.page}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </section>
         )}
       </section>

@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 from services.pdf_service import extract_pdf_pages, get_pdf_summary
 from services.vector_store_service import search_similar_chunks
+from services.llm_service import generate_answer
 
 
 class SearchRequest(BaseModel):
@@ -21,6 +22,18 @@ class SearchRequest(BaseModel):
         description="Nombre de segments à retourner.",
     )
 
+class AskRequest(BaseModel):
+    question: str = Field(
+        min_length=2,
+        description="Question posée par l'élève.",
+    )
+
+    number_of_results: int = Field(
+        default=3,
+        ge=1,
+        le=5,
+        description="Nombre de passages utilisés comme contexte.",
+    )
 
 app = FastAPI(
     title="API de l'assistant pédagogique LionAfrique",
@@ -140,5 +153,63 @@ def search_documents(request: SearchRequest):
             detail=(
                 "Une erreur est survenue "
                 "pendant la recherche."
+            ),
+        ) from error
+    
+@app.post("/ask")
+def ask_assistant(request: AskRequest):
+    try:
+        passages = search_similar_chunks(
+            question=request.question,
+            number_of_results=request.number_of_results,
+        )
+
+        answer = generate_answer(
+            question=request.question,
+            passages=passages,
+        )
+
+        sources = []
+
+        for passage in passages:
+            source = {
+                "file": passage["source"],
+                "page": passage["page"],
+            }
+
+            if source not in sources:
+                sources.append(source)
+
+        return {
+            "status": "success",
+            "message": "La réponse a été générée avec succès.",
+            "question": request.question,
+            "answer": answer,
+            "sources": sources,
+        }
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+    except RuntimeError as error:
+        raise HTTPException(
+            status_code=503,
+            detail=str(error),
+        ) from error
+
+    except Exception as error:
+        print(
+            "Erreur pendant la génération de la réponse : "
+            f"{error}"
+        )
+
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Une erreur est survenue pendant "
+                "la génération de la réponse."
             ),
         ) from error
