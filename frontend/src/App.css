@@ -204,3 +204,39 @@
 .sources-section li {
   margin-bottom: 8px;
 }
+
+.answer-card-success {
+  border-left: 5px solid #15803d;
+}
+
+.answer-card-warning {
+  border-left: 5px solid #b45309;
+  background: #fffbeb;
+}
+
+.answer-card-warning h2 {
+  color: #92400e;
+}
+
+.evidence-section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.evidence-section summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #334155;
+}
+
+.evidence-section ul {
+  margin-top: 14px;
+  padding-left: 22px;
+}
+
+.evidence-section li {
+  margin-bottom: 10px;
+  line-height: 1.6;
+  color: #475569;
+}

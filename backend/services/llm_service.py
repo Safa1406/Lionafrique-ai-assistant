@@ -1,100 +1,242 @@
+import json
+import re
+import unicodedata
+
 import httpx
 
 
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
+REFUSAL_ANSWER = (
+    "Les documents disponibles ne contiennent pas "
+    "une réponse suffisamment précise à cette question."
+)
+
+EVIDENCE_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "answerable": {
+            "type": "boolean",
+        },
+        "evidence": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "passage_number": {
+                        "type": "integer",
+                    },
+                    "quote": {
+                        "type": "string",
+                    },
+                },
+                "required": [
+                    "passage_number",
+                    "quote",
+                ],
+            },
+        },
+    },
+    "required": [
+        "answerable",
+        "evidence",
+    ],
+}
+
+ANSWER_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "answer": {
+            "type": "string",
+        },
+    },
+    "required": [
+        "answer",
+    ],
+}
+
+STOP_WORDS = {
+    "avec",
+    "aux",
+    "dans",
+    "des",
+    "du",
+    "elle",
+    "elles",
+    "est",
+    "ils",
+    "la",
+    "le",
+    "les",
+    "pour",
+    "quelles",
+    "quelle",
+    "quels",
+    "quel",
+    "sont",
+    "sur",
+    "une",
+}
+
+INTENT_WORDS = {
+    "causes": {
+        "cause",
+        "causes",
+        "origine",
+        "origines",
+        "raison",
+        "raisons",
+        "facteur",
+        "facteurs",
+        "declenchement",
+    },
+    "consequences": {
+        "consequence",
+        "consequences",
+        "effet",
+        "effets",
+        "bilan",
+        "impact",
+        "impacts",
+        "resultat",
+        "resultats",
+    },
+    "definition": {
+        "definition",
+        "definir",
+        "signifie",
+    },
+    "roles": {
+        "role",
+        "roles",
+        "fonction",
+        "fonctions",
+    },
+}
+
+UNCERTAINTY_EXPRESSIONS = {
+    "peut avoir contribue",
+    "peut etre",
+    "semble",
+    "suggere",
+    "probablement",
+    "ne mentionnent pas directement",
+    "ne sont pas directement",
+    "pas directement lie",
+}
+
+
+def normalize_text(text: str) -> str:
+    """
+    Normalise un texte pour effectuer des comparaisons fiables.
+    """
+
+    normalized_text = unicodedata.normalize(
+        "NFKD",
+        text.lower(),
+    )
+
+    normalized_text = "".join(
+        character
+        for character in normalized_text
+        if not unicodedata.combining(character)
+    )
+
+    normalized_text = re.sub(
+        r"[^a-z0-9\s]",
+        " ",
+        normalized_text,
+    )
+
+    return re.sub(
+        r"\s+",
+        " ",
+        normalized_text,
+    ).strip()
+
+
+def detect_question_intent(
+    question: str,
+) -> str | None:
+    """
+    Détecte la relation principale demandée.
+    """
+
+    normalized_question = normalize_text(question)
+
+    definition_patterns = (
+        "qu est ce que",
+        "qu est ce qu",
+        "que signifie",
+        "quelle est la definition",
+        "comment definir",
+    )
+
+    if any(
+        pattern in normalized_question
+        for pattern in definition_patterns
+    ):
+        return "definition"
+
+    question_words = set(
+        normalized_question.split()
+    )
+
+    for intent, words in INTENT_WORDS.items():
+        if question_words.intersection(words):
+            return intent
+
+    return None
+
+
+def extract_topic_keywords(
+    question: str,
+) -> set[str]:
+    """
+    Extrait les mots décrivant le sujet de la question.
+    """
+
+    excluded_words = set(STOP_WORDS)
+
+    for intent_words in INTENT_WORDS.values():
+        excluded_words.update(intent_words)
+
+    return {
+        word
+        for word in normalize_text(question).split()
+        if len(word) >= 4
+        and word not in excluded_words
+    }
+
 
 def build_context(passages: list[dict]) -> str:
     """
-    Prépare le contexte documentaire envoyé au modèle.
+    Prépare les passages avec leur numéro et leur source.
     """
 
     context_parts = []
 
-    for index, passage in enumerate(passages, start=1):
+    for index, passage in enumerate(
+        passages,
+        start=1,
+    ):
         context_parts.append(
             (
-                f"Document {index}\n"
+                f"PASSAGE {index}\n"
                 f"Source : {passage['source']}\n"
                 f"Page : {passage['page']}\n"
-                f"Contenu : {passage['text']}"
+                f"Texte exact :\n{passage['text']}"
             )
         )
 
     return "\n\n".join(context_parts)
 
 
-def generate_answer(
-    question: str,
-    passages: list[dict],
-) -> str:
+def call_ollama(payload: dict) -> dict:
     """
-    Génère une réponse pédagogique à partir des passages trouvés.
+    Envoie une requête à Ollama et retourne le JSON produit.
     """
-
-    cleaned_question = question.strip()
-
-    if not cleaned_question:
-        raise ValueError(
-            "La question ne peut pas être vide."
-        )
-
-    if not passages:
-        return (
-            "Je n'ai trouvé aucune information pertinente "
-            "dans les documents disponibles."
-        )
-
-    context = build_context(passages)
-
-    system_prompt = """
-Tu es un assistant pédagogique destiné aux élèves de troisième année
-du collège de l'établissement LionAfrique.
-
-Respecte strictement les règles suivantes :
-- Réponds uniquement à partir du contexte documentaire fourni.
-- N'utilise pas tes connaissances générales.
-- N'invente aucune information.
-- Utilise un français simple et adapté à un collégien.
-- Donne une réponse courte, claire et structurée.
-- Si le contexte ne permet pas de répondre, indique que l'information
-  n'est pas disponible dans les documents.
-- Ne montre jamais ton raisonnement interne.
-- Ne crée pas de sources qui ne figurent pas dans le contexte.
-""".strip()
-
-    user_prompt = f"""
-Contexte documentaire :
-
-{context}
-
-Question de l'élève :
-
-{cleaned_question}
-
-Rédige une réponse pédagogique en français.
-""".strip()
-
-    payload = {
-        "model": OLLAMA_MODEL,
-        "messages": [
-            {
-                "role": "system",
-                "content": system_prompt,
-            },
-            {
-                "role": "user",
-                "content": user_prompt,
-            },
-        ],
-        "stream": False,
-        "think": False,
-        "keep_alive": "10m",
-        "options": {
-            "temperature": 0.1,
-        },
-    }
 
     try:
         response = httpx.post(
@@ -104,16 +246,20 @@ Rédige une réponse pédagogique en français.
         )
 
         response.raise_for_status()
-        data = response.json()
 
-        answer = data.get("message", {}).get("content", "").strip()
+        content = (
+            response.json()
+            .get("message", {})
+            .get("content", "")
+            .strip()
+        )
 
-        if not answer:
+        if not content:
             raise RuntimeError(
-                "Ollama n'a retourné aucune réponse."
+                "Ollama n'a retourné aucun contenu."
             )
 
-        return answer
+        return json.loads(content)
 
     except httpx.ConnectError as error:
         raise RuntimeError(
@@ -128,6 +274,325 @@ Rédige une réponse pédagogique en français.
 
     except httpx.HTTPStatusError as error:
         raise RuntimeError(
-            "Ollama a retourné une erreur pendant "
-            "la génération de la réponse."
+            "Ollama a retourné une erreur HTTP."
         ) from error
+
+    except json.JSONDecodeError as error:
+        raise RuntimeError(
+            "La réponse structurée d'Ollama est invalide."
+        ) from error
+
+
+def extract_evidence(
+    question: str,
+    passages: list[dict],
+) -> dict:
+    """
+    Demande au modèle d'extraire uniquement les preuves directes.
+    """
+
+    context = build_context(passages)
+
+    system_prompt = """
+Tu es un vérificateur de preuves documentaires.
+
+Ta mission n'est pas de répondre immédiatement à la question.
+Tu dois seulement décider si les passages contiennent une preuve
+directe et explicite permettant de répondre.
+
+Règles obligatoires :
+
+- N'utilise aucune connaissance générale.
+- N'effectue aucune déduction.
+- Une simple présence du même sujet ne suffit pas.
+- Une preuve doit répondre exactement à la relation demandée.
+- Pour une question sur les causes, les passages doivent présenter
+  explicitement des causes, des origines ou des facteurs.
+- Une conséquence, une date, une arme, un armistice, une phase de guerre
+  ou une définition ne constituent pas une cause.
+- Chaque citation doit être copiée mot pour mot depuis un passage.
+- Chaque citation doit contenir entre 4 et 45 mots.
+- Indique le numéro exact du passage contenant chaque citation.
+- Si aucune preuve directe n'existe, utilise answerable=false
+  et retourne une liste evidence vide.
+""".strip()
+
+    user_prompt = f"""
+Question :
+
+{question}
+
+Passages documentaires :
+
+{context}
+
+Vérifie maintenant si ces passages contiennent une preuve directe.
+""".strip()
+
+    payload = {
+        "model": OLLAMA_MODEL,
+        "messages": [
+            {
+                "role": "system",
+                "content": system_prompt,
+            },
+            {
+                "role": "user",
+                "content": user_prompt,
+            },
+        ],
+        "format": EVIDENCE_SCHEMA,
+        "stream": False,
+        "think": False,
+        "keep_alive": "10m",
+        "options": {
+            "temperature": 0.0,
+            "num_predict": 400,
+        },
+    }
+
+    return call_ollama(payload)
+
+
+def validate_evidence(
+    question: str,
+    passages: list[dict],
+    evidence_items: list[dict],
+) -> list[dict]:
+    """
+    Vérifie que chaque citation existe réellement
+    dans le passage indiqué.
+    """
+
+    validated_evidence = []
+
+    for item in evidence_items:
+        passage_number = item.get("passage_number")
+        quote = item.get("quote", "").strip()
+
+        if not isinstance(passage_number, int):
+            continue
+
+        if passage_number < 1:
+            continue
+
+        if passage_number > len(passages):
+            continue
+
+        normalized_quote = normalize_text(quote)
+        quote_word_count = len(
+            normalized_quote.split()
+        )
+
+        if quote_word_count < 4:
+            continue
+
+        if quote_word_count > 45:
+            continue
+
+        passage = passages[passage_number - 1]
+
+        normalized_passage = normalize_text(
+            passage.get("text", "")
+        )
+
+        if normalized_quote not in normalized_passage:
+            continue
+
+        validated_evidence.append(
+            {
+                "passage_number": passage_number,
+                "quote": quote,
+                "source": passage["source"],
+                "page": passage["page"],
+            }
+        )
+
+    if not validated_evidence:
+        return []
+
+    combined_evidence = normalize_text(
+        " ".join(
+            item["quote"]
+            for item in validated_evidence
+        )
+    )
+
+    evidence_words = set(
+        combined_evidence.split()
+    )
+
+    intent = detect_question_intent(question)
+
+    intents_requiring_explicit_markers = {
+        "causes",
+        "consequences",
+        "roles",
+    }
+
+    if intent in intents_requiring_explicit_markers:
+        if not evidence_words.intersection(
+            INTENT_WORDS[intent]
+        ):
+            return []
+
+    topic_keywords = extract_topic_keywords(question)
+
+    if topic_keywords:
+        common_keywords = topic_keywords.intersection(
+            evidence_words
+        )
+
+        required_keywords = min(
+            2,
+            len(topic_keywords),
+        )
+
+        if len(common_keywords) < required_keywords:
+            return []
+
+    return validated_evidence
+
+
+def write_answer(
+    question: str,
+    evidence: list[dict],
+) -> str:
+    """
+    Construit une réponse uniquement avec les citations validées.
+    """
+
+    unique_quotes = []
+    seen_quotes = set()
+
+    for item in evidence:
+        quote = re.sub(
+            r"\s+",
+            " ",
+            item.get("quote", ""),
+        ).strip()
+
+        normalized_quote = normalize_text(quote)
+
+        if not normalized_quote:
+            continue
+
+        if normalized_quote in seen_quotes:
+            continue
+
+        seen_quotes.add(normalized_quote)
+        unique_quotes.append(quote)
+
+    if not unique_quotes:
+        return REFUSAL_ANSWER
+
+    intent = detect_question_intent(question)
+
+    if intent == "definition":
+        return (
+            "D'après le document : "
+            f"« {unique_quotes[0]} »"
+        )
+
+    if len(unique_quotes) == 1:
+        return (
+            "D'après le document : "
+            f"« {unique_quotes[0]} »"
+        )
+
+    answer_lines = [
+        "D'après les documents :"
+    ]
+
+    for quote in unique_quotes[:5]:
+        answer_lines.append(
+            f"- {quote}"
+        )
+
+    return "\n".join(answer_lines)
+
+
+def generate_answer(
+    question: str,
+    passages: list[dict],
+) -> dict:
+    """
+    Extrait les preuves, les valide puis produit la réponse.
+    """
+
+    if not passages:
+        return {
+            "answerable": False,
+            "answer": REFUSAL_ANSWER,
+            "sources": [],
+            "evidence": [],
+        }
+
+    extraction = extract_evidence(
+        question=question,
+        passages=passages,
+    )
+
+    if not extraction.get("answerable", False):
+        return {
+            "answerable": False,
+            "answer": REFUSAL_ANSWER,
+            "sources": [],
+            "evidence": [],
+        }
+
+    validated_evidence = validate_evidence(
+        question=question,
+        passages=passages,
+        evidence_items=extraction.get(
+            "evidence",
+            [],
+        ),
+    )
+
+    if not validated_evidence:
+        return {
+            "answerable": False,
+            "answer": REFUSAL_ANSWER,
+            "sources": [],
+            "evidence": [],
+        }
+    
+    intent = detect_question_intent(question)
+
+    if intent == "definition":
+        validated_evidence = validated_evidence[:1]
+
+    answer = write_answer(
+        question=question,
+        evidence=validated_evidence,
+    )
+
+    if answer == REFUSAL_ANSWER:
+        return {
+            "answerable": False,
+            "answer": REFUSAL_ANSWER,
+            "sources": [],
+            "evidence": [],
+        }
+
+    sources = []
+
+    for item in validated_evidence:
+        source = {
+            "file": item["source"],
+            "page": item["page"],
+        }
+
+        if source not in sources:
+            sources.append(source)
+
+    return {
+        "answerable": True,
+        "answer": answer,
+        "sources": sources,
+        "evidence": [
+            item["quote"]
+            for item in validated_evidence
+        ],
+    }

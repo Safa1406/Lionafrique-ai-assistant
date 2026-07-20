@@ -1,70 +1,193 @@
 from pathlib import Path
 
-from services.pdf_service import extract_pdf_pages
-from services.text_splitter import split_pages_into_chunks
-from services.vector_store_service import (
-    search_similar_chunks,
-    store_chunks,
+import chromadb
+
+from services.embedding_service import (
+    generate_passage_embeddings,
+    generate_query_embedding,
 )
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-
-PDF_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "sample"
-    / "les_aliments_partie_2.pdf"
-)
+BACKEND_ROOT = Path(__file__).resolve().parent.parent
+CHROMA_PATH = BACKEND_ROOT / "chroma_db"
+COLLECTION_NAME = "lionafrique_documents"
 
 
-def main() -> None:
-    try:
-        pages = extract_pdf_pages(PDF_PATH)
+def get_chroma_client() -> chromadb.PersistentClient:
+    """
+    Retourne le client local persistant de ChromaDB.
+    """
 
-        chunks = split_pages_into_chunks(
-            pages,
-            chunk_size=800,
-            chunk_overlap=120,
-        )
+    return chromadb.PersistentClient(
+        path=str(CHROMA_PATH)
+    )
 
-        stored_chunks = store_chunks(chunks)
 
-        print(
-            f"{stored_chunks} segments ont été enregistrés "
-            "dans ChromaDB."
-        )
+def get_document_collection():
+    """
+    Retourne ou crée la collection des documents pédagogiques.
+    """
 
-        question = "Quels sont les rôles des aliments ?"
+    client = get_chroma_client()
 
-        print(f"\nQuestion : {question}")
-
-        results = search_similar_chunks(
-            question,
-            number_of_results=3,
-        )
-
-        if not results:
-            print("Aucun segment pertinent n'a été trouvé.")
-            return
-
-        for position, result in enumerate(results, start=1):
-            print(f"\nRésultat {position}")
-            print(f"Source : {result['source']}")
-            print(f"Page : {result['page']}")
-            print(
-                f"Numéro du segment : "
-                f"{result['chunk_number']}"
+    return client.get_or_create_collection(
+        name=COLLECTION_NAME,
+        metadata={
+            "description": (
+                "Documents pédagogiques de LionAfrique"
             )
-            print(f"Distance : {result['distance']:.4f}")
-            print(f"Texte :\n{result['text'][:600]}")
+        },
+    )
 
-    except Exception as error:
-        print(
-            "Une erreur est survenue pendant le test "
-            f"de ChromaDB : {error}"
+
+def build_chunk_metadata(chunk: dict) -> dict:
+    """
+    Prépare les métadonnées autorisées pour ChromaDB.
+    """
+
+    metadata_fields = (
+        "source",
+        "relative_path",
+        "document_id",
+        "program",
+        "subject",
+        "semester",
+        "page",
+        "chunk_number",
+    )
+
+    return {
+        field: chunk[field]
+        for field in metadata_fields
+        if field in chunk
+        and chunk[field] is not None
+        and chunk[field] != ""
+    }
+
+
+def store_chunks(
+    chunks: list[dict],
+    batch_size: int = 32,
+) -> int:
+    """
+    Enregistre les segments par lots dans ChromaDB.
+    """
+
+    if not chunks:
+        return 0
+
+    if batch_size <= 0:
+        raise ValueError(
+            "La taille du lot doit être supérieure à zéro."
         )
 
+    collection = get_document_collection()
+    stored_chunks = 0
 
-if __name__ == "__main__":
-    main()
+    for start_index in range(0, len(chunks), batch_size):
+        batch = chunks[start_index:start_index + batch_size]
+
+        texts = [
+            chunk["text"]
+            for chunk in batch
+        ]
+
+        embeddings = generate_passage_embeddings(texts)
+
+        ids = [
+            chunk["chunk_id"]
+            for chunk in batch
+        ]
+
+        metadatas = [
+            build_chunk_metadata(chunk)
+            for chunk in batch
+        ]
+
+        collection.upsert(
+            ids=ids,
+            documents=texts,
+            embeddings=embeddings,
+            metadatas=metadatas,
+        )
+
+        stored_chunks += len(batch)
+
+    return stored_chunks
+
+
+def search_similar_chunks(
+    question: str,
+    number_of_results: int = 3,
+) -> list[dict]:
+    """
+    Recherche les segments les plus proches d'une question.
+    """
+
+    collection = get_document_collection()
+
+    if collection.count() == 0:
+        return []
+
+    query_embedding = generate_query_embedding(question)
+
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=min(
+            number_of_results,
+            collection.count(),
+        ),
+        include=[
+            "documents",
+            "metadatas",
+            "distances",
+        ],
+    )
+
+    matches = []
+
+    documents = results["documents"][0]
+    metadatas = results["metadatas"][0]
+    distances = results["distances"][0]
+    identifiers = results["ids"][0]
+
+    for identifier, document, metadata, distance in zip(
+        identifiers,
+        documents,
+        metadatas,
+        distances,
+    ):
+        matches.append(
+            {
+                "chunk_id": identifier,
+                "text": document,
+                "source": metadata.get(
+                    "source",
+                    "Source inconnue",
+                ),
+                "relative_path": metadata.get(
+                    "relative_path",
+                    "",
+                ),
+                "program": metadata.get(
+                    "program",
+                    "Non défini",
+                ),
+                "subject": metadata.get(
+                    "subject",
+                    "Non définie",
+                ),
+                "semester": metadata.get(
+                    "semester",
+                    "Non défini",
+                ),
+                "page": metadata.get("page", 0),
+                "chunk_number": metadata.get(
+                    "chunk_number",
+                    0,
+                ),
+                "distance": float(distance),
+            }
+        )
+
+    return matches

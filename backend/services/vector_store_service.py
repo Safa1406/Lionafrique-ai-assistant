@@ -13,7 +13,7 @@ CHROMA_PATH = BACKEND_ROOT / "chroma_db"
 COLLECTION_NAME = "lionafrique_documents"
 
 
-def get_chroma_client() -> chromadb.PersistentClient:
+def get_chroma_client():
     """
     Retourne le client local persistant de ChromaDB.
     """
@@ -40,45 +40,82 @@ def get_document_collection():
     )
 
 
-def store_chunks(chunks: list[dict]) -> int:
+def build_chunk_metadata(chunk: dict) -> dict:
     """
-    Enregistre les segments et leurs embeddings dans ChromaDB.
+    Prépare les métadonnées du segment pour ChromaDB.
+    """
+
+    metadata_fields = (
+        "source",
+        "relative_path",
+        "document_id",
+        "program",
+        "subject",
+        "semester",
+        "page",
+        "chunk_number",
+    )
+
+    return {
+        field: chunk[field]
+        for field in metadata_fields
+        if field in chunk
+        and chunk[field] is not None
+        and chunk[field] != ""
+    }
+
+
+def store_chunks(
+    chunks: list[dict],
+    batch_size: int = 32,
+) -> int:
+    """
+    Enregistre les segments par lots dans ChromaDB.
     """
 
     if not chunks:
         return 0
 
+    if batch_size <= 0:
+        raise ValueError(
+            "La taille du lot doit être supérieure à zéro."
+        )
+
     collection = get_document_collection()
+    stored_chunks = 0
 
-    texts = [
-        chunk["text"]
-        for chunk in chunks
-    ]
+    for start_index in range(0, len(chunks), batch_size):
+        batch = chunks[
+            start_index:start_index + batch_size
+        ]
 
-    embeddings = generate_passage_embeddings(texts)
+        texts = [
+            chunk["text"]
+            for chunk in batch
+        ]
 
-    ids = [
-        chunk["chunk_id"]
-        for chunk in chunks
-    ]
+        embeddings = generate_passage_embeddings(texts)
 
-    metadatas = [
-        {
-            "source": chunk["source"],
-            "page": chunk["page"],
-            "chunk_number": chunk["chunk_number"],
-        }
-        for chunk in chunks
-    ]
+        identifiers = [
+            chunk["chunk_id"]
+            for chunk in batch
+        ]
 
-    collection.upsert(
-        ids=ids,
-        documents=texts,
-        embeddings=embeddings,
-        metadatas=metadatas,
-    )
+        metadatas = [
+            build_chunk_metadata(chunk)
+            for chunk in batch
+        ]
 
-    return len(chunks)
+        collection.upsert(
+            ids=identifiers,
+            documents=texts,
+            embeddings=embeddings,
+            metadatas=metadatas,
+        )
+
+        stored_chunks += len(batch)
+
+    return stored_chunks
 
 
 def search_similar_chunks(
@@ -90,15 +127,19 @@ def search_similar_chunks(
     """
 
     collection = get_document_collection()
+    collection_size = collection.count()
 
-    if collection.count() == 0:
+    if collection_size == 0:
         return []
 
     query_embedding = generate_query_embedding(question)
 
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=number_of_results,
+        n_results=min(
+            number_of_results,
+            collection_size,
+        ),
         include=[
             "documents",
             "metadatas",
@@ -123,10 +164,32 @@ def search_similar_chunks(
             {
                 "chunk_id": identifier,
                 "text": document,
-                "source": metadata["source"],
-                "page": metadata["page"],
-                "chunk_number": metadata["chunk_number"],
-                "distance": distance,
+                "source": metadata.get(
+                    "source",
+                    "Source inconnue",
+                ),
+                "relative_path": metadata.get(
+                    "relative_path",
+                    "",
+                ),
+                "program": metadata.get(
+                    "program",
+                    "Non défini",
+                ),
+                "subject": metadata.get(
+                    "subject",
+                    "Non définie",
+                ),
+                "semester": metadata.get(
+                    "semester",
+                    "Non défini",
+                ),
+                "page": metadata.get("page", 0),
+                "chunk_number": metadata.get(
+                    "chunk_number",
+                    0,
+                ),
+                "distance": float(distance),
             }
         )
 

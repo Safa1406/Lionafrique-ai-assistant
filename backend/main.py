@@ -1,3 +1,4 @@
+import traceback
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -7,6 +8,10 @@ from pydantic import BaseModel, Field
 from services.pdf_service import extract_pdf_pages, get_pdf_summary
 from services.vector_store_service import search_similar_chunks
 from services.llm_service import generate_answer
+
+from services.retrieval_service import (
+    retrieve_relevant_passages,
+)
 
 
 class SearchRequest(BaseModel):
@@ -159,33 +164,39 @@ def search_documents(request: SearchRequest):
 @app.post("/ask")
 def ask_assistant(request: AskRequest):
     try:
-        passages = search_similar_chunks(
+        passages = retrieve_relevant_passages(
             question=request.question,
             number_of_results=request.number_of_results,
         )
 
-        answer = generate_answer(
+        generation_result = generate_answer(
             question=request.question,
             passages=passages,
         )
 
-        sources = []
-
-        for passage in passages:
-            source = {
-                "file": passage["source"],
-                "page": passage["page"],
+        if not generation_result["answerable"]:
+            return {
+                "status": "insufficient_context",
+                "message": (
+                    "Aucune preuve documentaire directe "
+                    "n'a été trouvée."
+                ),
+                "question": request.question,
+                "answer": generation_result["answer"],
+                "sources": [],
+                "evidence": [],
             }
-
-            if source not in sources:
-                sources.append(source)
 
         return {
             "status": "success",
-            "message": "La réponse a été générée avec succès.",
+            "message": (
+                "La réponse a été générée "
+                "à partir de preuves validées."
+            ),
             "question": request.question,
-            "answer": answer,
-            "sources": sources,
+            "answer": generation_result["answer"],
+            "sources": generation_result["sources"],
+            "evidence": generation_result["evidence"],
         }
 
     except ValueError as error:
@@ -204,12 +215,14 @@ def ask_assistant(request: AskRequest):
         print(
             "Erreur pendant la génération de la réponse : "
             f"{error}"
-        )
+            )
 
-        raise HTTPException(
-            status_code=500,
-            detail=(
-                "Une erreur est survenue pendant "
-                "la génération de la réponse."
-            ),
-        ) from error
+    traceback.print_exc()
+
+    raise HTTPException(
+        status_code=500,
+        detail=(
+            "Une erreur est survenue pendant "
+            "la génération de la réponse."
+        ),
+    ) from error
