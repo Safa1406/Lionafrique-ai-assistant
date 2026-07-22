@@ -1,12 +1,27 @@
+import re
+import traceback
+import unicodedata
+from pathlib import Path
+
 import traceback
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import (
+    FastAPI,
+    HTTPException,
+)
+from fastapi.middleware.cors import (
+    CORSMiddleware,
+)
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
-from services.llm_service import generate_answer
-from services.pdf_service import extract_pdf_pages
+from services.llm_service import (
+    generate_answer,
+)
+from services.pdf_service import (
+    extract_pdf_pages,
+)
 from services.retrieval_service import (
     retrieve_relevant_passages,
 )
@@ -16,7 +31,18 @@ from services.vector_store_service import (
 )
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = (
+    Path(__file__)
+    .resolve()
+    .parent
+    .parent
+)
+
+DATA_RAW_DIRECTORY = (
+    PROJECT_ROOT
+    / "data"
+    / "raw"
+).resolve()
 
 TEST_DOCUMENT_PATH = (
     PROJECT_ROOT
@@ -27,12 +53,14 @@ TEST_DOCUMENT_PATH = (
 
 
 app = FastAPI(
-    title="Assistant pédagogique LionAfrique",
+    title=(
+        "Assistant pédagogique LionAfrique"
+    ),
     description=(
         "API de recherche documentaire "
         "et de génération de réponses pédagogiques."
     ),
-    version="1.0.0",
+    version="1.1.0",
 )
 
 
@@ -51,36 +79,48 @@ app.add_middleware(
 class SearchRequest(BaseModel):
     question: str = Field(
         min_length=2,
-        description="Question posée par l'utilisateur.",
+        description=(
+            "Question posée par l'utilisateur."
+        ),
     )
 
     number_of_results: int = Field(
         default=3,
         ge=1,
         le=10,
-        description="Nombre de segments à retourner.",
+        description=(
+            "Nombre de segments à retourner."
+        ),
     )
 
     program: str | None = Field(
         default=None,
-        description="Programme pédagogique sélectionné.",
+        description=(
+            "Programme pédagogique sélectionné."
+        ),
     )
 
     subject: str | None = Field(
         default=None,
-        description="Matière sélectionnée.",
+        description=(
+            "Matière sélectionnée."
+        ),
     )
 
     semester: str | None = Field(
         default=None,
-        description="Semestre sélectionné.",
+        description=(
+            "Semestre sélectionné."
+        ),
     )
 
 
 class AskRequest(BaseModel):
     question: str = Field(
         min_length=2,
-        description="Question posée par l'élève.",
+        description=(
+            "Question posée par l'élève."
+        ),
     )
 
     number_of_results: int = Field(
@@ -95,17 +135,23 @@ class AskRequest(BaseModel):
 
     program: str | None = Field(
         default=None,
-        description="Programme pédagogique sélectionné.",
+        description=(
+            "Programme pédagogique sélectionné."
+        ),
     )
 
     subject: str | None = Field(
         default=None,
-        description="Matière sélectionnée.",
+        description=(
+            "Matière sélectionnée."
+        ),
     )
 
     semester: str | None = Field(
         default=None,
-        description="Semestre sélectionné.",
+        description=(
+            "Semestre sélectionné."
+        ),
     )
 
 
@@ -124,6 +170,185 @@ def build_selection(
         "subject": subject,
         "semester": semester,
     }
+
+
+def normalize_path_value(
+    path_value: str,
+) -> str:
+    """
+    Normalise un chemin pour faciliter
+    la comparaison entre les chemins stockés
+    et les chemins physiques.
+    """
+
+    normalized_value = (
+        path_value
+        .replace("\\", "/")
+        .strip()
+        .lower()
+    )
+
+    normalized_value = (
+        unicodedata.normalize(
+            "NFKD",
+            normalized_value,
+        )
+    )
+
+    normalized_value = "".join(
+        character
+        for character in normalized_value
+        if not unicodedata.combining(
+            character
+        )
+    )
+
+    normalized_value = re.sub(
+        r"[^a-z0-9/._-]",
+        "",
+        normalized_value,
+    )
+
+    normalized_value = re.sub(
+        r"/+",
+        "/",
+        normalized_value,
+    )
+
+    return normalized_value.strip(
+        "/"
+    )
+
+
+def resolve_document_path(
+    relative_path: str,
+) -> Path:
+    """
+    Résout un chemin relatif vers un document PDF.
+
+    La recherche tente d'abord le chemin exact,
+    puis recherche un fichier dont le chemin physique
+    se termine par le chemin relatif stocké.
+    """
+
+    cleaned_relative_path = (
+        relative_path.strip()
+    )
+
+    if not cleaned_relative_path:
+        raise ValueError(
+            "Le chemin du document est vide."
+        )
+
+    requested_path = Path(
+        cleaned_relative_path
+    )
+
+    if requested_path.is_absolute():
+        raise ValueError(
+            "Le chemin absolu est interdit."
+        )
+
+    if (
+        requested_path.suffix.lower()
+        != ".pdf"
+    ):
+        raise ValueError(
+            "Seuls les documents PDF peuvent être ouverts."
+        )
+
+    exact_document_path = (
+        DATA_RAW_DIRECTORY
+        / requested_path
+    ).resolve()
+
+    try:
+        exact_document_path.relative_to(
+            DATA_RAW_DIRECTORY
+        )
+    except ValueError as error:
+        raise ValueError(
+            "Le chemin demandé est interdit."
+        ) from error
+
+    if (
+        exact_document_path.exists()
+        and exact_document_path.is_file()
+    ):
+        return exact_document_path
+
+    normalized_requested_path = (
+        normalize_path_value(
+            cleaned_relative_path
+        )
+    )
+
+    requested_filename = (
+        requested_path.name
+    )
+
+    matching_documents = []
+
+    for candidate_path in (
+        DATA_RAW_DIRECTORY.rglob(
+            requested_filename
+        )
+    ):
+        if not candidate_path.is_file():
+            continue
+
+        if (
+            candidate_path.suffix.lower()
+            != ".pdf"
+        ):
+            continue
+
+        resolved_candidate_path = (
+            candidate_path.resolve()
+        )
+
+        try:
+            resolved_candidate_path.relative_to(
+                DATA_RAW_DIRECTORY
+            )
+        except ValueError:
+            continue
+
+        candidate_relative_path = (
+            resolved_candidate_path.relative_to(
+                DATA_RAW_DIRECTORY
+            )
+        )
+
+        normalized_candidate_path = (
+            normalize_path_value(
+                str(
+                    candidate_relative_path
+                )
+            )
+        )
+
+        if normalized_candidate_path.endswith(
+            normalized_requested_path
+        ):
+            return resolved_candidate_path
+
+        matching_documents.append(
+            resolved_candidate_path
+        )
+
+    if len(matching_documents) == 1:
+        return matching_documents[0]
+
+    if len(matching_documents) > 1:
+        raise FileNotFoundError(
+            "Plusieurs documents portent ce nom. "
+            "Le chemin stocké ne permet pas de les distinguer."
+        )
+
+    raise FileNotFoundError(
+        "Le document demandé est introuvable."
+    )
 
 
 @app.get("/")
@@ -202,6 +427,58 @@ def read_metadata_options():
         ) from error
 
 
+@app.get("/documents/open")
+def open_document(
+    relative_path: str,
+):
+    """
+    Ouvre un document PDF stocké dans data/raw.
+    """
+
+    try:
+        document_path = (
+            resolve_document_path(
+                relative_path
+            )
+        )
+
+        return FileResponse(
+            path=document_path,
+            media_type=(
+                "application/pdf"
+            ),
+        )
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+    except FileNotFoundError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error),
+        ) from error
+
+    except Exception as error:
+        print(
+            "Erreur pendant l'ouverture "
+            "du document : "
+            f"{error}"
+        )
+
+        traceback.print_exc()
+
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Une erreur est survenue pendant "
+                "l'ouverture du document."
+            ),
+        ) from error
+
+
 @app.get("/documents/test")
 def read_test_document():
     """
@@ -225,7 +502,10 @@ def read_test_document():
         pages_with_text = sum(
             1
             for page in pages
-            if page.get("has_text", False)
+            if page.get(
+                "has_text",
+                False,
+            )
         )
 
         previews = []
@@ -258,7 +538,9 @@ def read_test_document():
                 "source": (
                     TEST_DOCUMENT_PATH.name
                 ),
-                "total_pages": len(pages),
+                "total_pages": len(
+                    pages
+                ),
                 "pages_with_text": (
                     pages_with_text
                 ),
@@ -320,7 +602,9 @@ def search_documents(
                 subject=request.subject,
                 semester=request.semester,
             ),
-            "number_of_results": len(results),
+            "number_of_results": len(
+                results
+            ),
             "results": results,
         }
 
@@ -358,19 +642,23 @@ def ask_assistant(
     """
 
     try:
-        passages = retrieve_relevant_passages(
-            question=request.question,
-            number_of_results=(
-                request.number_of_results
-            ),
-            program=request.program,
-            subject=request.subject,
-            semester=request.semester,
+        passages = (
+            retrieve_relevant_passages(
+                question=request.question,
+                number_of_results=(
+                    request.number_of_results
+                ),
+                program=request.program,
+                subject=request.subject,
+                semester=request.semester,
+            )
         )
 
-        generation_result = generate_answer(
-            question=request.question,
-            passages=passages,
+        generation_result = (
+            generate_answer(
+                question=request.question,
+                passages=passages,
+            )
         )
 
         selection = build_selection(

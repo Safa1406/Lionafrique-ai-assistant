@@ -989,7 +989,9 @@ def generate_answer(
     puis produit une réponse documentaire.
     """
 
-    cleaned_question = question.strip()
+    cleaned_question = (
+        question.strip()
+    )
 
     if not cleaned_question:
         raise ValueError(
@@ -1035,13 +1037,17 @@ def generate_answer(
                 "evidence": [],
             }
 
-        validated_evidence = validate_evidence(
-            question=cleaned_question,
-            passages=passages,
-            evidence_items=extraction.get(
-                "evidence",
-                [],
-            ),
+        validated_evidence = (
+            validate_evidence(
+                question=cleaned_question,
+                passages=passages,
+                evidence_items=(
+                    extraction.get(
+                        "evidence",
+                        [],
+                    )
+                ),
+            )
         )
 
     if not validated_evidence:
@@ -1073,9 +1079,45 @@ def generate_answer(
     sources = []
 
     for item in validated_evidence:
+        passage_number = item.get(
+            "passage_number",
+            0,
+        )
+
+        relative_path = ""
+
+        if (
+            isinstance(
+                passage_number,
+                int,
+            )
+            and 1
+            <= passage_number
+            <= len(passages)
+        ):
+            passage = passages[
+                passage_number - 1
+            ]
+
+            relative_path = (
+                passage.get(
+                    "relative_path",
+                    "",
+                )
+            )
+
         source = {
-            "file": item["source"],
-            "page": item["page"],
+            "file": item.get(
+                "source",
+                "Source inconnue",
+            ),
+            "page": item.get(
+                "page",
+                0,
+            ),
+            "relative_path": (
+                relative_path
+            ),
         }
 
         if source not in sources:
