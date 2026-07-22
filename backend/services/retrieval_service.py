@@ -1,36 +1,83 @@
 import re
 import unicodedata
 
-from services.vector_store_service import search_similar_chunks
+from services.vector_store_service import (
+    search_similar_chunks,
+)
 
 
-MAX_ALLOWED_DISTANCE = 0.55
+MAX_ALLOWED_DISTANCE = 0.60
+
 
 STOP_WORDS = {
-    "le",
-    "la",
-    "les",
-    "un",
-    "une",
+    "avec",
+    "aux",
+    "comment",
+    "dans",
     "des",
     "du",
-    "de",
-    "dans",
-    "sur",
-    "avec",
-    "pour",
-    "par",
-    "et",
-    "ou",
+    "elle",
+    "elles",
     "est",
-    "sont",
+    "ils",
+    "la",
+    "le",
+    "les",
+    "pour",
+    "pourquoi",
+    "qu",
+    "que",
+    "quel",
+    "quelle",
     "quelles",
     "quels",
-    "quelle",
-    "quel",
-    "comment",
-    "pourquoi",
+    "qui",
+    "sont",
+    "sur",
+    "une",
+    "un",
 }
+
+
+QUESTION_INTENT_WORDS = {
+    "causes": {
+        "cause",
+        "causes",
+        "origine",
+        "origines",
+        "raison",
+        "raisons",
+        "facteur",
+        "facteurs",
+        "pourquoi",
+        "declenchement",
+    },
+    "consequences": {
+        "consequence",
+        "consequences",
+        "bilan",
+        "effet",
+        "effets",
+        "impact",
+        "impacts",
+        "resultat",
+        "resultats",
+    },
+    "definition": {
+        "definition",
+        "definir",
+        "signifie",
+        "signification",
+    },
+    "roles": {
+        "role",
+        "roles",
+        "fonction",
+        "fonctions",
+        "utilite",
+    },
+}
+
 
 INTENT_MARKERS = {
     "causes": {
@@ -43,7 +90,6 @@ INTENT_MARKERS = {
         "facteur",
         "facteurs",
         "declenchement",
-        "declenche",
         "provoque par",
         "a cause de",
         "en raison de",
@@ -60,6 +106,7 @@ INTENT_MARKERS = {
         "resultats",
         "provoque",
         "entraine",
+        "a pour consequence",
     },
     "definition": {
         "definition",
@@ -68,6 +115,7 @@ INTENT_MARKERS = {
         "correspond a",
         "est un",
         "est une",
+        "designe",
     },
     "roles": {
         "role",
@@ -76,46 +124,41 @@ INTENT_MARKERS = {
         "fonctions",
         "sert a",
         "permet de",
+        "a pour role",
     },
 }
 
-QUESTION_INTENT_WORDS = {
+
+OPPOSITE_MARKERS = {
     "causes": {
+        "consequence",
+        "consequences",
+        "bilan",
+        "resultat",
+        "resultats",
+        "apres guerre",
+        "defaite",
+        "disparition",
+        "victimes",
+    },
+    "consequences": {
         "cause",
         "causes",
         "origine",
         "origines",
-        "raison",
-        "raisons",
-        "pourquoi",
-    },
-    "consequences": {
-        "consequence",
-        "consequences",
-        "bilan",
-        "effet",
-        "effets",
-        "impact",
-        "impacts",
-    },
-    "definition": {
-        "definition",
-        "definir",
-        "signifie",
-    },
-    "roles": {
-        "role",
-        "roles",
-        "fonction",
-        "fonctions",
+        "declenchement",
     },
 }
 
 
 def normalize_text(text: str) -> str:
     """
-    Normalise le texte pour faciliter les comparaisons.
+    Normalise un texte afin de faciliter
+    les comparaisons lexicales.
     """
+
+    if not text:
+        return ""
 
     normalized_text = unicodedata.normalize(
         "NFKD",
@@ -125,7 +168,9 @@ def normalize_text(text: str) -> str:
     normalized_text = "".join(
         character
         for character in normalized_text
-        if not unicodedata.combining(character)
+        if not unicodedata.combining(
+            character
+        )
     )
 
     normalized_text = re.sub(
@@ -134,25 +179,52 @@ def normalize_text(text: str) -> str:
         normalized_text,
     )
 
-    return re.sub(
+    normalized_text = re.sub(
         r"\s+",
         " ",
         normalized_text,
-    ).strip()
+    )
+
+    return normalized_text.strip()
 
 
 def detect_question_intent(
     question: str,
 ) -> str | None:
     """
-    Détecte l'intention principale de la question.
+    Détecte la relation principale
+    demandée dans la question.
     """
 
-    normalized_question = normalize_text(question)
-    question_words = set(normalized_question.split())
+    normalized_question = normalize_text(
+        question
+    )
 
-    for intent, words in QUESTION_INTENT_WORDS.items():
-        if question_words.intersection(words):
+    definition_patterns = (
+        "qu est ce que",
+        "qu est ce qu",
+        "que signifie",
+        "quelle est la definition",
+        "comment definir",
+    )
+
+    if any(
+        pattern in normalized_question
+        for pattern in definition_patterns
+    ):
+        return "definition"
+
+    question_words = set(
+        normalized_question.split()
+    )
+
+    for (
+        intent,
+        intent_words,
+    ) in QUESTION_INTENT_WORDS.items():
+        if question_words.intersection(
+            intent_words
+        ):
             return intent
 
     return None
@@ -162,15 +234,24 @@ def extract_topic_keywords(
     question: str,
 ) -> set[str]:
     """
-    Extrait les mots décrivant le sujet de la question.
+    Extrait les mots décrivant
+    le sujet principal de la question.
     """
 
-    normalized_question = normalize_text(question)
+    excluded_words = set(
+        STOP_WORDS
+    )
 
-    excluded_words = set(STOP_WORDS)
+    for intent_words in (
+        QUESTION_INTENT_WORDS.values()
+    ):
+        excluded_words.update(
+            intent_words
+        )
 
-    for intent_words in QUESTION_INTENT_WORDS.values():
-        excluded_words.update(intent_words)
+    normalized_question = normalize_text(
+        question
+    )
 
     return {
         word
@@ -180,106 +261,259 @@ def extract_topic_keywords(
     }
 
 
-def passage_contains_marker(
-    passage_text: str,
-    markers: set[str],
+def contains_expression(
+    normalized_text: str,
+    expressions: set[str],
 ) -> bool:
     """
-    Vérifie la présence d'un marqueur explicite.
+    Vérifie si le texte contient
+    au moins une expression donnée.
     """
 
     return any(
-        marker in passage_text
-        for marker in markers
+        expression in normalized_text
+        for expression in expressions
     )
 
 
-def has_required_topic(
+def calculate_passage_score(
     question: str,
-    passage_text: str,
-) -> bool:
+    passage: dict,
+    intent: str | None,
+) -> float:
     """
-    Vérifie que le passage traite réellement du sujet demandé.
+    Calcule un score combinant
+    la proximité sémantique,
+    les mots du sujet et l'intention.
     """
 
-    topic_keywords = extract_topic_keywords(question)
-
-    if not topic_keywords:
-        return True
-
-    passage_words = set(passage_text.split())
-    common_keywords = topic_keywords.intersection(
-        passage_words
+    passage_text = passage.get(
+        "text",
+        "",
     )
 
-    required_count = min(
-        2,
-        len(topic_keywords),
+    normalized_passage = normalize_text(
+        passage_text
     )
 
-    return len(common_keywords) >= required_count
+    passage_words = set(
+        normalized_passage.split()
+    )
+
+    topic_keywords = extract_topic_keywords(
+        question
+    )
+
+    common_keywords = (
+        topic_keywords.intersection(
+            passage_words
+        )
+    )
+
+    lexical_score = (
+        len(common_keywords)
+        / max(
+            len(topic_keywords),
+            1,
+        )
+    )
+
+    distance = float(
+        passage.get(
+            "distance",
+            1.0,
+        )
+    )
+
+    semantic_score = max(
+        0.0,
+        1.0 - distance,
+    )
+
+    intent_bonus = 0.0
+    opposite_penalty = 0.0
+
+    if intent:
+        intent_markers = INTENT_MARKERS.get(
+            intent,
+            set(),
+        )
+
+        if contains_expression(
+            normalized_passage,
+            intent_markers,
+        ):
+            intent_bonus = 0.35
+
+        if (
+            intent == "definition"
+            and ":" in passage_text
+            and common_keywords
+        ):
+            intent_bonus = max(
+                intent_bonus,
+                0.30,
+            )
+
+        opposite_markers = (
+            OPPOSITE_MARKERS.get(
+                intent,
+                set(),
+            )
+        )
+
+        if contains_expression(
+            normalized_passage,
+            opposite_markers,
+        ):
+            opposite_penalty = 0.25
+
+    return (
+        semantic_score
+        + lexical_score * 0.80
+        + intent_bonus
+        - opposite_penalty
+    )
 
 
 def retrieve_relevant_passages(
     question: str,
     number_of_results: int = 3,
+    program: str | None = None,
+    subject: str | None = None,
+    semester: str | None = None,
 ) -> list[dict]:
     """
-    Recherche uniquement les passages contenant
-    des preuves directes pour répondre à la question.
+    Recherche et reclasse les passages
+    en appliquant les filtres pédagogiques.
     """
 
-    initial_results = search_similar_chunks(
-        question=question,
-        number_of_results=12,
+    cleaned_question = question.strip()
+
+    if not cleaned_question:
+        raise ValueError(
+            "La question ne peut pas être vide."
+        )
+
+    if number_of_results <= 0:
+        raise ValueError(
+            "Le nombre de résultats doit être supérieur à zéro."
+        )
+
+    candidate_count = max(
+        12,
+        number_of_results * 4,
     )
 
-    intent = detect_question_intent(question)
-    accepted_results = []
+    initial_results = search_similar_chunks(
+        question=cleaned_question,
+        number_of_results=candidate_count,
+        program=program,
+        subject=subject,
+        semester=semester,
+    )
+
+    if not initial_results:
+        return []
+
+    intent = detect_question_intent(
+        cleaned_question
+    )
+
+    topic_keywords = extract_topic_keywords(
+        cleaned_question
+    )
+
+    scored_results = []
 
     for passage in initial_results:
         distance = float(
-            passage.get("distance", 1.0)
+            passage.get(
+                "distance",
+                1.0,
+            )
         )
 
         if distance > MAX_ALLOWED_DISTANCE:
             continue
 
         normalized_passage = normalize_text(
-            passage.get("text", "")
+            passage.get(
+                "text",
+                "",
+            )
         )
 
-        if not has_required_topic(
-            question,
-            normalized_passage,
-        ):
-            continue
+        passage_words = set(
+            normalized_passage.split()
+        )
 
-        if intent:
-            markers = INTENT_MARKERS[intent]
+        if topic_keywords:
+            common_keywords = (
+                topic_keywords.intersection(
+                    passage_words
+                )
+            )
 
-            if not passage_contains_marker(
-                normalized_passage,
-                markers,
-            ):
+            if not common_keywords:
                 continue
 
-        topic_keywords = extract_topic_keywords(question)
-        passage_words = set(normalized_passage.split())
-
-        overlap_count = len(
-            topic_keywords.intersection(passage_words)
+        retrieval_score = (
+            calculate_passage_score(
+                question=cleaned_question,
+                passage=passage,
+                intent=intent,
+            )
         )
 
-        passage["retrieval_score"] = (
-            1.0 - distance
-        ) + overlap_count * 0.15
+        enriched_passage = {
+            **passage,
+            "retrieval_score": round(
+                retrieval_score,
+                6,
+            ),
+        }
 
-        accepted_results.append(passage)
+        scored_results.append(
+            enriched_passage
+        )
 
-    accepted_results.sort(
-        key=lambda passage: passage["retrieval_score"],
+    scored_results.sort(
+        key=lambda passage: (
+            passage["retrieval_score"]
+        ),
         reverse=True,
     )
 
-    return accepted_results[:number_of_results]
+    selected_passages = []
+    selected_chunk_ids = set()
+
+    for passage in scored_results:
+        chunk_id = passage.get(
+            "chunk_id",
+            "",
+        )
+
+        if (
+            chunk_id
+            and chunk_id
+            in selected_chunk_ids
+        ):
+            continue
+
+        if chunk_id:
+            selected_chunk_ids.add(
+                chunk_id
+            )
+
+        selected_passages.append(
+            passage
+        )
+
+        if (
+            len(selected_passages)
+            >= number_of_results
+        ):
+            break
+
+    return selected_passages

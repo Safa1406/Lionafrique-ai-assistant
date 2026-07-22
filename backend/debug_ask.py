@@ -9,7 +9,7 @@ from services.retrieval_service import (
 )
 
 
-question = "Qu'est-ce qu'une guerre de mouvement ?"
+question = "Quels sont les rôles des aliments ?"
 
 
 try:
@@ -19,9 +19,12 @@ try:
     )
 
     passages = retrieve_relevant_passages(
-        question=question,
-        number_of_results=3,
-    )
+    question=question,
+    number_of_results=3,
+    program="Programme marocain",
+    subject="SVT",
+    semester="S1",
+)
 
     print(
         "Nombre de passages trouvés :",

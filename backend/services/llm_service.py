@@ -209,6 +209,289 @@ def extract_topic_keywords(
         and word not in excluded_words
     }
 
+def extract_role_evidence_from_passages(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait une preuve directe pour chaque catégorie
+    ou rôle mentionné dans les passages.
+    """
+
+    category_patterns = {
+        "batisseurs": re.compile(
+            (
+                r"\b(?:les\s+)?aliments?\s+"
+                r"b[aâ]ti(?:s|ss)eurs?\b"
+            ),
+            flags=re.IGNORECASE,
+        ),
+        "energetiques": re.compile(
+            (
+                r"\b(?:les\s+)?aliments?\s+"
+                r"[ée]nerg[ée]tiques?\b"
+            ),
+            flags=re.IGNORECASE,
+        ),
+        "protecteurs": re.compile(
+            (
+                r"\b(?:les\s+)?aliments?\s+"
+                r"protecteurs?\b"
+            ),
+            flags=re.IGNORECASE,
+        ),
+    }
+
+    category_evidence = {}
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        for category, pattern in (
+            category_patterns.items()
+        ):
+            if category in category_evidence:
+                continue
+
+            match = pattern.search(
+                original_text
+            )
+
+            if not match:
+                continue
+
+            excerpt_start = match.start()
+
+            remaining_text = original_text[
+                excerpt_start:
+            ]
+
+            next_category_positions = []
+
+            for other_category, other_pattern in (
+                category_patterns.items()
+            ):
+                if other_category == category:
+                    continue
+
+                other_match = other_pattern.search(
+                    remaining_text,
+                    pos=max(
+                        1,
+                        match.end()
+                        - excerpt_start,
+                    ),
+                )
+
+                if other_match:
+                    next_category_positions.append(
+                        other_match.start()
+                    )
+
+            if next_category_positions:
+                excerpt_end = min(
+                    next_category_positions
+                )
+
+                excerpt = remaining_text[
+                    :excerpt_end
+                ]
+            else:
+                excerpt = remaining_text[
+                    :350
+                ]
+
+            excerpt = re.split(
+                (
+                    r"\b(?:"
+                    r"Séance"
+                    r"|Professeur"
+                    r"|Exercice"
+                    r"|Activité"
+                    r"|Résumé"
+                    r"|Document"
+                    r"|Conclusion"
+                    r")\b"
+                ),
+                excerpt,
+                maxsplit=1,
+                flags=re.IGNORECASE,
+            )[0].strip()
+
+            sentence_boundary = re.search(
+                r"[.!?](?=\s+[A-ZÀÂÇÉÈÊËÎÏÔÛÙÜ])",
+                excerpt,
+            )
+
+            if (
+                sentence_boundary
+                and sentence_boundary.end() >= 25
+            ):
+                excerpt = excerpt[
+                    :sentence_boundary.end()
+                ]
+
+            excerpt_words = excerpt.split()
+
+            if len(excerpt_words) < 4:
+                continue
+
+            if len(excerpt_words) > 45:
+                excerpt = " ".join(
+                    excerpt_words[:45]
+                ).rstrip(
+                    " ,;:-"
+                )
+
+                if not excerpt.endswith(
+                    (".", "!", "?")
+                ):
+                    excerpt += "."
+
+            excerpt = re.sub(
+                r"\s+",
+                " ",
+                excerpt,
+            ).strip()
+
+            category_evidence[category] = {
+                "passage_number": (
+                    passage_number
+                ),
+                "quote": excerpt,
+                "source": passage.get(
+                    "source",
+                    "Source inconnue",
+                ),
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+            }
+
+    ordered_categories = (
+        "batisseurs",
+        "energetiques",
+        "protecteurs",
+    )
+
+    evidence = [
+        category_evidence[category]
+        for category in ordered_categories
+        if category in category_evidence
+    ]
+
+    if evidence:
+        return evidence
+
+    fallback_role_markers = {
+        "a pour role",
+        "ont pour role",
+        "sert a",
+        "servent a",
+        "permet de",
+        "permettent de",
+        "fonction",
+        "fonctions",
+        "utilite",
+    }
+
+    fallback_evidence = []
+    seen_quotes = set()
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        sentences = re.split(
+            r"(?<=[.!?])\s+",
+            original_text,
+        )
+
+        for sentence in sentences:
+            cleaned_sentence = sentence.strip()
+
+            if not cleaned_sentence:
+                continue
+
+            normalized_sentence = normalize_text(
+                cleaned_sentence
+            )
+
+            if not any(
+                marker in normalized_sentence
+                for marker in fallback_role_markers
+            ):
+                continue
+
+            words = cleaned_sentence.split()
+
+            if len(words) < 4:
+                continue
+
+            if len(words) > 45:
+                cleaned_sentence = " ".join(
+                    words[:45]
+                ).rstrip(
+                    " ,;:-"
+                )
+
+                if not cleaned_sentence.endswith(
+                    (".", "!", "?")
+                ):
+                    cleaned_sentence += "."
+
+            normalized_quote = normalize_text(
+                cleaned_sentence
+            )
+
+            if normalized_quote in seen_quotes:
+                continue
+
+            seen_quotes.add(
+                normalized_quote
+            )
+
+            fallback_evidence.append(
+                {
+                    "passage_number": (
+                        passage_number
+                    ),
+                    "quote": cleaned_sentence,
+                    "source": passage.get(
+                        "source",
+                        "Source inconnue",
+                    ),
+                    "page": passage.get(
+                        "page",
+                        0,
+                    ),
+                }
+            )
+
+    return fallback_evidence[:5]
 
 def build_context(passages: list[dict]) -> str:
     """
@@ -297,24 +580,44 @@ def extract_evidence(
 Tu es un vérificateur de preuves documentaires.
 
 Ta mission n'est pas de répondre immédiatement à la question.
-Tu dois seulement décider si les passages contiennent une preuve
-directe et explicite permettant de répondre.
+Tu dois uniquement vérifier si les passages contiennent des
+informations directes permettant de répondre.
 
 Règles obligatoires :
 
+- Utilise uniquement les passages documentaires fournis.
 - N'utilise aucune connaissance générale.
-- N'effectue aucune déduction.
-- Une simple présence du même sujet ne suffit pas.
-- Une preuve doit répondre exactement à la relation demandée.
-- Pour une question sur les causes, les passages doivent présenter
-  explicitement des causes, des origines ou des facteurs.
-- Une conséquence, une date, une arme, un armistice, une phase de guerre
-  ou une définition ne constituent pas une cause.
+- N'effectue aucune supposition ni déduction.
 - Chaque citation doit être copiée mot pour mot depuis un passage.
 - Chaque citation doit contenir entre 4 et 45 mots.
 - Indique le numéro exact du passage contenant chaque citation.
-- Si aucune preuve directe n'existe, utilise answerable=false
-  et retourne une liste evidence vide.
+- Une simple présence du même sujet ne suffit pas.
+
+Pour une question sur les causes :
+- Accepte uniquement les passages qui présentent explicitement
+  une cause, une origine, une raison ou un facteur.
+- Une conséquence, une date, une phase ou une définition
+  ne constitue pas une cause.
+
+Pour une question sur les conséquences :
+- Accepte uniquement les passages qui décrivent explicitement
+  un effet, un résultat, un bilan ou une conséquence.
+
+Pour une question de définition :
+- Accepte une phrase qui définit directement le terme demandé.
+- Le mot « définition » ne doit pas obligatoirement apparaître.
+
+Pour une question sur les rôles :
+- Accepte les passages qui décrivent les catégories,
+  les fonctions, l'utilité ou l'action du sujet demandé.
+- Le mot « rôle » ne doit pas obligatoirement apparaître.
+- Par exemple, les formulations « aliments bâtisseurs »,
+  « aliments énergétiques » et « aliments protecteurs »
+  constituent des preuves directes sur les rôles des aliments.
+
+Si aucune preuve directe n'existe :
+- Utilise answerable=false.
+- Retourne une liste evidence vide.
 """.strip()
 
     user_prompt = f"""
@@ -361,16 +664,25 @@ def validate_evidence(
 ) -> list[dict]:
     """
     Vérifie que chaque citation existe réellement
-    dans le passage indiqué.
+    dans le passage indiqué et correspond au sujet.
     """
 
     validated_evidence = []
 
     for item in evidence_items:
-        passage_number = item.get("passage_number")
-        quote = item.get("quote", "").strip()
+        passage_number = item.get(
+            "passage_number"
+        )
 
-        if not isinstance(passage_number, int):
+        quote = item.get(
+            "quote",
+            "",
+        ).strip()
+
+        if not isinstance(
+            passage_number,
+            int,
+        ):
             continue
 
         if passage_number < 1:
@@ -379,7 +691,10 @@ def validate_evidence(
         if passage_number > len(passages):
             continue
 
-        normalized_quote = normalize_text(quote)
+        normalized_quote = normalize_text(
+            quote
+        )
+
         quote_word_count = len(
             normalized_quote.split()
         )
@@ -390,21 +705,37 @@ def validate_evidence(
         if quote_word_count > 45:
             continue
 
-        passage = passages[passage_number - 1]
+        passage = passages[
+            passage_number - 1
+        ]
 
         normalized_passage = normalize_text(
-            passage.get("text", "")
+            passage.get(
+                "text",
+                "",
+            )
         )
 
-        if normalized_quote not in normalized_passage:
+        if (
+            normalized_quote
+            not in normalized_passage
+        ):
             continue
 
         validated_evidence.append(
             {
-                "passage_number": passage_number,
+                "passage_number": (
+                    passage_number
+                ),
                 "quote": quote,
-                "source": passage["source"],
-                "page": passage["page"],
+                "source": passage.get(
+                    "source",
+                    "Source inconnue",
+                ),
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
             }
         )
 
@@ -422,25 +753,44 @@ def validate_evidence(
         combined_evidence.split()
     )
 
-    intent = detect_question_intent(question)
+    intent = detect_question_intent(
+        question
+    )
 
+    # Les questions sur les causes et les conséquences
+    # nécessitent une relation explicite.
+    #
+    # Pour une définition ou un rôle, la formulation
+    # documentaire peut répondre sans contenir
+    # littéralement les mots « définition » ou « rôle ».
     intents_requiring_explicit_markers = {
         "causes",
         "consequences",
-        "roles",
     }
 
-    if intent in intents_requiring_explicit_markers:
+    if (
+        intent
+        in intents_requiring_explicit_markers
+    ):
+        intent_words = INTENT_WORDS.get(
+            intent,
+            set(),
+        )
+
         if not evidence_words.intersection(
-            INTENT_WORDS[intent]
+            intent_words
         ):
             return []
 
-    topic_keywords = extract_topic_keywords(question)
+    topic_keywords = extract_topic_keywords(
+        question
+    )
 
     if topic_keywords:
-        common_keywords = topic_keywords.intersection(
-            evidence_words
+        common_keywords = (
+            topic_keywords.intersection(
+                evidence_words
+            )
         )
 
         required_keywords = min(
@@ -448,11 +798,13 @@ def validate_evidence(
             len(topic_keywords),
         )
 
-        if len(common_keywords) < required_keywords:
+        if (
+            len(common_keywords)
+            < required_keywords
+        ):
             return []
 
     return validated_evidence
-
 
 def write_answer(
     question: str,
@@ -517,8 +869,16 @@ def generate_answer(
     passages: list[dict],
 ) -> dict:
     """
-    Extrait les preuves, les valide puis produit la réponse.
+    Extrait les preuves, les valide
+    puis produit une réponse documentaire.
     """
+
+    cleaned_question = question.strip()
+
+    if not cleaned_question:
+        raise ValueError(
+            "La question ne peut pas être vide."
+        )
 
     if not passages:
         return {
@@ -528,27 +888,45 @@ def generate_answer(
             "evidence": [],
         }
 
-    extraction = extract_evidence(
-        question=question,
-        passages=passages,
+    intent = detect_question_intent(
+        cleaned_question
     )
 
-    if not extraction.get("answerable", False):
-        return {
-            "answerable": False,
-            "answer": REFUSAL_ANSWER,
-            "sources": [],
-            "evidence": [],
-        }
+    validated_evidence = []
 
-    validated_evidence = validate_evidence(
-        question=question,
-        passages=passages,
-        evidence_items=extraction.get(
-            "evidence",
-            [],
-        ),
-    )
+    if intent == "roles":
+        validated_evidence = (
+            extract_role_evidence_from_passages(
+                question=cleaned_question,
+                passages=passages,
+            )
+        )
+
+    if not validated_evidence:
+        extraction = extract_evidence(
+            question=cleaned_question,
+            passages=passages,
+        )
+
+        if not extraction.get(
+            "answerable",
+            False,
+        ):
+            return {
+                "answerable": False,
+                "answer": REFUSAL_ANSWER,
+                "sources": [],
+                "evidence": [],
+            }
+
+        validated_evidence = validate_evidence(
+            question=cleaned_question,
+            passages=passages,
+            evidence_items=extraction.get(
+                "evidence",
+                [],
+            ),
+        )
 
     if not validated_evidence:
         return {
@@ -557,14 +935,14 @@ def generate_answer(
             "sources": [],
             "evidence": [],
         }
-    
-    intent = detect_question_intent(question)
 
     if intent == "definition":
-        validated_evidence = validated_evidence[:1]
+        validated_evidence = (
+            validated_evidence[:1]
+        )
 
     answer = write_answer(
-        question=question,
+        question=cleaned_question,
         evidence=validated_evidence,
     )
 
@@ -585,7 +963,9 @@ def generate_answer(
         }
 
         if source not in sources:
-            sources.append(source)
+            sources.append(
+                source
+            )
 
     return {
         "answerable": True,

@@ -1,5 +1,7 @@
 import hashlib
 import json
+import re
+import unicodedata
 from pathlib import Path
 
 from services.pdf_service import extract_pdf_pages
@@ -9,6 +11,7 @@ from services.vector_store_service import store_chunks
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_ROOT = PROJECT_ROOT / "data" / "raw"
+
 REPORT_PATH = (
     PROJECT_ROOT
     / "data"
@@ -16,9 +19,33 @@ REPORT_PATH = (
     / "ingestion_report.json"
 )
 
-# Utiliser 5 pour le premier test.
-# Remplacer par None pour traiter tous les fichiers.
-MAX_FILES: int | None = 5
+# Utiliser None pour traiter tous les fichiers PDF.
+# Utiliser un nombre, par exemple 5, pour effectuer un test limité.
+MAX_FILES: int | None = None
+
+
+PROGRAM_ALIASES = {
+    "programme francais": "Programme français",
+    "programme marocain": "Programme marocain",
+}
+
+
+SUBJECT_ALIASES = {
+    "francais": "Français",
+    "anglais": "Anglais",
+    "arabe": "Arabe",
+    "education islamique": "Éducation islamique",
+    "histoire geographique": "Histoire-Géographie",
+    "informatique": "Informatique",
+    "math": "Mathématiques",
+    "math arabe": "Mathématiques arabe",
+    "pc": "Physique-Chimie",
+    "phisique chimie": "Physique-Chimie",
+    "physique chimie": "Physique-Chimie",
+    "pc arabe": "Physique-Chimie arabe",
+    "svt": "SVT",
+    "svt arabe": "SVT arabe",
+}
 
 
 def calculate_file_hash(file_path: Path) -> str:
@@ -29,48 +56,150 @@ def calculate_file_hash(file_path: Path) -> str:
     digest = hashlib.sha256()
 
     with file_path.open("rb") as file:
-        while chunk := file.read(1024 * 1024):
-            digest.update(chunk)
+        while True:
+            file_chunk = file.read(
+                1024 * 1024
+            )
+
+            if not file_chunk:
+                break
+
+            digest.update(file_chunk)
 
     return digest.hexdigest()
+
+
+def normalize_label(value: str) -> str:
+    """
+    Normalise une valeur pour comparer les noms
+    de dossiers sans tenir compte des accents,
+    des majuscules et des séparateurs.
+    """
+
+    if not value:
+        return ""
+
+    normalized_value = unicodedata.normalize(
+        "NFKD",
+        value.lower(),
+    )
+
+    normalized_value = "".join(
+        character
+        for character in normalized_value
+        if not unicodedata.combining(character)
+    )
+
+    normalized_value = normalized_value.replace(
+        "-",
+        " ",
+    )
+
+    normalized_value = normalized_value.replace(
+        "_",
+        " ",
+    )
+
+    normalized_value = re.sub(
+        r"\s+",
+        " ",
+        normalized_value,
+    )
+
+    return normalized_value.strip()
+
+
+def get_clean_path_parts(
+    relative_path: Path,
+) -> list[str]:
+    """
+    Supprime les dossiers racines inutiles
+    ou mal encodés avant le dossier du programme.
+    """
+
+    parts = list(relative_path.parts)
+
+    for index, part in enumerate(parts):
+        normalized_part = normalize_label(part)
+
+        if normalized_part in PROGRAM_ALIASES:
+            return parts[index:]
+
+    return parts
+
+
+def build_clean_relative_path(
+    relative_path: Path,
+) -> str:
+    """
+    Construit un chemin relatif propre
+    pour les métadonnées.
+    """
+
+    clean_parts = get_clean_path_parts(
+        relative_path
+    )
+
+    return "/".join(clean_parts)
 
 
 def extract_document_metadata(
     relative_path: Path,
 ) -> dict:
     """
-    Déduit les métadonnées principales depuis le chemin du fichier.
+    Déduit et normalise les métadonnées
+    principales depuis le chemin du fichier.
     """
 
-    parts = list(relative_path.parts)
+    parts = get_clean_path_parts(
+        relative_path
+    )
 
     program = "Non défini"
     subject = "Non définie"
     semester = "Non défini"
 
     for index, part in enumerate(parts):
-        normalized_part = part.lower()
+        normalized_part = normalize_label(part)
 
-        if normalized_part in {
-            "programme francais",
-            "programme français",
-            "programme marocain",
-        }:
-            program = part
+        if normalized_part in PROGRAM_ALIASES:
+            program = PROGRAM_ALIASES[
+                normalized_part
+            ]
 
             if index + 1 < len(parts):
-                subject = parts[index + 1]
+                subject_key = normalize_label(
+                    parts[index + 1]
+                )
+
+                subject = SUBJECT_ALIASES.get(
+                    subject_key,
+                    parts[index + 1],
+                )
 
         if normalized_part in {
             "s1",
-            "s2",
             "semestre 1",
+        }:
+            semester = "S1"
+
+        if normalized_part in {
+            "s2",
             "semestre 2",
         }:
-            semester = part
+            semester = "S2"
 
     if subject == "Non définie" and len(parts) >= 2:
-        subject = parts[-2]
+        possible_subject = parts[-2]
+
+        subject_key = normalize_label(
+            possible_subject
+        )
+
+        subject = SUBJECT_ALIASES.get(
+            subject_key,
+            possible_subject,
+        )
 
     return {
         "program": program,
@@ -84,27 +213,47 @@ def prepare_document_chunks(
     file_hash: str,
 ) -> tuple[list[dict], int, int]:
     """
-    Extrait, découpe et enrichit un document PDF.
+    Extrait, découpe et enrichit
+    un document PDF.
     """
 
-    relative_path = pdf_path.relative_to(DATA_ROOT)
-    relative_path_text = relative_path.as_posix()
-    document_id = file_hash[:20]
-
-    pages = extract_pdf_pages(pdf_path)
-
-    pages_with_text = sum(
-        1 for page in pages
-        if page["has_text"]
+    relative_path = pdf_path.relative_to(
+        DATA_ROOT
     )
 
-    empty_pages = len(pages) - pages_with_text
+    relative_path_text = (
+        build_clean_relative_path(
+            relative_path
+        )
+    )
+
+    document_id = file_hash[:20]
+
+    pages = extract_pdf_pages(
+        pdf_path
+    )
+
+    pages_with_text = sum(
+        1
+        for page in pages
+        if page.get("has_text", False)
+    )
+
+    empty_pages = (
+        len(pages) - pages_with_text
+    )
 
     if pages_with_text == 0:
-        return [], pages_with_text, empty_pages
+        return (
+            [],
+            pages_with_text,
+            empty_pages,
+        )
 
-    document_metadata = extract_document_metadata(
-        relative_path
+    document_metadata = (
+        extract_document_metadata(
+            relative_path
+        )
     )
 
     chunks = split_pages_into_chunks(
@@ -115,10 +264,22 @@ def prepare_document_chunks(
 
     for chunk in chunks:
         chunk["document_id"] = document_id
-        chunk["relative_path"] = relative_path_text
-        chunk["program"] = document_metadata["program"]
-        chunk["subject"] = document_metadata["subject"]
-        chunk["semester"] = document_metadata["semester"]
+
+        chunk["relative_path"] = (
+            relative_path_text
+        )
+
+        chunk["program"] = (
+            document_metadata["program"]
+        )
+
+        chunk["subject"] = (
+            document_metadata["subject"]
+        )
+
+        chunk["semester"] = (
+            document_metadata["semester"]
+        )
 
         chunk["chunk_id"] = (
             f"{document_id}"
@@ -126,22 +287,33 @@ def prepare_document_chunks(
             f"-segment-{chunk['chunk_number']}"
         )
 
-    return chunks, pages_with_text, empty_pages
+    return (
+        chunks,
+        pages_with_text,
+        empty_pages,
+    )
 
 
 def ingest_dataset() -> None:
     """
-    Analyse et enregistre les fichiers PDF dans ChromaDB.
+    Analyse tous les fichiers PDF
+    et les enregistre dans ChromaDB.
     """
 
     if not DATA_ROOT.exists():
         raise FileNotFoundError(
-            f"Le dossier des données est introuvable : {DATA_ROOT}"
+            "Le dossier des données est introuvable : "
+            f"{DATA_ROOT}"
         )
 
-    pdf_files = sorted(
-        DATA_ROOT.rglob("*.pdf")
+    all_pdf_files = sorted(
+        DATA_ROOT.rglob("*.pdf"),
+        key=lambda file_path: (
+            str(file_path).lower()
+        ),
     )
+
+    pdf_files = all_pdf_files
 
     if MAX_FILES is not None:
         pdf_files = pdf_files[:MAX_FILES]
@@ -159,7 +331,12 @@ def ingest_dataset() -> None:
     )
 
     report = {
-        "total_files_detected": len(pdf_files),
+        "total_files_available": len(
+            all_pdf_files
+        ),
+        "total_files_detected": len(
+            pdf_files
+        ),
         "processed_files": 0,
         "duplicate_files": 0,
         "scanned_or_empty_files": 0,
@@ -178,24 +355,37 @@ def ingest_dataset() -> None:
         pdf_files,
         start=1,
     ):
-        relative_path = pdf_path.relative_to(
-            DATA_ROOT
-        ).as_posix()
+        original_relative_path = (
+            pdf_path.relative_to(
+                DATA_ROOT
+            )
+        )
+
+        displayed_path = (
+            build_clean_relative_path(
+                original_relative_path
+            )
+        )
 
         print(
             f"\n[{index}/{len(pdf_files)}] "
-            f"Traitement : {relative_path}"
+            f"Traitement : {displayed_path}"
         )
 
         try:
-            file_hash = calculate_file_hash(pdf_path)
+            file_hash = calculate_file_hash(
+                pdf_path
+            )
 
             if file_hash in seen_hashes:
                 report["duplicate_files"] += 1
+
                 report["duplicates"].append(
                     {
-                        "file": relative_path,
-                        "duplicate_of": seen_hashes[file_hash],
+                        "file": displayed_path,
+                        "duplicate_of": (
+                            seen_hashes[file_hash]
+                        ),
                     }
                 )
 
@@ -203,54 +393,74 @@ def ingest_dataset() -> None:
                     "Fichier ignoré : copie exacte "
                     "d'un document déjà traité."
                 )
+
                 continue
 
-            seen_hashes[file_hash] = relative_path
+            seen_hashes[file_hash] = (
+                displayed_path
+            )
 
             (
                 chunks,
                 pages_with_text,
                 empty_pages,
             ) = prepare_document_chunks(
-                pdf_path,
-                file_hash,
+                pdf_path=pdf_path,
+                file_hash=file_hash,
             )
 
-            report["total_pages_with_text"] += (
-                pages_with_text
-            )
-            report["total_empty_pages"] += empty_pages
+            report[
+                "total_pages_with_text"
+            ] += pages_with_text
+
+            report[
+                "total_empty_pages"
+            ] += empty_pages
 
             if not chunks:
-                report["scanned_or_empty_files"] += 1
-                report["scanned_or_empty"].append(
-                    relative_path
+                report[
+                    "scanned_or_empty_files"
+                ] += 1
+
+                report[
+                    "scanned_or_empty"
+                ].append(
+                    displayed_path
                 )
 
                 print(
                     "Fichier ignoré : aucun texte "
                     "exploitable n'a été détecté."
                 )
+
                 continue
 
             stored_chunks = store_chunks(
-                chunks,
+                chunks=chunks,
                 batch_size=32,
             )
 
-            report["processed_files"] += 1
-            report["total_chunks"] += stored_chunks
+            report[
+                "processed_files"
+            ] += 1
+
+            report[
+                "total_chunks"
+            ] += stored_chunks
 
             print(
-                f"Document enregistré : "
+                "Document enregistré : "
                 f"{stored_chunks} segment(s)."
             )
 
         except Exception as error:
-            report["failed_files"] += 1
+            report[
+                "failed_files"
+            ] += 1
+
             report["errors"].append(
                 {
-                    "file": relative_path,
+                    "file": displayed_path,
                     "error": str(error),
                 }
             )
@@ -271,33 +481,57 @@ def ingest_dataset() -> None:
             indent=2,
         )
 
-    print("\n=== RAPPORT FINAL ===")
     print(
-        f"Fichiers détectés : "
+        "\n=== RAPPORT FINAL ==="
+    )
+
+    print(
+        "Fichiers disponibles : "
+        f"{report['total_files_available']}"
+    )
+
+    print(
+        "Fichiers détectés : "
         f"{report['total_files_detected']}"
     )
+
     print(
-        f"Fichiers traités : "
+        "Fichiers traités : "
         f"{report['processed_files']}"
     )
+
     print(
-        f"Doublons ignorés : "
+        "Doublons ignorés : "
         f"{report['duplicate_files']}"
     )
+
     print(
-        f"Fichiers sans texte : "
+        "Fichiers sans texte : "
         f"{report['scanned_or_empty_files']}"
     )
+
     print(
-        f"Fichiers en erreur : "
+        "Fichiers en erreur : "
         f"{report['failed_files']}"
     )
+
     print(
-        f"Segments enregistrés : "
+        "Pages avec du texte : "
+        f"{report['total_pages_with_text']}"
+    )
+
+    print(
+        "Pages sans texte : "
+        f"{report['total_empty_pages']}"
+    )
+
+    print(
+        "Segments enregistrés : "
         f"{report['total_chunks']}"
     )
+
     print(
-        f"Rapport enregistré dans : "
+        "Rapport enregistré dans : "
         f"{REPORT_PATH}"
     )
 
