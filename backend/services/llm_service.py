@@ -811,57 +811,173 @@ def write_answer(
     evidence: list[dict],
 ) -> str:
     """
-    Construit une réponse uniquement avec les citations validées.
+    Produit une réponse claire à partir
+    des preuves documentaires validées.
     """
 
-    unique_quotes = []
+    if not evidence:
+        return REFUSAL_ANSWER
+
+    intent = detect_question_intent(
+        question
+    )
+
+    cleaned_quotes = []
     seen_quotes = set()
 
     for item in evidence:
         quote = re.sub(
             r"\s+",
             " ",
-            item.get("quote", ""),
+            item.get(
+                "quote",
+                "",
+            ),
         ).strip()
 
-        normalized_quote = normalize_text(quote)
-
-        if not normalized_quote:
+        if not quote:
             continue
+
+        normalized_quote = normalize_text(
+            quote
+        )
 
         if normalized_quote in seen_quotes:
             continue
 
-        seen_quotes.add(normalized_quote)
-        unique_quotes.append(quote)
+        seen_quotes.add(
+            normalized_quote
+        )
 
-    if not unique_quotes:
+        cleaned_quotes.append(
+            quote
+        )
+
+    if not cleaned_quotes:
         return REFUSAL_ANSWER
 
-    intent = detect_question_intent(question)
-
     if intent == "definition":
-        return (
-            "D'après le document : "
-            f"« {unique_quotes[0]} »"
+        quote = cleaned_quotes[0].rstrip(
+            " ."
         )
 
-    if len(unique_quotes) == 1:
         return (
-            "D'après le document : "
-            f"« {unique_quotes[0]} »"
+            "D'après le document :\n"
+            f"{quote}."
         )
 
-    answer_lines = [
-        "D'après les documents :"
+    category_patterns = [
+        (
+            re.compile(
+                (
+                    r"^Les\s+aliments?\s+"
+                    r"b[aâ]ti(?:s|ss)eurs?\s*"
+                ),
+                flags=re.IGNORECASE,
+            ),
+            "Les aliments bâtisseurs",
+        ),
+        (
+            re.compile(
+                (
+                    r"^Les\s+aliments?\s+"
+                    r"[ée]nerg[ée]tiques?\s*"
+                ),
+                flags=re.IGNORECASE,
+            ),
+            "Les aliments énergétiques",
+        ),
+        (
+            re.compile(
+                (
+                    r"^Les\s+aliments?\s+"
+                    r"protecteurs?\s*"
+                ),
+                flags=re.IGNORECASE,
+            ),
+            "Les aliments protecteurs",
+        ),
     ]
 
-    for quote in unique_quotes[:5]:
-        answer_lines.append(
-            f"- {quote}"
+    formatted_lines = []
+
+    for quote in cleaned_quotes:
+        formatted_quote = None
+
+        for pattern, category_label in (
+            category_patterns
+        ):
+            match = pattern.match(
+                quote
+            )
+
+            if not match:
+                continue
+
+            explanation = quote[
+                match.end():
+            ].strip(
+                " :;,-"
+            )
+
+            if explanation:
+                explanation = (
+                    explanation[0].lower()
+                    + explanation[1:]
+                    if len(explanation) > 1
+                    else explanation.lower()
+                )
+
+                explanation = (
+                    explanation.rstrip(
+                        " ."
+                    )
+                    + "."
+                )
+
+                formatted_quote = (
+                    f"- {category_label} : "
+                    f"{explanation}"
+                )
+            else:
+                formatted_quote = (
+                    f"- {category_label}."
+                )
+
+            break
+
+        if formatted_quote is None:
+            formatted_quote = (
+                "- "
+                + quote.rstrip(
+                    " ."
+                )
+                + "."
+            )
+
+        formatted_lines.append(
+            formatted_quote
         )
 
-    return "\n".join(answer_lines)
+    if not formatted_lines:
+        return REFUSAL_ANSWER
+
+    if len(formatted_lines) == 1:
+        introduction = (
+            "D'après le document :"
+        )
+    else:
+        introduction = (
+            "D'après les documents :"
+        )
+
+    return (
+        introduction
+        + "\n"
+        + "\n".join(
+            formatted_lines
+        )
+    )
 
 
 def generate_answer(
