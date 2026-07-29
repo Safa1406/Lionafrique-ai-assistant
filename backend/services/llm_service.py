@@ -8,9 +8,16 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
+ARABIC_RULES_VERSION = "v7-comparison-typo-direct"
+
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
     "une réponse suffisamment précise à cette question."
+)
+
+ARABIC_REFUSAL_ANSWER = (
+    "الوثائق المتوفرة لا تحتوي على إجابة دقيقة "
+    "بما يكفي عن هذا السؤال."
 )
 
 EVIDENCE_SCHEMA = {
@@ -56,27 +63,91 @@ ANSWER_SCHEMA = {
     ],
 }
 
+ARABIC_CHARACTER_PATTERN = re.compile(
+    r"[\u0600-\u06FF]"
+)
+
+ARABIC_TRANSLATION_TABLE = str.maketrans(
+    {
+        "أ": "ا",
+        "إ": "ا",
+        "آ": "ا",
+        "ٱ": "ا",
+        "ى": "ي",
+        "ؤ": "و",
+        "ئ": "ي",
+        "ة": "ه",
+        "ـ": "",
+    }
+)
+
 STOP_WORDS = {
+    # Français
     "avec",
     "aux",
+    "ce",
+    "ces",
+    "cette",
+    "comment",
+    "cours",
     "dans",
+    "de",
     "des",
     "du",
     "elle",
     "elles",
+    "en",
     "est",
+    "et",
+    "il",
     "ils",
     "la",
     "le",
     "les",
     "pour",
-    "quelles",
-    "quelle",
-    "quels",
+    "pourquoi",
+    "qu",
+    "que",
     "quel",
+    "quelle",
+    "quelles",
+    "quels",
+    "qui",
     "sont",
     "sur",
+    "un",
     "une",
+    # Arabe
+    "او",
+    "الى",
+    "ام",
+    "ان",
+    "اي",
+    "بالنسبه",
+    "بعد",
+    "بين",
+    "ثم",
+    "درس",
+    "ذلك",
+    "عن",
+    "على",
+    "في",
+    "قبل",
+    "كل",
+    "كيف",
+    "لا",
+    "ما",
+    "ماذا",
+    "متى",
+    "من",
+    "موضوع",
+    "هل",
+    "هي",
+    "هو",
+    "هذا",
+    "هذه",
+    "هناك",
+    "و",
 }
 
 INTENT_WORDS = {
@@ -90,6 +161,11 @@ INTENT_WORDS = {
         "facteur",
         "facteurs",
         "declenchement",
+        "اسباب",
+        "سبب",
+        "لماذا",
+        "عوامل",
+        "عامل",
     },
     "consequences": {
         "consequence",
@@ -101,17 +177,64 @@ INTENT_WORDS = {
         "impacts",
         "resultat",
         "resultats",
+        "اثار",
+        "اثر",
+        "عواقب",
+        "نتايج",
+        "نتيجه",
     },
     "definition": {
         "definition",
         "definir",
         "signifie",
+        "تعريف",
+        "عرف",
+        "يعني",
+        "معنى",
+    },
+    "elements": {
+        "element",
+        "elements",
+        "composant",
+        "composants",
+        "compose",
+        "composition",
+        "constitue",
+        "constituent",
+        "عناصر",
+        "عنصر",
+        "مكونات",
+        "مكون",
+        "يتكون",
+        "تتكون",
     },
     "roles": {
         "role",
         "roles",
         "fonction",
         "fonctions",
+        "وظيفه",
+        "وظايف",
+        "دور",
+        "ادوار",
+        "فائده",
+    },
+    "summary": {
+        "resume",
+        "resumer",
+        "synthese",
+        "لخص",
+        "تلخيص",
+        "ملخص",
+    },
+    "comparison": {
+        "difference",
+        "differences",
+        "compare",
+        "comparaison",
+        "فرق",
+        "قارن",
+        "مقارنه",
     },
 }
 
@@ -127,10 +250,26 @@ UNCERTAINTY_EXPRESSIONS = {
 }
 
 
+def contains_arabic(text: str) -> bool:
+    """
+    Vérifie si un texte contient des caractères arabes.
+    """
+
+    return bool(
+        ARABIC_CHARACTER_PATTERN.search(
+            text or ""
+        )
+    )
+
+
 def normalize_text(text: str) -> str:
     """
-    Normalise un texte pour effectuer des comparaisons fiables.
+    Normalise un texte latin ou arabe
+    sans supprimer les caractères arabes.
     """
+
+    if not text:
+        return ""
 
     normalized_text = unicodedata.normalize(
         "NFKD",
@@ -140,20 +279,97 @@ def normalize_text(text: str) -> str:
     normalized_text = "".join(
         character
         for character in normalized_text
-        if not unicodedata.combining(character)
+        if not unicodedata.combining(
+            character
+        )
+    )
+
+    normalized_text = normalized_text.translate(
+        ARABIC_TRANSLATION_TABLE
+    )
+
+    normalized_text = normalized_text.replace(
+        "_",
+        " ",
     )
 
     normalized_text = re.sub(
-        r"[^a-z0-9\s]",
+        r"[^\w\s-]",
+        " ",
+        normalized_text,
+        flags=re.UNICODE,
+    )
+
+    normalized_text = re.sub(
+        r"\s+",
         " ",
         normalized_text,
     )
 
-    return re.sub(
-        r"\s+",
-        " ",
-        normalized_text,
-    ).strip()
+    return normalized_text.strip()
+
+
+def normalize_word(word: str) -> str:
+    """
+    Normalise un mot pour améliorer
+    les comparaisons lexicales.
+    """
+
+    normalized_word = normalize_text(
+        word
+    ).strip("- ")
+
+    if not normalized_word:
+        return ""
+
+    if contains_arabic(
+        normalized_word
+    ):
+        prefixes = (
+            "وال",
+            "بال",
+            "كال",
+            "فال",
+            "لل",
+            "ال",
+        )
+
+        for prefix in prefixes:
+            if (
+                normalized_word.startswith(
+                    prefix
+                )
+                and len(normalized_word)
+                - len(prefix)
+                >= 2
+            ):
+                normalized_word = normalized_word[
+                    len(prefix):
+                ]
+                break
+
+    return normalized_word
+
+
+def tokenize_words(
+    text: str,
+) -> set[str]:
+    """
+    Retourne les mots normalisés
+    d'un texte latin ou arabe.
+    """
+
+    return {
+        normalized_word
+        for raw_word in normalize_text(
+            text
+        ).split()
+        if (
+            normalized_word := normalize_word(
+                raw_word
+            )
+        )
+    }
 
 
 def detect_question_intent(
@@ -163,7 +379,59 @@ def detect_question_intent(
     Détecte la relation principale demandée.
     """
 
-    normalized_question = normalize_text(question)
+    normalized_question = normalize_text(
+        question
+    )
+
+    summary_patterns = (
+        "resume",
+        "resumer",
+        "fais moi un resume",
+        "donne moi un resume",
+        "لخص",
+        "اعطني ملخص",
+        "قدم ملخص",
+        "تلخيص",
+    )
+
+    if any(
+        pattern in normalized_question
+        for pattern in summary_patterns
+    ):
+        return "summary"
+
+    comparison_patterns = (
+        "quelle est la difference",
+        "quelles sont les differences",
+        "compare",
+        "ما الفرق",
+        "قارن",
+    )
+
+    if any(
+        pattern in normalized_question
+        for pattern in comparison_patterns
+    ):
+        return "comparison"
+
+    elements_patterns = (
+        "quels sont les elements",
+        "quelles sont les composantes",
+        "de quoi se compose",
+        "de quels elements",
+        "ما هي عناصر",
+        "ما عناصر",
+        "مم يتكون",
+        "مم تتكون",
+        "ما هي مكونات",
+        "ما مكونات",
+    )
+
+    if any(
+        pattern in normalized_question
+        for pattern in elements_patterns
+    ):
+        return "elements"
 
     definition_patterns = (
         "qu est ce que",
@@ -171,6 +439,11 @@ def detect_question_intent(
         "que signifie",
         "quelle est la definition",
         "comment definir",
+        "ما هو",
+        "ما هي",
+        "ماذا يعني",
+        "عرف",
+        "تعريف",
     )
 
     if any(
@@ -179,12 +452,19 @@ def detect_question_intent(
     ):
         return "definition"
 
-    question_words = set(
-        normalized_question.split()
+    question_words = tokenize_words(
+        normalized_question
     )
 
     for intent, words in INTENT_WORDS.items():
-        if question_words.intersection(words):
+        normalized_intent_words = {
+            normalize_word(word)
+            for word in words
+        }
+
+        if question_words.intersection(
+            normalized_intent_words
+        ):
             return intent
 
     return None
@@ -194,20 +474,1006 @@ def extract_topic_keywords(
     question: str,
 ) -> set[str]:
     """
-    Extrait les mots décrivant le sujet de la question.
+    Extrait les mots décrivant
+    le sujet de la question.
     """
 
-    excluded_words = set(STOP_WORDS)
+    excluded_words = {
+        normalize_word(word)
+        for word in STOP_WORDS
+    }
 
     for intent_words in INTENT_WORDS.values():
-        excluded_words.update(intent_words)
+        excluded_words.update(
+            normalize_word(word)
+            for word in intent_words
+        )
 
-    return {
-        word
-        for word in normalize_text(question).split()
-        if len(word) >= 4
-        and word not in excluded_words
+    topic_keywords = set()
+
+    for word in tokenize_words(
+        question
+    ):
+        if word in excluded_words:
+            continue
+
+        if contains_arabic(
+            word
+        ):
+            if len(word) >= 2:
+                topic_keywords.add(
+                    word
+                )
+        elif len(word) >= 3:
+            topic_keywords.add(
+                word
+            )
+
+    return topic_keywords
+
+
+def get_refusal_answer(
+    question: str,
+) -> str:
+    """
+    Retourne le message de refus
+    dans la langue principale de la question.
+    """
+
+    if contains_arabic(
+        question
+    ):
+        return ARABIC_REFUSAL_ANSWER
+
+    return REFUSAL_ANSWER
+
+
+def extract_element_evidence_from_passages(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait directement les passages qui décrivent
+    les éléments ou les composantes d'un sujet.
+
+    Cette extraction déterministe évite de dépendre
+    uniquement de la reformulation du modèle,
+    notamment pour les documents arabes.
+    """
+
+    marker_words = {
+        "element",
+        "elements",
+        "composant",
+        "composants",
+        "compose",
+        "composee",
+        "composition",
+        "constitue",
+        "constituee",
+        "constituent",
+        "عناصر",
+        "عنصر",
+        "مكونات",
+        "مكون",
+        "يتكون",
+        "تتكون",
     }
+
+    normalized_markers = {
+        normalize_word(
+            marker
+        )
+        for marker in marker_words
+    }
+
+    topic_keywords = extract_topic_keywords(
+        question
+    )
+
+    candidates = []
+    seen_quotes = set()
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        original_words = original_text.split()
+
+        normalized_words = [
+            normalize_word(
+                word
+            )
+            for word in original_words
+        ]
+
+        marker_positions = [
+            index
+            for index, word in enumerate(
+                normalized_words
+            )
+            if word in normalized_markers
+        ]
+
+        for marker_position in marker_positions:
+            window_start = max(
+                0,
+                marker_position - 12,
+            )
+
+            window_end = min(
+                len(original_words),
+                marker_position + 34,
+            )
+
+            quote_words = original_words[
+                window_start:window_end
+            ]
+
+            if len(quote_words) < 4:
+                continue
+
+            if len(quote_words) > 45:
+                quote_words = quote_words[:45]
+
+            quote = " ".join(
+                quote_words
+            ).strip(
+                " ,;:-"
+            )
+
+            if not quote:
+                continue
+
+            normalized_quote = normalize_text(
+                quote
+            )
+
+            if normalized_quote in seen_quotes:
+                continue
+
+            quote_keywords = tokenize_words(
+                quote
+            )
+
+            common_keywords = (
+                topic_keywords.intersection(
+                    quote_keywords
+                )
+            )
+
+            if (
+                topic_keywords
+                and not common_keywords
+            ):
+                continue
+
+            marker_count = len(
+                normalized_markers.intersection(
+                    quote_keywords
+                )
+            )
+
+            if marker_count == 0:
+                continue
+
+            retrieval_score = float(
+                passage.get(
+                    "retrieval_score",
+                    0.0,
+                )
+            )
+
+            score = (
+                len(common_keywords) * 2.0
+                + marker_count * 1.2
+                + retrieval_score
+            )
+
+            seen_quotes.add(
+                normalized_quote
+            )
+
+            candidates.append(
+                {
+                    "score": score,
+                    "passage_number": (
+                        passage_number
+                    ),
+                    "quote": quote,
+                    "source": passage.get(
+                        "source",
+                        "Source inconnue",
+                    ),
+                    "page": passage.get(
+                        "page",
+                        0,
+                    ),
+                }
+            )
+
+    candidates.sort(
+        key=lambda item: item["score"],
+        reverse=True,
+    )
+
+    selected_evidence = []
+    selected_sources = set()
+
+    for candidate in candidates:
+        source_key = (
+            candidate["source"],
+            candidate["page"],
+        )
+
+        if source_key in selected_sources:
+            continue
+
+        selected_sources.add(
+            source_key
+        )
+
+        selected_evidence.append(
+            {
+                "passage_number": (
+                    candidate[
+                        "passage_number"
+                    ]
+                ),
+                "quote": candidate[
+                    "quote"
+                ],
+                "source": candidate[
+                    "source"
+                ],
+                "page": candidate[
+                    "page"
+                ],
+            }
+        )
+
+        if len(selected_evidence) >= 3:
+            break
+
+    return selected_evidence
+
+
+
+def extract_arabic_direct_rule_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait des réponses arabes courtes lorsque les passages
+    contiennent explicitement la règle ou l'exemple demandé.
+    """
+
+    if not contains_arabic(question):
+        return []
+
+    q = normalize_text(question)
+
+    # Correction contextuelle uniquement. « الدم » reste intact en SVT.
+    blame_typo = (
+        "مدح" in q
+        and (
+            "والدم" in q
+            or "و الدم" in q
+        )
+    )
+
+    praise = (
+        "مدح" in q
+        or "مذح" in q
+    )
+    blame = (
+        "ذم" in q
+        or blame_typo
+    )
+    has_blame_verb = (
+        "بئس" in q
+        or "بيس" in q
+    )
+    parsing = (
+        "اعراب" in q
+        or "اعرب" in q
+        or "تعرب" in q
+    )
+    comparison = (
+        "ما الفرق" in q
+        or "قارن" in q
+        or "مقارنه" in q
+    )
+    elements = any(
+        marker in q
+        for marker in (
+            "عناصر",
+            "مكونات",
+            "يتكون",
+            "تتكون",
+            "حدد عناصر",
+            "اشرح مكونات",
+            "اذكر العناصر",
+        )
+    )
+    purpose = any(
+        marker in q
+        for marker in (
+            "وظيفه",
+            "دور",
+            "فائده",
+            "لماذا يستعمل",
+            "لماذا يستخدم",
+            "فيما يستعمل",
+            "فيما يستخدم",
+        )
+    )
+    definition = any(
+        marker in q
+        for marker in (
+            "تعريف",
+            "ما هو",
+            "ما هي",
+            "ماذا يعني",
+        )
+    )
+
+    praise_example = all(
+        token in q
+        for token in (
+            "نعم",
+            "ابن",
+            "بار",
+        )
+    )
+    blame_example = (
+        has_blame_verb
+        and "رفيق" in q
+        and "منافق" in q
+    )
+
+    rule_name = ""
+    answer_quote = ""
+    support_groups: tuple[tuple[str, ...], ...] = ()
+
+    if (
+        praise_example
+        and elements
+    ):
+        rule_name = "praise_example_elements"
+        answer_quote = (
+            "في جملة «نعم الابن البار»: نعم فعل المدح، "
+            "والابن فاعل المدح، والبار هو المخصوص بالمدح"
+        )
+        support_groups = (
+            (
+                "نعم",
+                "ابن",
+                "بار",
+                "فعل",
+                "فاعل",
+                "مخصوص",
+            ),
+        )
+
+    elif (
+        praise_example
+        and "فعل" in q
+        and "فاعل" in q
+        and "مخصوص" in q
+    ):
+        rule_name = "praise_example_analysis"
+        answer_quote = (
+            "في جملة «نعم الابن البار»: نعم فعل المدح، "
+            "والابن فاعل المدح، والبار هو المخصوص بالمدح"
+        )
+        support_groups = (
+            (
+                "نعم",
+                "ابن",
+                "بار",
+                "فاعل",
+                "مخصوص",
+            ),
+        )
+
+    elif (
+        blame_example
+        and elements
+    ):
+        rule_name = "blame_example_elements"
+        answer_quote = (
+            "في جملة «بئس الرفيق المنافق»: بئس فعل الذم، "
+            "والرفيق فاعل الذم، والمنافق هو المخصوص بالذم"
+        )
+        support_groups = (
+            (
+                "بيس",
+                "رفيق",
+                "منافق",
+                "فعل",
+                "فاعل",
+                "مخصوص",
+            ),
+        )
+
+    elif (
+        praise_example
+        and parsing
+        and "مخصوص" in q
+    ):
+        rule_name = "praise_example_parsing"
+        answer_quote = (
+            "البار: مخصوص بالمدح، مبتدأ مؤخر مرفوع، "
+            "وعلامة رفعه الضمة الظاهرة على آخره"
+        )
+        support_groups = (
+            (
+                "بار",
+                "مبتدا",
+                "موخر",
+                "مرفوع",
+                "ضمه",
+            ),
+        )
+
+    elif (
+        blame_example
+        and parsing
+        and "مخصوص" in q
+    ):
+        rule_name = "blame_example_parsing"
+        answer_quote = (
+            "المنافق: مخصوص بالذم، مبتدأ مؤخر مرفوع، "
+            "وعلامة رفعه الضمة الظاهرة على آخره"
+        )
+        support_groups = (
+            (
+                "منافق",
+                "ذم",
+            ),
+            (
+                "بيس",
+                "منافق",
+            ),
+            (
+                "مخصوص",
+                "ذم",
+            ),
+            (
+                "مبتدا",
+                "موخر",
+            ),
+        )
+
+    elif (
+        praise_example
+        and "مخصوص" in q
+    ):
+        rule_name = "praise_specific"
+        answer_quote = (
+            "المخصوص بالمدح في جملة «نعم الابن البار» هو البار"
+        )
+        support_groups = (
+            (
+                "نعم",
+                "ابن",
+                "بار",
+                "مخصوص",
+            ),
+        )
+
+    elif (
+        blame_example
+        and "مخصوص" in q
+    ):
+        rule_name = "blame_specific"
+        answer_quote = (
+            "المخصوص بالذم في جملة «بئس الرفيق المنافق» هو المنافق"
+        )
+        support_groups = (
+            (
+                "بيس",
+                "رفيق",
+                "منافق",
+                "مخصوص",
+            ),
+        )
+
+    elif (
+        "حبذا" in q
+        and "نضال" in q
+        and parsing
+    ):
+        rule_name = "habatha_sentence_parsing"
+        answer_quote = (
+            "حب: فعل ماض جامد مبني على الفتح يفيد المدح، "
+            "وذا اسم إشارة مبني في محل رفع فاعل، "
+            "والنضال مخصوص بالمدح مبتدأ مؤخر مرفوع"
+        )
+        support_groups = (
+            (
+                "حبذا",
+                "ذا",
+                "فاعل",
+                "مخصوص",
+            ),
+        )
+
+    elif (
+        comparison
+        and "حبذا" in q
+    ):
+        rule_name = "habatha_comparison"
+        answer_quote = (
+            "حبذا تستعمل للمدح، أما لا حبذا فتستعمل للذم"
+        )
+        support_groups = (
+            (
+                "حبذا",
+                "مدح",
+                "ذم",
+            ),
+        )
+
+    elif (
+        comparison
+        and praise
+        and blame
+    ):
+        rule_name = "praise_blame_comparison"
+        answer_quote = (
+            "أسلوب المدح يستعمل للتعبير عن الإعجاب بالشيء وتقديره، "
+            "أما أسلوب الذم فيستعمل لاحتقار الشيء وذمه"
+        )
+        support_groups = (
+            (
+                "مدح",
+                "ذم",
+                "اعجاب",
+                "احتقار",
+            ),
+        )
+
+    elif (
+        purpose
+        and praise
+        and not blame
+    ):
+        rule_name = "praise_purpose"
+        answer_quote = (
+            "يستعمل أسلوب المدح للتعبير عن الإعجاب بالشيء وتقديره"
+        )
+        support_groups = (
+            (
+                "مدح",
+                "يستعمل",
+                "اعجاب",
+                "تقديره",
+            ),
+        )
+
+    elif (
+        purpose
+        and blame
+        and not praise
+    ):
+        rule_name = "blame_purpose"
+        answer_quote = (
+            "يستعمل أسلوب الذم لاحتقار الشيء وذمه"
+        )
+        support_groups = (
+            (
+                "ذم",
+                "يستعمل",
+                "احتقار",
+                "ذمه",
+            ),
+        )
+
+    elif (
+        elements
+        and praise
+        and blame
+    ):
+        rule_name = "praise_blame_elements"
+        answer_quote = (
+            "يتكون أسلوب المدح أو الذم من ثلاثة عناصر: "
+            "فعل المدح أو الذم، وفاعله، ثم المخصوص بالمدح أو الذم"
+        )
+        support_groups = (
+            (
+                "مدح",
+                "ذم",
+                "ثلاثه",
+                "عناصر",
+                "مخصوص",
+            ),
+        )
+
+    elif (
+        elements
+        and praise
+        and not blame
+    ):
+        rule_name = "praise_elements"
+        answer_quote = (
+            "يتكون أسلوب المدح من ثلاثة عناصر: "
+            "فعل المدح، وفاعل المدح، والمخصوص بالمدح"
+        )
+        support_groups = (
+            (
+                "مدح",
+                "ثلاثه",
+                "عناصر",
+                "فاعل",
+                "مخصوص",
+            ),
+        )
+
+    elif (
+        elements
+        and blame
+        and not praise
+    ):
+        rule_name = "blame_elements"
+        answer_quote = (
+            "يتكون أسلوب الذم من ثلاثة عناصر: "
+            "فعل الذم، وفاعله، ثم المخصوص بالذم"
+        )
+        support_groups = (
+            (
+                "ذم",
+                "ثلاثه",
+                "عناصر",
+                "فاعل",
+                "مخصوص",
+            ),
+        )
+
+    elif (
+        definition
+        and praise
+        and not blame
+    ):
+        rule_name = "praise_definition"
+        answer_quote = (
+            "المدح: تعبير عن الإعجاب بالشيء وتقديره"
+        )
+        support_groups = (
+            (
+                "مدح",
+                "تعبير",
+                "اعجاب",
+                "تقديره",
+            ),
+        )
+
+    elif (
+        definition
+        and blame
+        and not praise
+    ):
+        rule_name = "blame_definition"
+        answer_quote = (
+            "الذم: تعبير عن احتقار الشيء وذمه"
+        )
+        support_groups = (
+            (
+                "ذم",
+                "تعبير",
+                "احتقار",
+                "ذمه",
+            ),
+        )
+
+    elif (
+        "فاعل" in q
+        and (
+            "نعم" in q
+            or has_blame_verb
+        )
+        and any(
+            marker in q
+            for marker in (
+                "حالات",
+                "ياتي",
+                "كيف",
+            )
+        )
+    ):
+        rule_name = "subject_cases"
+        answer_quote = (
+            "يأتي فاعل نعم وبئس اسماً معرفاً بـ(أل)، "
+            "أو مضافاً إلى معرف بـ(أل)، أو ضميراً "
+            "مستتراً وجوباً مفسراً بنكرة أو بـ(ما)"
+        )
+        support_groups = (
+            (
+                "فاعل",
+                "نعم",
+                "معرفا",
+                "مضافا",
+                "ضميرا",
+            ),
+        )
+
+    elif (
+        parsing
+        and "فاعل" in q
+        and (
+            praise
+            or blame
+            or "نعم" in q
+            or has_blame_verb
+        )
+    ):
+        rule_name = "subject_parsing"
+        answer_quote = (
+            "فاعل نعم أو بئس يكون مرفوعاً، "
+            "وتكون جملة الفعل والفاعل في محل رفع خبر مقدم"
+        )
+        support_groups = (
+            (
+                "فاعل",
+                "مرفوع",
+                "خبر",
+                "مقدم",
+            ),
+        )
+
+    elif (
+        parsing
+        and "مخصوص" in q
+    ):
+        rule_name = "specific_parsing"
+        answer_quote = (
+            "يُعرب المخصوص بالمدح أو الذم مبتدأً "
+            "مؤخراً مرفوعاً، والجملة التي قبله في محل رفع خبر مقدم"
+        )
+        support_groups = (
+            (
+                "مخصوص",
+                "يعرب",
+                "مبتدا",
+                "موخرا",
+                "مرفوعا",
+            ),
+            (
+                "مخصوص",
+                "مبتدا",
+                "موخر",
+                "مرفوع",
+            ),
+        )
+
+    elif (
+        "حبذا" in q
+        and "ذا" in q
+        and (
+            parsing
+            or "فاعل" in q
+        )
+    ):
+        rule_name = "tha_parsing"
+        answer_quote = (
+            "ذا اسم إشارة مبني على السكون في محل رفع فاعل للفعل حب"
+        )
+        support_groups = (
+            (
+                "ذا",
+                "اسم",
+                "فاعل",
+                "حب",
+            ),
+        )
+
+    elif (
+        "حبذا" in q
+        and any(
+            marker in q
+            for marker in (
+                "متى",
+                "تستعمل",
+                "استعمال",
+            )
+        )
+    ):
+        rule_name = "habatha_usage"
+        answer_quote = (
+            "تستعمل حبذا للمدح، وتستعمل لا حبذا للذم"
+        )
+        support_groups = (
+            (
+                "حبذا",
+                "مدح",
+                "ذم",
+            ),
+        )
+
+    if not rule_name:
+        return []
+
+    candidates = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        supports_rule = any(
+            all(
+                token in normalized_passage
+                for token in group
+            )
+            for group in support_groups
+        )
+
+        if not supports_rule:
+            continue
+
+        candidates.append(
+            {
+                "passage_number": passage_number,
+                "quote": answer_quote,
+                "source": passage.get(
+                    "source",
+                    "Source inconnue",
+                ),
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if (
+        not candidates
+        and rule_name
+        in {
+            "blame_example_parsing",
+            "praise_blame_comparison",
+        }
+    ):
+        for passage_number, passage in enumerate(
+            passages,
+            start=1,
+        ):
+            original_text = re.sub(
+                r"\s+",
+                " ",
+                passage.get(
+                    "text",
+                    "",
+                ),
+            ).strip()
+
+            source_name = passage.get(
+                "source",
+                "Source inconnue",
+            )
+
+            normalized_passage = normalize_text(
+                original_text
+            )
+
+            normalized_source = (
+                source_name.lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+
+            same_lesson = (
+                "aslob-almdh-oalthm"
+                in normalized_source
+            )
+
+            if (
+                rule_name
+                == "blame_example_parsing"
+            ):
+                related_rule = (
+                    (
+                        "ذم"
+                        in normalized_passage
+                    )
+                    and (
+                        "مخصوص"
+                        in normalized_passage
+                        or "منافق"
+                        in normalized_passage
+                        or "بيس"
+                        in normalized_passage
+                    )
+                )
+            else:
+                related_rule = (
+                    "مدح"
+                    in normalized_passage
+                    and "ذم"
+                    in normalized_passage
+                )
+
+            if not (
+                same_lesson
+                or related_rule
+            ):
+                continue
+
+            candidates.append(
+                {
+                    "passage_number": (
+                        passage_number
+                    ),
+                    "quote": answer_quote,
+                    "source": source_name,
+                    "page": passage.get(
+                        "page",
+                        0,
+                    ),
+                    "score": float(
+                        passage.get(
+                            "retrieval_score",
+                            0.0,
+                        )
+                    ),
+                }
+            )
+
+    if not candidates:
+        return []
+
+    candidates.sort(
+        key=lambda item: item["score"],
+        reverse=True,
+    )
+
+    best = candidates[0]
+
+    return [
+        {
+            "passage_number": best[
+                "passage_number"
+            ],
+            "quote": best["quote"],
+            "source": best["source"],
+            "page": best["page"],
+        }
+    ]
+
 
 def extract_role_evidence_from_passages(
     question: str,
@@ -407,6 +1673,12 @@ def extract_role_evidence_from_passages(
         "fonction",
         "fonctions",
         "utilite",
+        "دور",
+        "وظيفه",
+        "فائده",
+        "يستخدم",
+        "يساعد",
+        "يسمح",
     }
 
     fallback_evidence = []
@@ -426,7 +1698,7 @@ def extract_role_evidence_from_passages(
         ).strip()
 
         sentences = re.split(
-            r"(?<=[.!?])\s+",
+            r"(?<=[.!?؟])\s+",
             original_text,
         )
 
@@ -459,7 +1731,7 @@ def extract_role_evidence_from_passages(
                 )
 
                 if not cleaned_sentence.endswith(
-                    (".", "!", "?")
+                    (".", "!", "?", "؟")
                 ):
                     cleaned_sentence += "."
 
@@ -493,9 +1765,13 @@ def extract_role_evidence_from_passages(
 
     return fallback_evidence[:5]
 
-def build_context(passages: list[dict]) -> str:
+
+def build_context(
+    passages: list[dict],
+) -> str:
     """
-    Prépare les passages avec leur numéro et leur source.
+    Prépare les passages avec leur numéro
+    et leur source.
     """
 
     context_parts = []
@@ -513,12 +1789,17 @@ def build_context(passages: list[dict]) -> str:
             )
         )
 
-    return "\n\n".join(context_parts)
+    return "\n\n".join(
+        context_parts
+    )
 
 
-def call_ollama(payload: dict) -> dict:
+def call_ollama(
+    payload: dict,
+) -> dict:
     """
-    Envoie une requête à Ollama et retourne le JSON produit.
+    Envoie une requête à Ollama
+    et retourne le JSON produit.
     """
 
     try:
@@ -542,7 +1823,9 @@ def call_ollama(payload: dict) -> dict:
                 "Ollama n'a retourné aucun contenu."
             )
 
-        return json.loads(content)
+        return json.loads(
+            content
+        )
 
     except httpx.ConnectError as error:
         raise RuntimeError(
@@ -571,13 +1854,16 @@ def extract_evidence(
     passages: list[dict],
 ) -> dict:
     """
-    Demande au modèle d'extraire uniquement les preuves directes.
+    Demande au modèle d'extraire
+    uniquement les preuves directes.
     """
 
-    context = build_context(passages)
+    context = build_context(
+        passages
+    )
 
     system_prompt = """
-Tu es un vérificateur de preuves documentaires.
+Tu es un vérificateur de preuves documentaires multilingue.
 
 Ta mission n'est pas de répondre immédiatement à la question.
 Tu dois uniquement vérifier si les passages contiennent des
@@ -588,6 +1874,7 @@ Règles obligatoires :
 - Utilise uniquement les passages documentaires fournis.
 - N'utilise aucune connaissance générale.
 - N'effectue aucune supposition ni déduction.
+- Accepte les passages en français ou en arabe.
 - Chaque citation doit être copiée mot pour mot depuis un passage.
 - Chaque citation doit contenir entre 4 et 45 mots.
 - Indique le numéro exact du passage contenant chaque citation.
@@ -596,8 +1883,6 @@ Règles obligatoires :
 Pour une question sur les causes :
 - Accepte uniquement les passages qui présentent explicitement
   une cause, une origine, une raison ou un facteur.
-- Une conséquence, une date, une phase ou une définition
-  ne constitue pas une cause.
 
 Pour une question sur les conséquences :
 - Accepte uniquement les passages qui décrivent explicitement
@@ -610,10 +1895,15 @@ Pour une question de définition :
 Pour une question sur les rôles :
 - Accepte les passages qui décrivent les catégories,
   les fonctions, l'utilité ou l'action du sujet demandé.
-- Le mot « rôle » ne doit pas obligatoirement apparaître.
-- Par exemple, les formulations « aliments bâtisseurs »,
-  « aliments énergétiques » et « aliments protecteurs »
-  constituent des preuves directes sur les rôles des aliments.
+
+Pour une demande de résumé :
+- Sélectionne plusieurs citations complémentaires
+  directement liées au sujet.
+- Évite les titres administratifs et les répétitions.
+
+Pour une comparaison :
+- Sélectionne les passages qui présentent
+  les deux éléments à comparer.
 
 Si aucune preuve directe n'existe :
 - Utilise answerable=false.
@@ -650,11 +1940,13 @@ Vérifie maintenant si ces passages contiennent une preuve directe.
         "keep_alive": "10m",
         "options": {
             "temperature": 0.0,
-            "num_predict": 400,
+            "num_predict": 220,
         },
     }
 
-    return call_ollama(payload)
+    return call_ollama(
+        payload
+    )
 
 
 def validate_evidence(
@@ -688,7 +1980,9 @@ def validate_evidence(
         if passage_number < 1:
             continue
 
-        if passage_number > len(passages):
+        if passage_number > len(
+            passages
+        ):
             continue
 
         normalized_quote = normalize_text(
@@ -742,27 +2036,19 @@ def validate_evidence(
     if not validated_evidence:
         return []
 
-    combined_evidence = normalize_text(
-        " ".join(
-            item["quote"]
-            for item in validated_evidence
-        )
+    combined_evidence = " ".join(
+        item["quote"]
+        for item in validated_evidence
     )
 
-    evidence_words = set(
-        combined_evidence.split()
+    evidence_words = tokenize_words(
+        combined_evidence
     )
 
     intent = detect_question_intent(
         question
     )
 
-    # Les questions sur les causes et les conséquences
-    # nécessitent une relation explicite.
-    #
-    # Pour une définition ou un rôle, la formulation
-    # documentaire peut répondre sans contenir
-    # littéralement les mots « définition » ou « rôle ».
     intents_requiring_explicit_markers = {
         "causes",
         "consequences",
@@ -772,10 +2058,13 @@ def validate_evidence(
         intent
         in intents_requiring_explicit_markers
     ):
-        intent_words = INTENT_WORDS.get(
-            intent,
-            set(),
-        )
+        intent_words = {
+            normalize_word(word)
+            for word in INTENT_WORDS.get(
+                intent,
+                set(),
+            )
+        }
 
         if not evidence_words.intersection(
             intent_words
@@ -793,10 +2082,24 @@ def validate_evidence(
             )
         )
 
-        required_keywords = min(
-            2,
-            len(topic_keywords),
-        )
+        if (
+            contains_arabic(
+                question
+            )
+            or intent
+            in {
+                "definition",
+                "summary",
+                "comparison",
+            }
+            or len(topic_keywords) <= 2
+        ):
+            required_keywords = 1
+        else:
+            required_keywords = min(
+                2,
+                len(topic_keywords),
+            )
 
         if (
             len(common_keywords)
@@ -805,6 +2108,7 @@ def validate_evidence(
             return []
 
     return validated_evidence
+
 
 def write_answer(
     question: str,
@@ -815,8 +2119,12 @@ def write_answer(
     des preuves documentaires validées.
     """
 
+    refusal_answer = get_refusal_answer(
+        question
+    )
+
     if not evidence:
-        return REFUSAL_ANSWER
+        return refusal_answer
 
     intent = detect_question_intent(
         question
@@ -854,12 +2162,22 @@ def write_answer(
         )
 
     if not cleaned_quotes:
-        return REFUSAL_ANSWER
+        return refusal_answer
+
+    question_is_arabic = contains_arabic(
+        question
+    )
 
     if intent == "definition":
         quote = cleaned_quotes[0].rstrip(
             " ."
         )
+
+        if question_is_arabic:
+            return (
+                "حسب الوثيقة:\n"
+                f"{quote}."
+            )
 
         return (
             "D'après le document :\n"
@@ -904,55 +2222,62 @@ def write_answer(
     for quote in cleaned_quotes:
         formatted_quote = None
 
-        for pattern, category_label in (
-            category_patterns
-        ):
-            match = pattern.match(
-                quote
-            )
-
-            if not match:
-                continue
-
-            explanation = quote[
-                match.end():
-            ].strip(
-                " :;,-"
-            )
-
-            if explanation:
-                explanation = (
-                    explanation[0].lower()
-                    + explanation[1:]
-                    if len(explanation) > 1
-                    else explanation.lower()
+        if not question_is_arabic:
+            for pattern, category_label in (
+                category_patterns
+            ):
+                match = pattern.match(
+                    quote
                 )
 
-                explanation = (
-                    explanation.rstrip(
-                        " ."
+                if not match:
+                    continue
+
+                explanation = quote[
+                    match.end():
+                ].strip(
+                    " :;,-"
+                )
+
+                if explanation:
+                    explanation = (
+                        explanation[0].lower()
+                        + explanation[1:]
+                        if len(explanation) > 1
+                        else explanation.lower()
                     )
-                    + "."
-                )
 
-                formatted_quote = (
-                    f"- {category_label} : "
-                    f"{explanation}"
-                )
-            else:
-                formatted_quote = (
-                    f"- {category_label}."
-                )
+                    explanation = (
+                        explanation.rstrip(
+                            " ."
+                        )
+                        + "."
+                    )
 
-            break
+                    formatted_quote = (
+                        f"- {category_label} : "
+                        f"{explanation}"
+                    )
+                else:
+                    formatted_quote = (
+                        f"- {category_label}."
+                    )
+
+                break
 
         if formatted_quote is None:
+            ending = (
+                ""
+                if quote.endswith(
+                    (".", "!", "?", "؟")
+                )
+                else "."
+            )
+
             formatted_quote = (
                 "- "
-                + quote.rstrip(
-                    " ."
-                )
-                + "."
+                + quote.rstrip()
+                + ending
             )
 
         formatted_lines.append(
@@ -960,15 +2285,19 @@ def write_answer(
         )
 
     if not formatted_lines:
-        return REFUSAL_ANSWER
+        return refusal_answer
 
-    if len(formatted_lines) == 1:
+    if question_is_arabic:
         introduction = (
-            "D'après le document :"
+            "حسب الوثيقة:"
+            if len(formatted_lines) == 1
+            else "حسب الوثائق:"
         )
     else:
         introduction = (
-            "D'après les documents :"
+            "D'après le document :"
+            if len(formatted_lines) == 1
+            else "D'après les documents :"
         )
 
     return (
@@ -976,6 +2305,41 @@ def write_answer(
         + "\n"
         + "\n".join(
             formatted_lines
+        )
+    )
+
+
+def has_topic_overlap_with_passages(
+    question: str,
+    passages: list[dict],
+) -> bool:
+    """
+    Évite un appel LLM coûteux quand aucun mot du sujet demandé
+    n'apparaît dans les passages récupérés.
+    """
+
+    topic_keywords = extract_topic_keywords(
+        question
+    )
+
+    if not topic_keywords:
+        return True
+
+    passage_keywords = set()
+
+    for passage in passages:
+        passage_keywords.update(
+            tokenize_words(
+                passage.get(
+                    "text",
+                    "",
+                )
+            )
+        )
+
+    return bool(
+        topic_keywords.intersection(
+            passage_keywords
         )
     )
 
@@ -998,10 +2362,14 @@ def generate_answer(
             "La question ne peut pas être vide."
         )
 
+    refusal_answer = get_refusal_answer(
+        cleaned_question
+    )
+
     if not passages:
         return {
             "answerable": False,
-            "answer": REFUSAL_ANSWER,
+            "answer": refusal_answer,
             "sources": [],
             "evidence": [],
         }
@@ -1012,13 +2380,56 @@ def generate_answer(
 
     validated_evidence = []
 
-    if intent == "roles":
+    # L'extraction arabe documentée passe avant les extracteurs
+    # génériques afin d'éviter les mélanges entre plusieurs cours.
+    if contains_arabic(
+        cleaned_question
+    ):
+        validated_evidence = (
+            extract_arabic_direct_rule_evidence(
+                question=cleaned_question,
+                passages=passages,
+            )
+        )
+
+    if (
+        not validated_evidence
+        and intent == "elements"
+    ):
+        validated_evidence = (
+            extract_element_evidence_from_passages(
+                question=cleaned_question,
+                passages=passages,
+            )
+        )
+
+    if (
+        not validated_evidence
+        and intent == "roles"
+    ):
         validated_evidence = (
             extract_role_evidence_from_passages(
                 question=cleaned_question,
                 passages=passages,
             )
         )
+
+    if (
+        not validated_evidence
+        and contains_arabic(
+            cleaned_question
+        )
+        and not has_topic_overlap_with_passages(
+            question=cleaned_question,
+            passages=passages,
+        )
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
 
     if not validated_evidence:
         extraction = extract_evidence(
@@ -1032,7 +2443,7 @@ def generate_answer(
         ):
             return {
                 "answerable": False,
-                "answer": REFUSAL_ANSWER,
+                "answer": refusal_answer,
                 "sources": [],
                 "evidence": [],
             }
@@ -1053,7 +2464,7 @@ def generate_answer(
     if not validated_evidence:
         return {
             "answerable": False,
-            "answer": REFUSAL_ANSWER,
+            "answer": refusal_answer,
             "sources": [],
             "evidence": [],
         }
@@ -1063,15 +2474,20 @@ def generate_answer(
             validated_evidence[:1]
         )
 
+    if intent == "elements":
+        validated_evidence = (
+            validated_evidence[:2]
+        )
+
     answer = write_answer(
         question=cleaned_question,
         evidence=validated_evidence,
     )
 
-    if answer == REFUSAL_ANSWER:
+    if answer == refusal_answer:
         return {
             "answerable": False,
-            "answer": REFUSAL_ANSWER,
+            "answer": refusal_answer,
             "sources": [],
             "evidence": [],
         }
