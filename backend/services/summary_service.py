@@ -147,6 +147,11 @@ NOISE_PREFIXES = (
     "النشاط",
     "التمرين",
     "التعليمة",
+    "ان نعرف",
+    "ان نحدد",
+    "ان نبين",
+    "تامل الجدول",
+    "الامثله",
 )
 
 SENTENCE_BOUNDARY_PATTERN = re.compile(
@@ -174,6 +179,14 @@ ARABIC_NEW_SENTENCE_PREFIXES = (
     "واما ",
     "كما ",
     "ملحوظه ",
+    "الاختصاص ",
+    "الضمير ",
+    "الفعل المحذوف ",
+    "الاسم المختص ",
+    "احوال الاسم المختص ",
+    "يكون الاسم المختص ",
+    "حكم الاسم المختص ",
+    "الشرط ",
 )
 
 PEDAGOGICAL_PREFIXES = (
@@ -269,7 +282,7 @@ def is_noise_sentence(
 
 def split_long_sentence(
     sentence: str,
-    maximum_words: int = 70,
+    maximum_words: int = 55,
 ) -> list[str]:
     """Découpe une phrase anormalement longue par groupes de mots."""
 
@@ -954,6 +967,42 @@ def clean_arabic_display_text(
         text
     )
 
+    cleaned_text = (
+        cleaned_text
+        .replace(
+            "Ƞ",
+            "",
+        )
+        .replace(
+            "ƞ",
+            "",
+        )
+        .replace(
+            "ȥ",
+            "",
+        )
+        .replace(
+            "Ȣ",
+            "",
+        )
+        .replace(
+            "ȣ",
+            "",
+        )
+        .replace(
+            "Ȧ",
+            "ا",
+        )
+        .replace(
+            "ȧ",
+            "ا",
+        )
+        .replace(
+            "ϗ",
+            "",
+        )
+    )
+
     # Artefact RTL fréquent : « أو) الذم (» devient « أو الذم ».
     cleaned_text = re.sub(
         r"\bأو\)\s*([^()]{1,30}?)\s*\(",
@@ -1202,7 +1251,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v5-arabic-general-coverage"
+    "v6-arabic-structured-summary"
 )
 
 
@@ -1277,8 +1326,12 @@ ARABIC_FOCUS_GROUPS = (
             "عناصر",
             "يتكون",
             "مكونات",
+            "ضمير",
             "فعل",
             "فاعل",
+            "محذوف",
+            "اسم",
+            "مختص",
             "مخصوص",
         ),
     },
@@ -1286,6 +1339,7 @@ ARABIC_FOCUS_GROUPS = (
         "markers": (
             "اعراب",
             "اعرب",
+            "حكم",
         ),
         "evidence": (
             "يعرب",
@@ -1297,23 +1351,55 @@ ARABIC_FOCUS_GROUPS = (
             "مجرور",
             "خبر",
             "فاعل",
+            "مفعول",
+            "محذوف",
+            "وجوبا",
             "محل",
+            "نصب",
         ),
     },
     {
         "markers": (
             "حالات",
+            "احوال",
             "انواع",
             "صور",
         ),
         "evidence": (
             "ياتي",
+            "يكون",
             "حالات",
+            "احوال",
             "انواع",
-            "معرف",
+            "مقترن",
+            "ال",
+        ),
+    },
+    {
+        "markers": (
+            "حالات",
+            "احوال",
+            "انواع",
+            "صور",
+        ),
+        "evidence": (
             "مضاف",
-            "ضمير",
-            "مستتر",
+        ),
+    },
+    {
+        "markers": (
+            "حالات",
+            "احوال",
+            "انواع",
+            "صور",
+        ),
+        "evidence": (
+            "ايها",
+            "ايتها",
+            "اي",
+            "ايه",
+            "مبني",
+            "محل نصب",
         ),
     },
     {
@@ -1385,6 +1471,12 @@ ARABIC_FOCUS_GROUPS = (
             "اهميه",
             "يساهم",
             "يساعد",
+            "يستعمل",
+            "يوتي",
+            "تقييد",
+            "تخصيص",
+            "بيان",
+            "توضيح",
         ),
     },
     {
@@ -1409,9 +1501,10 @@ ARABIC_GENERAL_COVERAGE_GROUPS = (
         "تعريف",
         "يعني",
         "هو",
+        "هي",
+        "اسلوب",
         "يستعمل",
         "يستخدم",
-        "الغرض",
     ),
     (
         "ينقسم",
@@ -1420,6 +1513,9 @@ ARABIC_GENERAL_COVERAGE_GROUPS = (
         "نوعين",
         "عناصر",
         "مكونات",
+        "ضمير",
+        "فعل",
+        "اسم",
     ),
     (
         "ادوات",
@@ -1427,17 +1523,26 @@ ARABIC_GENERAL_COVERAGE_GROUPS = (
         "حرفا",
         "اسماء",
         "حالات",
+        "احوال",
         "انواع",
-        "قواعد",
+        "مقترن",
+        "مضاف",
+        "معرف",
+        "ايها",
+        "ايتها",
     ),
     (
         "يكون الجواب",
         "يستفهم",
         "استعمال",
         "استخدام",
-        "مثال",
-        "نحو",
+        "يعرب",
         "اعراب",
+        "منصوب",
+        "مفعول",
+        "محذوف",
+        "وجوبا",
+        "محل نصب",
     ),
 )
 
@@ -1578,10 +1683,40 @@ def score_arabic_unit_for_terms(
         )
     )
 
+    word_count = len(
+        normalize_spaces(
+            unit.get(
+                "text",
+                "",
+            )
+        ).split()
+    )
+
+    length_penalty = (
+        max(
+            0,
+            word_count - 45,
+        )
+        * 0.06
+    )
+
+    pedagogical_bonus = (
+        1.0
+        if normalized_text_value.startswith(
+            PEDAGOGICAL_PREFIXES
+        )
+        else 0.0
+    )
+
     return (
-        hits * 2.0
-        + quality_score
+        min(
+            hits,
+            5,
+        ) * 1.7
+        + quality_score * 3.0
+        + pedagogical_bonus
         + retrieval_score * 0.10
+        - length_penalty
     )
 
 
@@ -1671,7 +1806,7 @@ def get_arabic_topic_keywords(
 def select_arabic_focused_units(
     question: str,
     units: list[dict],
-    maximum_units: int = 2,
+    maximum_units: int = 4,
 ) -> list[dict]:
     """Couvre chaque sous-thème demandé avec une unité distincte."""
 
@@ -1724,7 +1859,17 @@ def select_arabic_focused_units(
 
             # Une unité doit couvrir le type demandé
             # tout en restant liée au thème de la question.
-            score += topic_hits * 3.5
+            quality_score = calculate_quality_score(
+                unit.get(
+                    "text",
+                    "",
+                )
+            )
+
+            score += (
+                topic_hits * 2.0
+                + quality_score * 1.5
+            )
 
             candidates.append(
                 (
@@ -1832,7 +1977,36 @@ def select_general_arabic_coverage_units(
                 in normalized_unit_text
             )
 
-            score += topic_hits * 2.5
+            quality_score = calculate_quality_score(
+                unit.get(
+                    "text",
+                    "",
+                )
+            )
+
+            page_value = int(
+                unit.get(
+                    "page",
+                    0,
+                )
+                or 0
+            )
+
+            early_page_bonus = (
+                1.2
+                if page_value <= 1
+                else (
+                    0.5
+                    if page_value == 2
+                    else 0.0
+                )
+            )
+
+            score += (
+                topic_hits * 2.5
+                + quality_score * 1.5
+                + early_page_bonus
+            )
 
             candidates.append(
                 (
@@ -2006,7 +2180,7 @@ def generate_summary(
                 select_arabic_focused_units(
                     question=cleaned_question,
                     units=units,
-                    maximum_units=2,
+                    maximum_units=4,
                 )
             )
 

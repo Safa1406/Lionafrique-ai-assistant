@@ -1,3 +1,4 @@
+import difflib
 import json
 import re
 import unicodedata
@@ -8,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v8-general-arabic-evidence-fast"
+ARABIC_RULES_VERSION = "v9-arabic-section-aware-evidence"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -78,6 +79,20 @@ ARABIC_TRANSLATION_TABLE = str.maketrans(
         "ئ": "ي",
         "ة": "ه",
         "ـ": "",
+    }
+)
+
+
+ARABIC_OCR_TRANSLATION_TABLE = str.maketrans(
+    {
+        "Ƞ": "",
+        "ƞ": "",
+        "ȥ": "",
+        "Ȣ": "",
+        "ȣ": "",
+        "Ȧ": "ا",
+        "ȧ": "ا",
+        "ϗ": "",
     }
 )
 
@@ -271,9 +286,13 @@ def normalize_text(text: str) -> str:
     if not text:
         return ""
 
+    cleaned_input = text.translate(
+        ARABIC_OCR_TRANSLATION_TABLE
+    )
+
     normalized_text = unicodedata.normalize(
         "NFKD",
-        text.lower(),
+        cleaned_input.lower(),
     )
 
     normalized_text = "".join(
@@ -1562,6 +1581,24 @@ ARABIC_GENERIC_COMMAND_WORDS = {
     "باقي",
     "درس",
     "اسلوب",
+    "قاعده",
+    "باختصار",
+    "مختصر",
+    "بشكل",
+    "حكم",
+    "اعرابي",
+    "اعراب",
+    "اعرب",
+    "يعرب",
+    "وظيفه",
+    "دور",
+    "فائده",
+    "نوع",
+    "احوال",
+    "انواع",
+    "شرط",
+    "تقدير",
+    "غالبا",
 }
 
 
@@ -1630,6 +1667,260 @@ def get_arabic_question_terms(
     return terms
 
 
+def get_arabic_passage_vocabulary(
+    passages: list[dict],
+) -> set[str]:
+    """Construit le vocabulaire arabe réellement présent."""
+
+    vocabulary = set()
+
+    for passage in passages:
+        for word in tokenize_words(
+            passage.get(
+                "text",
+                "",
+            )
+        ):
+            if (
+                contains_arabic(
+                    word
+                )
+                and len(word) >= 3
+            ):
+                vocabulary.add(
+                    word
+                )
+
+    return vocabulary
+
+
+def align_arabic_question_terms(
+    question_terms: set[str],
+    passages: list[dict],
+) -> set[str]:
+    """Corrige prudemment les petites fautes par le vocabulaire du PDF."""
+
+    vocabulary = (
+        get_arabic_passage_vocabulary(
+            passages
+        )
+    )
+
+    if not vocabulary:
+        return question_terms
+
+    aligned_terms = set()
+
+    for term in question_terms:
+        if term in vocabulary:
+            aligned_terms.add(
+                term
+            )
+            continue
+
+        if len(term) < 4:
+            aligned_terms.add(
+                term
+            )
+            continue
+
+        candidates = [
+            word
+            for word in vocabulary
+            if abs(
+                len(word)
+                - len(term)
+            )
+            <= 2
+            and (
+                word[:1]
+                == term[:1]
+            )
+        ]
+
+        best_match = ""
+        best_ratio = 0.0
+
+        for candidate in candidates:
+            ratio = difflib.SequenceMatcher(
+                None,
+                term,
+                candidate,
+            ).ratio()
+
+            if ratio > best_ratio:
+                best_ratio = ratio
+                best_match = candidate
+
+        if best_match and best_ratio >= 0.76:
+            aligned_terms.add(
+                best_match
+            )
+        else:
+            aligned_terms.add(
+                term
+            )
+
+    return aligned_terms
+
+
+def get_arabic_dynamic_answer_markers(
+    question: str,
+) -> set[str]:
+    """Ajoute des marqueurs génériques selon la relation demandée."""
+
+    q = normalize_text(
+        question
+    )
+
+    markers = set()
+
+    if any(
+        marker in q
+        for marker in (
+            "وظيفه",
+            "دور",
+            "فائده",
+            "لماذا",
+        )
+    ):
+        markers.update(
+            {
+                "يوتي",
+                "لتقييد",
+                "تخصيص",
+                "بيان",
+                "توضيح",
+                "ازاله",
+                "غموض",
+                "يستعمل",
+                "يستخدم",
+            }
+        )
+
+    if any(
+        marker in q
+        for marker in (
+            "عناصر",
+            "عناصير",
+            "مكونات",
+            "يتكون",
+        )
+    ):
+        markers.update(
+            {
+                "عناصر",
+                "يتكون",
+                "ضمير",
+                "فعل",
+                "اسم",
+                "محذوف",
+            }
+        )
+
+    if any(
+        marker in q
+        for marker in (
+            "احوال",
+            "انواع",
+            "صور",
+        )
+    ):
+        markers.update(
+            {
+                "احوال",
+                "انواع",
+                "يكون",
+                "مقترن",
+                "مضاف",
+                "معرف",
+                "اي",
+                "ايه",
+            }
+        )
+
+    if any(
+        marker in q
+        for marker in (
+            "شرط",
+            "يشترط",
+        )
+    ):
+        markers.update(
+            {
+                "يشترط",
+                "بعده",
+                "معرف",
+                "نعت",
+            }
+        )
+
+    if any(
+        marker in q
+        for marker in (
+            "اعراب",
+            "اعرب",
+            "يعرب",
+            "تعرب",
+            "حكم",
+        )
+    ):
+        markers.update(
+            {
+                "يعرب",
+                "مفعول",
+                "منصوب",
+                "مبني",
+                "مرفوع",
+                "محل",
+                "نصب",
+                "ضمه",
+                "فتحه",
+                "فعل",
+                "محذوف",
+            }
+        )
+
+    if any(
+        marker in q
+        for marker in (
+            "تقدير",
+            "يقدر",
+            "محذوف",
+        )
+    ):
+        markers.update(
+            {
+                "اخص",
+                "اعني",
+                "اقصد",
+                "وجوبا",
+                "محذوف",
+            }
+        )
+
+    if (
+        "لا محل" in q
+        or "محل الجمله" in q
+    ):
+        markers.update(
+            {
+                "لا محل",
+                "اعتراضيه",
+            }
+        )
+
+    return {
+        normalize_word(
+            marker
+        )
+        for marker in markers
+        if normalize_word(
+            marker
+        )
+    }
+
+
 def build_arabic_coverage_groups(
     question: str,
 ) -> list[set[str]]:
@@ -1644,6 +1935,166 @@ def build_arabic_coverage_groups(
     )
 
     groups: list[set[str]] = []
+
+    if any(
+        marker in q
+        for marker in (
+            "عناصر",
+            "عناصير",
+            "مكونات",
+            "يتكون",
+        )
+    ):
+        groups.extend(
+            [
+                {
+                    "عناصر",
+                    "يتكون",
+                    "مكونات",
+                },
+                {
+                    "فعل",
+                    "اسم",
+                    "ضمير",
+                    "فاعل",
+                    "مخصوص",
+                    "مختص",
+                },
+            ]
+        )
+
+    if any(
+        marker in q
+        for marker in (
+            "وظيفه",
+            "دور",
+            "فائده",
+        )
+    ):
+        groups.extend(
+            [
+                {
+                    "يستعمل",
+                    "يستخدم",
+                    "يوتي",
+                    "وظيفه",
+                },
+                {
+                    "تقييد",
+                    "تخصيص",
+                    "بيان",
+                    "توضيح",
+                    "ازاله",
+                    "غموض",
+                },
+            ]
+        )
+
+    if any(
+        marker in q
+        for marker in (
+            "احوال",
+            "انواع",
+            "صور",
+        )
+    ):
+        groups.extend(
+            [
+                {
+                    "احوال",
+                    "انواع",
+                    "يكون",
+                },
+                {
+                    "مقترن",
+                    "مضاف",
+                    "معرف",
+                    "اي",
+                    "ايه",
+                },
+            ]
+        )
+
+    if any(
+        marker in q
+        for marker in (
+            "شرط",
+            "يشترط",
+        )
+    ):
+        groups.extend(
+            [
+                {
+                    "يشترط",
+                    "شرط",
+                },
+                {
+                    "معرف",
+                    "نعت",
+                    "بعده",
+                },
+            ]
+        )
+
+    if any(
+        marker in q
+        for marker in (
+            "اعراب",
+            "اعرب",
+            "يعرب",
+            "تعرب",
+            "حكم",
+        )
+    ):
+        groups.extend(
+            [
+                {
+                    "يعرب",
+                    "اعراب",
+                    "حكم",
+                },
+                {
+                    "مفعول",
+                    "منصوب",
+                    "مبني",
+                    "مرفوع",
+                    "محل",
+                },
+            ]
+        )
+
+    if (
+        "تقدير" in q
+        or "محذوف" in q
+    ):
+        groups.extend(
+            [
+                {
+                    "محذوف",
+                    "وجوبا",
+                },
+                {
+                    "اخص",
+                    "اعني",
+                    "اقصد",
+                },
+            ]
+        )
+
+    if (
+        "لا محل" in q
+        or "محل الجمله" in q
+    ):
+        groups.extend(
+            [
+                {
+                    "لا محل",
+                },
+                {
+                    "اعتراضيه",
+                },
+            ]
+        )
 
     if (
         "تعريف" in q
@@ -2037,6 +2488,12 @@ def get_arabic_answer_markers(
             }
         )
 
+    markers.update(
+        get_arabic_dynamic_answer_markers(
+            question
+        )
+    )
+
     return {
         normalize_word(
             marker
@@ -2048,10 +2505,121 @@ def get_arabic_answer_markers(
     }
 
 
+def make_arabic_line_windows(
+    text: str,
+    anchor_terms: set[str],
+    maximum_words: int = 105,
+) -> list[str]:
+    """Construit des extraits par lignes pour conserver une règle entière."""
+
+    raw_lines = [
+        re.sub(
+            r"\s+",
+            " ",
+            line,
+        ).strip()
+        for line in (
+            text or ""
+        ).replace(
+            "\r",
+            "\n",
+        ).split(
+            "\n"
+        )
+    ]
+
+    lines = [
+        line
+        for line in raw_lines
+        if line
+    ]
+
+    if not lines:
+        return []
+
+    normalized_lines = [
+        normalize_text(
+            line
+        )
+        for line in lines
+    ]
+
+    anchor_positions = [
+        index
+        for index, line in enumerate(
+            normalized_lines
+        )
+        if any(
+            term
+            and term in line
+            for term in anchor_terms
+        )
+    ]
+
+    windows = []
+    seen = set()
+
+    for position in anchor_positions:
+        start = position
+
+        selected_lines = []
+        word_count = 0
+
+        for line in lines[
+            start:
+        ]:
+            line_words = line.split()
+
+            if (
+                selected_lines
+                and word_count
+                + len(line_words)
+                > maximum_words
+            ):
+                break
+
+            selected_lines.append(
+                line
+            )
+            word_count += len(
+                line_words
+            )
+
+            if word_count >= 95:
+                break
+
+        quote = " ".join(
+            selected_lines
+        ).strip(
+            " ,;:-"
+        )
+
+        normalized_quote = normalize_text(
+            quote
+        )
+
+        if len(
+            normalized_quote.split()
+        ) < 4:
+            continue
+
+        if normalized_quote in seen:
+            continue
+
+        seen.add(
+            normalized_quote
+        )
+        windows.append(
+            quote
+        )
+
+    return windows
+
+
 def make_arabic_word_windows(
     text: str,
     anchor_terms: set[str],
-    window_size: int = 45,
+    window_size: int = 85,
 ) -> list[str]:
     """
     Produit de courts extraits autour des mots utiles
@@ -2093,7 +2661,7 @@ def make_arabic_word_windows(
     for position in anchor_positions:
         start = max(
             0,
-            position - 12,
+            position - 8,
         )
 
         end = min(
@@ -2165,6 +2733,13 @@ def extract_arabic_generic_evidence(
         )
     )
 
+    question_terms = (
+        align_arabic_question_terms(
+            question_terms=question_terms,
+            passages=passages,
+        )
+    )
+
     coverage_groups = (
         build_arabic_coverage_groups(
             question
@@ -2173,6 +2748,12 @@ def extract_arabic_generic_evidence(
 
     answer_markers = (
         get_arabic_answer_markers(
+            question
+        )
+    )
+
+    dynamic_answer_markers = (
+        get_arabic_dynamic_answer_markers(
             question
         )
     )
@@ -2202,10 +2783,18 @@ def extract_arabic_generic_evidence(
             "",
         )
 
-        for quote in make_arabic_word_windows(
-            text=passage_text,
-            anchor_terms=anchor_terms,
-        ):
+        candidate_quotes = (
+            make_arabic_line_windows(
+                text=passage_text,
+                anchor_terms=anchor_terms,
+            )
+            + make_arabic_word_windows(
+                text=passage_text,
+                anchor_terms=anchor_terms,
+            )
+        )
+
+        for quote in candidate_quotes:
             normalized_quote = normalize_text(
                 quote
             )
@@ -2262,13 +2851,132 @@ def extract_arabic_generic_evidence(
                 )
             )
 
+            normalized_question = normalize_text(
+                question
+            )
+
+            phrase_bonus = sum(
+                1.8
+                for phrase in (
+                    "الاسم المختص",
+                    "الفعل المحذوف",
+                    "اسلوب الاختصاص",
+                    "ايها",
+                    "ايتها",
+                    "لا محل",
+                )
+                if phrase
+                in normalized_question
+                and phrase
+                in normalized_quote
+            )
+
+            noise_penalty = 0.0
+
+            if any(
+                noise in normalized_quote
+                for noise in (
+                    "اهداف الدرس",
+                    "تامل الجدول",
+                    "الامثله الضمير نوعه",
+                )
+            ):
+                noise_penalty += 4.0
+
+            word_count = len(
+                normalized_quote.split()
+            )
+
+            length_penalty = (
+                max(
+                    0,
+                    word_count - 85,
+                )
+                * 0.03
+            )
+
+            marker_positions = [
+                index
+                for index, word in enumerate(
+                    normalize_word(
+                        raw_word
+                    )
+                    for raw_word in quote.split()
+                )
+                if word in answer_markers
+            ]
+
+            marker_position_bonus = (
+                max(
+                    0.0,
+                    5.0
+                    - min(
+                        marker_positions
+                    )
+                    * 0.10,
+                )
+                if marker_positions
+                else 0.0
+            )
+
+            dynamic_marker_positions = [
+                index
+                for index, word in enumerate(
+                    normalize_word(
+                        raw_word
+                    )
+                    for raw_word in quote.split()
+                )
+                if word
+                in dynamic_answer_markers
+            ]
+
+            dynamic_position_bonus = (
+                max(
+                    0.0,
+                    8.0
+                    - min(
+                        dynamic_marker_positions
+                    )
+                    * 0.16,
+                )
+                if dynamic_marker_positions
+                else 0.0
+            )
+
+            normalized_quote_words = [
+                normalize_word(
+                    raw_word
+                )
+                for raw_word in quote.split()
+            ]
+
+            early_topic_hits = len(
+                question_terms.intersection(
+                    set(
+                        normalized_quote_words[:12]
+                    )
+                )
+            )
+
+            early_topic_bonus = (
+                early_topic_hits
+                * 3.2
+            )
+
             score = (
-                topic_hits * 2.8
-                + marker_hits * 0.55
+                topic_hits * 3.0
+                + marker_hits * 0.75
                 + len(
                     covered_groups
-                ) * 2.2
+                ) * 2.8
+                + phrase_bonus
+                + marker_position_bonus
+                + dynamic_position_bonus
+                + early_topic_bonus
                 + retrieval_score
+                - noise_penalty
+                - length_penalty
             )
 
             candidates.append(
@@ -2333,9 +3041,32 @@ def extract_arabic_generic_evidence(
     ):
         return []
 
+    normalized_question = normalize_text(
+        question
+    )
+
+    minimum_selected = (
+        2
+        if any(
+            marker in normalized_question
+            for marker in (
+                "اعراب",
+                "اعرب",
+                "يعرب",
+                "تعرب",
+                "حكم",
+                "احوال",
+                "انواع",
+                "صور",
+            )
+        )
+        else 1
+    )
+
     selected = []
     covered = set()
     used_quotes = set()
+    used_passage_numbers = set()
 
     for candidate in candidates:
         normalized_quote = normalize_text(
@@ -2343,6 +3074,19 @@ def extract_arabic_generic_evidence(
         )
 
         if normalized_quote in used_quotes:
+            continue
+
+        if (
+            selected
+            and len(
+                selected
+            )
+            < minimum_selected
+            and candidate[
+                "passage_number"
+            ]
+            in used_passage_numbers
+        ):
             continue
 
         adds_coverage = (
@@ -2356,6 +3100,10 @@ def extract_arabic_generic_evidence(
             selected
             and coverage_groups
             and not adds_coverage
+            and len(
+                selected
+            )
+            >= minimum_selected
         ):
             continue
 
@@ -2381,6 +3129,11 @@ def extract_arabic_generic_evidence(
         used_quotes.add(
             normalized_quote
         )
+        used_passage_numbers.add(
+            candidate[
+                "passage_number"
+            ]
+        )
 
         covered.update(
             candidate[
@@ -2388,13 +3141,23 @@ def extract_arabic_generic_evidence(
             ]
         )
 
-        if (
+        coverage_is_complete = (
             not coverage_groups
             or len(
                 covered
             )
             == len(
                 coverage_groups
+            )
+        )
+
+        if (
+            (
+                coverage_is_complete
+                and len(
+                    selected
+                )
+                >= minimum_selected
             )
             or len(
                 selected
@@ -3083,13 +3846,20 @@ def write_answer(
     seen_quotes = set()
 
     for item in evidence:
-        quote = re.sub(
-            r"\s+",
-            " ",
+        quote = (
             item.get(
                 "quote",
                 "",
-            ),
+            )
+            .translate(
+                ARABIC_OCR_TRANSLATION_TABLE
+            )
+        )
+
+        quote = re.sub(
+            r"\s+",
+            " ",
+            quote,
         ).strip()
 
         if not quote:
