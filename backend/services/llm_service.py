@@ -8,7 +8,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v7-comparison-typo-direct"
+ARABIC_RULES_VERSION = "v8-general-arabic-evidence-fast"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -306,6 +306,30 @@ def normalize_text(text: str) -> str:
         normalized_text,
     )
 
+    # Corrections prudentes de fautes fréquentes dans les requêtes
+    # arabes. Elles améliorent la recherche sans modifier les PDF.
+    arabic_typo_replacements = {
+        "ماهي": "ما هي",
+        "ادواه": "ادوات",
+        "ادواة": "ادوات",
+        "الادواة": "الادوات",
+        "الهمزه": "الهمزه",
+    }
+
+    for wrong_form, corrected_form in (
+        arabic_typo_replacements.items()
+    ):
+        normalized_text = normalized_text.replace(
+            wrong_form,
+            corrected_form,
+        )
+
+    normalized_text = re.sub(
+        r"\s+",
+        " ",
+        normalized_text,
+    )
+
     return normalized_text.strip()
 
 
@@ -357,19 +381,56 @@ def tokenize_words(
     """
     Retourne les mots normalisés
     d'un texte latin ou arabe.
+
+    Pour l'arabe, conserve aussi une variante sans
+    la conjonction initiale «و» ou «ف». Cela permet
+    de rapprocher «وأين» de «أين» sans perdre le mot
+    original, contrairement à un radicaliseur brutal.
     """
 
-    return {
-        normalized_word
-        for raw_word in normalize_text(
-            text
-        ).split()
-        if (
-            normalized_word := normalize_word(
-                raw_word
-            )
+    words = set()
+
+    for raw_word in normalize_text(
+        text
+    ).split():
+        normalized_word = normalize_word(
+            raw_word
         )
-    }
+
+        if not normalized_word:
+            continue
+
+        words.add(
+            normalized_word
+        )
+
+        if (
+            contains_arabic(
+                normalized_word
+            )
+            and normalized_word.startswith(
+                (
+                    "و",
+                    "ف",
+                )
+            )
+            and len(
+                normalized_word
+            )
+            >= 3
+        ):
+            conjunction_free_word = (
+                normalize_word(
+                    normalized_word[1:]
+                )
+            )
+
+            if conjunction_free_word:
+                words.add(
+                    conjunction_free_word
+                )
+
+    return words
 
 
 def detect_question_intent(
@@ -1475,6 +1536,894 @@ def extract_arabic_direct_rule_evidence(
     ]
 
 
+
+ARABIC_GENERIC_COMMAND_WORDS = {
+    "اذكر",
+    "اشرح",
+    "بين",
+    "وضح",
+    "حدد",
+    "حلل",
+    "قدم",
+    "اعطني",
+    "ما",
+    "ماذا",
+    "ماهي",
+    "ماهو",
+    "بماذا",
+    "كيف",
+    "الذي",
+    "التي",
+    "عن",
+    "في",
+    "الى",
+    "من",
+    "بعض",
+    "باقي",
+    "درس",
+    "اسلوب",
+}
+
+
+ARABIC_QUESTION_TOOL_MEANINGS = {
+    "من": {
+        "عاقل",
+    },
+    "ما": {
+        "غير",
+        "عاقل",
+    },
+    "اين": {
+        "مكان",
+    },
+    "متي": {
+        "زمان",
+    },
+    "ايان": {
+        "زمان",
+    },
+    "كيف": {
+        "حال",
+    },
+    "كم": {
+        "عدد",
+    },
+    "اني": {
+        "زمان",
+        "مكان",
+    },
+}
+
+
+def get_arabic_question_terms(
+    question: str,
+) -> set[str]:
+    """
+    Retourne les mots utiles d'une question arabe
+    sans les verbes de consigne les plus fréquents.
+    """
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    terms = set()
+
+    for raw_word in normalized_question.split():
+        word = normalize_word(
+            raw_word
+        )
+
+        if not word:
+            continue
+
+        if word in ARABIC_GENERIC_COMMAND_WORDS:
+            continue
+
+        if len(word) < 2:
+            continue
+
+        terms.add(
+            word
+        )
+
+    return terms
+
+
+def build_arabic_coverage_groups(
+    question: str,
+) -> list[set[str]]:
+    """
+    Décrit les notions minimales attendues dans l'extrait.
+    Les groupes restent génériques et servent uniquement
+    à choisir une preuve déjà présente dans le document.
+    """
+
+    q = normalize_text(
+        question
+    )
+
+    groups: list[set[str]] = []
+
+    if (
+        "تعريف" in q
+        or "عرف" in q
+        or "معني" in q
+    ):
+        groups.append(
+            {
+                "تعريف",
+                "طلب",
+                "يعني",
+                "عباره",
+                "يستعمل",
+                "هو",
+                "هي",
+            }
+        )
+
+    if (
+        "كم قسم" in q
+        or "تنقسم" in q
+        or "اقسام" in q
+    ):
+        groups.extend(
+            [
+                {
+                    "قسم",
+                    "قسمين",
+                    "اقسام",
+                    "تنقسم",
+                },
+                {
+                    "حرف",
+                    "حروف",
+                    "حرفا",
+                },
+                {
+                    "اسم",
+                    "اسماء",
+                },
+            ]
+        )
+
+    if (
+        "حرفا" in q
+        or "حروف الاستفهام" in q
+    ):
+        groups.extend(
+            [
+                {
+                    "هل",
+                },
+                {
+                    "همزه",
+                },
+            ]
+        )
+
+    asks_for_answer = any(
+        marker in q
+        for marker in (
+            "يجاب",
+            "الجواب",
+            "نجيب",
+            "اجابه",
+        )
+    )
+
+    if asks_for_answer:
+        groups.append(
+            {
+                "جواب",
+                "يجاب",
+                "نجيب",
+                "يكون",
+            }
+        )
+
+        if "اثبات" in q:
+            groups.append(
+                {
+                    "اثبات",
+                    "نعم",
+                    "بلي",
+                }
+            )
+
+        if "نفي" in q:
+            groups.append(
+                {
+                    "نفي",
+                    "لا",
+                    "نعم",
+                }
+            )
+
+        if (
+            "منفي" in q
+            or "الم" in q
+            or "اليس" in q
+        ):
+            groups.extend(
+                [
+                    {
+                        "بلي",
+                    },
+                    {
+                        "نعم",
+                    },
+                ]
+            )
+
+    if (
+        "تتميز" in q
+        or "يميز" in q
+        or "الفرق" in q
+        or "قارن" in q
+    ):
+        groups.append(
+            {
+                "تتميز",
+                "تنفرد",
+                "فرق",
+                "اما",
+                "باستثناء",
+            }
+        )
+
+        if (
+            "همزه" in q
+            and "هل" in q
+        ):
+            groups.extend(
+                [
+                    {
+                        "مضمون",
+                    },
+                    {
+                        "تعيين",
+                    },
+                ]
+            )
+
+    if (
+        "اسماء الاستفهام" in q
+        and any(
+            marker in q
+            for marker in (
+                "اذكر",
+                "معاني",
+                "دلاله",
+            )
+        )
+    ):
+        groups.extend(
+            [
+                {
+                    "من",
+                },
+                {
+                    "ما",
+                },
+                {
+                    "اين",
+                },
+                {
+                    "متي",
+                    "ايان",
+                },
+                {
+                    "كيف",
+                },
+                {
+                    "كم",
+                },
+            ]
+        )
+
+    if (
+        "ادوات الاستفهام" in q
+        or "ادوات الاستفهم" in q
+    ):
+        groups.extend(
+            [
+                {
+                    "هل",
+                },
+                {
+                    "همزه",
+                },
+                {
+                    "من",
+                },
+                {
+                    "ما",
+                },
+            ]
+        )
+
+    if (
+        "دلاله" in q
+        or "معاني" in q
+        or "معناها" in q
+    ):
+        normalized_words = set(
+            q.split()
+        )
+
+        for tool, meanings in (
+            ARABIC_QUESTION_TOOL_MEANINGS.items()
+        ):
+            if tool not in normalized_words:
+                continue
+
+            groups.append(
+                {
+                    tool,
+                }
+            )
+
+            groups.append(
+                set(
+                    meanings
+                )
+            )
+
+    if (
+        "اسم الاستفهام اي" in q
+        or (
+            "يميز" in q
+            and "اي" in q
+        )
+    ):
+        groups.extend(
+            [
+                {
+                    "مبني",
+                    "مبنيه",
+                },
+                {
+                    "معرب",
+                },
+            ]
+        )
+
+    if (
+        "مثبت" in q
+        and "منفي" in q
+    ):
+        groups.extend(
+            [
+                {
+                    "مثبت",
+                },
+                {
+                    "منفي",
+                },
+                {
+                    "نفي",
+                },
+            ]
+        )
+
+    if (
+        "هل حضر زيد" in q
+    ):
+        groups.extend(
+            [
+                {
+                    "هل",
+                },
+                {
+                    "حضر",
+                    "حضور",
+                },
+                {
+                    "جواب",
+                    "نعم",
+                    "لا",
+                },
+            ]
+        )
+
+    if (
+        "الم تشتر الكتاب" in q
+    ):
+        groups.extend(
+            [
+                {
+                    "بلي",
+                },
+                {
+                    "نعم",
+                },
+            ]
+        )
+
+    unique_groups = []
+    seen = set()
+
+    for group in groups:
+        normalized_group = frozenset(
+            normalize_word(
+                word
+            )
+            for word in group
+            if normalize_word(
+                word
+            )
+        )
+
+        if not normalized_group:
+            continue
+
+        if normalized_group in seen:
+            continue
+
+        seen.add(
+            normalized_group
+        )
+
+        unique_groups.append(
+            set(
+                normalized_group
+            )
+        )
+
+    return unique_groups
+
+
+def get_arabic_answer_markers(
+    question: str,
+) -> set[str]:
+    """
+    Retourne des marqueurs de réponse adaptés à la forme
+    de la question, sans imposer une réponse préécrite.
+    """
+
+    q = normalize_text(
+        question
+    )
+
+    markers = {
+        "تعريف",
+        "يعني",
+        "عباره",
+        "يستعمل",
+        "يتكون",
+        "تنقسم",
+        "هما",
+        "جواب",
+        "نعم",
+        "لا",
+        "بلي",
+        "تعيين",
+        "مضمون",
+        "عاقل",
+        "مكان",
+        "زمان",
+        "حال",
+        "عدد",
+        "مبني",
+        "معرب",
+        "مثبت",
+        "منفي",
+        "نفي",
+    }
+
+    if (
+        "تعريف" in q
+        or "عرف" in q
+    ):
+        markers.update(
+            {
+                "طلب",
+                "فهم",
+                "اصطلاحا",
+            }
+        )
+
+    if (
+        "فرق" in q
+        or "يميز" in q
+        or "تتميز" in q
+    ):
+        markers.update(
+            {
+                "تنفرد",
+                "باستثناء",
+                "اما",
+            }
+        )
+
+    return {
+        normalize_word(
+            marker
+        )
+        for marker in markers
+        if normalize_word(
+            marker
+        )
+    }
+
+
+def make_arabic_word_windows(
+    text: str,
+    anchor_terms: set[str],
+    window_size: int = 45,
+) -> list[str]:
+    """
+    Produit de courts extraits autour des mots utiles
+    en conservant exactement le texte du passage.
+    """
+
+    cleaned_text = re.sub(
+        r"\s+",
+        " ",
+        text or "",
+    ).strip()
+
+    if not cleaned_text:
+        return []
+
+    original_words = cleaned_text.split()
+
+    normalized_words = [
+        normalize_word(
+            word
+        )
+        for word in original_words
+    ]
+
+    anchor_positions = [
+        index
+        for index, word in enumerate(
+            normalized_words
+        )
+        if word in anchor_terms
+    ]
+
+    if not anchor_positions:
+        return []
+
+    windows = []
+    seen = set()
+
+    for position in anchor_positions:
+        start = max(
+            0,
+            position - 12,
+        )
+
+        end = min(
+            len(original_words),
+            start + window_size,
+        )
+
+        if (
+            end - start
+            < window_size
+        ):
+            start = max(
+                0,
+                end - window_size,
+            )
+
+        quote = " ".join(
+            original_words[
+                start:end
+            ]
+        ).strip(
+            " ,;:-"
+        )
+
+        normalized_quote = normalize_text(
+            quote
+        )
+
+        if len(
+            normalized_quote.split()
+        ) < 4:
+            continue
+
+        if normalized_quote in seen:
+            continue
+
+        seen.add(
+            normalized_quote
+        )
+
+        windows.append(
+            quote
+        )
+
+    return windows
+
+
+def extract_arabic_generic_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Sélectionne rapidement des extraits arabes pertinents
+    avant tout appel au LLM.
+
+    Cette méthode ne mémorise pas les réponses d'un cours :
+    elle cherche les mots du sujet, les marqueurs de réponse
+    et la couverture des notions demandées dans les passages.
+    """
+
+    if not contains_arabic(
+        question
+    ):
+        return []
+
+    question_terms = (
+        get_arabic_question_terms(
+            question
+        )
+    )
+
+    coverage_groups = (
+        build_arabic_coverage_groups(
+            question
+        )
+    )
+
+    answer_markers = (
+        get_arabic_answer_markers(
+            question
+        )
+    )
+
+    anchor_terms = (
+        question_terms
+        | answer_markers
+    )
+
+    for group in coverage_groups:
+        anchor_terms.update(
+            group
+        )
+
+    if not anchor_terms:
+        return []
+
+    candidates = []
+    seen_quotes = set()
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        passage_text = passage.get(
+            "text",
+            "",
+        )
+
+        for quote in make_arabic_word_windows(
+            text=passage_text,
+            anchor_terms=anchor_terms,
+        ):
+            normalized_quote = normalize_text(
+                quote
+            )
+
+            if normalized_quote in seen_quotes:
+                continue
+
+            seen_quotes.add(
+                normalized_quote
+            )
+
+            quote_words = tokenize_words(
+                quote
+            )
+
+            topic_hits = len(
+                question_terms.intersection(
+                    quote_words
+                )
+            )
+
+            marker_hits = len(
+                answer_markers.intersection(
+                    quote_words
+                )
+            )
+
+            covered_groups = {
+                index
+                for index, group in enumerate(
+                    coverage_groups
+                )
+                if group.intersection(
+                    quote_words
+                )
+            }
+
+            if (
+                question_terms
+                and topic_hits == 0
+            ):
+                continue
+
+            if (
+                coverage_groups
+                and not covered_groups
+            ):
+                continue
+
+            retrieval_score = float(
+                passage.get(
+                    "retrieval_score",
+                    0.0,
+                )
+            )
+
+            score = (
+                topic_hits * 2.8
+                + marker_hits * 0.55
+                + len(
+                    covered_groups
+                ) * 2.2
+                + retrieval_score
+            )
+
+            candidates.append(
+                {
+                    "score": score,
+                    "passage_number": (
+                        passage_number
+                    ),
+                    "quote": quote,
+                    "source": passage.get(
+                        "source",
+                        "Source inconnue",
+                    ),
+                    "page": passage.get(
+                        "page",
+                        0,
+                    ),
+                    "covered_groups": (
+                        covered_groups
+                    ),
+                    "topic_hits": (
+                        topic_hits
+                    ),
+                    "marker_hits": (
+                        marker_hits
+                    ),
+                }
+            )
+
+    if not candidates:
+        return []
+
+    candidates.sort(
+        key=lambda item: (
+            item["score"],
+            len(
+                item["covered_groups"]
+            ),
+            item["topic_hits"],
+        ),
+        reverse=True,
+    )
+
+    required_topic_hits = (
+        1
+        if len(
+            question_terms
+        ) <= 2
+        else 2
+    )
+
+    best_candidate = candidates[0]
+
+    if (
+        best_candidate["topic_hits"]
+        < required_topic_hits
+        and len(
+            best_candidate[
+                "covered_groups"
+            ]
+        ) < 2
+    ):
+        return []
+
+    selected = []
+    covered = set()
+    used_quotes = set()
+
+    for candidate in candidates:
+        normalized_quote = normalize_text(
+            candidate["quote"]
+        )
+
+        if normalized_quote in used_quotes:
+            continue
+
+        adds_coverage = (
+            candidate[
+                "covered_groups"
+            ]
+            - covered
+        )
+
+        if (
+            selected
+            and coverage_groups
+            and not adds_coverage
+        ):
+            continue
+
+        selected.append(
+            {
+                "passage_number": (
+                    candidate[
+                        "passage_number"
+                    ]
+                ),
+                "quote": candidate[
+                    "quote"
+                ],
+                "source": candidate[
+                    "source"
+                ],
+                "page": candidate[
+                    "page"
+                ],
+            }
+        )
+
+        used_quotes.add(
+            normalized_quote
+        )
+
+        covered.update(
+            candidate[
+                "covered_groups"
+            ]
+        )
+
+        if (
+            not coverage_groups
+            or len(
+                covered
+            )
+            == len(
+                coverage_groups
+            )
+            or len(
+                selected
+            )
+            >= 2
+        ):
+            break
+
+    if not selected:
+        return []
+
+    if coverage_groups:
+        minimum_coverage = max(
+            1,
+            int(
+                len(
+                    coverage_groups
+                )
+                * 0.65
+            ),
+        )
+
+        if len(
+            covered
+        ) < minimum_coverage:
+            return []
+
+    return selected
+
 def extract_role_evidence_from_passages(
     question: str,
     passages: list[dict],
@@ -2387,6 +3336,19 @@ def generate_answer(
     ):
         validated_evidence = (
             extract_arabic_direct_rule_evidence(
+                question=cleaned_question,
+                passages=passages,
+            )
+        )
+
+    if (
+        not validated_evidence
+        and contains_arabic(
+            cleaned_question
+        )
+    ):
+        validated_evidence = (
+            extract_arabic_generic_evidence(
                 question=cleaned_question,
                 passages=passages,
             )

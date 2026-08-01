@@ -1202,7 +1202,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v4-arabic-topic-linked-coverage"
+    "v5-arabic-general-coverage"
 )
 
 
@@ -1401,6 +1401,44 @@ ARABIC_FOCUS_GROUPS = (
             "مقارنه",
         ),
     },
+)
+
+
+ARABIC_GENERAL_COVERAGE_GROUPS = (
+    (
+        "تعريف",
+        "يعني",
+        "هو",
+        "يستعمل",
+        "يستخدم",
+        "الغرض",
+    ),
+    (
+        "ينقسم",
+        "تنقسم",
+        "قسمين",
+        "نوعين",
+        "عناصر",
+        "مكونات",
+    ),
+    (
+        "ادوات",
+        "حروف",
+        "حرفا",
+        "اسماء",
+        "حالات",
+        "انواع",
+        "قواعد",
+    ),
+    (
+        "يكون الجواب",
+        "يستفهم",
+        "استعمال",
+        "استخدام",
+        "مثال",
+        "نحو",
+        "اعراب",
+    ),
 )
 
 
@@ -1742,6 +1780,119 @@ def select_arabic_focused_units(
     return selected_units
 
 
+def select_general_arabic_coverage_units(
+    question: str,
+    units: list[dict],
+    maximum_units: int = 4,
+) -> list[dict]:
+    """Sélectionne des idées complémentaires pour un cours entier."""
+
+    topic_keywords = get_arabic_topic_keywords(
+        question
+    )
+
+    selected_units = []
+    selected_ids = set()
+
+    for group_terms in (
+        ARABIC_GENERAL_COVERAGE_GROUPS
+    ):
+        normalized_terms = (
+            normalize_arabic_terms(
+                group_terms
+            )
+        )
+
+        candidates = []
+
+        for unit in units:
+            if unit["unit_id"] in selected_ids:
+                continue
+
+            score = score_arabic_unit_for_terms(
+                unit,
+                normalized_terms,
+            )
+
+            if score < 0:
+                continue
+
+            normalized_unit_text = normalize_text(
+                unit.get(
+                    "text",
+                    "",
+                )
+            )
+
+            topic_hits = sum(
+                1
+                for keyword in topic_keywords
+                if keyword
+                and keyword
+                in normalized_unit_text
+            )
+
+            score += topic_hits * 2.5
+
+            candidates.append(
+                (
+                    score,
+                    unit,
+                )
+            )
+
+        if not candidates:
+            continue
+
+        candidates.sort(
+            key=lambda item: item[0],
+            reverse=True,
+        )
+
+        best_unit = candidates[0][1]
+
+        selected_units.append(
+            best_unit
+        )
+        selected_ids.add(
+            best_unit["unit_id"]
+        )
+
+        if len(selected_units) >= maximum_units:
+            break
+
+    if len(selected_units) < maximum_units:
+        fallback_units = select_diverse_units(
+            question=question,
+            units=units,
+            preferred_unit_ids=[],
+            maximum_units=maximum_units * 2,
+        )
+
+        for unit in fallback_units:
+            if unit["unit_id"] in selected_ids:
+                continue
+
+            selected_units.append(
+                unit
+            )
+            selected_ids.add(
+                unit["unit_id"]
+            )
+
+            if len(selected_units) >= maximum_units:
+                break
+
+    selected_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+
+    return selected_units
+
+
 def remove_redundant_summary_units(
     units: list[dict],
 ) -> list[dict]:
@@ -1844,18 +1995,11 @@ def generate_summary(
 
         if is_general_request:
             selected_units = (
-                select_diverse_units(
+                select_general_arabic_coverage_units(
                     question=cleaned_question,
                     units=units,
-                    preferred_unit_ids=[],
-                    maximum_units=5,
+                    maximum_units=4,
                 )
-            )
-
-            selected_units = (
-                remove_redundant_summary_units(
-                    selected_units
-                )[:4]
             )
         else:
             selected_units = (

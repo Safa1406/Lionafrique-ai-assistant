@@ -1,82 +1,19 @@
 import re
-import unicodedata
 
+from services.llm_service import (
+    contains_arabic,
+    detect_question_intent,
+    extract_topic_keywords,
+    normalize_text,
+    tokenize_words,
+)
 from services.vector_store_service import (
     search_similar_chunks,
 )
 
 
-MAX_ALLOWED_DISTANCE = 0.60
-
-
-STOP_WORDS = {
-    "avec",
-    "aux",
-    "comment",
-    "dans",
-    "des",
-    "du",
-    "elle",
-    "elles",
-    "est",
-    "ils",
-    "la",
-    "le",
-    "les",
-    "pour",
-    "pourquoi",
-    "qu",
-    "que",
-    "quel",
-    "quelle",
-    "quelles",
-    "quels",
-    "qui",
-    "sont",
-    "sur",
-    "une",
-    "un",
-}
-
-
-QUESTION_INTENT_WORDS = {
-    "causes": {
-        "cause",
-        "causes",
-        "origine",
-        "origines",
-        "raison",
-        "raisons",
-        "facteur",
-        "facteurs",
-        "pourquoi",
-        "declenchement",
-    },
-    "consequences": {
-        "consequence",
-        "consequences",
-        "bilan",
-        "effet",
-        "effets",
-        "impact",
-        "impacts",
-        "resultat",
-        "resultats",
-    },
-    "definition": {
-        "definition",
-        "definir",
-        "signifie",
-        "signification",
-    },
-    "roles": {
-        "role",
-        "roles",
-        "fonction",
-        "fonctions",
-        "utilite",
-    },
-}
+DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
+RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
 
 INTENT_MARKERS = {
@@ -93,6 +30,11 @@ INTENT_MARKERS = {
         "provoque par",
         "a cause de",
         "en raison de",
+        "سبب",
+        "اسباب",
+        "بسبب",
+        "عوامل",
+        "عامل",
     },
     "consequences": {
         "consequence",
@@ -107,6 +49,13 @@ INTENT_MARKERS = {
         "provoque",
         "entraine",
         "a pour consequence",
+        "نتيجه",
+        "نتايج",
+        "اثار",
+        "اثر",
+        "عواقب",
+        "يودي",
+        "ينتج",
     },
     "definition": {
         "definition",
@@ -116,6 +65,27 @@ INTENT_MARKERS = {
         "est un",
         "est une",
         "designe",
+        "تعريف",
+        "يعني",
+        "هو",
+        "هي",
+        "يقصد",
+    },
+    "elements": {
+        "element",
+        "elements",
+        "composant",
+        "composants",
+        "compose",
+        "composition",
+        "constitue",
+        "constituent",
+        "عناصر",
+        "عنصر",
+        "مكونات",
+        "مكون",
+        "يتكون",
+        "تتكون",
     },
     "roles": {
         "role",
@@ -125,6 +95,30 @@ INTENT_MARKERS = {
         "sert a",
         "permet de",
         "a pour role",
+        "دور",
+        "وظيفه",
+        "فائده",
+        "يساعد",
+        "يسمح",
+        "يستخدم",
+    },
+    "summary": {
+        "resume",
+        "synthese",
+        "bilan",
+        "ملخص",
+        "تلخيص",
+        "خلاصه",
+    },
+    "comparison": {
+        "difference",
+        "differences",
+        "compare",
+        "comparaison",
+        "فرق",
+        "قارن",
+        "مقارنه",
+        "يختلف",
     },
 }
 
@@ -140,6 +134,10 @@ OPPOSITE_MARKERS = {
         "defaite",
         "disparition",
         "victimes",
+        "نتيجه",
+        "نتايج",
+        "اثار",
+        "عواقب",
     },
     "consequences": {
         "cause",
@@ -147,118 +145,64 @@ OPPOSITE_MARKERS = {
         "origine",
         "origines",
         "declenchement",
+        "سبب",
+        "اسباب",
+        "عوامل",
     },
 }
 
 
-def normalize_text(text: str) -> str:
-    """
-    Normalise un texte afin de faciliter
-    les comparaisons lexicales.
-    """
-
-    if not text:
-        return ""
-
-    normalized_text = unicodedata.normalize(
-        "NFKD",
-        text.lower(),
-    )
-
-    normalized_text = "".join(
-        character
-        for character in normalized_text
-        if not unicodedata.combining(
-            character
-        )
-    )
-
-    normalized_text = re.sub(
-        r"[^a-z0-9\s-]",
-        " ",
-        normalized_text,
-    )
-
-    normalized_text = re.sub(
-        r"\s+",
-        " ",
-        normalized_text,
-    )
-
-    return normalized_text.strip()
+SUMMARY_PREFIX_PATTERNS = (
+    r"^\s*(?:résume|resume|résumer|resumer)\s+",
+    r"^\s*(?:fais-moi|fais moi|donne-moi|donne moi)\s+"
+    r"(?:un|une)\s+(?:résumé|resume|synthèse|synthese)\s+",
+    r"^\s*(?:summarize|summarise)\s+",
+    r"^\s*(?:لخص|لخّص)\s+",
+    r"^\s*(?:اعطني|أعطني|قدم|قدّم)\s+"
+    r"(?:ملخصا|ملخص|تلخيصا|تلخيص)\s+",
+    r"^\s*(?:تلخيص|ملخص)\s+",
+)
 
 
-def detect_question_intent(
+def prepare_search_query(
     question: str,
-) -> str | None:
+) -> str:
     """
-    Détecte la relation principale
-    demandée dans la question.
-    """
-
-    normalized_question = normalize_text(
-        question
-    )
-
-    definition_patterns = (
-        "qu est ce que",
-        "qu est ce qu",
-        "que signifie",
-        "quelle est la definition",
-        "comment definir",
-    )
-
-    if any(
-        pattern in normalized_question
-        for pattern in definition_patterns
-    ):
-        return "definition"
-
-    question_words = set(
-        normalized_question.split()
-    )
-
-    for (
-        intent,
-        intent_words,
-    ) in QUESTION_INTENT_WORDS.items():
-        if question_words.intersection(
-            intent_words
-        ):
-            return intent
-
-    return None
-
-
-def extract_topic_keywords(
-    question: str,
-) -> set[str]:
-    """
-    Extrait les mots décrivant
-    le sujet principal de la question.
+    Supprime les mots de commande
+    qui ne décrivent pas le sujet recherché.
     """
 
-    excluded_words = set(
-        STOP_WORDS
+    cleaned_question = question.strip()
+
+    for pattern in SUMMARY_PREFIX_PATTERNS:
+        cleaned_question = re.sub(
+            pattern,
+            "",
+            cleaned_question,
+            count=1,
+            flags=re.IGNORECASE,
+        ).strip()
+
+    cleaned_question = re.sub(
+        r"^(?:le|la|les|un|une|du|de la|des)\s+",
+        "",
+        cleaned_question,
+        count=1,
+        flags=re.IGNORECASE,
+    ).strip()
+
+    cleaned_question = re.sub(
+        r"^(?:درس|موضوع)\s+",
+        "",
+        cleaned_question,
+        count=1,
+    ).strip()
+
+    return (
+        cleaned_question
+        if cleaned_question
+        else question.strip()
     )
-
-    for intent_words in (
-        QUESTION_INTENT_WORDS.values()
-    ):
-        excluded_words.update(
-            intent_words
-        )
-
-    normalized_question = normalize_text(
-        question
-    )
-
-    return {
-        word
-        for word in normalized_question.split()
-        if len(word) >= 4
-        and word not in excluded_words
-    }
 
 
 def contains_expression(
@@ -270,10 +214,38 @@ def contains_expression(
     au moins une expression donnée.
     """
 
-    return any(
-        expression in normalized_text
+    normalized_expressions = {
+        normalize_text(
+            expression
+        )
         for expression in expressions
+    }
+
+    return any(
+        expression
+        and expression in normalized_text
+        for expression in normalized_expressions
     )
+
+
+def get_max_allowed_distance(
+    question: str,
+    intent: str | None,
+) -> float:
+    """
+    Retourne un seuil adapté
+    à la langue et au type de demande.
+    """
+
+    if (
+        contains_arabic(
+            question
+        )
+        or intent == "summary"
+    ):
+        return RELAXED_MAX_ALLOWED_DISTANCE
+
+    return DEFAULT_MAX_ALLOWED_DISTANCE
 
 
 def calculate_passage_score(
@@ -296,8 +268,8 @@ def calculate_passage_score(
         passage_text
     )
 
-    passage_words = set(
-        normalized_passage.split()
+    passage_words = tokenize_words(
+        passage_text
     )
 
     topic_keywords = extract_topic_keywords(
@@ -343,7 +315,7 @@ def calculate_passage_score(
             normalized_passage,
             intent_markers,
         ):
-            intent_bonus = 0.35
+            intent_bonus = 0.30
 
         if (
             intent == "definition"
@@ -352,7 +324,16 @@ def calculate_passage_score(
         ):
             intent_bonus = max(
                 intent_bonus,
-                0.30,
+                0.28,
+            )
+
+        if (
+            intent == "summary"
+            and len(common_keywords) >= 1
+        ):
+            intent_bonus = max(
+                intent_bonus,
+                0.20,
             )
 
         opposite_markers = (
@@ -366,14 +347,33 @@ def calculate_passage_score(
             normalized_passage,
             opposite_markers,
         ):
-            opposite_penalty = 0.25
+            opposite_penalty = 0.22
 
     return (
         semantic_score
-        + lexical_score * 0.80
+        + lexical_score * 0.85
         + intent_bonus
         - opposite_penalty
     )
+
+
+def should_keep_without_lexical_overlap(
+    distance: float,
+    intent: str | None,
+    question_is_arabic: bool,
+) -> bool:
+    """
+    Autorise un résultat sémantiquement fort
+    même si les formes lexicales diffèrent.
+    """
+
+    if question_is_arabic:
+        return distance <= 0.56
+
+    if intent == "summary":
+        return distance <= 0.58
+
+    return distance <= 0.48
 
 
 def retrieve_relevant_passages(
@@ -382,6 +382,7 @@ def retrieve_relevant_passages(
     program: str | None = None,
     subject: str | None = None,
     semester: str | None = None,
+    source: str | None = None,
 ) -> list[dict]:
     """
     Recherche et reclasse les passages
@@ -400,28 +401,75 @@ def retrieve_relevant_passages(
             "Le nombre de résultats doit être supérieur à zéro."
         )
 
-    candidate_count = max(
-        12,
-        number_of_results * 4,
+    search_question = prepare_search_query(
+        cleaned_question
     )
-
-    initial_results = search_similar_chunks(
-        question=cleaned_question,
-        number_of_results=candidate_count,
-        program=program,
-        subject=subject,
-        semester=semester,
-    )
-
-    if not initial_results:
-        return []
 
     intent = detect_question_intent(
         cleaned_question
     )
 
-    topic_keywords = extract_topic_keywords(
+    question_is_arabic = contains_arabic(
         cleaned_question
+    )
+
+    if question_is_arabic:
+        # Les embeddings arabes peuvent classer le passage exact
+        # plus bas que prévu, surtout pour les courtes questions
+        # de définition ou de grammaire. On élargit donc le vivier
+        # avant le reclassement lexical et documentaire.
+        candidate_count = max(
+            60,
+            number_of_results * 12,
+        )
+    elif intent == "summary":
+        candidate_count = max(
+            30,
+            number_of_results * 8,
+        )
+    else:
+        candidate_count = max(
+            14,
+            number_of_results * 4,
+        )
+
+    initial_results = search_similar_chunks(
+        question=search_question,
+        number_of_results=candidate_count,
+        program=program,
+        subject=subject,
+        semester=semester,
+        source=source,
+    )
+
+    if not initial_results:
+        return []
+
+    if source:
+        cleaned_source = source.strip()
+
+        initial_results = [
+            passage
+            for passage in initial_results
+            if passage.get(
+                "source",
+                "",
+            )
+            == cleaned_source
+        ]
+
+        if not initial_results:
+            return []
+
+    topic_keywords = extract_topic_keywords(
+        search_question
+    )
+
+    max_allowed_distance = (
+        get_max_allowed_distance(
+            question=cleaned_question,
+            intent=intent,
+        )
     )
 
     scored_results = []
@@ -434,33 +482,51 @@ def retrieve_relevant_passages(
             )
         )
 
-        if distance > MAX_ALLOWED_DISTANCE:
-            continue
-
-        normalized_passage = normalize_text(
+        passage_words = tokenize_words(
             passage.get(
                 "text",
                 "",
             )
         )
 
-        passage_words = set(
-            normalized_passage.split()
+        common_keywords = (
+            topic_keywords.intersection(
+                passage_words
+            )
         )
 
-        if topic_keywords:
-            common_keywords = (
-                topic_keywords.intersection(
-                    passage_words
-                )
-            )
+        strong_arabic_lexical_match = (
+            question_is_arabic
+            and len(common_keywords) >= 2
+            and distance <= 0.96
+        )
 
-            if not common_keywords:
-                continue
+        # Pour l'arabe, un passage qui contient clairement plusieurs
+        # mots du sujet ne doit pas être éliminé uniquement à cause
+        # d'une distance vectorielle imparfaite. La validation des
+        # preuves effectuée ensuite empêche les réponses inventées.
+        if (
+            distance > max_allowed_distance
+            and not strong_arabic_lexical_match
+        ):
+            continue
+
+        if (
+            topic_keywords
+            and not common_keywords
+            and not should_keep_without_lexical_overlap(
+                distance=distance,
+                intent=intent,
+                question_is_arabic=(
+                    question_is_arabic
+                ),
+            )
+        ):
+            continue
 
         retrieval_score = (
             calculate_passage_score(
-                question=cleaned_question,
+                question=search_question,
                 passage=passage,
                 intent=intent,
             )
@@ -487,6 +553,7 @@ def retrieve_relevant_passages(
 
     selected_passages = []
     selected_chunk_ids = set()
+    source_page_counts = {}
 
     for passage in scored_results:
         chunk_id = passage.get(
@@ -501,10 +568,40 @@ def retrieve_relevant_passages(
         ):
             continue
 
+        source_page_key = (
+            passage.get(
+                "source",
+                "",
+            ),
+            passage.get(
+                "page",
+                0,
+            ),
+        )
+
+        source_page_count = (
+            source_page_counts.get(
+                source_page_key,
+                0,
+            )
+        )
+
+        if (
+            intent == "summary"
+            and source_page_count >= 2
+        ):
+            continue
+
         if chunk_id:
             selected_chunk_ids.add(
                 chunk_id
             )
+
+        source_page_counts[
+            source_page_key
+        ] = (
+            source_page_count + 1
+        )
 
         selected_passages.append(
             passage

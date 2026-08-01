@@ -3,9 +3,6 @@ import traceback
 import unicodedata
 from pathlib import Path
 
-import traceback
-from pathlib import Path
-
 from fastapi import (
     FastAPI,
     HTTPException,
@@ -24,6 +21,9 @@ from services.pdf_service import (
 )
 from services.retrieval_service import (
     retrieve_relevant_passages,
+)
+from services.summary_service import (
+    generate_summary,
 )
 from services.vector_store_service import (
     get_metadata_options,
@@ -57,10 +57,11 @@ app = FastAPI(
         "Assistant pédagogique LionAfrique"
     ),
     description=(
-        "API de recherche documentaire "
-        "et de génération de réponses pédagogiques."
+        "API de recherche documentaire, "
+        "de génération de réponses "
+        "et de résumés pédagogiques."
     ),
-    version="1.1.0",
+    version="1.3.0",
 )
 
 
@@ -114,6 +115,14 @@ class SearchRequest(BaseModel):
         ),
     )
 
+    source: str | None = Field(
+        default=None,
+        description=(
+            "Nom exact du document PDF "
+            "à utiliser comme source."
+        ),
+    )
+
 
 class AskRequest(BaseModel):
     question: str = Field(
@@ -154,11 +163,68 @@ class AskRequest(BaseModel):
         ),
     )
 
+    source: str | None = Field(
+        default=None,
+        description=(
+            "Nom exact du document PDF "
+            "à utiliser comme source."
+        ),
+    )
+
+
+class SummaryRequest(BaseModel):
+    question: str = Field(
+        min_length=2,
+        description=(
+            "Sujet ou question à résumer."
+        ),
+    )
+
+    number_of_results: int = Field(
+        default=5,
+        ge=1,
+        le=8,
+        description=(
+            "Nombre de passages utilisés "
+            "pour produire le résumé."
+        ),
+    )
+
+    program: str | None = Field(
+        default=None,
+        description=(
+            "Programme pédagogique sélectionné."
+        ),
+    )
+
+    subject: str | None = Field(
+        default=None,
+        description=(
+            "Matière sélectionnée."
+        ),
+    )
+
+    semester: str | None = Field(
+        default=None,
+        description=(
+            "Semestre sélectionné."
+        ),
+    )
+
+    source: str | None = Field(
+        default=None,
+        description=(
+            "Nom exact du document PDF "
+            "à utiliser comme source."
+        ),
+    )
+
 
 def build_selection(
     program: str | None,
     subject: str | None,
     semester: str | None,
+    source: str | None = None,
 ) -> dict:
     """
     Prépare les filtres pédagogiques
@@ -169,6 +235,7 @@ def build_selection(
         "program": program,
         "subject": subject,
         "semester": semester,
+        "source": source,
     }
 
 
@@ -177,8 +244,7 @@ def normalize_path_value(
 ) -> str:
     """
     Normalise un chemin pour faciliter
-    la comparaison entre les chemins stockés
-    et les chemins physiques.
+    la comparaison avec les fichiers physiques.
     """
 
     normalized_value = (
@@ -224,11 +290,8 @@ def resolve_document_path(
     relative_path: str,
 ) -> Path:
     """
-    Résout un chemin relatif vers un document PDF.
-
-    La recherche tente d'abord le chemin exact,
-    puis recherche un fichier dont le chemin physique
-    se termine par le chemin relatif stocké.
+    Résout un chemin relatif vers un document PDF
+    sans autoriser l'accès en dehors de data/raw.
     """
 
     cleaned_relative_path = (
@@ -385,7 +448,7 @@ def health_check():
 def read_metadata_options():
     """
     Retourne les programmes, matières
-    et semestres disponibles dans ChromaDB.
+    et semestres disponibles.
     """
 
     try:
@@ -575,8 +638,7 @@ def search_documents(
     request: SearchRequest,
 ):
     """
-    Recherche les segments similaires
-    avec des filtres pédagogiques facultatifs.
+    Recherche les segments similaires.
     """
 
     try:
@@ -588,6 +650,7 @@ def search_documents(
             program=request.program,
             subject=request.subject,
             semester=request.semester,
+            source=request.source,
         )
 
         return {
@@ -601,6 +664,7 @@ def search_documents(
                 program=request.program,
                 subject=request.subject,
                 semester=request.semester,
+                source=request.source,
             ),
             "number_of_results": len(
                 results
@@ -651,6 +715,7 @@ def ask_assistant(
                 program=request.program,
                 subject=request.subject,
                 semester=request.semester,
+                source=request.source,
             )
         )
 
@@ -665,6 +730,7 @@ def ask_assistant(
             program=request.program,
             subject=request.subject,
             semester=request.semester,
+            source=request.source,
         )
 
         if not generation_result[
@@ -732,5 +798,111 @@ def ask_assistant(
             detail=(
                 "Une erreur est survenue pendant "
                 "la génération de la réponse."
+            ),
+        ) from error
+
+
+@app.post("/summarize")
+def summarize_documents(
+    request: SummaryRequest,
+):
+    """
+    Recherche les passages pertinents
+    puis produit un résumé documenté.
+    """
+
+    try:
+        passages = (
+            retrieve_relevant_passages(
+                question=request.question,
+                number_of_results=(
+                    request.number_of_results
+                ),
+                program=request.program,
+                subject=request.subject,
+                semester=request.semester,
+                source=request.source,
+            )
+        )
+
+        summary_result = (
+            generate_summary(
+                question=request.question,
+                passages=passages,
+            )
+        )
+
+        selection = build_selection(
+            program=request.program,
+            subject=request.subject,
+            semester=request.semester,
+            source=request.source,
+        )
+
+        if not summary_result[
+            "answerable"
+        ]:
+            return {
+                "status": (
+                    "insufficient_context"
+                ),
+                "message": (
+                    "Le résumé n'a pas pu être produit "
+                    "avec les preuves disponibles."
+                ),
+                "question": request.question,
+                "selection": selection,
+                "summary": summary_result[
+                    "summary"
+                ],
+                "sources": [],
+                "evidence": [],
+            }
+
+        return {
+            "status": "success",
+            "message": (
+                "Le résumé a été produit "
+                "à partir de preuves validées."
+            ),
+            "question": request.question,
+            "selection": selection,
+            "summary": summary_result[
+                "summary"
+            ],
+            "sources": summary_result[
+                "sources"
+            ],
+            "evidence": summary_result[
+                "evidence"
+            ],
+        }
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+    except RuntimeError as error:
+        raise HTTPException(
+            status_code=503,
+            detail=str(error),
+        ) from error
+
+    except Exception as error:
+        print(
+            "Erreur pendant la génération "
+            "du résumé : "
+            f"{error}"
+        )
+
+        traceback.print_exc()
+
+        raise HTTPException(
+            status_code=500,
+            detail=(
+                "Une erreur est survenue pendant "
+                "la génération du résumé."
             ),
         ) from error

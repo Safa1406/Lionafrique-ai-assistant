@@ -158,6 +158,7 @@ def build_metadata_filter(
     program: str | None = None,
     subject: str | None = None,
     semester: str | None = None,
+    source: str | None = None,
 ) -> dict | None:
     """
     Construit le filtre ChromaDB
@@ -174,6 +175,10 @@ def build_metadata_filter(
 
     cleaned_semester = clean_filter_value(
         semester
+    )
+
+    cleaned_source = clean_filter_value(
+        source
     )
 
     conditions = []
@@ -205,6 +210,15 @@ def build_metadata_filter(
             }
         )
 
+    if cleaned_source:
+        conditions.append(
+            {
+                "source": {
+                    "$eq": cleaned_source
+                }
+            }
+        )
+
     if not conditions:
         return None
 
@@ -222,6 +236,7 @@ def search_similar_chunks(
     program: str | None = None,
     subject: str | None = None,
     semester: str | None = None,
+    source: str | None = None,
 ) -> list[dict]:
     """
     Recherche les segments les plus proches
@@ -254,6 +269,7 @@ def search_similar_chunks(
         program=program,
         subject=subject,
         semester=semester,
+        source=source,
     )
 
     query_arguments = {
