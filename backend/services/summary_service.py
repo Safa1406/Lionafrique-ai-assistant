@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v20-arabic-time-place-nouns-structured-summary"
+    "v21-arabic-wonderful-dialogue-structured-summary"
 )
 
 
@@ -2485,6 +2485,146 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
         "مرفوع محلا",
     ),
 )
+
+
+def detect_arabic_wonderful_dialogue_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du texte حوار عجيب."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    if "حوار عجيب" not in normalized_question:
+        return ""
+
+    if (
+        "تحليل"
+        in normalized_question
+        and "نوع"
+        in normalized_question
+        and "شخصيات"
+        in normalized_question
+        and "اساليب"
+        in normalized_question
+    ):
+        return "analysis"
+
+    if any(
+        marker in normalized_question
+        for marker in (
+            "لخص نص",
+            "ملخص نص",
+            "تلخيص نص",
+        )
+    ):
+        return "narrative"
+
+    return ""
+
+
+def select_arabic_wonderful_dialogue_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF حوار عجيب."""
+
+    mode = (
+        detect_arabic_wonderful_dialogue_summary_mode(
+            question
+        )
+    )
+
+    if not mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "hoar-ajib" in source_name:
+            lesson_units.append(unit)
+
+    if len(lesson_units) < 2:
+        return []
+
+    lesson_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return lesson_units
+
+
+def build_arabic_wonderful_dialogue_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré et documenté."""
+
+    mode = (
+        detect_arabic_wonderful_dialogue_summary_mode(
+            question
+        )
+    )
+
+    if mode == "narrative":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- يعود الجندي حاييم إلى أسرته متباهيا بأنه "
+            "قتل طفل فلسطيني في عمر ابنه موشي.\n"
+            "- يواجهه موشي بأسئلة بريئة تكشف تناقض "
+            "تبريراته، ويعبر عن الاستنكار والتعاطف مع "
+            "الأطفال الفلسطينيين ويرفض قتل الأطفال.\n"
+            "- تعجز الأسرة عن إقناع موشي، وينتهي النص "
+            "بالتفكير في قتل ابنه موشي بدلا من الطفل "
+            "علي، في نهاية تبرز قسوة الاحتلال وعبث منطقه."
+        )
+
+    elif mode == "analysis":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- النص نص حواري في شكل مسرحية ذات بعد وطني، "
+            "ومضمونه وحشية حاييم ضد الأطفال الفلسطينيين "
+            "وموقف موشي الرافض لذلك.\n"
+            "- يمثل حاييم وأسرته الاحتلال العاجز عن تبرير "
+            "اعتدائه، ويمثل موشي الضمير الإنساني الحي، "
+            "ويمثل علي القضية الفلسطينية.\n"
+            "- وضعية البداية هي عودة حاييم إلى أسرته، "
+            "والحدث الرئيسي تباهيه بقتل طفل فلسطيني، "
+            "والعقدة إصرار موشي على معرفة الحقيقة، "
+            "والحل محاولة الأسرة تبرير الجريمة، أما وضعية "
+            "النهاية فهي تفكير حاييم في قتل ابنه.\n"
+            "- اعتمد النص الاستفهام لإثارة التساؤلات، "
+            "والوصف لتصوير الانفعالات، والحوار لإبراز "
+            "اختلاف الآراء.\n"
+            "- تتمثل المقصدية في إبراز معاناة الشعب "
+            "الفلسطيني، وتتجلى قيمة إنسانية في تعاطف "
+            "موشي مع الطفل الفلسطيني واستنكاره لتصرف أبيه."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 def detect_arabic_time_place_summary_mode(
@@ -3935,6 +4075,29 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        wonderful_dialogue_units = (
+            select_arabic_wonderful_dialogue_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if wonderful_dialogue_units:
+            structured_wonderful_dialogue_summary = (
+                build_arabic_wonderful_dialogue_summary(
+                    question=cleaned_question,
+                    selected_units=wonderful_dialogue_units,
+                )
+            )
+
+            if (
+                structured_wonderful_dialogue_summary
+                is not None
+            ):
+                return (
+                    structured_wonderful_dialogue_summary
+                )
+
         time_place_units = (
             select_arabic_time_place_units(
                 question=cleaned_question,

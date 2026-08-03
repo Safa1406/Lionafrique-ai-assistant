@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v16-arabic-time-place-nouns-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v17-arabic-wonderful-dialogue-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -558,6 +558,40 @@ def retrieve_relevant_passages(
         else ""
     )
 
+    asks_wonderful_dialogue_lesson = (
+        question_is_arabic
+        and (
+            "hoar-ajib"
+            in normalized_source_name
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "حوار عجيب",
+                    "زينب حبش",
+                    "حقل الوحشيه",
+                    "حقل الاستنكار",
+                    "وضعيه البدايه",
+                    "الحدث الرييسي",
+                    "العقده",
+                    "وضعيه النهايه",
+                    "حاييم",
+                    "موشي",
+                )
+            )
+        )
+    )
+
+    # Le texte حوار عجيب comprend treize segments sur
+    # cinq pages. La biographie, les seuils de lecture,
+    # les événements, les personnages, les procédés et
+    # les valeurs sont éloignés les uns des autres.
+    if asks_wonderful_dialogue_lesson:
+        number_of_results = max(
+            number_of_results,
+            24,
+        )
+
     asks_time_place_nouns_lesson = (
         question_is_arabic
         and (
@@ -893,6 +927,7 @@ def retrieve_relevant_passages(
             and not asks_passive_participle_lesson
             and not asks_comparative_lesson
             and not asks_time_place_nouns_lesson
+            and not asks_wonderful_dialogue_lesson
         ):
             continue
 
@@ -904,6 +939,7 @@ def retrieve_relevant_passages(
             and not asks_passive_participle_lesson
             and not asks_comparative_lesson
             and not asks_time_place_nouns_lesson
+            and not asks_wonderful_dialogue_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,
@@ -983,6 +1019,7 @@ def retrieve_relevant_passages(
                 or asks_active_participle_lesson
                 or asks_passive_participle_lesson
                 or asks_comparative_lesson
+                or asks_wonderful_dialogue_lesson
             )
             else 2
         )
