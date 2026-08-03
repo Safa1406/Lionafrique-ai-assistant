@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v15-arabic-comparative-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v16-arabic-time-place-nouns-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -558,6 +558,38 @@ def retrieve_relevant_passages(
         else ""
     )
 
+    asks_time_place_nouns_lesson = (
+        question_is_arabic
+        and (
+            "asmaa-alzman-oalmkan"
+            in normalized_source_name
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "اسماء الزمان والمكان",
+                    "اسمي الزمان والمكان",
+                    "اسم الزمان والمكان",
+                    "اسم الزمان او المكان",
+                    "المصدر الميمي",
+                    "منتظر الزوار",
+                    "مسافر الوفد",
+                    "ماسده",
+                    "مقمحه",
+                )
+            )
+        )
+    )
+
+    # Le PDF أسماء الزمان والمكان ne contient que quatre
+    # segments sur deux pages. On conserve tout le petit
+    # document pour les règles réparties entre les pages.
+    if asks_time_place_nouns_lesson:
+        number_of_results = max(
+            number_of_results,
+            10,
+        )
+
     asks_comparative_lesson = (
         question_is_arabic
         and (
@@ -860,6 +892,7 @@ def retrieve_relevant_passages(
             and not asks_active_participle_lesson
             and not asks_passive_participle_lesson
             and not asks_comparative_lesson
+            and not asks_time_place_nouns_lesson
         ):
             continue
 
@@ -870,6 +903,7 @@ def retrieve_relevant_passages(
             and not asks_active_participle_lesson
             and not asks_passive_participle_lesson
             and not asks_comparative_lesson
+            and not asks_time_place_nouns_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,

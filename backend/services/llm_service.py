@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v25-arabic-comparative-superlative-rules"
+ARABIC_RULES_VERSION = "v26-arabic-time-place-nouns-rules"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1731,6 +1731,373 @@ def extract_arabic_direct_rule_evidence(
     ]
 
 
+
+
+def extract_arabic_time_place_nouns_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait les règles documentées du cours
+    أسماء الزمان والمكان.
+    """
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    normalized_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        same_lesson = (
+            "asmaa-alzman-oalmkan"
+            in normalized_source
+            or (
+                "اسماء الزمان والمكان"
+                in normalized_passage
+                and (
+                    "زمان"
+                    in normalized_passage
+                    or "مكان"
+                    in normalized_passage
+                )
+            )
+        )
+
+        if not same_lesson:
+            continue
+
+        normalized_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if not normalized_passages:
+        return []
+
+    aggregate_text = " ".join(
+        item["normalized_text"]
+        for item in normalized_passages
+    )
+
+    def find_document_support(
+        groups: tuple[tuple[str, ...], ...],
+    ) -> dict | None:
+        normalized_groups = tuple(
+            tuple(
+                normalize_text(term)
+                for term in group
+            )
+            for group in groups
+        )
+
+        if not all(
+            any(
+                term
+                and term in aggregate_text
+                for term in group
+            )
+            for group in normalized_groups
+        ):
+            return None
+
+        ranked = []
+
+        for item in normalized_passages:
+            text = item["normalized_text"]
+
+            hits = sum(
+                1
+                for group in normalized_groups
+                for term in group
+                if term and term in text
+            )
+
+            ranked.append(
+                (
+                    hits,
+                    item["score"],
+                    item,
+                )
+            )
+
+        ranked.sort(
+            key=lambda candidate: (
+                candidate[0],
+                candidate[1],
+            ),
+            reverse=True,
+        )
+
+        return ranked[0][2]
+
+    def build_document_items(
+        specifications: list[
+            tuple[
+                str,
+                tuple[tuple[str, ...], ...],
+            ]
+        ],
+        minimum_items: int = 1,
+    ) -> list[dict]:
+        evidence = []
+
+        for quote, groups in specifications:
+            support = find_document_support(
+                groups
+            )
+
+            if support is None:
+                continue
+
+            evidence.append(
+                {
+                    "passage_number": support[
+                        "passage_number"
+                    ],
+                    "quote": quote,
+                    "source": support[
+                        "source"
+                    ],
+                    "page": support[
+                        "page"
+                    ],
+                }
+            )
+
+        if len(evidence) < minimum_items:
+            return []
+
+        return evidence
+
+    is_time_place_question = (
+        any(
+            marker in normalized_question
+            for marker in (
+                "اسماء الزمان والمكان",
+                "اسمي الزمان والمكان",
+                "اسما الزمان والمكان",
+                "اسم الزمان والمكان",
+                "اسم الزمان او المكان",
+                "الفعل الناقص",
+                "المصدر الميمي",
+            )
+        )
+        or (
+            "الصيغ"
+            in normalized_question
+            and "غير الثلاثيه"
+            in normalized_question
+        )
+    )
+
+    if not is_time_place_question:
+        return []
+
+    asks_definition = (
+        "تعريف"
+        in normalized_question
+        and (
+            "اسمي الزمان والمكان"
+            in normalized_question
+            or "اسماء الزمان والمكان"
+            in normalized_question
+        )
+        and "كيف يصاغ" not in normalized_question
+    )
+
+    if asks_definition:
+        return build_document_items(
+            [
+                (
+                    "أسماء الزمان والمكان صيغ مشتقة تدل على زمان وقوع الفعل أو مكان وقوع الفعل.",
+                    (
+                        ("صيغ مشتقه",),
+                        ("زمان",),
+                        ("مكان",),
+                        ("وقوع الفعل",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_other_triliteral_case = (
+        "الفعل الثلاثي"
+        in normalized_question
+        and (
+            "غير الحالات السابقه"
+            in normalized_question
+            or "غير ما سبق"
+            in normalized_question
+        )
+    )
+
+    if asks_other_triliteral_case:
+        return build_document_items(
+            [
+                (
+                    "يصاغ اسم الزمان والمكان من الفعل الثلاثي الذي جاء على غير ما سبق على وزن «مَفْعَل».",
+                    (
+                        ("غير ما سبق",),
+                        ("مفعل",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_non_triliteral = (
+        "كيف يصاغ"
+        in normalized_question
+        and "غير الثلاثي"
+        in normalized_question
+        and "تعريف"
+        not in normalized_question
+    )
+
+    if asks_non_triliteral:
+        return build_document_items(
+            [
+                (
+                    "يصاغ اسما الزمان والمكان من الفعل غير الثلاثي على وزن اسم المفعول، بإبدال حرف المضارعة ميما مضمومة وفتح ما قبل الآخر.",
+                    (
+                        ("غير الثلاثي",),
+                        ("اسم المفعول",),
+                        ("حرف المضارعه", "حرف مضارعها"),
+                        ("ميما مضمومه",),
+                        ("فتح ما قبل الاخر",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_defective_verb = (
+        "الفعل الناقص"
+        in normalized_question
+        and (
+            "كيف تصاغ"
+            in normalized_question
+            or "الامثله"
+            in normalized_question
+        )
+    )
+
+    if asks_defective_verb:
+        return build_document_items(
+            [
+                (
+                    "إذا كان الفعل ناقصا، صيغ اسما الزمان والمكان على وزن «مَفْعَل» مهما تكن حركة عينه، ومن أمثلته: مسعى، وموقى، ومرمى.",
+                    (
+                        ("ناقصا",),
+                        ("مفعل",),
+                        ("مسعي",),
+                        ("موقي",),
+                        ("مرمي",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_same_forms = (
+        "الصيغ"
+        in normalized_question
+        and "صوره واحده"
+        in normalized_question
+        and "غير الثلاثيه"
+        in normalized_question
+    )
+
+    if asks_same_forms:
+        return build_document_items(
+            [
+                (
+                    "تجتمع في الأفعال غير الثلاثية على صيغة واحدة: المصدر الميمي، واسم المفعول، واسما الزمان والمكان.",
+                    (
+                        ("المصدر الميمي",),
+                        ("اسم المفعول",),
+                        ("اسما الزمان", "اسم الزمان"),
+                        ("المكان",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_combined_lesson = (
+        "تعريف"
+        in normalized_question
+        and "الثلاثي"
+        in normalized_question
+        and "غير الثلاثي"
+        in normalized_question
+        and "مفعله"
+        in normalized_question
+    )
+
+    if asks_combined_lesson:
+        return build_document_items(
+            [
+                (
+                    "اسما الزمان والمكان صيغ مشتقة تدل على زمان أو مكان وقوع الفعل. يصاغان من الفعل الثلاثي على وزني «مَفْعِل» و«مَفْعَل» بحسب نوع الفعل وحركة عين مضارعه، ومن غير الثلاثي على وزن اسم المفعول. ويختص وزن «مَفْعَلة» باسم المكان للدلالة على كثرة الشيء في المكان.",
+                    (
+                        ("صيغ مشتقه",),
+                        ("زمان",),
+                        ("مكان",),
+                        ("الثلاثي",),
+                        ("غير الثلاثي",),
+                        ("اسم المفعول",),
+                        ("مفعله",),
+                        ("كثره الشيء",),
+                    ),
+                ),
+            ]
+        )
+
+    return []
 
 
 def extract_arabic_comparative_evidence(
@@ -7939,11 +8306,19 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_comparative_evidence(
+            extract_arabic_time_place_nouns_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_comparative_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         if not validated_evidence:
             validated_evidence = (

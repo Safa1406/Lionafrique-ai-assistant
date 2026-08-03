@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v19-arabic-comparative-structured-summary"
+    "v20-arabic-time-place-nouns-structured-summary"
 )
 
 
@@ -2485,6 +2485,158 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
         "مرفوع محلا",
     ),
 )
+
+
+def detect_arabic_time_place_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours أسماء الزمان والمكان."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    lesson_marker_found = any(
+        marker in normalized_question
+        for marker in (
+            "اسماء زمان مكان",
+            "اسمي زمان مكان",
+        )
+    )
+
+    if not lesson_marker_found:
+        return ""
+
+    if (
+        "صياغه"
+        in normalized_question
+        and "ثلاثي"
+        in normalized_question
+        and "غير ثلاثي"
+        in normalized_question
+        and "مفعله"
+        in normalized_question
+    ):
+        return "formation"
+
+    if any(
+        marker in normalized_question
+        for marker in (
+            "لخص درس",
+            "ملخص درس",
+            "تلخيص درس",
+        )
+    ):
+        return "general"
+
+    return ""
+
+
+def select_arabic_time_place_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF concerné."""
+
+    summary_mode = (
+        detect_arabic_time_place_summary_mode(
+            question
+        )
+    )
+
+    if not summary_mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "asmaa-alzman-oalmkan" in source_name:
+            lesson_units.append(
+                unit
+            )
+
+    if len(lesson_units) < 2:
+        return []
+
+    lesson_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+
+    return lesson_units
+
+
+def build_arabic_time_place_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré du cours."""
+
+    summary_mode = (
+        detect_arabic_time_place_summary_mode(
+            question
+        )
+    )
+
+    if summary_mode == "general":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- اسم الزمان واسم المكان صيغ مشتقة تدل على "
+            "زمان وقوع الفعل أو مكان وقوعه.\n"
+            "- يصاغان من الفعل الثلاثي على وزني «مَفْعِل» "
+            "و«مَفْعَل» بحسب نوع الفعل وحركة عين مضارعه، "
+            "ومن غير الثلاثي على وزن اسم المفعول بإبدال "
+            "حرف المضارعة ميما مضمومة وفتح ما قبل الآخر.\n"
+            "- يصاغ اسم المكان على وزن «مَفْعَلة» للدلالة "
+            "على كثرة الشيء في المكان.\n"
+            "- قد تتحد صيغة المصدر الميمي واسم المفعول "
+            "واسم الزمان واسم المكان في غير الثلاثي، "
+            "ويكون التفريق بينها بالقرائن."
+        )
+
+    elif summary_mode == "formation":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- من الفعل الثلاثي مكسور العين في المضارع "
+            "صحيح الآخر، ومن مثال واوي صحيح الآخر، "
+            "يصاغان على وزن «مَفْعِل». وما جاء على غير "
+            "ذلك يصاغ على وزن «مَفْعَل».\n"
+            "- من غير الثلاثي يصاغان على وزن اسم المفعول، "
+            "بإبدال حرف المضارعة ميما مضمومة وفتح ما قبل "
+            "الآخر.\n"
+            "- وزن «مَفْعَلة» خاص باسم المكان للدلالة على "
+            "كثرة الشيء فيه.\n"
+            "- من الأسماء السماعية المكسورة على خلاف "
+            "القاعدة: المشرق، والمغرب، والمسجد، والمنبت، "
+            "والمنجر، والمظنة."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 def detect_arabic_comparative_summary_mode(
@@ -3783,6 +3935,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        time_place_units = (
+            select_arabic_time_place_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if time_place_units:
+            structured_time_place_summary = (
+                build_arabic_time_place_summary(
+                    question=cleaned_question,
+                    selected_units=time_place_units,
+                )
+            )
+
+            if structured_time_place_summary is not None:
+                return structured_time_place_summary
+
         comparative_units = (
             select_arabic_comparative_units(
                 question=cleaned_question,
