@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v10-arabic-exclamation-structured-summary"
+    "v13-arabic-warning-summary-intent-normalization"
 )
 
 
@@ -2487,6 +2487,296 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 )
 
 
+def detect_arabic_warning_enticement_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours التحذير والإغراء."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    contains_lesson = (
+        "تحذير" in normalized_question
+        and "اغراء" in normalized_question
+    )
+
+    if not contains_lesson:
+        return ""
+
+    normalized_delete_verb = (
+        normalize_arabic_match_text(
+            "حذف الفعل"
+        )
+    )
+
+    if (
+        "صور" in normalized_question
+        and normalized_delete_verb
+        in normalized_question
+    ):
+        return "forms_deletion"
+
+    if any(
+        marker in normalized_question
+        for marker in (
+            "لخص درس",
+            "ملخص درس",
+            "تلخيص درس",
+        )
+    ):
+        return "general"
+
+    return ""
+
+
+def select_arabic_warning_enticement_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """
+    Sélectionne des unités couvrant les définitions,
+    les formes et la règle de suppression du verbe.
+    """
+
+    summary_mode = (
+        detect_arabic_warning_enticement_summary_mode(
+            question
+        )
+    )
+
+    if not summary_mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        normalized_unit = normalize_arabic_match_text(
+            unit.get(
+                "text",
+                "",
+            )
+        )
+
+        same_lesson = (
+            "aslob-alththir-oalighraa"
+            in source_name
+            or "اغراء"
+            in normalized_unit
+            or "تحذير"
+            in normalized_unit
+            or "اياك"
+            in normalized_unit
+        )
+
+        if same_lesson:
+            lesson_units.append(
+                unit
+            )
+
+    if not lesson_units:
+        return []
+
+    aggregate_text = " ".join(
+        normalize_arabic_match_text(
+            unit.get(
+                "text",
+                "",
+            )
+        )
+        for unit in lesson_units
+    )
+
+    required_groups = (
+        ("اغراء",),
+        ("تحذير",),
+        ("مفرد",),
+        ("مكرر",),
+        ("معطوف",),
+        ("وجوبا",),
+        ("جوازا",),
+        ("اياك",),
+    )
+
+    for group in required_groups:
+        if not any(
+            term in aggregate_text
+            for term in group
+        ):
+            return []
+
+    coverage_groups = (
+        (
+            "اغراء",
+            "امر محمود",
+            "الزم",
+        ),
+        (
+            "تحذير",
+            "امر غير محمود",
+            "احذر",
+        ),
+        (
+            "مفرد",
+            "مكرر",
+            "معطوف",
+        ),
+        (
+            "اياك",
+            "ضمير منفصل",
+        ),
+        (
+            "وجوبا",
+            "جوازا",
+        ),
+    )
+
+    selected_units = []
+    selected_ids = set()
+
+    for markers in coverage_groups:
+        candidates = []
+
+        for unit in lesson_units:
+            if unit["unit_id"] in selected_ids:
+                continue
+
+            normalized_unit = normalize_arabic_match_text(
+                unit.get(
+                    "text",
+                    "",
+                )
+            )
+
+            hits = sum(
+                1
+                for marker in markers
+                if marker in normalized_unit
+            )
+
+            if hits == 0:
+                continue
+
+            candidates.append(
+                (
+                    hits,
+                    float(
+                        unit.get(
+                            "retrieval_score",
+                            0.0,
+                        )
+                    ),
+                    unit,
+                )
+            )
+
+        if not candidates:
+            continue
+
+        candidates.sort(
+            key=lambda item: (
+                item[0],
+                item[1],
+            ),
+            reverse=True,
+        )
+
+        best_unit = candidates[0][2]
+        selected_units.append(
+            best_unit
+        )
+        selected_ids.add(
+            best_unit["unit_id"]
+        )
+
+    minimum_units = (
+        2
+        if summary_mode == "forms_deletion"
+        else 3
+    )
+
+    if len(selected_units) < minimum_units:
+        return []
+
+    selected_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+
+    return selected_units
+
+
+def build_arabic_warning_enticement_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré et documenté."""
+
+    summary_mode = (
+        detect_arabic_warning_enticement_summary_mode(
+            question
+        )
+    )
+
+    if summary_mode == "general":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- الإغراء: تنبيه المخاطب إلى أمر محمود "
+            "ليفعله أو يلزمه، وينصب المغرى به على أنه "
+            "مفعول به لفعل محذوف تقديره «الزم» أو "
+            "«التزم».\n"
+            "- التحذير: تنبيه المخاطب إلى أمر غير محمود "
+            "ليجتنبه، وينصب المحذر منه على أنه مفعول به "
+            "لفعل محذوف تقديره «احذر» أو ما في معناه.\n"
+            "- يأتي المغرى به والمحذر منه مفردا أو مكررا "
+            "أو معطوفا، ويأتي التحذير أيضا بضمير النصب "
+            "المنفصل «إياك».\n"
+            "- يحذف الفعل وجوبا مع المكرر والمعطوف، "
+            "ويجوز حذفه إذا كان الاسم مفردا."
+        )
+
+    elif summary_mode == "forms_deletion":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- صور الإغراء: يكون المغرى به مفردا، أو "
+            "مكررا، أو معطوفا عليه.\n"
+            "- صور التحذير: يكون المحذر منه مفردا، أو "
+            "مكررا، أو معطوفا عليه، وقد يأتي بضمير النصب "
+            "المنفصل «إياك»، مثل «إياك الغش»، و«إياك "
+            "إياك الغش»، و«إياك والغش».\n"
+            "- يحذف الفعل وجوبا إذا كان المغرى به أو "
+            "المحذر منه مكررا أو معطوفا، ويجوز حذفه "
+            "إذا كان مفردا."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_arabic_exclamation_summary_mode(
     question: str,
 ) -> str:
@@ -2750,6 +3040,26 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        warning_enticement_units = (
+            select_arabic_warning_enticement_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if warning_enticement_units:
+            structured_warning_summary = (
+                build_arabic_warning_enticement_summary(
+                    question=cleaned_question,
+                    selected_units=(
+                        warning_enticement_units
+                    ),
+                )
+            )
+
+            if structured_warning_summary is not None:
+                return structured_warning_summary
+
         exclamation_units = (
             select_arabic_exclamation_units(
                 question=cleaned_question,

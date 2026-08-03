@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v14-arabic-exclamation-rules"
+ARABIC_RULES_VERSION = "v15-arabic-warning-enticement-rules"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -105,6 +105,14 @@ ARABIC_QUESTION_TYPO_REPLACEMENTS = (
     (
         r"(?<!\w)ادواه(?!\w)",
         "ادوات",
+    ),
+    (
+        r"(?<!\w)الاغرا(?!\w)",
+        "الاغراء",
+    ),
+    (
+        r"(?<!\w)اغرا(?!\w)",
+        "اغراء",
     ),
 )
 
@@ -1723,6 +1731,531 @@ def extract_arabic_direct_rule_evidence(
     ]
 
 
+
+
+def extract_arabic_warning_enticement_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait les réponses documentées du cours
+    d'أسلوب التحذير والإغراء.
+    """
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    lesson_markers = (
+        "اغراء",
+        "تحذير",
+        "اياك",
+        "الصبر",
+        "الغش",
+        "الاجتهاد",
+        "الضجيج",
+    )
+
+    if not any(
+        marker in normalized_question
+        for marker in lesson_markers
+    ):
+        return []
+
+    normalized_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        same_lesson = (
+            "aslob-alththir-oalighraa"
+            in normalized_source
+            or (
+                "تحذير"
+                in normalized_passage
+                and "اغراء"
+                in normalized_passage
+            )
+            or "اياك الكذب"
+            in normalized_passage
+        )
+
+        if not same_lesson:
+            continue
+
+        normalized_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": (
+                    normalized_passage
+                ),
+                "source": source_name,
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if not normalized_passages:
+        return []
+
+    def find_support(
+        groups: tuple[tuple[str, ...], ...],
+    ) -> dict | None:
+        normalized_groups = tuple(
+            tuple(
+                normalize_text(term)
+                for term in group
+            )
+            for group in groups
+        )
+
+        candidates = []
+
+        for item in normalized_passages:
+            passage_text = item[
+                "normalized_text"
+            ]
+
+            group_hits = [
+                any(
+                    term
+                    and term in passage_text
+                    for term in group
+                )
+                for group in normalized_groups
+            ]
+
+            if not all(group_hits):
+                continue
+
+            lexical_hits = sum(
+                1
+                for group in normalized_groups
+                for term in group
+                if term
+                and term in passage_text
+            )
+
+            candidates.append(
+                (
+                    lexical_hits,
+                    item["score"],
+                    item,
+                )
+            )
+
+        if not candidates:
+            return None
+
+        candidates.sort(
+            key=lambda candidate: (
+                candidate[0],
+                candidate[1],
+            ),
+            reverse=True,
+        )
+
+        return candidates[0][2]
+
+    def build_items(
+        specifications: list[
+            tuple[
+                str,
+                tuple[tuple[str, ...], ...],
+            ]
+        ],
+        minimum_items: int = 1,
+    ) -> list[dict]:
+        evidence = []
+        used_pairs = set()
+
+        for quote, groups in specifications:
+            support = find_support(
+                groups
+            )
+
+            if support is None:
+                continue
+
+            pair = (
+                support["passage_number"],
+                normalize_text(quote),
+            )
+
+            if pair in used_pairs:
+                continue
+
+            used_pairs.add(
+                pair
+            )
+
+            evidence.append(
+                {
+                    "passage_number": support[
+                        "passage_number"
+                    ],
+                    "quote": quote,
+                    "source": support[
+                        "source"
+                    ],
+                    "page": support[
+                        "page"
+                    ],
+                }
+            )
+
+        if len(evidence) < minimum_items:
+            return []
+
+        return evidence
+
+    asks_enticement_repeated_example = (
+        "اغراء" in normalized_question
+        and "مثال" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "تكرار",
+                "مكرر",
+            )
+        )
+    )
+
+    asks_enticement_conjoined_example = (
+        "اغراء" in normalized_question
+        and "مثال" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "عطف",
+                "معطوف",
+            )
+        )
+    )
+
+    asks_warning_singular_example = (
+        "تحذير" in normalized_question
+        and "مثال" in normalized_question
+        and "مفرد" in normalized_question
+    )
+
+    asks_warning_repeated_example = (
+        "تحذير" in normalized_question
+        and "مثال" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "تكرار",
+                "مكرر",
+            )
+        )
+    )
+
+    asks_warning_conjoined_example = (
+        "تحذير" in normalized_question
+        and "مثال" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "عطف",
+                "معطوف",
+            )
+        )
+    )
+
+    asks_obligatory_deletion = (
+        "حذف" in normalized_question
+        and "فعل" in normalized_question
+        and "وجوبا" in normalized_question
+    )
+
+    asks_optional_deletion = (
+        "حذف" in normalized_question
+        and "فعل" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "يجوز",
+                "جوازا",
+            )
+        )
+    )
+
+    asks_difference = (
+        "فرق" in normalized_question
+        and "اغراء" in normalized_question
+        and "تحذير" in normalized_question
+    )
+
+    asks_iyaaka_waw_parsing = (
+        any(
+            marker in normalized_question
+            for marker in (
+                "اعرب",
+                "اعراب",
+            )
+        )
+        and "اياك" in normalized_question
+        and "الكذب" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "الواو",
+                "واو",
+            )
+        )
+    )
+
+    asks_brief_rule = (
+        "اشرح" in normalized_question
+        and "قاعده" in normalized_question
+        and "اغراء" in normalized_question
+        and "تحذير" in normalized_question
+    )
+
+    if asks_enticement_repeated_example:
+        return build_items(
+            [
+                (
+                    "من أمثلة الإغراء بالتكرار: «الاجتهاد، الاجتهاد يا جماعة»، وفيه جاء المغرى به مكررا.",
+                    (
+                        ("الاجتهاد",),
+                        ("مكررا",),
+                        ("جماعه",),
+                    ),
+                ),
+            ]
+        )
+
+    if asks_enticement_conjoined_example:
+        return build_items(
+            [
+                (
+                    "من أمثلة الإغراء بالعطف: «الاجتهاد والانضباط يا تلاميذ»، فالانضباط معطوف على الاجتهاد.",
+                    (
+                        ("الاجتهاد",),
+                        ("الانضباط",),
+                        (
+                            "معطوفا",
+                            "عطف",
+                        ),
+                    ),
+                ),
+            ]
+        )
+
+    if asks_warning_singular_example:
+        return build_items(
+            [
+                (
+                    "من أمثلة التحذير بالمفرد: «الضجيج يا أطفال».",
+                    (
+                        ("الضجيج",),
+                        ("اطفال",),
+                        ("مفردا",),
+                    ),
+                ),
+            ]
+        )
+
+    if asks_warning_repeated_example:
+        return build_items(
+            [
+                (
+                    "من أمثلة التحذير بالتكرار: «الضجيج، الضجيج يا أطفال»، وفيه جاء المحذر منه مكررا.",
+                    (
+                        ("الضجيج",),
+                        ("اطفال",),
+                        ("مكررا",),
+                    ),
+                ),
+            ]
+        )
+
+    if asks_warning_conjoined_example:
+        return build_items(
+            [
+                (
+                    "من أمثلة التحذير بالعطف: «الكذب والخيانة فهما من علامات النفاق»، فالخيانة معطوفة على الكذب.",
+                    (
+                        ("الكذب",),
+                        ("الخيانه",),
+                        (
+                            "معطوفا",
+                            "عطف",
+                        ),
+                    ),
+                ),
+            ]
+        )
+
+    if asks_obligatory_deletion:
+        return build_items(
+            [
+                (
+                    "يحذف الفعل وجوبا إذا كان المغرى به أو المحذر منه مكررا أو معطوفا.",
+                    (
+                        ("وجوبا",),
+                        ("مكررا",),
+                        ("معطوفا",),
+                    ),
+                ),
+            ]
+        )
+
+    if asks_optional_deletion:
+        return build_items(
+            [
+                (
+                    "يجوز حذف الفعل إذا كان المغرى به أو المحذر منه مفردا.",
+                    (
+                        ("جوازا",),
+                        ("مفردين", "مفردا"),
+                    ),
+                ),
+            ]
+        )
+
+    if asks_difference:
+        return build_items(
+            [
+                (
+                    "الإغراء تنبيه المخاطب إلى أمر محمود ليفعله أو يلزمه، ويقدر فعله المحذوف بـ«الزم» أو «التزم».",
+                    (
+                        ("الاغراء",),
+                        ("امر محمود",),
+                        (
+                            "الزم",
+                            "التزم",
+                        ),
+                    ),
+                ),
+                (
+                    "أما التحذير فهو تنبيه المخاطب إلى أمر غير محمود ليجتنبه، ويقدر فعله المحذوف بـ«احذر».",
+                    (
+                        ("التحذير",),
+                        ("امر غير محمود",),
+                        ("احذر",),
+                    ),
+                ),
+            ],
+            minimum_items=2,
+        )
+
+    if asks_iyaaka_waw_parsing:
+        return build_items(
+            [
+                (
+                    "الواو في «إياك والكذب» زائدة لا محل لها من الإعراب.",
+                    (
+                        (
+                            "و زائده",
+                            "الواو زائده",
+                        ),
+                        ("لا محل",),
+                    ),
+                ),
+                (
+                    "الكذب مفعول به منصوب لفعل محذوف تقديره «احذر» أو «اجتنب»، وعلامة نصبه الفتحة.",
+                    (
+                        ("الكذب",),
+                        ("مفعول به",),
+                        (
+                            "احذر",
+                            "اجتنب",
+                        ),
+                        ("منصوب",),
+                    ),
+                ),
+            ],
+            minimum_items=2,
+        )
+
+    if asks_brief_rule:
+        return build_items(
+            [
+                (
+                    "الإغراء تنبيه المخاطب إلى أمر محمود ليفعله أو يلزمه، وفعله المحذوف يقدر بـ«الزم» أو «التزم».",
+                    (
+                        ("الاغراء",),
+                        ("امر محمود",),
+                        (
+                            "الزم",
+                            "التزم",
+                        ),
+                    ),
+                ),
+                (
+                    "التحذير تنبيه المخاطب إلى أمر غير محمود ليجتنبه، وفعله المحذوف يقدر بـ«احذر».",
+                    (
+                        ("التحذير",),
+                        ("امر غير محمود",),
+                        ("احذر",),
+                    ),
+                ),
+                (
+                    "يأتي المغرى به والمحذر منه مفردا أو مكررا أو معطوفا، ويستعمل في التحذير أيضا ضمير النصب المنفصل «إياك».",
+                    (
+                        ("مفردا",),
+                        ("مكررا",),
+                        ("معطوفا",),
+                        ("اياك",),
+                    ),
+                ),
+                (
+                    "يحذف الفعل وجوبا مع المكرر والمعطوف، ويجوز حذفه مع المفرد.",
+                    (
+                        ("وجوبا",),
+                        ("جوازا",),
+                        ("مكررا",),
+                        ("معطوفا",),
+                        ("مفردين",),
+                    ),
+                ),
+            ],
+            minimum_items=4,
+        )
+
+    return []
 
 
 def extract_arabic_exclamation_evidence(
@@ -5321,11 +5854,19 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_exclamation_evidence(
+            extract_arabic_warning_enticement_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_exclamation_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
     if (
         not validated_evidence

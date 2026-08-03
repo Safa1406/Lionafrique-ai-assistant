@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v9-arabic-summary-intent-coverage"
+RETRIEVAL_SERVICE_VERSION = "v11-arabic-warning-summary-full-page-coverage"
 
 
 INTENT_MARKERS = {
@@ -207,6 +207,14 @@ ARABIC_QUERY_TYPO_REPLACEMENTS = (
     (
         r"(?<!\w)ادواه(?!\w)",
         "ادوات",
+    ),
+    (
+        r"(?<!\w)الاغرا(?!\w)",
+        "الاغراء",
+    ),
+    (
+        r"(?<!\w)اغرا(?!\w)",
+        "اغراء",
     ),
 )
 
@@ -541,6 +549,49 @@ def retrieve_relevant_passages(
             10,
         )
 
+    normalized_source_name = (
+        source.strip()
+        .lower()
+        .replace("_", "-")
+        .replace(" ", "-")
+        if source
+        else ""
+    )
+
+    asks_warning_enticement_lesson = (
+        question_is_arabic
+        and (
+            "aslob-alththir-oalighraa"
+            in normalized_source_name
+            or (
+                "تحذير"
+                in normalized_search_question
+                and "اغراء"
+                in normalized_search_question
+            )
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "اياك",
+                    "المغرى به",
+                    "المحذر منه",
+                )
+            )
+        )
+    )
+
+    # Le cours de التحذير والإغراء ne contient que six
+    # segments, mais ses règles et exemples sont répartis
+    # sur trois pages. On récupère donc tous les segments
+    # afin que la validation documentaire ne perde ni les
+    # exemples de la page 1 ni l'analyse de إياك page 3.
+    if asks_warning_enticement_lesson:
+        number_of_results = max(
+            number_of_results,
+            10,
+        )
+
     asks_arabic_multirule_explanation = (
         question_is_arabic
         and "تعجب"
@@ -754,9 +805,16 @@ def retrieve_relevant_passages(
             )
         )
 
+        summary_page_limit = (
+            3
+            if asks_warning_enticement_lesson
+            else 2
+        )
+
         if (
             intent == "summary"
-            and source_page_count >= 2
+            and source_page_count
+            >= summary_page_limit
         ):
             continue
 
