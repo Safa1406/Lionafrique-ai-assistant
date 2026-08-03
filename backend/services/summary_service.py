@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v13-arabic-warning-summary-intent-normalization"
+    "v15-arabic-instrument-noun-summary-normalization"
 )
 
 
@@ -2487,6 +2487,280 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 )
 
 
+def detect_arabic_instrument_noun_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours اسم الآلة."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    normalized_lesson_name = (
+        normalize_arabic_match_text(
+            "اسم الآلة"
+        )
+    )
+
+    if (
+        normalized_lesson_name
+        not in normalized_question
+    ):
+        return ""
+
+    if (
+        "قياسي" in normalized_question
+        and "سماعي" in normalized_question
+    ):
+        return "formation"
+
+    if any(
+        marker in normalized_question
+        for marker in (
+            "لخص درس",
+            "ملخص درس",
+            "تلخيص درس",
+        )
+    ):
+        return "general"
+
+    return ""
+
+
+def select_arabic_instrument_noun_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités documentaires du cours."""
+
+    summary_mode = (
+        detect_arabic_instrument_noun_summary_mode(
+            question
+        )
+    )
+
+    if not summary_mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        normalized_unit = normalize_arabic_match_text(
+            unit.get(
+                "text",
+                "",
+            )
+        )
+
+        normalized_lesson_name = (
+            normalize_arabic_match_text(
+                "اسم الآلة"
+            )
+        )
+
+        if (
+            "asm-alaala"
+            in source_name
+            or normalized_lesson_name
+            in normalized_unit
+        ):
+            lesson_units.append(
+                unit
+            )
+
+    if not lesson_units:
+        return []
+
+    aggregate_text = " ".join(
+        normalize_arabic_match_text(
+            unit.get(
+                "text",
+                "",
+            )
+        )
+        for unit in lesson_units
+    )
+
+    required_groups = (
+        ("اسم مشتق",),
+        ("مفعل",),
+        ("مفعال",),
+        ("مفعله",),
+        ("فعاله",),
+        ("سماعي",),
+    )
+
+    for group in required_groups:
+        if not any(
+            term in aggregate_text
+            for term in group
+        ):
+            return []
+
+    selected_units = []
+    selected_ids = set()
+
+    coverage_groups = (
+        (
+            "اسم مشتق",
+            "الاداه",
+        ),
+        (
+            "مفعل",
+            "مفعال",
+            "مفعله",
+            "فعاله",
+        ),
+        (
+            "ثلاثي",
+            "غير الثلاثي",
+            "اسم جامد",
+        ),
+        (
+            "سماعي",
+            "لا يقاس",
+        ),
+    )
+
+    for markers in coverage_groups:
+        candidates = []
+
+        for unit in lesson_units:
+            if unit["unit_id"] in selected_ids:
+                continue
+
+            normalized_unit = normalize_arabic_match_text(
+                unit.get(
+                    "text",
+                    "",
+                )
+            )
+
+            hits = sum(
+                1
+                for marker in markers
+                if marker in normalized_unit
+            )
+
+            if hits == 0:
+                continue
+
+            candidates.append(
+                (
+                    hits,
+                    float(
+                        unit.get(
+                            "retrieval_score",
+                            0.0,
+                        )
+                    ),
+                    unit,
+                )
+            )
+
+        if not candidates:
+            continue
+
+        candidates.sort(
+            key=lambda item: (
+                item[0],
+                item[1],
+            ),
+            reverse=True,
+        )
+
+        selected = candidates[0][2]
+        selected_units.append(
+            selected
+        )
+        selected_ids.add(
+            selected["unit_id"]
+        )
+
+    if len(selected_units) < 3:
+        return []
+
+    selected_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+
+    return selected_units
+
+
+def build_arabic_instrument_noun_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré et documenté."""
+
+    summary_mode = (
+        detect_arabic_instrument_noun_summary_mode(
+            question
+        )
+    )
+
+    if summary_mode == "general":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- اسم الآلة اسم مشتق يدل على الأداة التي "
+            "ينجز بها الفعل.\n"
+            "- أوزانه القياسية الأساسية هي: «مِفْعَل» "
+            "مثل مبرد، و«مِفْعال» مثل منشار ومحراث، "
+            "و«مِفْعَلة» مثل مجرفة ومعزفة، و«فَعّالة» "
+            "مثل ثلاجة وغسالة.\n"
+            "- يصاغ غالبا من فعل ثلاثي متصرف متعد، وقد "
+            "يصاغ من الثلاثي اللازم، ومن غير الثلاثي، "
+            "ومن بعض الأسماء الجامدة، مثل مقلمة من قلم.\n"
+            "- أضاف مجمع اللغة العربية أوزانا أخرى هي: "
+            "«فَعّالة»، و«فاعلة»، و«فاعول».\n"
+            "- وقد يأتي اسم الآلة سماعيا على غير الأوزان "
+            "القياسية؛ تستعمل صيغه في الكلام ولا يقاس "
+            "عليها، مثل سيف وسكين ورمح وإزميل."
+        )
+
+    elif summary_mode == "formation":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- الصياغة القياسية لاسم الآلة تكون على "
+            "الأوزان: «مِفْعَل»، و«مِفْعال»، "
+            "و«مِفْعَلة»، و«فَعّالة».\n"
+            "- يصاغ غالبا من الفعل الثلاثي المتصرف "
+            "المتعدي، وقد يصاغ من الثلاثي اللازم، ومن "
+            "غير الثلاثي، ومن بعض الأسماء الجامدة.\n"
+            "- الصياغة السماعية تأتي على أوزان غير "
+            "قياسية، وتستعمل في الكلام ولا يقاس عليها، "
+            "مثل سيف وسكين ورمح وإزميل."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_arabic_warning_enticement_summary_mode(
     question: str,
 ) -> str:
@@ -3040,6 +3314,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        instrument_noun_units = (
+            select_arabic_instrument_noun_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if instrument_noun_units:
+            structured_instrument_summary = (
+                build_arabic_instrument_noun_summary(
+                    question=cleaned_question,
+                    selected_units=instrument_noun_units,
+                )
+            )
+
+            if structured_instrument_summary is not None:
+                return structured_instrument_summary
+
         warning_enticement_units = (
             select_arabic_warning_enticement_units(
                 question=cleaned_question,

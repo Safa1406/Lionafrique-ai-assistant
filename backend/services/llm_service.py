@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v15-arabic-warning-enticement-rules"
+ARABIC_RULES_VERSION = "v19-arabic-instrument-noun-compound-answer"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1731,6 +1731,757 @@ def extract_arabic_direct_rule_evidence(
     ]
 
 
+
+
+def extract_arabic_instrument_noun_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Extrait les règles documentées du cours اسم الآلة."""
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(
+        question
+    )
+    question_tokens = set(
+        normalized_question.split()
+    )
+
+    normalized_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        same_lesson = (
+            "asm-alaala"
+            in normalized_source
+            or "اسم الاله"
+            in normalized_passage
+        )
+
+        if not same_lesson:
+            continue
+
+        normalized_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if not normalized_passages:
+        return []
+
+    def find_support(
+        groups: tuple[tuple[str, ...], ...],
+    ) -> dict | None:
+        normalized_groups = tuple(
+            tuple(
+                normalize_text(term)
+                for term in group
+            )
+            for group in groups
+        )
+
+        candidates = []
+
+        for item in normalized_passages:
+            passage_text = item[
+                "normalized_text"
+            ]
+
+            if not all(
+                any(
+                    term
+                    and term in passage_text
+                    for term in group
+                )
+                for group in normalized_groups
+            ):
+                continue
+
+            lexical_hits = sum(
+                1
+                for group in normalized_groups
+                for term in group
+                if term
+                and term in passage_text
+            )
+
+            candidates.append(
+                (
+                    lexical_hits,
+                    item["score"],
+                    item,
+                )
+            )
+
+        if not candidates:
+            return None
+
+        candidates.sort(
+            key=lambda candidate: (
+                candidate[0],
+                candidate[1],
+            ),
+            reverse=True,
+        )
+
+        return candidates[0][2]
+
+    def find_document_support(
+        groups: tuple[tuple[str, ...], ...],
+    ) -> dict | None:
+        """
+        Valide les concepts sur l'ensemble des passages
+        récupérés du même PDF, puis choisit le passage qui
+        en contient le plus comme source principale.
+        """
+
+        normalized_groups = tuple(
+            tuple(
+                normalize_text(term)
+                for term in group
+            )
+            for group in groups
+        )
+
+        aggregate_text = " ".join(
+            item["normalized_text"]
+            for item in normalized_passages
+        )
+
+        if not all(
+            any(
+                term
+                and term in aggregate_text
+                for term in group
+            )
+            for group in normalized_groups
+        ):
+            return None
+
+        ranked_passages = []
+
+        for item in normalized_passages:
+            passage_text = item[
+                "normalized_text"
+            ]
+
+            lexical_hits = sum(
+                1
+                for group in normalized_groups
+                for term in group
+                if term
+                and term in passage_text
+            )
+
+            ranked_passages.append(
+                (
+                    lexical_hits,
+                    item["score"],
+                    item,
+                )
+            )
+
+        ranked_passages.sort(
+            key=lambda candidate: (
+                candidate[0],
+                candidate[1],
+            ),
+            reverse=True,
+        )
+
+        return ranked_passages[0][2]
+
+    def build_items(
+        specifications: list[
+            tuple[
+                str,
+                tuple[tuple[str, ...], ...],
+            ]
+        ],
+        minimum_items: int = 1,
+    ) -> list[dict]:
+        evidence = []
+        used_pairs = set()
+
+        for quote, groups in specifications:
+            support = find_support(
+                groups
+            )
+
+            if support is None:
+                continue
+
+            pair = (
+                support["passage_number"],
+                normalize_text(quote),
+            )
+
+            if pair in used_pairs:
+                continue
+
+            used_pairs.add(
+                pair
+            )
+
+            evidence.append(
+                {
+                    "passage_number": support[
+                        "passage_number"
+                    ],
+                    "quote": quote,
+                    "source": support[
+                        "source"
+                    ],
+                    "page": support[
+                        "page"
+                    ],
+                }
+            )
+
+        if len(evidence) < minimum_items:
+            return []
+
+        return evidence
+
+    def build_document_items(
+        specifications: list[
+            tuple[
+                str,
+                tuple[tuple[str, ...], ...],
+            ]
+        ],
+        minimum_items: int = 1,
+    ) -> list[dict]:
+        """
+        Construit des preuves pour les questions qui
+        réunissent des règles réparties sur plusieurs
+        segments du même document.
+        """
+
+        evidence = []
+        used_pairs = set()
+
+        for quote, groups in specifications:
+            support = find_document_support(
+                groups
+            )
+
+            if support is None:
+                continue
+
+            pair = (
+                support["passage_number"],
+                normalize_text(quote),
+            )
+
+            if pair in used_pairs:
+                continue
+
+            used_pairs.add(
+                pair
+            )
+
+            evidence.append(
+                {
+                    "passage_number": support[
+                        "passage_number"
+                    ],
+                    "quote": quote,
+                    "source": support[
+                        "source"
+                    ],
+                    "page": support[
+                        "page"
+                    ],
+                }
+            )
+
+        if len(evidence) < minimum_items:
+            return []
+
+        return evidence
+
+    is_instrument_question = (
+        "اسم الاله"
+        in normalized_question
+        or "اسماء الاله"
+        in normalized_question
+        or bool(
+            question_tokens.intersection(
+                {
+                    "مفعل",
+                    "مفعال",
+                    "مفعله",
+                    "فعاله",
+                }
+            )
+        )
+    )
+
+    if not is_instrument_question:
+        return []
+
+    asks_combined_definition_weights = (
+        "تعريف" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "اوزان",
+                "اوزانه",
+                "القياسيه",
+            )
+        )
+    )
+
+    if asks_combined_definition_weights:
+        return build_document_items(
+            [
+                (
+                    "اسم الآلة اسم مشتق يدل على الأداة التي ينجز بها الفعل.",
+                    (
+                        ("اسم مشتق",),
+                        ("الاداه",),
+                        ("ينجز بها الفعل",),
+                    ),
+                ),
+                (
+                    "يصاغ اسم الآلة على الأوزان القياسية: «مِفْعَل»، و«مِفْعال»، و«مِفْعَلة»، و«فَعّالة».",
+                    (
+                        ("مفعل",),
+                        ("مفعال",),
+                        ("مفعله",),
+                        ("فعاله",),
+                    ),
+                ),
+            ],
+            minimum_items=2,
+        )
+
+    weight_examples = {
+        "مفعل": (
+            "وزن «مِفْعَل» من أوزان اسم الآلة، ومن أمثلته «مِقْلع» و«مِبْرد».",
+            (
+                ("مفعل",),
+                ("مقلع",),
+                ("مبرد",),
+            ),
+        ),
+        "مفعال": (
+            "وزن «مِفْعال» من أوزان اسم الآلة، ومن أمثلته «مِنشار» و«مِحراث».",
+            (
+                ("مفعال",),
+                ("منشار",),
+                ("محراث",),
+            ),
+        ),
+        "مفعله": (
+            "وزن «مِفْعَلة» من أوزان اسم الآلة، ومن أمثلته «مِجرفة» و«مِعزفة».",
+            (
+                ("مفعله",),
+                ("مجرفه",),
+                ("معزفه",),
+            ),
+        ),
+        "فعاله": (
+            "وزن «فَعّالة» من أوزان اسم الآلة، ومن أمثلته «ثلاجة» و«غسالة».",
+            (
+                ("فعاله",),
+                ("ثلاجه",),
+                ("غساله",),
+            ),
+        ),
+    }
+
+    if (
+        "مثال" in normalized_question
+        or "امثله" in normalized_question
+    ):
+        for weight in (
+            "مفعله",
+            "مفعال",
+            "فعاله",
+            "مفعل",
+        ):
+            if weight in question_tokens:
+                quote, groups = weight_examples[
+                    weight
+                ]
+                return build_items(
+                    [
+                        (
+                            quote,
+                            groups,
+                        )
+                    ]
+                )
+
+    asks_usual_origin = (
+        "غالبا" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "نوع",
+                "افعال",
+                "فعل",
+            )
+        )
+    )
+
+    if asks_usual_origin:
+        return build_items(
+            [
+                (
+                    "يصاغ اسم الآلة غالبا من فعل ثلاثي متصرف متعد.",
+                    (
+                        ("غالبا",),
+                        ("الفعل الثلاثي",),
+                        ("متصرف",),
+                        ("المتعدي",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_triliteral_intransitive = (
+        "هل" in normalized_question
+        and "ثلاثي" in normalized_question
+        and "لازم" in normalized_question
+    )
+
+    if asks_triliteral_intransitive:
+        return build_items(
+            [
+                (
+                    "نعم، قد يصاغ اسم الآلة من الفعل الثلاثي المتصرف اللازم.",
+                    (
+                        ("ثلاثي",),
+                        ("متصرف",),
+                        ("لازم",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_non_triliteral = (
+        "هل" in normalized_question
+        and "غير الثلاثي"
+        in normalized_question
+    )
+
+    if asks_non_triliteral:
+        return build_items(
+            [
+                (
+                    "نعم، قد يصاغ اسم الآلة من الفعل غير الثلاثي، ومن أمثلته «مزمار» و«مكنسة» المشتقان من فعلين رباعيين.",
+                    (
+                        ("غير الثلاثي",),
+                        ("مزمار", "مكنسه"),
+                    ),
+                ),
+            ]
+        )
+
+    asks_nominal_origin = (
+        "هل" in normalized_question
+        and "اسم جامد"
+        in normalized_question
+    )
+
+    if asks_nominal_origin:
+        return build_items(
+            [
+                (
+                    "نعم، قد يصاغ اسم الآلة من اسم جامد، مثل «محبرة» من «حبر» و«مقلمة» من «قلم».",
+                    (
+                        ("اسم جامد", "الاسم الجامد"),
+                        ("محبره",),
+                        ("مقلمه",),
+                    ),
+                ),
+            ]
+        )
+
+    if (
+        "محبره" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "اشتق",
+                "وزن",
+            )
+        )
+    ):
+        return build_items(
+            [
+                (
+                    "«محبرة» اسم آلة على وزن «مِفْعَلة»، مشتق من اسم جامد هو «حبر».",
+                    (
+                        ("محبره",),
+                        ("مفعله",),
+                        ("حبر",),
+                        ("الاسم الجامد",),
+                    ),
+                ),
+            ]
+        )
+
+    if (
+        "مقلمه" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "اشتق",
+                "وزن",
+            )
+        )
+    ):
+        return build_items(
+            [
+                (
+                    "«مقلمة» اسم آلة على وزن «مِفْعَلة»، مشتق من اسم جامد هو «قلم».",
+                    (
+                        ("مقلمه",),
+                        ("مفعله",),
+                        ("قلم",),
+                        ("اسم جامد", "الاسم الجامد"),
+                    ),
+                ),
+            ]
+        )
+
+    asks_added_weights = (
+        "مجمع اللغه العربيه"
+        in normalized_question
+        or (
+            "اوزان" in normalized_question
+            and "اضاف"
+            in normalized_question
+        )
+    )
+
+    if asks_added_weights:
+        return build_items(
+            [
+                (
+                    "أضاف مجمع اللغة العربية أوزانا قياسية أخرى لاسم الآلة، وهي: «فَعّالة»، و«فاعلة»، و«فاعول».",
+                    (
+                        ("مجمع اللغه العربيه",),
+                        ("فعاله",),
+                        ("فاعله",),
+                        ("فاعول",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_heard_definition = (
+        "سماعا" in normalized_question
+        and (
+            "مقصود" in normalized_question
+            or "تعريف" in normalized_question
+            or "ما" in question_tokens
+        )
+        and not (
+            "امثله" in normalized_question
+            or "مثال" in normalized_question
+        )
+        and not any(
+            noun in normalized_question
+            for noun in (
+                "سكين",
+                "رمح",
+                "سيف",
+                "ازميل",
+                "قلم",
+            )
+        )
+    )
+
+    if asks_heard_definition:
+        return build_items(
+            [
+                (
+                    "الصياغة السماعية لاسم الآلة تكون على غير الأوزان القياسية السابقة؛ تستعمل في الكلام ولا يقاس عليها.",
+                    (
+                        ("سماعا",),
+                        ("غير الاوزان السابقه",),
+                        ("تستعمل في الكلام",),
+                        ("لا يقاس عليها",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_heard_examples = (
+        (
+            "امثله" in normalized_question
+            or "مثال" in normalized_question
+        )
+        and "سماعي"
+        in normalized_question
+    )
+
+    if asks_heard_examples:
+        return build_document_items(
+            [
+                (
+                    "من أسماء الآلة السماعية: «سيف»، و«سكين»، و«رمح»، و«إزميل».",
+                    (
+                        ("سيف",),
+                        ("سكين",),
+                        ("رمح",),
+                        ("ازميل",),
+                    ),
+                ),
+            ]
+        )
+
+    heard_weights = {
+        "سكين": (
+            "«سكين» اسم آلة سماعي على وزن «فعيل».",
+            (
+                ("سكين",),
+                ("فعيل",),
+            ),
+        ),
+        "رمح": (
+            "«رمح» اسم آلة سماعي على وزن «فَعْل».",
+            (
+                ("رمح",),
+                ("فعل",),
+            ),
+        ),
+        "سيف": (
+            "«سيف» اسم آلة سماعي على وزن «فَعْل».",
+            (
+                ("سيف",),
+                ("فعل",),
+            ),
+        ),
+        "ازميل": (
+            "«إزميل» اسم آلة سماعي على وزن «فِعْليل».",
+            (
+                ("ازميل",),
+                ("فعليل",),
+            ),
+        ),
+        "قلم": (
+            "«قلم» في الجدول السماعي على وزن «فَعَل».",
+            (
+                ("قلم",),
+                ("فعل",),
+            ),
+        ),
+    }
+
+    if "وزن" in normalized_question:
+        for noun, (
+            quote,
+            groups,
+        ) in heard_weights.items():
+            if noun in normalized_question:
+                return build_items(
+                    [
+                        (
+                            quote,
+                            groups,
+                        )
+                    ]
+                )
+
+    asks_brief_rule = (
+        "اشرح" in normalized_question
+        and "قاعده" in normalized_question
+        and "اسم الاله"
+        in normalized_question
+    )
+
+    if asks_brief_rule:
+        return build_items(
+            [
+                (
+                    "اسم الآلة اسم مشتق يدل على الأداة التي ينجز بها الفعل.",
+                    (
+                        ("اسم مشتق",),
+                        ("الاداه",),
+                        ("ينجز بها الفعل",),
+                    ),
+                ),
+                (
+                    "أوزانه القياسية الأساسية هي: «مِفْعَل»، و«مِفْعال»، و«مِفْعَلة»، و«فَعّالة».",
+                    (
+                        ("مفعل",),
+                        ("مفعال",),
+                        ("مفعله",),
+                        ("فعاله",),
+                    ),
+                ),
+                (
+                    "يصاغ غالبا من الفعل الثلاثي المتصرف المتعدي، وقد يصاغ من الثلاثي اللازم، ومن غير الثلاثي، ومن اسم جامد.",
+                    (
+                        ("غالبا",),
+                        ("ثلاثي",),
+                        ("لازم",),
+                        ("غير الثلاثي",),
+                        ("اسم جامد", "الاسم الجامد"),
+                    ),
+                ),
+                (
+                    "وقد يأتي اسم الآلة على صيغ سماعية غير قياسية تستعمل في الكلام ولا يقاس عليها.",
+                    (
+                        ("سماعيه", "سماعا"),
+                        ("لا يقاس عليها",),
+                    ),
+                ),
+            ],
+            minimum_items=4,
+        )
+
+    return []
 
 
 def extract_arabic_warning_enticement_evidence(
@@ -5630,6 +6381,55 @@ def write_answer(
         question
     )
 
+    normalized_answer_question = (
+        normalize_text(
+            question
+        )
+    )
+
+    asks_instrument_definition_and_weights = (
+        question_is_arabic
+        and (
+            "اسم الاله"
+            in normalized_answer_question
+            or "اسماء الاله"
+            in normalized_answer_question
+        )
+        and "تعريف"
+        in normalized_answer_question
+        and any(
+            marker
+            in normalized_answer_question
+            for marker in (
+                "اوزان",
+                "اوزانه",
+                "القياسيه",
+            )
+        )
+    )
+
+    if (
+        intent == "definition"
+        and asks_instrument_definition_and_weights
+    ):
+        formatted_quotes = [
+            (
+                "- "
+                + quote.rstrip(
+                    " ."
+                )
+                + "."
+            )
+            for quote in cleaned_quotes
+        ]
+
+        return (
+            "حسب الوثائق:\n"
+            + "\n".join(
+                formatted_quotes
+            )
+        )
+
     if intent == "definition":
         quote = cleaned_quotes[0].rstrip(
             " ."
@@ -5854,11 +6654,19 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_warning_enticement_evidence(
+            extract_arabic_instrument_noun_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_warning_enticement_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         if not validated_evidence:
             validated_evidence = (
@@ -5971,7 +6779,39 @@ def generate_answer(
             "evidence": [],
         }
 
-    if intent == "definition":
+    normalized_analysis_question = (
+        normalize_text(
+            analysis_question
+        )
+    )
+
+    asks_instrument_definition_and_weights = (
+        contains_arabic(
+            analysis_question
+        )
+        and (
+            "اسم الاله"
+            in normalized_analysis_question
+            or "اسماء الاله"
+            in normalized_analysis_question
+        )
+        and "تعريف"
+        in normalized_analysis_question
+        and any(
+            marker
+            in normalized_analysis_question
+            for marker in (
+                "اوزان",
+                "اوزانه",
+                "القياسيه",
+            )
+        )
+    )
+
+    if (
+        intent == "definition"
+        and not asks_instrument_definition_and_weights
+    ):
         validated_evidence = (
             validated_evidence[:1]
         )

@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v11-arabic-warning-summary-full-page-coverage"
+RETRIEVAL_SERVICE_VERSION = "v12-arabic-instrument-noun-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -558,6 +558,36 @@ def retrieve_relevant_passages(
         else ""
     )
 
+    asks_instrument_noun_lesson = (
+        question_is_arabic
+        and (
+            "asm-alaala"
+            in normalized_source_name
+            or "اسم الاله"
+            in normalized_search_question
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "مفعال",
+                    "مفعله",
+                    "اسم الاله سماعا",
+                    "اسماء الاله السماعيه",
+                )
+            )
+        )
+    )
+
+    # Le PDF اسم الآلة ne contient que quatre segments.
+    # Lorsqu'un filtre de source exact est actif, on conserve
+    # l'ensemble du petit document afin de couvrir à la fois
+    # les tableaux, les règles de dérivation et le سماعي.
+    if asks_instrument_noun_lesson:
+        number_of_results = max(
+            number_of_results,
+            10,
+        )
+
     asks_warning_enticement_lesson = (
         question_is_arabic
         and (
@@ -727,12 +757,14 @@ def retrieve_relevant_passages(
         if (
             distance > max_allowed_distance
             and not strong_arabic_lexical_match
+            and not asks_instrument_noun_lesson
         ):
             continue
 
         if (
             topic_keywords
             and not common_keywords
+            and not asks_instrument_noun_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,
