@@ -15,6 +15,8 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
+RETRIEVAL_SERVICE_VERSION = "v7-arabic-inventory-coverage"
+
 
 INTENT_MARKERS = {
     "causes": {
@@ -162,6 +164,83 @@ SUMMARY_PREFIX_PATTERNS = (
     r"(?:ملخصا|ملخص|تلخيصا|تلخيص)\s+",
     r"^\s*(?:تلخيص|ملخص)\s+",
 )
+
+
+
+ARABIC_QUERY_TYPO_REPLACEMENTS = (
+    (
+        r"(?<!\w)الانواء(?!\w)",
+        "الانواع",
+    ),
+    (
+        r"(?<!\w)انواء(?!\w)",
+        "انواع",
+    ),
+    (
+        r"(?<!\w)المنادا(?!\w)",
+        "المنادى",
+    ),
+    (
+        r"(?<!\w)منادا(?!\w)",
+        "منادى",
+    ),
+    (
+        r"(?<!\w)الاختصاس(?!\w)",
+        "الاختصاص",
+    ),
+    (
+        r"(?<!\w)اختصاس(?!\w)",
+        "اختصاص",
+    ),
+    (
+        r"(?<!\w)عناصير(?!\w)",
+        "عناصر",
+    ),
+    (
+        r"(?<!\w)الادواة(?!\w)",
+        "الادوات",
+    ),
+    (
+        r"(?<!\w)ادواة(?!\w)",
+        "ادوات",
+    ),
+    (
+        r"(?<!\w)ادواه(?!\w)",
+        "ادوات",
+    ),
+)
+
+
+def repair_common_arabic_query_typos(
+    question: str,
+) -> str:
+    """
+    Corrige un ensemble limité de fautes arabes
+    fréquentes avant la recherche vectorielle.
+
+    La question originale et le contenu PDF
+    ne sont pas modifiés.
+    """
+
+    repaired_question = question
+
+    for pattern, replacement in (
+        ARABIC_QUERY_TYPO_REPLACEMENTS
+    ):
+        repaired_question = re.sub(
+            pattern,
+            replacement,
+            repaired_question,
+            flags=re.UNICODE,
+        )
+
+    repaired_question = re.sub(
+        r"\s+",
+        " ",
+        repaired_question,
+    )
+
+    return repaired_question.strip()
 
 
 def prepare_search_query(
@@ -401,17 +480,56 @@ def retrieve_relevant_passages(
             "Le nombre de résultats doit être supérieur à zéro."
         )
 
-    search_question = prepare_search_query(
-        cleaned_question
+    search_question = (
+        repair_common_arabic_query_typos(
+            prepare_search_query(
+                cleaned_question
+            )
+        )
     )
 
     intent = detect_question_intent(
-        cleaned_question
+        search_question
     )
 
     question_is_arabic = contains_arabic(
-        cleaned_question
+        search_question
     )
+
+    normalized_search_question = normalize_text(
+        search_question
+    )
+
+    asks_munada_inventory = (
+        question_is_arabic
+        and any(
+            marker
+            in normalized_search_question
+            for marker in (
+                "انواع",
+                "احكام",
+            )
+        )
+        and any(
+            marker
+            in normalized_search_question
+            for marker in (
+                "منادي",
+                "منادى",
+            )
+        )
+    )
+
+    # Une question d'inventaire demande plusieurs sous-types
+    # répartis sur différents segments du PDF. Cinq passages
+    # peuvent contenir le titre sans contenir toutes les règles.
+    # On élargit uniquement ce cas afin de préserver la validation
+    # documentaire complète dans llm_service.
+    if asks_munada_inventory:
+        number_of_results = max(
+            number_of_results,
+            10,
+        )
 
     if question_is_arabic:
         # Les embeddings arabes peuvent classer le passage exact
@@ -467,7 +585,7 @@ def retrieve_relevant_passages(
 
     max_allowed_distance = (
         get_max_allowed_distance(
-            question=cleaned_question,
+            question=search_question,
             intent=intent,
         )
     )

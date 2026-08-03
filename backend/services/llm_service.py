@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v9-arabic-section-aware-evidence"
+ARABIC_RULES_VERSION = "v13-arabic-analysis-query-repair"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -63,6 +63,82 @@ ANSWER_SCHEMA = {
         "answer",
     ],
 }
+
+
+ARABIC_QUESTION_TYPO_REPLACEMENTS = (
+    (
+        r"(?<!\w)الانواء(?!\w)",
+        "الانواع",
+    ),
+    (
+        r"(?<!\w)انواء(?!\w)",
+        "انواع",
+    ),
+    (
+        r"(?<!\w)المنادا(?!\w)",
+        "المنادى",
+    ),
+    (
+        r"(?<!\w)منادا(?!\w)",
+        "منادى",
+    ),
+    (
+        r"(?<!\w)الاختصاس(?!\w)",
+        "الاختصاص",
+    ),
+    (
+        r"(?<!\w)اختصاس(?!\w)",
+        "اختصاص",
+    ),
+    (
+        r"(?<!\w)عناصير(?!\w)",
+        "عناصر",
+    ),
+    (
+        r"(?<!\w)الادواة(?!\w)",
+        "الادوات",
+    ),
+    (
+        r"(?<!\w)ادواة(?!\w)",
+        "ادوات",
+    ),
+    (
+        r"(?<!\w)ادواه(?!\w)",
+        "ادوات",
+    ),
+)
+
+
+def repair_common_arabic_question_typos(
+    question: str,
+) -> str:
+    """
+    Corrige un ensemble limité de fautes arabes
+    avant l'analyse documentaire de la question.
+
+    La question originale reste inchangée dans l'interface.
+    """
+
+    repaired_question = question
+
+    for pattern, replacement in (
+        ARABIC_QUESTION_TYPO_REPLACEMENTS
+    ):
+        repaired_question = re.sub(
+            pattern,
+            replacement,
+            repaired_question,
+            flags=re.UNICODE,
+        )
+
+    repaired_question = re.sub(
+        r"\s+",
+        " ",
+        repaired_question,
+    )
+
+    return repaired_question.strip()
+
 
 ARABIC_CHARACTER_PATTERN = re.compile(
     r"[\u0600-\u06FF]"
@@ -332,6 +408,10 @@ def normalize_text(text: str) -> str:
         "ادواه": "ادوات",
         "ادواة": "ادوات",
         "الادواة": "الادوات",
+        "انواء": "انواع",
+        "الانواء": "الانواع",
+        "المنادا": "المنادي",
+        "منادا": "منادي",
         "الهمزه": "الهمزه",
     }
 
@@ -392,6 +472,94 @@ def normalize_word(word: str) -> str:
                 break
 
     return normalized_word
+
+
+def normalize_arabic_match_text(
+    text: str,
+) -> str:
+    """Normalise chaque mot arabe, y compris l'article défini."""
+
+    words = []
+
+    for raw_word in normalize_text(
+        text
+    ).split():
+        normalized_word = normalize_word(
+            raw_word
+        )
+
+        if normalized_word:
+            words.append(
+                normalized_word
+            )
+
+    return " ".join(
+        words
+    )
+
+
+def arabic_phrase_in_text(
+    text: str,
+    phrase: str,
+) -> bool:
+    """Compare une expression arabe sans être trompé par «ال»."""
+
+    normalized_text_value = (
+        normalize_arabic_match_text(
+            text
+        )
+    )
+
+    normalized_phrase = (
+        normalize_arabic_match_text(
+            phrase
+        )
+    )
+
+    if not normalized_phrase:
+        return False
+
+    return (
+        f" {normalized_phrase} "
+        in f" {normalized_text_value} "
+    )
+
+
+def arabic_coverage_group_matches(
+    group: set[str],
+    quote: str,
+    quote_words: set[str],
+) -> bool:
+    """Vérifie les mots simples et les expressions d'un groupe."""
+
+    normalized_quote = (
+        normalize_arabic_match_text(
+            quote
+        )
+    )
+
+    for raw_term in group:
+        normalized_term = (
+            normalize_arabic_match_text(
+                raw_term
+            )
+        )
+
+        if not normalized_term:
+            continue
+
+        if " " in normalized_term:
+            if (
+                f" {normalized_term} "
+                in f" {normalized_quote} "
+            ):
+                return True
+            continue
+
+        if normalized_term in quote_words:
+            return True
+
+    return False
 
 
 def tokenize_words(
@@ -1667,6 +1835,61 @@ def get_arabic_question_terms(
     return terms
 
 
+def get_arabic_query_phrases(
+    question: str,
+) -> set[str]:
+    """Construit des groupes de mots utiles pour favoriser le bon sous-type."""
+
+    words = []
+
+    for raw_word in normalize_text(
+        question
+    ).split():
+        word = normalize_word(
+            raw_word
+        )
+
+        if not word:
+            continue
+
+        if word in ARABIC_GENERIC_COMMAND_WORDS:
+            continue
+
+        if len(word) < 2:
+            continue
+
+        words.append(
+            word
+        )
+
+    phrases = set()
+
+    for size in (
+        4,
+        3,
+        2,
+    ):
+        for start in range(
+            0,
+            max(
+                0,
+                len(words) - size + 1,
+            ),
+        ):
+            phrase = " ".join(
+                words[
+                    start:start + size
+                ]
+            )
+
+            if len(phrase) >= 5:
+                phrases.add(
+                    phrase
+                )
+
+    return phrases
+
+
 def get_arabic_passage_vocabulary(
     passages: list[dict],
 ) -> set[str]:
@@ -1910,6 +2133,50 @@ def get_arabic_dynamic_answer_markers(
             }
         )
 
+    if "منادي" in q:
+        markers.update(
+            {
+                "منادي",
+                "علم",
+                "مفرد",
+                "نكره",
+                "مقصوده",
+                "مضاف",
+                "شبيه",
+                "منصوب",
+                "مبني",
+            }
+        )
+
+    if (
+        "حذف" in q
+        and "اداه" in q
+    ):
+        markers.update(
+            {
+                "تحذف",
+                "سياق",
+                "دالا",
+            }
+        )
+
+    if (
+        "المعرف" in q
+        or "معرف بال" in q
+        or "ايها" in q
+        or "ايتها" in q
+    ):
+        markers.update(
+            {
+                "اي",
+                "ايه",
+                "نعت",
+                "صفه",
+                "مرفوع",
+                "منادي",
+            }
+        )
+
     return {
         normalize_word(
             marker
@@ -1934,7 +2201,116 @@ def build_arabic_coverage_groups(
         question
     )
 
+    q_match = normalize_arabic_match_text(
+        question
+    )
+
     groups: list[set[str]] = []
+
+    asks_munada_types = (
+        "منادي" in q_match
+        and any(
+            marker in q_match
+            for marker in (
+                "انواع",
+                "احكام",
+            )
+        )
+    )
+
+    if asks_munada_types:
+        return [
+            {"علم مفرد"},
+            {"نكره مقصوده"},
+            {
+                "اسم مضاف",
+                "مضاف الي ما بعده",
+                "مضاف يه",
+            },
+            {"شبيه مضاف"},
+            {"نكره غير مقصوده"},
+        ]
+
+    asks_targeted_nakra = (
+        "نكره مقصوده" in q_match
+        and "نكره غير مقصوده"
+        not in q_match
+    )
+
+    if asks_targeted_nakra:
+        focused_groups = [
+            {"نكره مقصوده"},
+        ]
+
+        if any(
+            marker in q_match
+            for marker in (
+                "تعريف",
+                "مقصود",
+            )
+        ):
+            focused_groups.append(
+                {
+                    "يقصد بالنداء",
+                    "يقصد",
+                }
+            )
+
+        if "حكم" in q_match:
+            focused_groups.extend(
+                [
+                    {
+                        "كحكم العلم المفرد",
+                        "علم مفرد",
+                    },
+                    {"مبني", "مبنيه"},
+                ]
+            )
+
+        return focused_groups
+
+    asks_plain_mudaf = (
+        "منادي مضاف" in q_match
+        and "شبيه مضاف" not in q_match
+    )
+
+    if asks_plain_mudaf:
+        return [
+            {
+                "اسم مضاف",
+                "مضاف الي ما بعده",
+            },
+            {"منصوب", "منصوبا"},
+            {"مضاف يه", "مضافا يه"},
+            {"مجرور", "مجرورا"},
+        ]
+
+    if "شبيه مضاف" in q_match:
+        return [
+            {"شبيه مضاف"},
+            {"يحتاج"},
+            {"يتمم", "ليتمم", "تمام معناه", "ليتمم معناه"},
+            {"منصوب", "منصوبا", "نصب"},
+        ]
+
+    asks_after_ayy = any(
+        phrase in q_match
+        for phrase in (
+            "بعد ايها",
+            "بعد ايتها",
+            "اسم ذي ياتي بعد",
+            "اسم الذي ياتي بعد",
+        )
+    )
+
+    if asks_after_ayy:
+        # La source du cours dit explicitement que le nom placé
+        # après «أيها/أيتها» s'analyse comme un نعت/صفة,
+        # ou comme عطف بيان lorsqu'il est جامدا. On ne force pas
+        # le marqueur «مرفوع» s'il n'apparaît pas dans le PDF.
+        return [
+            {"نعت", "صفه", "عطف بيان"},
+        ]
 
     if any(
         marker in q
@@ -2392,16 +2768,189 @@ def build_arabic_coverage_groups(
             ]
         )
 
+    # Les listes de sous-types doivent conserver chaque catégorie,
+    # même lorsque plusieurs intitulés partagent le mot «مضاف» ou «نكرة».
+    if (
+        "منادي" in q
+        and any(
+            marker in q
+            for marker in (
+                "انواع",
+                "احكام",
+            )
+        )
+    ):
+        groups.extend(
+            [
+                {"علم مفرد"},
+                {"نكره مقصوده"},
+                {
+                    "الاسم المضاف",
+                    "مضاف اليه",
+                },
+                {"شبيه مضاف"},
+                {"نكره غير مقصوده"},
+            ]
+        )
+
+    if (
+        "علم مفرد" in q
+        and "حكم" in q
+    ):
+        groups.extend(
+            [
+                {"ضم"},
+                {"الف"},
+                {"واو"},
+            ]
+        )
+
+    if (
+        "نكره مقصوده" in q
+        and "نكره غير مقصوده" not in q
+    ):
+        groups.append(
+            {"نكره مقصوده"}
+        )
+
+        if any(
+            marker in q
+            for marker in (
+                "تعريف",
+                "مقصود",
+            )
+        ):
+            groups.append(
+                {
+                    "يقصد بالنداء",
+                    "يقصد",
+                }
+            )
+
+        if "حكم" in q:
+            groups.extend(
+                [
+                    {
+                        "كحكم العلم المفرد",
+                        "علم مفرد",
+                    },
+                    {"مبني", "مبنيه"},
+                ]
+            )
+
+    if (
+        "نكره غير مقصوده" in q
+        or (
+            "غير مقصوده" in q
+            and "نكره" in q
+        )
+    ):
+        groups.extend(
+            [
+                {"غير"},
+                {"بعينه"},
+                {"منصوب"},
+            ]
+        )
+
+    if (
+        "منادي مضاف" in q
+        and "شبيه" not in q
+    ):
+        groups.extend(
+            [
+                {
+                    "الاسم المضاف",
+                    "مضاف الي ما بعده",
+                },
+                {"منصوب"},
+                {"مضاف اليه"},
+                {"مجرور"},
+            ]
+        )
+
+    if "شبيه مضاف" in q:
+        groups.extend(
+            [
+                {"شبيه مضاف"},
+                {"يحتاج"},
+                {"يتمم", "تمام معناه"},
+                {"منصوب", "نصب"},
+            ]
+        )
+
+    if (
+        "اعراب المنادي" in q
+        or "يعرب المنادي" in q
+        or "المنادي بصفه عامه" in q
+    ):
+        groups.extend(
+            [
+                {"مفعول"},
+                {"محذوف"},
+                {"انادي", "ادعو"},
+            ]
+        )
+
+    if (
+        "بعد ايها" in q
+        or "بعد ايتها" in q
+        or "الاسم الذي ياتي بعد" in q
+    ):
+        groups.extend(
+            [
+                {"نعت", "صفه"},
+                {"مرفوع"},
+            ]
+        )
+
+    if (
+        "حذف" in q
+        and "اداه النداء" in q
+    ):
+        groups.extend(
+            [
+                {"تحذف", "حذف"},
+                {"سياق"},
+                {"دالا", "دال"},
+            ]
+        )
+
+    if (
+        "قاعده النداء" in q
+        or "اسلوب النداء" in q
+        and "باختصار" in q
+    ):
+        groups.extend(
+            [
+                {"اداه"},
+                {"منادي"},
+                {"مبني", "منصوب"},
+            ]
+        )
+
+    if (
+        "محبا وطنه" in q
+        and "نوع" in q
+    ):
+        groups.extend(
+            [
+                {"شبيه"},
+                {"مضاف"},
+                {"منصوب"},
+            ]
+        )
+
     unique_groups = []
     seen = set()
 
     for group in groups:
         normalized_group = frozenset(
-            normalize_word(
+            normalize_arabic_match_text(
                 word
             )
             for word in group
-            if normalize_word(
+            if normalize_arabic_match_text(
                 word
             )
         )
@@ -2758,6 +3307,12 @@ def extract_arabic_generic_evidence(
         )
     )
 
+    query_phrases = (
+        get_arabic_query_phrases(
+            question
+        )
+    )
+
     anchor_terms = (
         question_terms
         | answer_markers
@@ -2827,14 +3382,44 @@ def extract_arabic_generic_evidence(
                 for index, group in enumerate(
                     coverage_groups
                 )
-                if group.intersection(
-                    quote_words
+                if arabic_coverage_group_matches(
+                    group=group,
+                    quote=quote,
+                    quote_words=quote_words,
                 )
             }
 
+            normalized_question_for_scope = (
+                normalize_arabic_match_text(
+                    question
+                )
+            )
+
+            asks_munada_type_inventory = (
+                "منادي"
+                in normalized_question_for_scope
+                and any(
+                    marker
+                    in normalized_question_for_scope
+                    for marker in (
+                        "انواع",
+                        "احكام",
+                    )
+                )
+            )
+
+            # Dans une question qui demande l'inventaire complet
+            # des types, certains sous-titres du PDF («نكرة مقصودة»,
+            # «شبيه بالمضاف»...) ne répètent pas toujours le mot
+            # «المنادى». La couverture du sous-type suffit alors
+            # à établir la pertinence du passage.
             if (
                 question_terms
                 and topic_hits == 0
+                and not (
+                    asks_munada_type_inventory
+                    and covered_groups
+                )
             ):
                 continue
 
@@ -2851,11 +3436,34 @@ def extract_arabic_generic_evidence(
                 )
             )
 
-            normalized_question = normalize_text(
-                question
+            normalized_question = (
+                normalize_arabic_match_text(
+                    question
+                )
+            )
+
+            normalized_quote_for_match = (
+                normalize_arabic_match_text(
+                    quote
+                )
             )
 
             phrase_bonus = sum(
+                2.6
+                + min(
+                    4,
+                    len(
+                        phrase.split()
+                    ),
+                )
+                * 0.9
+                for phrase in query_phrases
+                if phrase
+                and phrase
+                in normalized_quote_for_match
+            )
+
+            phrase_bonus += sum(
                 1.8
                 for phrase in (
                     "الاسم المختص",
@@ -2864,12 +3472,141 @@ def extract_arabic_generic_evidence(
                     "ايها",
                     "ايتها",
                     "لا محل",
+                    "نكره مقصوده",
+                    "نكره غير مقصوده",
+                    "علم مفرد",
+                    "شبيه مضاف",
+                    "حذف اداه النداء",
+                    "نداء المعرف",
                 )
                 if phrase
                 in normalized_question
                 and phrase
-                in normalized_quote
+                in normalized_quote_for_match
             )
+
+            subtype_bonus = 0.0
+            subtype_penalty = 0.0
+
+            asks_targeted_nakra = (
+                "نكره مقصوده"
+                in normalized_question
+                and "نكره غير مقصوده"
+                not in normalized_question
+            )
+
+            if asks_targeted_nakra:
+                if (
+                    "نكره مقصوده"
+                    in normalized_quote_for_match
+                    and "نكره غير مقصوده"
+                    not in normalized_quote_for_match
+                ):
+                    subtype_bonus += 24.0
+
+                if (
+                    "نكره غير مقصوده"
+                    in normalized_quote_for_match
+                ):
+                    subtype_penalty += 32.0
+
+            asks_plain_mudaf = (
+                "منادي مضاف"
+                in normalized_question
+                and "شبيه مضاف"
+                not in normalized_question
+            )
+
+            if asks_plain_mudaf:
+                if any(
+                    phrase
+                    in normalized_quote_for_match
+                    for phrase in (
+                        "اسم مضاف",
+                        "مضاف الي ما بعده",
+                        "مضاف اليه",
+                    )
+                ):
+                    subtype_bonus += 22.0
+
+                if (
+                    "شبيه مضاف"
+                    in normalized_quote_for_match
+                    and "مضاف اليه"
+                    not in normalized_quote_for_match
+                ):
+                    subtype_penalty += 28.0
+
+            if (
+                "شبيه مضاف"
+                in normalized_question
+            ):
+                if (
+                    "شبيه مضاف"
+                    in normalized_quote_for_match
+                ):
+                    subtype_bonus += 20.0
+
+                contains_shibh_definition = any(
+                    marker
+                    in normalized_quote_for_match
+                    for marker in (
+                        "يحتاج",
+                        "يتمم معناه",
+                        "ليتمم معناه",
+                        "تمام معناه",
+                    )
+                )
+
+                if contains_shibh_definition:
+                    subtype_bonus += 24.0
+
+                if (
+                    any(
+                        marker
+                        in normalized_question
+                        for marker in (
+                            "تعريف",
+                            "مقصود",
+                        )
+                    )
+                    and not contains_shibh_definition
+                ):
+                    subtype_penalty += 26.0
+
+            asks_after_ayy = any(
+                phrase
+                in normalized_question
+                for phrase in (
+                    "بعد ايها",
+                    "بعد ايتها",
+                    "اسم الذي ياتي بعد",
+                    "اسم ذي ياتي بعد",
+                )
+            )
+
+            if asks_after_ayy:
+                if any(
+                    marker
+                    in normalized_quote_for_match
+                    for marker in (
+                        "نعت",
+                        "صفه",
+                        "عطف بيان",
+                    )
+                ):
+                    subtype_bonus += 24.0
+
+                if any(
+                    phrase
+                    in normalized_quote_for_match
+                    for phrase in (
+                        "بعدهما يعرب نعتا",
+                        "بعدهما صفه للمنادي",
+                        "عطف بيان",
+                    )
+                ):
+                    subtype_bonus += 18.0
 
             noise_penalty = 0.0
 
@@ -2975,6 +3712,8 @@ def extract_arabic_generic_evidence(
                 + dynamic_position_bonus
                 + early_topic_bonus
                 + retrieval_score
+                + subtype_bonus
+                - subtype_penalty
                 - noise_penalty
                 - length_penalty
             )
@@ -3041,12 +3780,41 @@ def extract_arabic_generic_evidence(
     ):
         return []
 
-    normalized_question = normalize_text(
-        question
+    normalized_question = (
+        normalize_arabic_match_text(
+            question
+        )
+    )
+
+    asks_munada_types = (
+        "منادي" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "انواع",
+                "احكام",
+            )
+        )
+    )
+
+    asks_after_ayy = any(
+        phrase
+        in normalized_question
+        for phrase in (
+            "بعد ايها",
+            "بعد ايتها",
+            "اسم ذي ياتي بعد",
+            "اسم الذي ياتي بعد",
+        )
     )
 
     minimum_selected = (
-        2
+        3
+        if (
+            asks_munada_types
+            or asks_after_ayy
+        )
+        else 2
         if any(
             marker in normalized_question
             for marker in (
@@ -3061,6 +3829,23 @@ def extract_arabic_generic_evidence(
             )
         )
         else 1
+    )
+
+    maximum_selected = (
+        5
+        if asks_munada_types
+        else 3
+        if asks_after_ayy
+        else 4
+        if any(
+            marker in normalized_question
+            for marker in (
+                "انواع",
+                "احوال",
+                "اذكر",
+            )
+        )
+        else 2
     )
 
     selected = []
@@ -3162,7 +3947,7 @@ def extract_arabic_generic_evidence(
             or len(
                 selected
             )
-            >= 2
+            >= maximum_selected
         ):
             break
 
@@ -3170,14 +3955,35 @@ def extract_arabic_generic_evidence(
         return []
 
     if coverage_groups:
-        minimum_coverage = max(
-            1,
-            int(
-                len(
-                    coverage_groups
+        requires_full_coverage = (
+            asks_munada_types
+            or "نكره مقصوده"
+            in normalized_question
+            or "منادي مضاف"
+            in normalized_question
+            or "شبيه مضاف"
+            in normalized_question
+            or any(
+                phrase
+                in normalized_question
+                for phrase in (
+                    "بعد ايها",
+                    "بعد ايتها",
+                    "اسم الذي ياتي بعد",
                 )
-                * 0.65
-            ),
+            )
+        )
+
+        minimum_coverage = (
+            len(coverage_groups)
+            if requires_full_coverage
+            else max(
+                1,
+                int(
+                    len(coverage_groups)
+                    * 0.65
+                ),
+            )
         )
 
         if len(
@@ -4081,6 +4887,12 @@ def generate_answer(
             "La question ne peut pas être vide."
         )
 
+    analysis_question = (
+        repair_common_arabic_question_typos(
+            cleaned_question
+        )
+    )
+
     refusal_answer = get_refusal_answer(
         cleaned_question
     )
@@ -4094,7 +4906,7 @@ def generate_answer(
         }
 
     intent = detect_question_intent(
-        cleaned_question
+        analysis_question
     )
 
     validated_evidence = []
@@ -4102,11 +4914,11 @@ def generate_answer(
     # L'extraction arabe documentée passe avant les extracteurs
     # génériques afin d'éviter les mélanges entre plusieurs cours.
     if contains_arabic(
-        cleaned_question
+        analysis_question
     ):
         validated_evidence = (
             extract_arabic_direct_rule_evidence(
-                question=cleaned_question,
+                question=analysis_question,
                 passages=passages,
             )
         )
@@ -4114,12 +4926,12 @@ def generate_answer(
     if (
         not validated_evidence
         and contains_arabic(
-            cleaned_question
+            analysis_question
         )
     ):
         validated_evidence = (
             extract_arabic_generic_evidence(
-                question=cleaned_question,
+                question=analysis_question,
                 passages=passages,
             )
         )
@@ -4130,7 +4942,7 @@ def generate_answer(
     ):
         validated_evidence = (
             extract_element_evidence_from_passages(
-                question=cleaned_question,
+                question=analysis_question,
                 passages=passages,
             )
         )
@@ -4141,7 +4953,7 @@ def generate_answer(
     ):
         validated_evidence = (
             extract_role_evidence_from_passages(
-                question=cleaned_question,
+                question=analysis_question,
                 passages=passages,
             )
         )
@@ -4149,10 +4961,10 @@ def generate_answer(
     if (
         not validated_evidence
         and contains_arabic(
-            cleaned_question
+            analysis_question
         )
         and not has_topic_overlap_with_passages(
-            question=cleaned_question,
+            question=analysis_question,
             passages=passages,
         )
     ):
@@ -4165,7 +4977,7 @@ def generate_answer(
 
     if not validated_evidence:
         extraction = extract_evidence(
-            question=cleaned_question,
+            question=analysis_question,
             passages=passages,
         )
 
@@ -4182,7 +4994,7 @@ def generate_answer(
 
         validated_evidence = (
             validate_evidence(
-                question=cleaned_question,
+                question=analysis_question,
                 passages=passages,
                 evidence_items=(
                     extraction.get(
@@ -4212,7 +5024,7 @@ def generate_answer(
         )
 
     answer = write_answer(
-        question=cleaned_question,
+        question=analysis_question,
         evidence=validated_evidence,
     )
 

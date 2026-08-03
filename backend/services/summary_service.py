@@ -4,6 +4,7 @@ from services.llm_service import (
     OLLAMA_MODEL,
     call_ollama,
     contains_arabic,
+    normalize_arabic_match_text,
     normalize_text,
     tokenize_words,
 )
@@ -186,6 +187,18 @@ ARABIC_NEW_SENTENCE_PREFIXES = (
     "احوال الاسم المختص ",
     "يكون الاسم المختص ",
     "حكم الاسم المختص ",
+    "النداء ",
+    "عناصر اسلوب النداء ",
+    "ادوات النداء ",
+    "انواع المنادي ",
+    "علم مفرد ",
+    "نكره مقصوده ",
+    "نكره غير مقصوده ",
+    "مضاف ",
+    "شبيه بالمضاف ",
+    "اعراب المنادي ",
+    "نداء المعرف ",
+    "فائده ",
     "الشرط ",
 )
 
@@ -202,6 +215,64 @@ PEDAGOGICAL_PREFIXES = (
     "تتمثل ",
     "تشمل ",
 )
+
+
+ARABIC_SECTION_HEADINGS = {
+    normalize_arabic_match_text(
+        heading
+    )
+    for heading in {
+        "علم مفرد",
+        "نكرة مقصودة",
+        "نكرة غير مقصودة",
+        "مضاف",
+        "شبيه مضاف",
+        "إعراب المنادى",
+        "نداء المعرف بأل",
+        "أنواع المنادى وأحكامه",
+        "أدوات النداء ودلالاتها",
+        "عناصر أسلوب النداء",
+        "التعريف",
+        "الملخص",
+    }
+}
+
+
+def is_arabic_section_heading(
+    sentence: str,
+) -> bool:
+    """Repère un petit titre pédagogique devant la règle qui le suit."""
+
+    normalized_sentence = (
+        normalize_arabic_match_text(
+            sentence
+        )
+    )
+
+    if not normalized_sentence:
+        return False
+
+    if len(
+        normalized_sentence.split()
+    ) > 5:
+        return False
+
+    if normalized_sentence in (
+        ARABIC_SECTION_HEADINGS
+    ):
+        return True
+
+    return normalized_sentence.startswith(
+        (
+            "علم مفرد",
+            "نكره مقصوده",
+            "نكره غير مقصوده",
+            "شبيه مضاف",
+            "اعراب المنادي",
+            "نداء المعرف",
+            "انواع المنادي",
+        )
+    )
 
 
 def get_summary_refusal(
@@ -381,6 +452,14 @@ def split_into_sentences(
 
         if is_short_heading:
             flush_current_lines()
+
+            if is_arabic_section_heading(
+                line
+            ):
+                logical_paragraphs.append(
+                    line
+                )
+
             continue
 
         line_is_arabic = contains_arabic(
@@ -454,9 +533,14 @@ def split_into_sentences(
                     sentence
                 )
 
-                if len(
-                    cleaned_sentence.split()
-                ) < 2:
+                if (
+                    len(
+                        cleaned_sentence.split()
+                    ) < 2
+                    and not is_arabic_section_heading(
+                        cleaned_sentence
+                    )
+                ):
                     continue
 
                 sentences.append(
@@ -499,8 +583,27 @@ def build_summary_units(
         )
 
         passage_units = []
+        pending_heading = ""
 
         for sentence in sentences:
+            if is_arabic_section_heading(
+                sentence
+            ):
+                pending_heading = (
+                    sentence
+                )
+                continue
+
+            if pending_heading:
+                sentence = (
+                    pending_heading.rstrip(
+                        " :؛"
+                    )
+                    + ": "
+                    + sentence
+                )
+                pending_heading = ""
+
             if (
                 passage_units
                 and starts_with_dependent_expression(
@@ -1251,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v6-arabic-structured-summary"
+    "v8-arabic-distinct-subtype-summary"
 )
 
 
@@ -1551,7 +1654,9 @@ def normalize_arabic_terms(
     terms: tuple[str, ...],
 ) -> tuple[str, ...]:
     return tuple(
-        normalize_text(term)
+        normalize_arabic_match_text(
+            term
+        )
         for term in terms
     )
 
@@ -1561,11 +1666,96 @@ def get_requested_arabic_focus_groups(
 ) -> list[dict]:
     """Détecte les sous-thèmes explicitement demandés."""
 
-    normalized_question = normalize_text(
-        question
+    normalized_question = (
+        normalize_arabic_match_text(
+            question
+        )
     )
 
     requested_groups = []
+
+    dynamic_groups = []
+
+    if (
+        "منادي" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "انواع",
+                "احكام",
+            )
+        )
+    ):
+        dynamic_groups.extend(
+            [
+                {
+                    "markers": (
+                        "انواع المنادي",
+                        "احكام المنادي",
+                    ),
+                    "evidence": (
+                        "علم مفرد",
+                        "الشخص الذي ينادي عليه باسمه",
+                    ),
+                },
+                {
+                    "markers": (
+                        "نكره مقصوده",
+                    ),
+                    "evidence": (
+                        "نكره مقصوده",
+                        "كحكم العلم المفرد",
+                        "مبنيه",
+                    ),
+                },
+                {
+                    "markers": (
+                        "مضاف",
+                    ),
+                    "evidence": (
+                        "الاسم المضاف",
+                        "مضاف اليه",
+                        "مضافا اليه",
+                        "مجرور",
+                        "مجرورا",
+                    ),
+                },
+                {
+                    "markers": (
+                        "شبيه مضاف",
+                    ),
+                    "evidence": (
+                        "شبيه مضاف",
+                        "يحتاج",
+                        "يتمم معناه",
+                        "ليتمم معناه",
+                        "تمام معناه",
+                    ),
+                },
+                {
+                    "markers": (
+                        "نكره غير مقصوده",
+                    ),
+                    "evidence": (
+                        "نكره غير مقصوده",
+                        "لا يدل على شخص بعينه",
+                        "منصوبه",
+                    ),
+                },
+            ]
+        )
+
+    for group in dynamic_groups:
+        requested_groups.append(
+            {
+                "markers": normalize_arabic_terms(
+                    group["markers"]
+                ),
+                "evidence": normalize_arabic_terms(
+                    group["evidence"]
+                ),
+            }
+        )
 
     for group in ARABIC_FOCUS_GROUPS:
         markers = normalize_arabic_terms(
@@ -1585,7 +1775,25 @@ def get_requested_arabic_focus_groups(
                 }
             )
 
-    return requested_groups
+    unique_groups = []
+    seen_evidence = set()
+
+    for group in requested_groups:
+        evidence_key = tuple(
+            group["evidence"]
+        )
+
+        if evidence_key in seen_evidence:
+            continue
+
+        seen_evidence.add(
+            evidence_key
+        )
+        unique_groups.append(
+            group
+        )
+
+    return unique_groups
 
 
 def get_arabic_summary_focus_keywords(
@@ -1652,18 +1860,34 @@ def score_arabic_unit_for_terms(
 ) -> float:
     """Classe une unité avec des racines arabes simples et robustes."""
 
-    normalized_text_value = normalize_text(
-        unit.get(
-            "text",
-            "",
+    normalized_text_value = (
+        normalize_arabic_match_text(
+            unit.get(
+                "text",
+                "",
+            )
         )
     )
 
+    normalized_terms = {
+        normalize_arabic_match_text(
+            term
+        )
+        for term in terms
+        if normalize_arabic_match_text(
+            term
+        )
+    }
+
     hits = sum(
         1
-        for term in terms
+        for term in normalized_terms
         if term
-        and term in normalized_text_value
+        and (
+            f" {term} "
+            in f" {normalized_text_value} "
+            or term in normalized_text_value
+        )
     )
 
     if hits == 0:
@@ -1841,7 +2065,7 @@ def select_arabic_focused_units(
                 continue
 
             normalized_unit_text = (
-                normalize_text(
+                normalize_arabic_match_text(
                     unit.get(
                         "text",
                         "",
@@ -2067,6 +2291,34 @@ def select_general_arabic_coverage_units(
     return selected_units
 
 
+ARABIC_DISTINCT_SUBTYPE_LABELS = (
+    "علم مفرد",
+    "نكره مقصوده",
+    "نكره غير مقصوده",
+    "شبيه مضاف",
+    "الاسم المضاف",
+    "مضاف اليه",
+)
+
+
+def get_arabic_subtype_labels(
+    text: str,
+) -> set[str]:
+    normalized_text_value = (
+        normalize_arabic_match_text(
+            text
+        )
+    )
+
+    return {
+        label
+        for label in (
+            ARABIC_DISTINCT_SUBTYPE_LABELS
+        )
+        if label in normalized_text_value
+    }
+
+
 def remove_redundant_summary_units(
     units: list[dict],
 ) -> list[dict]:
@@ -2087,6 +2339,15 @@ def remove_redundant_summary_units(
 
         is_redundant = False
 
+        unit_subtype_labels = (
+            get_arabic_subtype_labels(
+                unit.get(
+                    "text",
+                    "",
+                )
+            )
+        )
+
         for kept_unit in kept_units:
             kept_keywords = extract_keywords(
                 kept_unit.get(
@@ -2094,6 +2355,24 @@ def remove_redundant_summary_units(
                     "",
                 )
             )
+
+            kept_subtype_labels = (
+                get_arabic_subtype_labels(
+                    kept_unit.get(
+                        "text",
+                        "",
+                    )
+                )
+            )
+
+            if (
+                unit_subtype_labels
+                and kept_subtype_labels
+                and unit_subtype_labels.isdisjoint(
+                    kept_subtype_labels
+                )
+            ):
+                continue
 
             smaller_count = min(
                 len(unit_keywords),
@@ -2176,11 +2455,36 @@ def generate_summary(
                 )
             )
         else:
+            normalized_summary_question = (
+                normalize_text(
+                    cleaned_question
+                )
+            )
+
+            focused_maximum_units = (
+                5
+                if (
+                    "منادي"
+                    in normalized_summary_question
+                    and any(
+                        marker
+                        in normalized_summary_question
+                        for marker in (
+                            "انواع",
+                            "احكام",
+                        )
+                    )
+                )
+                else 4
+            )
+
             selected_units = (
                 select_arabic_focused_units(
                     question=cleaned_question,
                     units=units,
-                    maximum_units=4,
+                    maximum_units=(
+                        focused_maximum_units
+                    ),
                 )
             )
 
