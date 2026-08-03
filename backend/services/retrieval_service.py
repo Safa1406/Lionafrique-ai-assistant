@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v7-arabic-inventory-coverage"
+RETRIEVAL_SERVICE_VERSION = "v9-arabic-summary-intent-coverage"
 
 
 INTENT_MARKERS = {
@@ -480,6 +480,10 @@ def retrieve_relevant_passages(
             "Le nombre de résultats doit être supérieur à zéro."
         )
 
+    request_intent = detect_question_intent(
+        cleaned_question
+    )
+
     search_question = (
         repair_common_arabic_query_typos(
             prepare_search_query(
@@ -488,8 +492,14 @@ def retrieve_relevant_passages(
         )
     )
 
-    intent = detect_question_intent(
+    search_intent = detect_question_intent(
         search_question
+    )
+
+    intent = (
+        request_intent
+        if request_intent == "summary"
+        else search_intent
     )
 
     question_is_arabic = contains_arabic(
@@ -526,6 +536,46 @@ def retrieve_relevant_passages(
     # On élargit uniquement ce cas afin de préserver la validation
     # documentaire complète dans llm_service.
     if asks_munada_inventory:
+        number_of_results = max(
+            number_of_results,
+            10,
+        )
+
+    asks_arabic_multirule_explanation = (
+        question_is_arabic
+        and "تعجب"
+        in normalized_search_question
+        and any(
+            marker
+            in normalized_search_question
+            for marker in (
+                "شروط",
+                "لماذا",
+                "كيف نصوغ",
+                "كيف صيغ",
+                "كيف نتعجب",
+                "اشرح قاعده",
+                "حدد صيغه",
+                "صياغه مباشره",
+                "صياغه غير مباشره",
+                "مبني للمجهول",
+            )
+        )
+    )
+
+    asks_arabic_lesson_summary = (
+        question_is_arabic
+        and intent == "summary"
+    )
+
+    # Les questions grammaticales explicatives et les résumés
+    # couvrent souvent plusieurs règles réparties sur plusieurs
+    # pages. Cinq passages favorisent le premier tableau rencontré
+    # et peuvent masquer les exceptions ou les exemples d'analyse.
+    if (
+        asks_arabic_multirule_explanation
+        or asks_arabic_lesson_summary
+    ):
         number_of_results = max(
             number_of_results,
             10,

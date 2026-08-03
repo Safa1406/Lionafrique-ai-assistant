@@ -1,4 +1,4 @@
-﻿import re
+import re
 
 from services.llm_service import (
     OLLAMA_MODEL,
@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v8-arabic-distinct-subtype-summary"
+    "v10-arabic-exclamation-structured-summary"
 )
 
 
@@ -2401,6 +2401,316 @@ def remove_redundant_summary_units(
 
     return kept_units
 
+
+ARABIC_EXCLAMATION_GENERAL_GROUPS = (
+    (
+        "شعور داخلي",
+        "تنفعل",
+        "سلبا",
+        "ايجابا",
+    ),
+    (
+        "صيغتان قياسيتان",
+        "ما افعل",
+        "افعل ب",
+    ),
+    (
+        "ثلاثي",
+        "متصرف",
+        "تام",
+        "مثبت",
+        "للمعلوم",
+        "التفاضل",
+    ),
+    (
+        "غير المستوفي للشروط",
+        "المساعد",
+        "المصدر الصريح",
+        "المصدر الموول",
+    ),
+    (
+        "صيغ سماعيه",
+        "سياق الكلام",
+        "صوره نداء",
+    ),
+)
+
+
+ARABIC_EXCLAMATION_DIRECT_INDIRECT_GROUPS = (
+    (
+        "ما افعل",
+        "افعل ب",
+        "صيغتان قياسيتان",
+    ),
+    (
+        "ثلاثي",
+        "متصرف",
+        "تام",
+        "مثبت",
+        "للمعلوم",
+        "التفاضل",
+    ),
+    (
+        "غير المستوفي للشروط",
+        "المساعد",
+        "المصدر الصريح",
+        "المصدر الموول",
+    ),
+)
+
+
+ARABIC_EXCLAMATION_PARSING_GROUPS = (
+    (
+        "ما اسم نكره تامه",
+        "محل رفع",
+        "مبتدا",
+    ),
+    (
+        "فعل ماض مبني على الفتح",
+        "فعل التعجب",
+        "فاعل ضمير مستتر",
+    ),
+    (
+        "مفعول به منصوب",
+        "مضاف اليه مجرور",
+    ),
+    (
+        "صوره الامر",
+        "فتح مقدر",
+        "فعل التعجب",
+    ),
+    (
+        "حرف جر زائد",
+        "فاعل مجرور بالباء لفظا",
+        "مرفوع محلا",
+    ),
+)
+
+
+def detect_arabic_exclamation_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le type de résumé demandé pour أسلوب التعجب."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    asks_parsing = (
+        "اعراب" in normalized_question
+        and "ما افعل" in normalized_question
+        and "افعل به" in normalized_question
+    )
+
+    asks_direct_indirect = (
+        "صياغه مباشره" in normalized_question
+        and "غير مباشره" in normalized_question
+    )
+
+    is_general = (
+        "تعجب" in normalized_question
+        and any(
+            pattern in normalized_question
+            for pattern in (
+                "لخص درس",
+                "ملخص درس",
+                "تلخيص درس",
+            )
+        )
+    )
+
+    if asks_parsing:
+        return "parsing"
+
+    if asks_direct_indirect:
+        return "direct_indirect"
+
+    if is_general:
+        return "general"
+
+    return ""
+
+
+def select_arabic_exclamation_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités clés du cours d'أسلوب التعجب."""
+
+    summary_mode = (
+        detect_arabic_exclamation_summary_mode(
+            question
+        )
+    )
+
+    if not summary_mode:
+        return []
+
+    asks_parsing = (
+        summary_mode == "parsing"
+    )
+
+    asks_direct_indirect = (
+        summary_mode == "direct_indirect"
+    )
+
+    is_general = (
+        summary_mode == "general"
+    )
+
+    if asks_parsing:
+        groups = ARABIC_EXCLAMATION_PARSING_GROUPS
+        maximum_units = 5
+    elif asks_direct_indirect:
+        groups = ARABIC_EXCLAMATION_DIRECT_INDIRECT_GROUPS
+        maximum_units = 4
+    elif is_general:
+        groups = ARABIC_EXCLAMATION_GENERAL_GROUPS
+        maximum_units = 5
+    else:
+        return []
+
+    selected_units = []
+    selected_ids = set()
+
+    for group_terms in groups:
+        normalized_terms = normalize_arabic_terms(
+            group_terms
+        )
+
+        candidates = []
+
+        for unit in units:
+            if unit["unit_id"] in selected_ids:
+                continue
+
+            normalized_unit = normalize_arabic_match_text(
+                unit.get(
+                    "text",
+                    "",
+                )
+            )
+
+            hits = sum(
+                1
+                for term in normalized_terms
+                if term
+                and term in normalized_unit
+            )
+
+            if hits == 0:
+                continue
+
+            score = score_arabic_unit_for_terms(
+                unit,
+                normalized_terms,
+            )
+
+            if score < 0:
+                continue
+
+            # Les groupes spécialisés privilégient la couverture
+            # de plusieurs marqueurs dans une même unité.
+            score += hits * 2.4
+
+            candidates.append(
+                (
+                    hits,
+                    score,
+                    unit,
+                )
+            )
+
+        if not candidates:
+            continue
+
+        candidates.sort(
+            key=lambda item: (
+                item[0],
+                item[1],
+            ),
+            reverse=True,
+        )
+
+        best_unit = candidates[0][2]
+        selected_units.append(
+            best_unit
+        )
+        selected_ids.add(
+            best_unit["unit_id"]
+        )
+
+        if len(selected_units) >= maximum_units:
+            break
+
+    selected_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+
+    return selected_units
+
+def build_arabic_exclamation_structured_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """
+    Construit deux résumés structurés lorsque la demande
+    exige une distinction explicite entre plusieurs règles.
+    """
+
+    summary_mode = (
+        detect_arabic_exclamation_summary_mode(
+            question
+        )
+    )
+
+    if summary_mode == "direct_indirect":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- الصياغة المباشرة: يصاغ التعجب على وزني "
+            "«ما أفعل» و«أفعل به» إذا كان الفعل ثلاثيا، "
+            "متصرفا، تاما، مثبتا، مبنيا للمعلوم، قابلا "
+            "للتفاضل، ولا يدل على لون أو عيب أو حلية.\n"
+            "- الصياغة غير المباشرة: إذا لم يستوف الفعل "
+            "شروط الصياغة المباشرة، يستعمل فعل مساعد على "
+            "وزن «ما أفعل» أو «أفعل به»، ثم يذكر المصدر "
+            "الصريح أو المؤول، ما لم يكن الفعل جامدا أو "
+            "غير قابل للتفاضل."
+        )
+
+    elif summary_mode == "parsing":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- إعراب صيغة «ما أفعل»: «ما» اسم نكرة تامة "
+            "مبني على السكون في محل رفع مبتدأ، و«أفعل» "
+            "فعل ماض مبني على الفتح وهو فعل التعجب، "
+            "وفاعله ضمير مستتر، أما المتعجب منه فمفعول "
+            "به منصوب.\n"
+            "- إعراب صيغة «أفعل به»: «أفعل» فعل ماض جاء "
+            "على صورة الأمر مبني على فتح مقدر وهو فعل "
+            "التعجب، والباء حرف جر زائد، والاسم بعدها "
+            "فاعل مجرور بالباء لفظا مرفوع محلا."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def generate_summary(
     question: str,
     passages: list[dict],
@@ -2440,6 +2750,29 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        exclamation_units = (
+            select_arabic_exclamation_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if exclamation_units:
+            structured_response = (
+                build_arabic_exclamation_structured_summary(
+                    question=cleaned_question,
+                    selected_units=exclamation_units,
+                )
+            )
+
+            if structured_response is not None:
+                return structured_response
+
+            return build_summary_response(
+                exclamation_units,
+                cleaned_question,
+            )
+
         is_general_request = (
             is_general_arabic_summary_request(
                 cleaned_question

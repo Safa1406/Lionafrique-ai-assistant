@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v13-arabic-analysis-query-repair"
+ARABIC_RULES_VERSION = "v14-arabic-exclamation-rules"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1722,6 +1722,410 @@ def extract_arabic_direct_rule_evidence(
         }
     ]
 
+
+
+
+def extract_arabic_exclamation_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Extrait les règles documentées du cours d'أسلوب التعجب."""
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    if "تعجب" not in normalized_question:
+        return []
+
+    normalized_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+
+        same_lesson = (
+            "aslob-altajb"
+            in source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+            or "تعجب"
+            in normalized_passage
+        )
+
+        if not same_lesson:
+            continue
+
+        normalized_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if not normalized_passages:
+        return []
+
+    def find_support(
+        groups: tuple[tuple[str, ...], ...],
+    ) -> dict | None:
+        candidates = []
+
+        normalized_groups = tuple(
+            tuple(
+                normalize_text(term)
+                for term in group
+            )
+            for group in groups
+        )
+
+        for item in normalized_passages:
+            passage_text = item[
+                "normalized_text"
+            ]
+
+            group_hits = []
+
+            for group in normalized_groups:
+                matched = any(
+                    term
+                    and term in passage_text
+                    for term in group
+                )
+                group_hits.append(
+                    matched
+                )
+
+            if not all(group_hits):
+                continue
+
+            lexical_hits = sum(
+                1
+                for group in normalized_groups
+                for term in group
+                if term
+                and term in passage_text
+            )
+
+            candidates.append(
+                (
+                    lexical_hits,
+                    item["score"],
+                    item,
+                )
+            )
+
+        if not candidates:
+            return None
+
+        candidates.sort(
+            key=lambda candidate: (
+                candidate[0],
+                candidate[1],
+            ),
+            reverse=True,
+        )
+
+        return candidates[0][2]
+
+    def build_items(
+        specifications: list[
+            tuple[
+                str,
+                tuple[tuple[str, ...], ...],
+            ]
+        ],
+        minimum_items: int = 1,
+    ) -> list[dict]:
+        evidence = []
+        used_pairs = set()
+
+        for quote, groups in specifications:
+            support = find_support(
+                groups
+            )
+
+            if support is None:
+                continue
+
+            pair = (
+                support["passage_number"],
+                normalize_text(quote),
+            )
+
+            if pair in used_pairs:
+                continue
+
+            used_pairs.add(
+                pair
+            )
+
+            evidence.append(
+                {
+                    "passage_number": support[
+                        "passage_number"
+                    ],
+                    "quote": quote,
+                    "source": support[
+                        "source"
+                    ],
+                    "page": support[
+                        "page"
+                    ],
+                }
+            )
+
+        if len(evidence) < minimum_items:
+            return []
+
+        return evidence
+
+    asks_daharaja = (
+        "دحرج" in normalized_question
+        and "لماذا" in normalized_question
+    )
+
+    asks_naima_bisa = (
+        "لماذا" in normalized_question
+        and "نعم" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "بئس",
+                "بيس",
+            )
+        )
+    )
+
+    asks_istafada = (
+        "استفاد" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "كيف صيغ",
+                "كيف يصاغ",
+            )
+        )
+    )
+
+    asks_passive = (
+        "مبني للمجهول"
+        in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "كيف نتعجب",
+                "كيف يصاغ",
+                "طريقه غير مباشره",
+            )
+        )
+    )
+
+    asks_formula_identification = (
+        "حدد صيغه"
+        in normalized_question
+        and "ما اجمل"
+        in normalized_question
+    )
+
+    asks_brief_rule = (
+        "اشرح قاعده التعجب"
+        in normalized_question
+        or (
+            "قاعده التعجب"
+            in normalized_question
+            and "باختصار"
+            in normalized_question
+        )
+    )
+
+    if asks_daharaja:
+        return build_items(
+            [
+                (
+                    "لا يصاغ التعجب مباشرة من «دحرج» لأنه فعل غير ثلاثي.",
+                    (
+                        ("دحرج",),
+                        ("ثلاثي",),
+                    ),
+                ),
+                (
+                    "وعند فقد شرط الصياغة المباشرة يستعمل فعل مساعد على وزن «ما أفعل» أو «أفعل به»، ثم يذكر المصدر الصريح أو المؤول.",
+                    (
+                        (
+                            "غير المستوفي للشروط",
+                            "لم تتوفر فيه الشروط",
+                            "الزائد على ثلاثه",
+                        ),
+                        (
+                            "المساعد",
+                            "اشد",
+                            "اشدد",
+                        ),
+                        (
+                            "المصدر الصريح",
+                            "المصدر الموول",
+                        ),
+                    ),
+                ),
+            ],
+            minimum_items=2,
+        )
+
+    if asks_naima_bisa:
+        return build_items(
+            [
+                (
+                    "لا يصاغ التعجب مباشرة من «نعم» و«بئس» لأنهما فعلان جامدان غير متصرفين.",
+                    (
+                        ("نعم",),
+                        ("بئس", "بيس"),
+                        ("متصرف",),
+                    ),
+                ),
+                (
+                    "والفعل الجامد لا يتعجب منه مطلقا.",
+                    (
+                        ("الجامد",),
+                        ("لا يتعجب منه",),
+                    ),
+                ),
+            ],
+            minimum_items=1,
+        )
+
+    if asks_istafada:
+        return build_items(
+            [
+                (
+                    "لأن «استفاد» فعل غير ثلاثي، صيغ التعجب منه بطريقة غير مباشرة: «أعظم بالاستفادة»، باستعمال المساعد ثم المصدر الصريح «الاستفادة».",
+                    (
+                        ("استفاد",),
+                        ("غير ثلاثي",),
+                        ("اعظم بالاستفاده",),
+                        ("المساعد",),
+                    ),
+                ),
+            ]
+        )
+
+    if asks_passive:
+        return build_items(
+            [
+                (
+                    "يصاغ التعجب من الفعل المبني للمجهول بطريقة غير مباشرة باستعمال مساعد مثل «أشد» أو «أعظم»، ثم المصدر الصريح أو المؤول للفعل.",
+                    (
+                        (
+                            "المبني للمجهول",
+                            "مبنيا للمجهول",
+                        ),
+                        ("اشد", "اعظم"),
+                        (
+                            "المصدر الصريح",
+                            "المصدر الموول",
+                        ),
+                    ),
+                ),
+                (
+                    "ومن أمثلته الواردة في الدرس: «ما أعظم ما ضُرب».",
+                    (
+                        ("ما اعظم ما",),
+                        ("ضرب",),
+                    ),
+                ),
+            ],
+            minimum_items=1,
+        )
+
+    if asks_formula_identification:
+        return build_items(
+            [
+                (
+                    "صيغة التعجب في «ما أجمل شواطئ المغرب» هي الصيغة القياسية «ما أفعل».",
+                    (
+                        ("ما افعل",),
+                        ("ما اجمل",),
+                    ),
+                ),
+            ]
+        )
+
+    if asks_brief_rule:
+        return build_items(
+            [
+                (
+                    "للتعجب صيغتان قياسيتان: «ما أفعل» و«أفعل به».",
+                    (
+                        ("صيغتان قياسيتان",),
+                        ("ما افعل",),
+                        ("افعل ب",),
+                    ),
+                ),
+                (
+                    "يصاغ التعجب مباشرة إذا كان الفعل ثلاثيا متصرفا تاما مثبتا مبنيا للمعلوم قابلا للتفاضل، ولا يدل على لون أو عيب أو حلية.",
+                    (
+                        ("ثلاثي",),
+                        ("متصرف",),
+                        ("تام",),
+                        ("مثبت",),
+                        ("للمعلوم",),
+                        ("التفاضل", "التفاوت"),
+                    ),
+                ),
+                (
+                    "إذا لم يستوف الفعل الشروط، يصاغ التعجب بطريقة غير مباشرة بفعل مساعد على وزن «ما أفعل» أو «أفعل به»، ثم مصدر صريح أو مؤول.",
+                    (
+                        (
+                            "غير المستوفي للشروط",
+                            "لم تتوفر فيه الشروط",
+                        ),
+                        ("المساعد",),
+                        (
+                            "المصدر الصريح",
+                            "المصدر الموول",
+                        ),
+                    ),
+                ),
+            ],
+            minimum_items=3,
+        )
+
+    return []
 
 
 ARABIC_GENERIC_COMMAND_WORDS = {
@@ -4915,6 +5319,19 @@ def generate_answer(
     # génériques afin d'éviter les mélanges entre plusieurs cours.
     if contains_arabic(
         analysis_question
+    ):
+        validated_evidence = (
+            extract_arabic_exclamation_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
+
+    if (
+        not validated_evidence
+        and contains_arabic(
+            analysis_question
+        )
     ):
         validated_evidence = (
             extract_arabic_direct_rule_evidence(
