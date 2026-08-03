@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v14-arabic-passive-participle-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v15-arabic-comparative-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -558,6 +558,38 @@ def retrieve_relevant_passages(
         else ""
     )
 
+    asks_comparative_lesson = (
+        question_is_arabic
+        and (
+            "asm-altfdhil-siaghth"
+            in normalized_source_name
+            or "اسم التفضيل"
+            in normalized_search_question
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "غير القابلين للتفاضل",
+                    "اشد حمره",
+                    "احق ان يصان",
+                    "الاجدر الا ينسي",
+                    "من الايايل",
+                    "فضليا النساء",
+                )
+            )
+        )
+    )
+
+    # Le cours اسم التفضيل contient huit segments sur
+    # trois pages. Les règles directes, indirectes,
+    # les cas passif/négatif, le fonctionnement et
+    # les modèles d'analyse sont répartis partout.
+    if asks_comparative_lesson:
+        number_of_results = max(
+            number_of_results,
+            14,
+        )
+
     asks_passive_participle_lesson = (
         question_is_arabic
         and (
@@ -827,6 +859,7 @@ def retrieve_relevant_passages(
             and not asks_instrument_noun_lesson
             and not asks_active_participle_lesson
             and not asks_passive_participle_lesson
+            and not asks_comparative_lesson
         ):
             continue
 
@@ -836,6 +869,7 @@ def retrieve_relevant_passages(
             and not asks_instrument_noun_lesson
             and not asks_active_participle_lesson
             and not asks_passive_participle_lesson
+            and not asks_comparative_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,
@@ -914,6 +948,7 @@ def retrieve_relevant_passages(
                 asks_warning_enticement_lesson
                 or asks_active_participle_lesson
                 or asks_passive_participle_lesson
+                or asks_comparative_lesson
             )
             else 2
         )

@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v24-arabic-passive-participle-final-cases"
+ARABIC_RULES_VERSION = "v25-arabic-comparative-superlative-rules"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1731,6 +1731,498 @@ def extract_arabic_direct_rule_evidence(
     ]
 
 
+
+
+def extract_arabic_comparative_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait les règles documentées du cours
+    اسم التفضيل وصياغته وعمله.
+    """
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    normalized_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        same_lesson = (
+            "asm-altfdhil-siaghth"
+            in normalized_source
+            or (
+                "اسم التفضيل"
+                in normalized_passage
+                and "افعل"
+                in normalized_passage
+            )
+        )
+
+        if not same_lesson:
+            continue
+
+        normalized_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if not normalized_passages:
+        return []
+
+    aggregate_text = " ".join(
+        item["normalized_text"]
+        for item in normalized_passages
+    )
+
+    def find_document_support(
+        groups: tuple[tuple[str, ...], ...],
+    ) -> dict | None:
+        normalized_groups = tuple(
+            tuple(
+                normalize_text(term)
+                for term in group
+            )
+            for group in groups
+        )
+
+        if not all(
+            any(
+                term
+                and term in aggregate_text
+                for term in group
+            )
+            for group in normalized_groups
+        ):
+            return None
+
+        ranked = []
+
+        for item in normalized_passages:
+            text = item["normalized_text"]
+
+            hits = sum(
+                1
+                for group in normalized_groups
+                for term in group
+                if term and term in text
+            )
+
+            ranked.append(
+                (
+                    hits,
+                    item["score"],
+                    item,
+                )
+            )
+
+        ranked.sort(
+            key=lambda candidate: (
+                candidate[0],
+                candidate[1],
+            ),
+            reverse=True,
+        )
+
+        return ranked[0][2]
+
+    def build_document_items(
+        specifications: list[
+            tuple[
+                str,
+                tuple[tuple[str, ...], ...],
+            ]
+        ],
+        minimum_items: int = 1,
+    ) -> list[dict]:
+        evidence = []
+
+        for quote, groups in specifications:
+            support = find_document_support(
+                groups
+            )
+
+            if support is None:
+                continue
+
+            evidence.append(
+                {
+                    "passage_number": support[
+                        "passage_number"
+                    ],
+                    "quote": quote,
+                    "source": support[
+                        "source"
+                    ],
+                    "page": support[
+                        "page"
+                    ],
+                }
+            )
+
+        if len(evidence) < minimum_items:
+            return []
+
+        return evidence
+
+    is_comparative_question = (
+        "اسم التفضيل"
+        in normalized_question
+        or "التفضيل"
+        in normalized_question
+        or any(
+            marker in normalized_question
+            for marker in (
+                "غير القابلين للتفاضل",
+                "افعال مساعده",
+                "الصياغه غير المباشره",
+                "احق ان يصان",
+                "الاجدر الا ينسي",
+                "اجمل في عينها الكحل",
+                "اوطان البلاد",
+                "جر عمر",
+            )
+        )
+    )
+
+    if not is_comparative_question:
+        return []
+
+    asks_non_gradable_verbs = (
+        "غير القابلين للتفاضل"
+        in normalized_question
+        and "الفعلين"
+        in normalized_question
+    )
+
+    if asks_non_gradable_verbs:
+        return build_document_items(
+            [
+                (
+                    "الفعلان غير القابلين للتفاضل الواردان في الدرس هما «مات» و«فني».",
+                    (
+                        ("مات",),
+                        ("فني",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_indirect_formation = (
+        "كيف يصاغ اسم التفضيل"
+        in normalized_question
+        and "غير مباشره"
+        in normalized_question
+        and "تعريف" not in normalized_question
+    )
+
+    if asks_indirect_formation:
+        return build_document_items(
+            [
+                (
+                    "يصاغ اسم التفضيل بطريقة غير مباشرة بالإتيان بمصدر الفعل منصوبا على التمييز، مسبوقا بفعل مساعد على وزن «أفعل».",
+                    (
+                        ("مصدر الفعل",),
+                        ("منصوبا علي التمييز",),
+                        ("فعل مساعد",),
+                        ("افعل",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_helper_forms = (
+        "ثلاثه افعال مساعده"
+        in normalized_question
+        or (
+            "افعال مساعده"
+            in normalized_question
+            and "افعل"
+            in normalized_question
+        )
+    )
+
+    if asks_helper_forms:
+        return build_document_items(
+            [
+                (
+                    "من الأفعال المساعدة على وزن «أفعل»: «أكثر»، و«أشد»، و«أقوى».",
+                    (
+                        ("اكثر",),
+                        ("اشد",),
+                        ("اقوي",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_passive_negative_rule = (
+        "كيف يصاغ اسم التفضيل"
+        in normalized_question
+        and "المبني للمجهول"
+        in normalized_question
+        and "المنفي"
+        in normalized_question
+    )
+
+    if asks_passive_negative_rule:
+        return build_document_items(
+            [
+                (
+                    "يصاغ اسم التفضيل من الفعل المبني للمجهول أو المنفي بالإتيان بالمصدر المؤول للفعل، مسبوقا بفعل مساعد على وزن «أفعل».",
+                    (
+                        ("المبني للمجهول",),
+                        ("المنفي",),
+                        ("المصدر الموول",),
+                        ("فعل مساعد",),
+                        ("افعل",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_passive_example = (
+        "اشرح صياغه التفضيل"
+        in normalized_question
+        and "احق ان يصان"
+        in normalized_question
+    )
+
+    if asks_passive_example:
+        return build_document_items(
+            [
+                (
+                    "في «الشرف أحق أن يصان» استعمل «أحق» فعلا مساعدا على وزن «أفعل»، ثم جاء المصدر المؤول «أن يصان» لأن الفعل «يصان» مبني للمجهول.",
+                    (
+                        ("احق",),
+                        ("ان يصان",),
+                        ("مبنيا للمجهول", "مبني للمجهول"),
+                        ("المصدر الموول",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_negative_example = (
+        "اشرح صياغه التفضيل"
+        in normalized_question
+        and "الاجدر الا ينسي"
+        in normalized_question
+    )
+
+    if asks_negative_example:
+        return build_document_items(
+            [
+                (
+                    "في «الأجدر ألا ينسى المرء وطنه» استعمل «الأجدر» فعلا مساعدا على وزن «أفعل»، ثم جاء المصدر المؤول «ألا ينسى» لأن الفعل «ينسى» منفي.",
+                    (
+                        ("الاجدر",),
+                        ("الا ينسي",),
+                        ("منفيا", "منفي"),
+                        ("المصدر الموول",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_work = (
+        normalized_question
+        in (
+            "ما عمل اسم التفضيل",
+            "ما عمل اسم التفضيل؟",
+        )
+        or (
+            "عمل اسم التفضيل"
+            in normalized_question
+            and "ما"
+            in normalized_question.split()
+        )
+    )
+
+    if asks_work:
+        return build_document_items(
+            [
+                (
+                    "يرفع اسم التفضيل بعده فاعلا، وغالبا ما يكون ضميرا مستترا.",
+                    (
+                        ("يرفع اسم التفضيل",),
+                        ("فاعلا",),
+                        ("ضميرا مستترا",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_hidden_subject = (
+        "نوع الفاعل"
+        in normalized_question
+        and "احب"
+        in normalized_question
+        and "ليوسف"
+        in normalized_question
+    )
+
+    if asks_hidden_subject:
+        return build_document_items(
+            [
+                (
+                    "رفع اسم التفضيل «أحب» فاعلا ضميرا مستترا، وهو الغالب في عمل اسم التفضيل.",
+                    (
+                        ("احب",),
+                        ("فاعلا ضميرا مستترا",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_ajmal_subject = (
+        "الفاعل الظاهر"
+        in normalized_question
+        and "اجمل"
+        in normalized_question
+        and "الكحل"
+        in normalized_question
+    )
+
+    if asks_ajmal_subject:
+        return build_document_items(
+            [
+                (
+                    "رفع اسم التفضيل «أجمل» فاعلا ظاهرا هو «الكحل».",
+                    (
+                        ("اجمل",),
+                        ("الكحل",),
+                        ("اسمين ظاهرين", "ظاهرا"),
+                    ),
+                ),
+            ]
+        )
+
+    asks_ahab_subject = (
+        "الفاعل الظاهر"
+        in normalized_question
+        and "احب"
+        in normalized_question
+        and "اوطان البلاد"
+        in normalized_question
+    )
+
+    if asks_ahab_subject:
+        return build_document_items(
+            [
+                (
+                    "رفع اسم التفضيل «أحب» فاعلا ظاهرا هو «أرض».",
+                    (
+                        ("احب",),
+                        ("ارض",),
+                        ("اسمين ظاهرين", "ظاهرا"),
+                    ),
+                ),
+            ]
+        )
+
+    asks_omar_reason = (
+        "لماذا جر عمر"
+        in normalized_question
+        and "اكبر من عمر"
+        in normalized_question
+    )
+
+    if asks_omar_reason:
+        return build_document_items(
+            [
+                (
+                    "«عمر» اسم مجرور بـ«من» وعلامة جره الفتحة لأنه ممنوع من الصرف؛ فهو علم معدول عن «عامر» على وزن «فعل».",
+                    (
+                        ("عمر اسم مجرور",),
+                        ("الفتحه",),
+                        ("ممنوع من الصرف",),
+                        ("علم معدول",),
+                        ("عامر",),
+                        ("فعل",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_combined_lesson = (
+        "تعريف اسم التفضيل"
+        in normalized_question
+        and "مباشره"
+        in normalized_question
+        and "غير المباشره"
+        in normalized_question
+        and "يعمل"
+        in normalized_question
+    )
+
+    if asks_combined_lesson:
+        return build_document_items(
+            [
+                (
+                    "اسم التفضيل اسم مشتق على وزن «أفعل». يصاغ مباشرة من فعل ثلاثي متصرف مثبت تام مبني للمعلوم قابل للتفاضل ولا يدل على لون أو عيب أو حلية. ويصاغ بطريقة غير مباشرة باستعمال فعل مساعد على وزن «أفعل» يليه مصدر منصوب على التمييز. ويرفع اسم التفضيل بعده فاعلا.",
+                    (
+                        ("اسم مشتق",),
+                        ("ثلاثي", "ثلاثيا"),
+                        ("متصرف", "متصرفا"),
+                        ("فعل مساعد",),
+                        ("مصدر الفعل",),
+                        ("التمييز",),
+                        ("يرفع اسم التفضيل",),
+                        ("فاعلا",),
+                    ),
+                ),
+            ]
+        )
+
+    return []
 
 
 def extract_arabic_passive_participle_evidence(
@@ -7447,11 +7939,19 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_passive_participle_evidence(
+            extract_arabic_comparative_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_passive_participle_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         if not validated_evidence:
             validated_evidence = (

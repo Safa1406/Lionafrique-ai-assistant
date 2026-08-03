@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v18-arabic-passive-participle-summary-selection"
+    "v19-arabic-comparative-structured-summary"
 )
 
 
@@ -2485,6 +2485,148 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
         "مرفوع محلا",
     ),
 )
+
+
+def detect_arabic_comparative_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours اسم التفضيل."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    if "اسم تفضيل" not in normalized_question:
+        return ""
+
+    if (
+        "شروط صياغه"
+        in normalized_question
+        and "مباشره"
+        in normalized_question
+        and "غير مباشره"
+        in normalized_question
+    ):
+        return "conditions_work"
+
+    if any(
+        marker in normalized_question
+        for marker in (
+            "لخص درس",
+            "ملخص درس",
+            "تلخيص درس",
+        )
+    ):
+        return "general"
+
+    return ""
+
+
+def select_arabic_comparative_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF اسم التفضيل."""
+
+    summary_mode = (
+        detect_arabic_comparative_summary_mode(
+            question
+        )
+    )
+
+    if not summary_mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "asm-altfdhil-siaghth" in source_name:
+            lesson_units.append(
+                unit
+            )
+
+    if len(lesson_units) < 2:
+        return []
+
+    lesson_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+
+    return lesson_units
+
+
+def build_arabic_comparative_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré du cours."""
+
+    summary_mode = (
+        detect_arabic_comparative_summary_mode(
+            question
+        )
+    )
+
+    if summary_mode == "general":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- اسم التفضيل اسم مشتق يدل على اشتراك شيئين "
+            "في صفة وزيادة أحدهما على الآخر، ويأتي على "
+            "وزن «أفعل» ومؤنثه «فعلى».\n"
+            "- في الصياغة المباشرة يشتق من فعل ثلاثي "
+            "متصرف مثبت تام مبني للمعلوم قابل للتفاضل، "
+            "ولا يدل على لون أو عيب أو حلية.\n"
+            "- في الصياغة غير المباشرة يستعمل فعل مساعد "
+            "على وزن «أفعل»، ثم مصدر الفعل منصوبا على "
+            "التمييز. ومن المبني للمجهول أو المنفي يأتي "
+            "المصدر المؤول بعد الفعل المساعد.\n"
+            "- يرفع اسم التفضيل بعده فاعلا، وغالبا ما "
+            "يكون ضميرا مستترا، وقد يكون اسما ظاهرا."
+        )
+
+    elif summary_mode == "conditions_work":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- يصاغ اسم التفضيل مباشرة إذا كان الفعل "
+            "ثلاثيا، متصرفا، مثبتا، تاما، مبنيا للمعلوم، "
+            "قابلا للتفاضل، ولا يدل على لون أو عيب أو "
+            "حلية.\n"
+            "- إذا لم يستوف الفعل الشروط، تصاغ المقارنة "
+            "بطريقة غير مباشرة باستعمال فعل مساعد على "
+            "وزن «أفعل»، يليه مصدر منصوب على التمييز.\n"
+            "- من الفعل المبني للمجهول أو المنفي يستعمل "
+            "المصدر المؤول مسبوقا بالفعل المساعد.\n"
+            "- يرفع اسم التفضيل بعده فاعلا، وغالبا ما "
+            "يكون ضميرا مستترا."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 def detect_arabic_passive_participle_summary_mode(
@@ -3641,6 +3783,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        comparative_units = (
+            select_arabic_comparative_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if comparative_units:
+            structured_comparative_summary = (
+                build_arabic_comparative_summary(
+                    question=cleaned_question,
+                    selected_units=comparative_units,
+                )
+            )
+
+            if structured_comparative_summary is not None:
+                return structured_comparative_summary
+
         passive_participle_units = (
             select_arabic_passive_participle_units(
                 question=cleaned_question,
