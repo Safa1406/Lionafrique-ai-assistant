@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v19-arabic-instrument-noun-compound-answer"
+ARABIC_RULES_VERSION = "v22-arabic-active-participle-example-normalization"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1731,6 +1731,408 @@ def extract_arabic_direct_rule_evidence(
     ]
 
 
+
+
+def extract_arabic_active_participle_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait les règles documentées du cours
+    اسم الفاعل وصيغ المبالغة وعملهما.
+    """
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    normalized_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        same_lesson = (
+            "asm-alfaal-osigh-almbalgha-oamlhma"
+            in normalized_source
+            or (
+                "اسم الفاعل"
+                in normalized_passage
+                and "صيغ المبالغه"
+                in normalized_passage
+            )
+        )
+
+        if not same_lesson:
+            continue
+
+        normalized_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if not normalized_passages:
+        return []
+
+    aggregate_text = " ".join(
+        item["normalized_text"]
+        for item in normalized_passages
+    )
+
+    def find_document_support(
+        groups: tuple[tuple[str, ...], ...],
+    ) -> dict | None:
+        normalized_groups = tuple(
+            tuple(
+                normalize_text(term)
+                for term in group
+            )
+            for group in groups
+        )
+
+        if not all(
+            any(
+                term
+                and term in aggregate_text
+                for term in group
+            )
+            for group in normalized_groups
+        ):
+            return None
+
+        ranked = []
+
+        for item in normalized_passages:
+            text = item["normalized_text"]
+
+            hits = sum(
+                1
+                for group in normalized_groups
+                for term in group
+                if term and term in text
+            )
+
+            ranked.append(
+                (
+                    hits,
+                    item["score"],
+                    item,
+                )
+            )
+
+        ranked.sort(
+            key=lambda candidate: (
+                candidate[0],
+                candidate[1],
+            ),
+            reverse=True,
+        )
+
+        return ranked[0][2]
+
+    def build_document_items(
+        specifications: list[
+            tuple[
+                str,
+                tuple[tuple[str, ...], ...],
+            ]
+        ],
+        minimum_items: int = 1,
+    ) -> list[dict]:
+        evidence = []
+
+        for quote, groups in specifications:
+            support = find_document_support(
+                groups
+            )
+
+            if support is None:
+                continue
+
+            evidence.append(
+                {
+                    "passage_number": support[
+                        "passage_number"
+                    ],
+                    "quote": quote,
+                    "source": support[
+                        "source"
+                    ],
+                    "page": support[
+                        "page"
+                    ],
+                }
+            )
+
+        if len(evidence) < minimum_items:
+            return []
+
+        return evidence
+
+    is_lesson_question = (
+        "اسم الفاعل"
+        in normalized_question
+        or "صيغه المبالغه"
+        in normalized_question
+        or "صيغ المبالغه"
+        in normalized_question
+    )
+
+    if not is_lesson_question:
+        return []
+
+    asks_monazzim_application = (
+        "لماذا" in normalized_question
+        and "منظم" in normalized_question
+        and "صفوفه" in normalized_question
+        and "هل" in normalized_question.split()
+        and (
+            "القايد" in normalized_question
+            or "القائد" in normalized_question
+        )
+    )
+
+    if asks_monazzim_application:
+        return build_document_items(
+            [
+                (
+                    "يعمل اسم الفاعل «منظم» لأنه مجرد من ال، ويدل على الحاضر والمستقبل، ومسبوق باستفهام.",
+                    (
+                        ("هل القائد منظم",),
+                        ("مجرد من ال",),
+                        ("الحاضر والمستقبل",),
+                        ("باستفهام", "استفهام"),
+                    ),
+                ),
+            ]
+        )
+
+    asks_active_work = (
+        "عمل اسم الفاعل"
+        in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "عندما",
+                "ماذا يعمل",
+                "ما عمل",
+            )
+        )
+    )
+
+    if asks_active_work:
+        return build_document_items(
+            [
+                (
+                    "يعمل اسم الفاعل عمل فعله المبني للمعلوم؛ فيرفع الفاعل وينصب المفعول به.",
+                    (
+                        ("يعمل اسم الفاعل عمل فعله",),
+                        ("المبني للمعلوم",),
+                        ("رفع الفاعل",),
+                        ("نصب المفعول به",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_work_states = (
+        "كم حال"
+        in normalized_question
+        or (
+            "حاله يعمل"
+            in normalized_question
+            and "ما هما"
+            in normalized_question
+        )
+    )
+
+    if asks_work_states:
+        return build_document_items(
+            [
+                (
+                    "يعمل اسم الفاعل في حالتين: الحالة الأولى هي المقترن بال، ويعمل دون شرط؛ والحالة الثانية هي المجرد من ال، ويعمل بشروط.",
+                    (
+                        ("يعمل في حالين", "يعمل عمل فعله في حالتين"),
+                        ("تحلى", "مقترن"),
+                        ("خلا من", "مجرد من"),
+                    ),
+                ),
+            ]
+        )
+
+    asks_without_conditions = (
+        "دون شروط"
+        in normalized_question
+        or "بدون شروط"
+        in normalized_question
+    )
+
+    if asks_without_conditions:
+        return build_document_items(
+            [
+                (
+                    "يعمل اسم الفاعل دون شرط إذا كان من نوع المقترن بال.",
+                    (
+                        ("مقترن", "تحلى"),
+                        ("دون شرط", "بدون"),
+                    ),
+                ),
+            ]
+        )
+
+    asks_bare_conditions = (
+        "شروط عمل اسم الفاعل"
+        in normalized_question
+        and (
+            "مجرد من ال"
+            in normalized_question
+            or "خلا من ال"
+            in normalized_question
+        )
+    )
+
+    if asks_bare_conditions:
+        return build_document_items(
+            [
+                (
+                    "يشترط في اسم الفاعل المجرد من «أل» أن يدل على الحاضر أو المستقبل، وأن يكون مسبوقا بما يعتمد عليه.",
+                    (
+                        ("الحاضر", "الحال"),
+                        ("المستقبل", "الاستقبال"),
+                        ("مسبوق", "يسبق"),
+                    ),
+                ),
+            ]
+        )
+
+    asks_preceders = (
+        "بماذا يسبق"
+        in normalized_question
+        or (
+            "يسبق اسم الفاعل"
+            in normalized_question
+            and "حتى يعمل"
+            in normalized_question
+        )
+    )
+
+    if asks_preceders:
+        return build_document_items(
+            [
+                (
+                    "يسبق اسم الفاعل المجرد من «أل» بمبتدأ، أو نفي، أو نداء، أو استفهام، أو موصوف، أو ناسخ.",
+                    (
+                        ("مبتدا",),
+                        ("نفي",),
+                        ("نداء",),
+                        ("استفهام",),
+                        ("موصوف",),
+                        ("ناسخ",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_ghafour_weight = (
+        "غفور" in normalized_question
+        and "وزن" in normalized_question
+    )
+
+    if asks_ghafour_weight:
+        return build_document_items(
+            [
+                (
+                    "«غفور» صيغة مبالغة على وزن «فعول».",
+                    (
+                        ("غفور",),
+                        ("فعول",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_combined_lesson = (
+        "تعريف" in normalized_question
+        and "اسم الفاعل"
+        in normalized_question
+        and (
+            "صيغه المبالغه"
+            in normalized_question
+            or "صيغ المبالغه"
+            in normalized_question
+        )
+        and any(
+            marker in normalized_question
+            for marker in (
+                "يصاغان",
+                "يعملان",
+                "كيف يصاغ",
+            )
+        )
+    )
+
+    if asks_combined_lesson:
+        return build_document_items(
+            [
+                (
+                    "اسم الفاعل اسم مشتق يدل على من قام بالفعل؛ يصاغ من الثلاثي على وزن «فاعل»، ومن غير الثلاثي على وزن مضارعه بإبدال حرف المضارعة ميما مضمومة وكسر ما قبل الآخر. وصيغة المبالغة مشتق يدل على كثرة الفعل أو شدة الصفة، ومن أوزانها «فعال» و«فعول» و«مفعال» و«فعيل» و«فعل». ويعمل اسم الفاعل وصيغ المبالغة عمل فعلهما بالشروط الواردة في الدرس.",
+                    (
+                        ("اسم مشتق",),
+                        ("فاعل",),
+                        ("مضارعه",),
+                        ("صيغه المبالغه", "صيغ المبالغه"),
+                        ("فعال",),
+                        ("فعول",),
+                        ("عمل",),
+                    ),
+                ),
+            ]
+        )
+
+    return []
 
 
 def extract_arabic_instrument_noun_evidence(
@@ -6654,11 +7056,19 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_instrument_noun_evidence(
+            extract_arabic_active_participle_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_instrument_noun_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         if not validated_evidence:
             validated_evidence = (

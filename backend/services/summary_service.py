@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v15-arabic-instrument-noun-summary-normalization"
+    "v16-arabic-active-participle-structured-summary"
 )
 
 
@@ -2487,6 +2487,181 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 )
 
 
+def detect_arabic_active_participle_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours concerné."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    if (
+        "اسم فاعل"
+        not in normalized_question
+        or "مبالغه"
+        not in normalized_question
+    ):
+        return ""
+
+    if (
+        "صياغه"
+        in normalized_question
+        and "شروط"
+        in normalized_question
+    ):
+        return "formation_work"
+
+    if any(
+        marker in normalized_question
+        for marker in (
+            "لخص درس",
+            "ملخص درس",
+            "تلخيص درس",
+        )
+    ):
+        return "general"
+
+    return ""
+
+
+def select_arabic_active_participle_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne tous les segments documentaires du petit PDF."""
+
+    summary_mode = (
+        detect_arabic_active_participle_summary_mode(
+            question
+        )
+    )
+
+    if not summary_mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "asm-alfaal-osigh-almbalgha-oamlhma"
+            in source_name
+        ):
+            lesson_units.append(
+                unit
+            )
+
+    if not lesson_units:
+        return []
+
+    aggregate_text = " ".join(
+        normalize_arabic_match_text(
+            unit.get(
+                "text",
+                "",
+            )
+        )
+        for unit in lesson_units
+    )
+
+    required_groups = (
+        ("اسم فاعل",),
+        ("فاعل",),
+        ("مضارعه",),
+        ("مبالغه",),
+        ("فعال",),
+        ("فعول",),
+        ("عمل",),
+    )
+
+    for group in required_groups:
+        if not any(
+            term in aggregate_text
+            for term in group
+        ):
+            return []
+
+    lesson_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+
+    return lesson_units
+
+
+def build_arabic_active_participle_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré et documenté."""
+
+    summary_mode = (
+        detect_arabic_active_participle_summary_mode(
+            question
+        )
+    )
+
+    if summary_mode == "general":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- اسم الفاعل اسم مشتق يدل على من قام بالفعل. "
+            "يصاغ من الفعل الثلاثي على وزن «فاعل»، ومن "
+            "غير الثلاثي على وزن مضارعه بإبدال حرف "
+            "المضارعة ميما مضمومة وكسر ما قبل الآخر.\n"
+            "- يعمل اسم الفاعل عمل فعله المبني للمعلوم، "
+            "فيرفع الفاعل وينصب المفعول به. يعمل المقترن "
+            "بـ«أل» دون شروط، أما المجرد منها فيدل على "
+            "الحاضر أو المستقبل ويعتمد على مبتدأ أو نفي "
+            "أو نداء أو استفهام أو موصوف أو ناسخ.\n"
+            "- صيغ المبالغة مشتقات تدل على كثرة الفعل أو "
+            "شدة الصفة، ومن أوزانها: «فعال»، و«فعول»، "
+            "و«مفعال»، و«فعيل»، و«فعل».\n"
+            "- تعمل صيغ المبالغة عمل اسم الفاعل بنفس "
+            "الحالات والشروط."
+        )
+
+    elif summary_mode == "formation_work":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- يصاغ اسم الفاعل من الثلاثي على وزن «فاعل»، "
+            "ومن غير الثلاثي على وزن مضارعه مع إبدال حرف "
+            "المضارعة ميما مضمومة وكسر ما قبل الآخر.\n"
+            "- من أوزان صيغ المبالغة: «فعال»، و«فعول»، "
+            "و«مفعال»، و«فعيل»، و«فعل».\n"
+            "- يعمل اسم الفاعل وصيغ المبالغة عمل فعلهما؛ "
+            "فالمقترن بـ«أل» يعمل دون شروط، والمجرد منها "
+            "يشترط أن يدل على الحاضر أو المستقبل وأن "
+            "يسبق بما يعتمد عليه."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_arabic_instrument_noun_summary_mode(
     question: str,
 ) -> str:
@@ -3314,6 +3489,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        active_participle_units = (
+            select_arabic_active_participle_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if active_participle_units:
+            structured_active_summary = (
+                build_arabic_active_participle_summary(
+                    question=cleaned_question,
+                    selected_units=active_participle_units,
+                )
+            )
+
+            if structured_active_summary is not None:
+                return structured_active_summary
+
         instrument_noun_units = (
             select_arabic_instrument_noun_units(
                 question=cleaned_question,

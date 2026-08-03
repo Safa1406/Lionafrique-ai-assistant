@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v12-arabic-instrument-noun-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v13-arabic-active-participle-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -558,6 +558,42 @@ def retrieve_relevant_passages(
         else ""
     )
 
+    asks_active_participle_lesson = (
+        question_is_arabic
+        and (
+            "asm-alfaal-osigh-almbalgha-oamlhma"
+            in normalized_source_name
+            or (
+                "اسم الفاعل"
+                in normalized_search_question
+                and "مبالغه"
+                in normalized_search_question
+            )
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "صيغ المبالغه",
+                    "صيغه المبالغه",
+                    "مستنتج",
+                    "معوان",
+                    "غفور",
+                )
+            )
+        )
+    )
+
+    # Le cours contient huit segments répartis sur trois
+    # pages. Les règles de formation, les conditions de
+    # fonctionnement et les exemples de صيغ المبالغة ne
+    # figurent pas dans le même segment. Avec un filtre de
+    # source exact, on récupère donc tout le petit document.
+    if asks_active_participle_lesson:
+        number_of_results = max(
+            number_of_results,
+            12,
+        )
+
     asks_instrument_noun_lesson = (
         question_is_arabic
         and (
@@ -758,6 +794,7 @@ def retrieve_relevant_passages(
             distance > max_allowed_distance
             and not strong_arabic_lexical_match
             and not asks_instrument_noun_lesson
+            and not asks_active_participle_lesson
         ):
             continue
 
@@ -765,6 +802,7 @@ def retrieve_relevant_passages(
             topic_keywords
             and not common_keywords
             and not asks_instrument_noun_lesson
+            and not asks_active_participle_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,
@@ -839,7 +877,10 @@ def retrieve_relevant_passages(
 
         summary_page_limit = (
             3
-            if asks_warning_enticement_lesson
+            if (
+                asks_warning_enticement_lesson
+                or asks_active_participle_lesson
+            )
             else 2
         )
 
