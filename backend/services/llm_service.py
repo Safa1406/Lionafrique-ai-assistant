@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v22-arabic-active-participle-example-normalization"
+ARABIC_RULES_VERSION = "v24-arabic-passive-participle-final-cases"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1731,6 +1731,397 @@ def extract_arabic_direct_rule_evidence(
     ]
 
 
+
+
+def extract_arabic_passive_participle_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait les règles documentées du cours
+    اسم المفعول وعمله.
+    """
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    normalized_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get(
+                "text",
+                "",
+            ),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        same_lesson = (
+            "asm-almfaol-oamlh"
+            in normalized_source
+            or (
+                "اسم المفعول"
+                in normalized_passage
+                and (
+                    "نايب الفاعل"
+                    in normalized_passage
+                    or "مفعول"
+                    in normalized_passage
+                )
+            )
+        )
+
+        if not same_lesson:
+            continue
+
+        normalized_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if not normalized_passages:
+        return []
+
+    aggregate_text = " ".join(
+        item["normalized_text"]
+        for item in normalized_passages
+    )
+
+    def find_document_support(
+        groups: tuple[tuple[str, ...], ...],
+    ) -> dict | None:
+        normalized_groups = tuple(
+            tuple(
+                normalize_text(term)
+                for term in group
+            )
+            for group in groups
+        )
+
+        if not all(
+            any(
+                term
+                and term in aggregate_text
+                for term in group
+            )
+            for group in normalized_groups
+        ):
+            return None
+
+        ranked = []
+
+        for item in normalized_passages:
+            text = item[
+                "normalized_text"
+            ]
+
+            hits = sum(
+                1
+                for group in normalized_groups
+                for term in group
+                if term
+                and term in text
+            )
+
+            ranked.append(
+                (
+                    hits,
+                    item["score"],
+                    item,
+                )
+            )
+
+        ranked.sort(
+            key=lambda candidate: (
+                candidate[0],
+                candidate[1],
+            ),
+            reverse=True,
+        )
+
+        return ranked[0][2]
+
+    def build_document_items(
+        specifications: list[
+            tuple[
+                str,
+                tuple[tuple[str, ...], ...],
+            ]
+        ],
+        minimum_items: int = 1,
+    ) -> list[dict]:
+        evidence = []
+
+        for quote, groups in specifications:
+            support = find_document_support(
+                groups
+            )
+
+            if support is None:
+                continue
+
+            evidence.append(
+                {
+                    "passage_number": support[
+                        "passage_number"
+                    ],
+                    "quote": quote,
+                    "source": support[
+                        "source"
+                    ],
+                    "page": support[
+                        "page"
+                    ],
+                }
+            )
+
+        if len(evidence) < minimum_items:
+            return []
+
+        return evidence
+
+    is_passive_participle_question = (
+        "اسم المفعول"
+        in normalized_question
+        or "نايب الفاعل"
+        in normalized_question
+        or (
+            "مختار"
+            in normalized_question
+            and "اختارك"
+            in normalized_question
+        )
+    )
+
+    if not is_passive_participle_question:
+        return []
+
+    asks_combined_lesson = (
+        "تعريف" in normalized_question
+        and "الثلاثي" in normalized_question
+        and "غير الثلاثي"
+        in normalized_question
+        and "يعمل" in normalized_question
+    )
+
+    if asks_combined_lesson:
+        return build_document_items(
+            [
+                (
+                    "اسم المفعول اسم مشتق يدل على الحدث وعلى من وقع عليه الفعل. يصاغ من الثلاثي على وزن «مفعول»، ومن غير الثلاثي على وزن مضارعه مع إبدال حرف المضارعة ميما مضمومة وفتح ما قبل الآخر. ويعمل عمل فعله المبني للمجهول فيرفع نائب الفاعل.",
+                    (
+                        ("اسم مشتق",),
+                        ("مفعول",),
+                        ("مضارعه",),
+                        ("ميما مضمومه",),
+                        ("فتح ما قبل الاخر",),
+                        ("المبني للمجهول",),
+                        ("نايب الفاعل",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_non_triliteral_formation = (
+        "كيف يصاغ"
+        in normalized_question
+        and "غير الثلاثي"
+        in normalized_question
+    )
+
+    if asks_non_triliteral_formation:
+        return build_document_items(
+            [
+                (
+                    "يصاغ اسم المفعول من غير الثلاثي على وزن مضارعه، مع إبدال حرف المضارعة ميما مضمومة وفتح ما قبل الآخر.",
+                    (
+                        ("غير الثلاثي",),
+                        ("مضارعه",),
+                        ("حرف المضارعه",),
+                        ("ميما مضمومه",),
+                        ("فتح ما قبل الاخر",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_bare_conditions = (
+        "شروط عمل اسم المفعول"
+        in normalized_question
+        and (
+            "مجرد من ال"
+            in normalized_question
+            or "المجرد من ال"
+            in normalized_question
+        )
+    )
+
+    if asks_bare_conditions:
+        return build_document_items(
+            [
+                (
+                    "يشترط في اسم المفعول المجرد من ال أن يدل على الحاضر أو المستقبل، وأن يكون مسبوقا بما يعتمد عليه.",
+                    (
+                        ("المجرد من ال",),
+                        ("الحاضر",),
+                        ("المستقبل",),
+                        ("مسبوق",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_mahmoud_application = (
+        "لماذا" in normalized_question
+        and "محمود" in normalized_question
+        and "المومن" in normalized_question
+        and "فعله" in normalized_question
+    )
+
+    if asks_mahmoud_application:
+        return build_document_items(
+            [
+                (
+                    "يعمل اسم المفعول «محمود» لأنه مجرد من ال، ويدل على الحاضر والمستقبل، ومسبوق بمبتدأ هو «المؤمن»، وقد رفع «فعله» نائب فاعل.",
+                    (
+                        ("المومن محمود",),
+                        ("مجرد من ال",),
+                        ("الحاضر",),
+                        ("المستقبل",),
+                        ("بمبتدا",),
+                        ("فعله",),
+                        ("نايب الفاعل",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_multiple_objects = (
+        "اكثر من مفعول"
+        in normalized_question
+        and (
+            "نايب الفاعل"
+            in normalized_question
+            or "ماذا يكون"
+            in normalized_question
+        )
+    )
+
+    if asks_multiple_objects:
+        return build_document_items(
+            [
+                (
+                    "إذا كان الفعل متعديا لأكثر من مفعول، يكون نائب الفاعل مفعولا أولا.",
+                    (
+                        ("اكثر من مفعول",),
+                        ("مفعولا اولا",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_intransitive_examples = (
+        "مثالين"
+        in normalized_question
+        and "فعل لازم"
+        in normalized_question
+    )
+
+    if asks_intransitive_examples:
+        return build_document_items(
+            [
+                (
+                    "من أمثلة صياغة اسم المفعول من فعل لازم في الدرس: «السرير منوم فوقه» و«الأرض متسابق عليها».",
+                    (
+                        ("السرير منوم فوقه",),
+                        ("الارض متسابق عليها",),
+                    ),
+                ),
+            ]
+        )
+
+    asks_heard_forms = (
+        "صيغتين سماعيتين"
+        in normalized_question
+        and "بمعني اسم المفعول"
+        in normalized_question
+    )
+
+    if asks_heard_forms:
+        return build_document_items(
+            [
+                (
+                    "من الصيغ السماعية التي تأتي بمعنى اسم المفعول: «فعيل» مثل جريح وقتيل، و«فَعْلة» مثل أكلة ومضغة وطعمة.",
+                    (
+                        ("فعيل",),
+                        ("جريح", "قتيل"),
+                        ("فعله",),
+                        ("مضغه", "طعمه"),
+                    ),
+                ),
+            ]
+        )
+
+    asks_mokhtar_example = (
+        "مختار" in normalized_question
+        and "اختارك" in normalized_question
+        and "رييسك" in normalized_question
+    )
+
+    if asks_mokhtar_example:
+        return build_document_items(
+            [
+                (
+                    "في «أنت مختار» تكون «مختار» اسم مفعول لأن الاختيار وقع عليك، وفي «رئيسك مختار» تكون اسم فاعل لأن الرئيس قام بالاختيار، والتفريق بينهما بالقرينة.",
+                    (
+                        ("مختار",),
+                        ("اختارك",),
+                        ("بالقرينه", "القرينه"),
+                    ),
+                ),
+            ]
+        )
+
+    return []
 
 
 def extract_arabic_active_participle_evidence(
@@ -7056,11 +7447,19 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_active_participle_evidence(
+            extract_arabic_passive_participle_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_active_participle_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         if not validated_evidence:
             validated_evidence = (

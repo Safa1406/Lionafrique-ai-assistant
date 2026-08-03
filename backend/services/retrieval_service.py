@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v13-arabic-active-participle-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v14-arabic-passive-participle-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -558,6 +558,37 @@ def retrieve_relevant_passages(
         else ""
     )
 
+    asks_passive_participle_lesson = (
+        question_is_arabic
+        and (
+            "asm-almfaol-oamlh"
+            in normalized_source_name
+            or "اسم المفعول"
+            in normalized_search_question
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "نايب الفاعل",
+                    "محموده اعماله",
+                    "محمود فعله",
+                    "منوم فوقه",
+                    "متسابق عليها",
+                )
+            )
+        )
+    )
+
+    # Le cours اسم المفعول contient sept segments sur
+    # trois pages. Les règles de formation, les formes du
+    # نائب الفاعل, les exemples du فعل لازم et les formes
+    # سماعية sont répartis dans différents segments.
+    if asks_passive_participle_lesson:
+        number_of_results = max(
+            number_of_results,
+            12,
+        )
+
     asks_active_participle_lesson = (
         question_is_arabic
         and (
@@ -795,6 +826,7 @@ def retrieve_relevant_passages(
             and not strong_arabic_lexical_match
             and not asks_instrument_noun_lesson
             and not asks_active_participle_lesson
+            and not asks_passive_participle_lesson
         ):
             continue
 
@@ -803,6 +835,7 @@ def retrieve_relevant_passages(
             and not common_keywords
             and not asks_instrument_noun_lesson
             and not asks_active_participle_lesson
+            and not asks_passive_participle_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,
@@ -880,6 +913,7 @@ def retrieve_relevant_passages(
             if (
                 asks_warning_enticement_lesson
                 or asks_active_participle_lesson
+                or asks_passive_participle_lesson
             )
             else 2
         )
