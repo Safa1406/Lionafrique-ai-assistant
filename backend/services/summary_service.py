@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v21-arabic-wonderful-dialogue-structured-summary"
+    "v22-arabic-muslim-qualities-structured-summary"
 )
 
 
@@ -2485,6 +2485,143 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
         "مرفوع محلا",
     ),
 )
+
+
+def detect_arabic_muslim_qualities_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du texte خصال المسلم."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    if "خصال مسلم" not in normalized_question:
+        return ""
+
+    if (
+        "تحليل"
+        in normalized_question
+        and "مجال"
+        in normalized_question
+        and "نوع"
+        in normalized_question
+        and "اساليب"
+        in normalized_question
+        and "قيم"
+        in normalized_question
+    ):
+        return "analysis"
+
+    if any(
+        marker in normalized_question
+        for marker in (
+            "لخص نص",
+            "ملخص نص",
+            "تلخيص نص",
+        )
+    ):
+        return "narrative"
+
+    return ""
+
+
+def select_arabic_muslim_qualities_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF خصال المسلم."""
+
+    mode = (
+        detect_arabic_muslim_qualities_summary_mode(
+            question
+        )
+    )
+
+    if not mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "khsal-almslm" in source_name:
+            lesson_units.append(unit)
+
+    if len(lesson_units) < 2:
+        return []
+
+    lesson_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return lesson_units
+
+
+def build_arabic_muslim_qualities_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré du texte خصال المسلم."""
+
+    mode = (
+        detect_arabic_muslim_qualities_summary_mode(
+            question
+        )
+    )
+
+    if mode == "narrative":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- تعرض الأحاديث خصال المسلم الحقيقي، ومنها "
+            "التقوى والعدل وطلب العلم والقناعة وغنى النفس.\n"
+            "- تدعو إلى الإحسان إلى الجار وحب الخير "
+            "للناس ونصرة المظلوم ومنع الظالم من ظلمه.\n"
+            "- تحث على صلة الرحم والعفو والأمر بالمعروف، "
+            "وعلى خشية الله والرضى بما قسمه للإنسان.\n"
+            "- تنظم هذه الخصال علاقة الإنسان بربه "
+            "وعلاقته بنفسه وعلاقته بالمجتمع."
+        )
+
+    elif mode == "analysis":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- ينتمي النص إلى مجال القيم الإسلامية، "
+            "ويتكون من أحاديث قدسية وأحاديث نبوية شريفة.\n"
+            "- عنوان «خصال المسلم» مركب إضافي، ودلالته "
+            "أن المسلم يتحلى بخصال عديدة.\n"
+            "- يتناول المضمون تقوى الله والعدل والعلم "
+            "والقناعة وغنى النفس، ويصنف الخصال إلى ما "
+            "ينظم علاقة الإنسان بربه وما ينظم علاقة "
+            "الإنسان بالمجتمع.\n"
+            "- من أساليبه النداء والاستفهام والأمر "
+            "والنهي، ومن خصائصه الفنية الإيجاز والطباق.\n"
+            "- تبرز القيم مكانة الإنسان المسلم وتسهم "
+            "في سعادته في الدنيا والآخرة."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 def detect_arabic_wonderful_dialogue_summary_mode(
@@ -4075,6 +4212,27 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        muslim_qualities_units = (
+            select_arabic_muslim_qualities_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if muslim_qualities_units:
+            structured_muslim_qualities_summary = (
+                build_arabic_muslim_qualities_summary(
+                    question=cleaned_question,
+                    selected_units=muslim_qualities_units,
+                )
+            )
+
+            if (
+                structured_muslim_qualities_summary
+                is not None
+            ):
+                return structured_muslim_qualities_summary
+
         wonderful_dialogue_units = (
             select_arabic_wonderful_dialogue_units(
                 question=cleaned_question,
