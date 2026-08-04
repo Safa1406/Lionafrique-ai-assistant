@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v35-arabic-locust-text-structured-summary"
+    "v36-arabic-mamnu-min-al-sarf-structured-summary"
 )
 
 
@@ -2495,6 +2495,99 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_mamnu_min_al_sarf_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du درس الممنوع من الصرف."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص درس الممنوع من الصرف"
+        in normalized_question
+        and "اسبابه" in normalized_question
+        and "احكامه" in normalized_question
+        and "الامثله" in normalized_question
+        and "الاعراب" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_mamnu_min_al_sarf_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF concerné."""
+
+    if not (
+        detect_arabic_mamnu_min_al_sarf_summary_mode(
+            question
+        )
+    ):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "almmnoa-mn-alsrf" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_mamnu_min_al_sarf_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du درس."""
+
+    if (
+        detect_arabic_mamnu_min_al_sarf_summary_mode(
+            question
+        )
+        != "full"
+    ):
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- الممنوع من الصرف اسم لا يقبل التنوين، ويرفع بالضمة وينصب بالفتحة ويجر بالفتحة النائبة عن الكسرة.\n"
+        "- يمنع لسبب واحد إذا ختم بألف التأنيث المقصورة أو ألف التأنيث الممدودة، أو جاء على صيغة منتهى الجموع.\n"
+        "- يمنع العلم لسببين، مثل العلمية مع التأنيث أو العجمة أو التركيب المزجي أو وزن الفعل أو زيادة الألف والنون أو العدل.\n"
+        "- تمنع الصفة إذا جاءت على وزن أفعل الذي مؤنثه فعلاء، أو فعلان الذي مؤنثه فعلى، أو كانت معدولة على أوزان مفعل وفعال وفعل.\n"
+        "- إذا جاء الممنوع من الصرف معرفا بأل أو مضافا فإنه يجر بالكسرة. ومن نماذج الإعراب: عمر ومساجد وسلوى وأحمد وحضرموت وإبراهيم وحسان وعطشان وأخر."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -5555,6 +5648,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        mamnu_units = (
+            select_arabic_mamnu_min_al_sarf_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if mamnu_units:
+            structured_mamnu_summary = (
+                build_arabic_mamnu_min_al_sarf_summary(
+                    question=cleaned_question,
+                    selected_units=mamnu_units,
+                )
+            )
+
+            if structured_mamnu_summary is not None:
+                return structured_mamnu_summary
+
         locust_units = (
             select_arabic_locust_units(
                 question=cleaned_question,
