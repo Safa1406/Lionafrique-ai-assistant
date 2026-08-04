@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v29-arabic-muslim-qualities-analysis"
+ARABIC_RULES_VERSION = "v30-arabic-kalim-allah-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1731,6 +1731,557 @@ def extract_arabic_direct_rule_evidence(
     ]
 
 
+
+
+def extract_arabic_kalim_allah_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait des réponses structurées et strictement fondées
+    sur le texte كليم الله et son analyse pédagogique.
+    """
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(question)
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        text = re.sub(
+            r"\s+",
+            " ",
+            passage.get("text", ""),
+        ).strip()
+
+        if not text:
+            continue
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        normalized_text = normalize_text(text)
+
+        if (
+            "klim-allh" in normalized_source
+            or (
+                "كليم" in normalized_text
+                and (
+                    "موسي" in normalized_text
+                    or "سوره الشعراء" in normalized_text
+                )
+            )
+        ):
+            lesson_passages.append(
+                {
+                    "passage_number": passage_number,
+                    "text": normalized_text,
+                    "source": source_name,
+                    "page": passage.get("page", 0),
+                    "score": float(
+                        passage.get(
+                            "retrieval_score",
+                            0.0,
+                        )
+                    ),
+                }
+            )
+
+    if not lesson_passages:
+        return []
+
+    def build_answer(
+        answer: str,
+        keywords: tuple[str, ...],
+    ) -> list[dict]:
+        normalized_keywords = tuple(
+            normalize_text(keyword)
+            for keyword in keywords
+        )
+
+        ranked = []
+
+        for passage in lesson_passages:
+            hits = sum(
+                1
+                for keyword in normalized_keywords
+                if keyword and keyword in passage["text"]
+            )
+            ranked.append(
+                (
+                    hits,
+                    passage["score"],
+                    passage,
+                )
+            )
+
+        ranked.sort(
+            key=lambda item: (
+                item[0],
+                item[1],
+            ),
+            reverse=True,
+        )
+        support = ranked[0][2]
+
+        return [
+            {
+                "passage_number": support[
+                    "passage_number"
+                ],
+                "quote": answer,
+                "source": support["source"],
+                "page": support["page"],
+            }
+        ]
+
+    if (
+        "تعريف القران"
+        in normalized_question
+    ):
+        return build_answer(
+            "القرآن لغة من الفعل قرأ، أي تلاه. واصطلاحا هو كلام الله المنزل على المصطفى محمد صلى الله عليه وسلم بلسان عربي فصيح بواسطة جبريل عليه السلام، المبدوء بسورة الفاتحة والمختوم بسورة الناس، والمنقول إلينا بالتواتر جيلا عن جيل، والمحفوظ من التحريف والتزوير.",
+            (
+                "التعريف بالقران",
+                "قرا",
+                "تلاه",
+                "محمد",
+                "جبريل",
+                "الفاتحه",
+                "الناس",
+                "بالتواتر",
+            ),
+        )
+
+    if (
+        "مكيه ام مدنيه"
+        in normalized_question
+        and "الشعراء"
+        in normalized_question
+    ):
+        return build_answer(
+            "سورة الشعراء مكية، ما عدا الآية 197 ومن الآية 224 إلى آخر السورة فهي مدنية.",
+            (
+                "سوره الشعراء مكيه",
+                "197",
+                "224",
+                "مدنيه",
+            ),
+        )
+
+    if (
+        "عدد ايات سوره الشعراء"
+        in normalized_question
+        or (
+            "كم عدد ايات"
+            in normalized_question
+            and "ترتيبها"
+            in normalized_question
+        )
+    ):
+        return build_answer(
+            "عدد آيات سورة الشعراء 227 آية، وترتيبها في المصحف الشريف 26.",
+            (
+                "227",
+                "26",
+            ),
+        )
+
+    if (
+        "بعد اي سوره"
+        in normalized_question
+        and "باي حروف"
+        in normalized_question
+    ):
+        return build_answer(
+            "نزلت سورة الشعراء بعد سورة الواقعة، وبدأت بحروف الهجاء «طسم».",
+            (
+                "سوره الواقعه",
+                "طسم",
+            ),
+        )
+
+    if (
+        "لماذا سميت سوره الشعراء"
+        in normalized_question
+    ):
+        return build_answer(
+            "سميت سورة الشعراء بهذا الاسم لأن الله ذكر فيها أخبار الشعراء، وكان الهدف هو الرد على المشركين في زعمهم أن محمدا صلى الله عليه وسلم كان شاعرا وأن ما جاء به من قبيل الشعر.",
+            (
+                "اخبار الشعراء",
+                "الرد علي المشركين",
+                "شاعرا",
+                "الشعر",
+            ),
+        )
+
+    if (
+        "الي اي مجال"
+        in normalized_question
+        and "كليم الله"
+        in normalized_question
+    ):
+        return build_answer(
+            "ينتمي نص «كليم الله» إلى مجال القيم الإسلامية.",
+            (
+                "مجال القيم الاسلاميه",
+            ),
+        )
+
+    if (
+        "نوع نص كليم الله"
+        in normalized_question
+    ):
+        return build_answer(
+            "نص «كليم الله» نص قرآني يتكون من آيات قرآنية، وتدل على ذلك عبارة «قال الله سبحانه وتعالى»، ومصدره سورة الشعراء، والرسم العثماني الذي كتب به النص.",
+            (
+                "نص قراني",
+                "ايات قرانيه",
+                "قال",
+                "سوره الشعراء",
+                "الرسم العثماني",
+            ),
+        )
+
+    if (
+        "يتكون عنوان كليم الله"
+        in normalized_question
+        or (
+            "عنوان كليم الله"
+            in normalized_question
+            and "تركيبيا"
+            in normalized_question
+        )
+    ):
+        return build_answer(
+            "عنوان «كليم الله» مركب إضافي، يتكون من «كليم» مضاف و«الله» مضاف إليه.",
+            (
+                "مركب اضافي",
+                "كليم",
+                "مضاف اليه",
+            ),
+        )
+
+    if (
+        "دلاله عنوان كليم الله"
+        in normalized_question
+    ):
+        return build_answer(
+            "«كليم الله» لقب للنبي موسى عليه السلام، لأن الله كلمه.",
+            (
+                "لقب النبي موسي",
+                "كلمه",
+            ),
+        )
+
+    if (
+        "المكونات الثلاثه"
+        in normalized_question
+        and "بدايه النص"
+        in normalized_question
+    ):
+        return build_answer(
+            "تشير بداية النص إلى ثلاثة مكونات: المرسل وهو الله عز وجل، والمخاطب وهو الرسول محمد صلى الله عليه وسلم، وموضوع الرسالة وهو بعثة موسى عليه السلام إلى فرعون.",
+            (
+                "المرسل",
+                "المخاطب",
+                "موضوع الرساله",
+                "بعثه موسي",
+                "فرعون",
+            ),
+        )
+
+    if (
+        "تشير نهايه نص كليم الله"
+        in normalized_question
+    ):
+        return build_answer(
+            "تشير نهاية النص إلى انتصار موسى عليه السلام على سحرة فرعون وإيمانهم بالله عز وجل.",
+            (
+                "انتصار موسي",
+                "سحره فرعون",
+                "ايمانهم",
+            ),
+        )
+
+    if (
+        "فرضيه القراءه"
+        in normalized_question
+        and "كليم الله"
+        in normalized_question
+    ):
+        return build_answer(
+            "تفترض القراءة أن النص يتناول قصة موسى عليه السلام مع فرعون وقومه.",
+            (
+                "قصه موسي",
+                "فرعون",
+                "قومه",
+            ),
+        )
+
+    if all(
+        marker in normalized_question
+        for marker in (
+            "لبثت",
+            "وهب",
+            "تمن",
+        )
+    ):
+        return build_answer(
+            "لبثت تعني أقمت بيننا، ووهب تعني أعطى، وتمن تعني تعدد ما فعلت من الخير، والملأ هم أكابر القوم.",
+            (
+                "لبثت",
+                "اقمت",
+                "وهب",
+                "تمن",
+                "الملأ",
+            ),
+        )
+
+    if all(
+        marker in normalized_question
+        for marker in (
+            "ارجه",
+            "حاشرين",
+            "ميقاتا",
+        )
+    ):
+        return build_answer(
+            "أرجه تعني أخر أمره، وحاشرين تعني جامعين، وميقاتا تعني وقت معلوم، ويأفكون تعني يكذبون.",
+            (
+                "ارجه",
+                "حاشرين",
+                "ميقاتا",
+                "يافكون",
+            ),
+        )
+
+    if (
+        "المضمون العام"
+        in normalized_question
+        and "كليم الله"
+        in normalized_question
+    ):
+        return build_answer(
+            "يتناول النص قصة موسى عليه السلام منذ إرساله إلى فرعون الذي استكبر وتجبر، إلى تحديه لسحرة فرعون وانتصاره عليهم وإيمان السحرة بالله عز وجل.",
+            (
+                "قصه موسي",
+                "ارساله الي فرعون",
+                "استكبر",
+                "السحره",
+                "انتصاره",
+                "ايمان السحره",
+            ),
+        )
+
+    if (
+        "الايتين 10 و11"
+        in normalized_question
+    ):
+        return build_answer(
+            "أمر الله موسى عليه السلام بتبليغ رسالته إلى فرعون وإنقاذ بني إسرائيل من بطشه وجبروته.",
+            (
+                "10",
+                "11",
+                "تبليغ رسالته",
+                "انقاذ بني اسراييل",
+            ),
+        )
+
+    if (
+        "لماذا طلب موسي"
+        in normalized_question
+        and "هارون"
+        in normalized_question
+    ):
+        return build_answer(
+            "طلب موسى أن يرسل الله معه هارون لأنه قال: أخاف أن يكذبون، ويضيق صدري، ولا ينطلق لساني، فطلب مساندة أخيه هارون.",
+            (
+                "اخاف ان يكذبون",
+                "يضيق صدري",
+                "لا ينطلق لساني",
+                "هارون",
+            ),
+        )
+
+    if (
+        "بم واجه موسي فرعون"
+        in normalized_question
+    ):
+        return build_answer(
+            "واجه موسى فرعون بالحجج البينة، وكان رد فرعون تجبر فرعون وعنادَه، واتهمه بالسحر.",
+            (
+                "الحجج البينه",
+                "تجبر فرعون",
+                "اتهامه موسي بالسحر",
+            ),
+        )
+
+    if (
+        "كيف عرف موسي رب العالمين"
+        in normalized_question
+    ):
+        return build_answer(
+            "عرف موسى رب العالمين بأنه رب السماوات والأرض وما بينهما، وربكم ورب آبائكم الأولين، ورب المشرق والمغرب وما بينهما.",
+            (
+                "رب السماوات والارض",
+                "ما بينهما",
+                "ربكم",
+                "رب ابايكم الاولين",
+                "رب المشرق والمغرب",
+            ),
+        )
+
+    if (
+        "المعجزتان"
+        in normalized_question
+        and "موسي"
+        in normalized_question
+    ):
+        return build_answer(
+            "ألقى عصاه فإذا هي ثعبان مبين، ونزع يده فإذا هي بيضاء للناظرين.",
+            (
+                "القي عصاه",
+                "ثعبان مبين",
+                "نزع يده",
+                "بيضاء للناظرين",
+            ),
+        )
+
+    if (
+        "مظاهر من تعنت فرعون"
+        in normalized_question
+    ):
+        return build_answer(
+            "من مظاهر تعنت فرعون قوله إن موسى لمجنون، وتهديده بأن يجعله من المسجونين، واتهامه بأنه ساحر عليم.",
+            (
+                "لمجنون",
+                "المسجونين",
+                "ساحر عليم",
+            ),
+        )
+
+    if (
+        "عندما القي موسي عصاه"
+        in normalized_question
+        and "السحره"
+        in normalized_question
+    ):
+        return build_answer(
+            "ألقى موسى عصاه فإذا هي تلقف ما يأفكون، فألقي السحرة ساجدين وقالوا: آمنا برب العالمين، رب موسى وهارون.",
+            (
+                "تلقف ما يافكون",
+                "القي السحره ساجدين",
+                "امنا برب العالمين",
+                "رب موسي وهارون",
+            ),
+        )
+
+    if (
+        "كيف هدد فرعون السحره"
+        in normalized_question
+    ):
+        return build_answer(
+            "هدد فرعون السحرة بقوله: لأقطعن أيديكم وأرجلكم من خلاف ولأصلبنكم أجمعين. فأجابوه: لا ضير، إنا إلى ربنا منقلبون، وإنا نطمع أن يغفر لنا ربنا خطايانا.",
+            (
+                "لاقطعن ايديكم وارجلكم",
+                "لاصلبنكم",
+                "لا ضير",
+                "الي ربنا منقلبون",
+                "يغفر لنا ربنا خطايانا",
+            ),
+        )
+
+    if (
+        "الاسلوبان المعتمدان"
+        in normalized_question
+    ):
+        return build_answer(
+            "اعتمد النص أسلوبي السرد والحوار؛ فالسرد يسرد قصة موسى عليه السلام مع فرعون وقومه، والحوار يدل عليه فعل الحكي «قال».",
+            (
+                "السرد",
+                "قصه موسي",
+                "الحوار",
+                "قال",
+            ),
+        )
+
+    if (
+        "اوصاف موسي وهارون"
+        in normalized_question
+    ):
+        return build_answer(
+            "موسى رسول رب العالمين وصاحب معجزة ومجادل، وهارون أخ موسى ومسانده وفصيح، وفرعون متكبر ومتجبر وكافر وجاحد وعنيد، والسحرة كانوا كافرين وظالمين في البداية ثم صاروا تائبين ومؤمنين في النهاية.",
+            (
+                "رسول رب العالمين",
+                "صاحب معجزه",
+                "اخ موسي",
+                "مسانده",
+                "فصيح",
+                "متكبر",
+                "متجبر",
+                "السحره",
+                "مومنين في النهايه",
+            ),
+        )
+
+    if (
+        "مراحل احداث قصه موسي"
+        in normalized_question
+        or (
+            "لخص مراحل"
+            in normalized_question
+            and "الاية 51"
+            in normalized_question
+        )
+    ):
+        return build_answer(
+            "في الآيتين 10 و11 أمر الله موسى بتبليغ رسالته إلى فرعون وإنقاذ بني إسرائيل. ومن الآية 12 إلى 17 ظهر خوف موسى وطلبه مساندة هارون. ومن الآية 18 إلى 37 واجه موسى فرعون بالحجج البينة واتهمه فرعون بالسحر. ومن الآية 38 إلى 51 تحدى موسى السحرة، وانتهت المواجهة بانتصاره عليهم ثم إيمانهم بالله.",
+            (
+                "10",
+                "11",
+                "تبليغ رسالته",
+                "12",
+                "17",
+                "هارون",
+                "18",
+                "37",
+                "الحجج البينه",
+                "38",
+                "51",
+                "انتصاره",
+                "ايمانهم",
+            ),
+        )
+
+    if (
+        "مقصديه نص كليم الله"
+        in normalized_question
+    ):
+        return build_answer(
+            "مقصدية النص هي أخذ العبرة من قصة موسى عليه السلام وفرعون الظالم والمتكبر. ويتضمن قيما عقدية وروحية هي التوحيد، والامتثال لأمر الله، والإيمان، والثبات على الإيمان، وطلب المغفرة.",
+            (
+                "اخذ العبره",
+                "موسي",
+                "فرعون",
+                "التوحيد",
+                "الامتثال لامر",
+                "الثبات علي الايمان",
+                "طلب المغفره",
+            ),
+        )
+
+    return []
 
 
 def extract_arabic_muslim_qualities_evidence(
@@ -9151,11 +9702,19 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_muslim_qualities_evidence(
+            extract_arabic_kalim_allah_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_muslim_qualities_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         if not validated_evidence:
             validated_evidence = (

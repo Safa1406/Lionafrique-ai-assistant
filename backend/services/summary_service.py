@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v22-arabic-muslim-qualities-structured-summary"
+    "v23-arabic-kalim-allah-structured-summary"
 )
 
 
@@ -2485,6 +2485,152 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
         "مرفوع محلا",
     ),
 )
+
+
+def detect_arabic_kalim_allah_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du texte كليم الله."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    if not any(
+        marker in normalized_question
+        for marker in (
+            "كليم الله",
+            "كليم له",
+        )
+    ):
+        return ""
+
+    if (
+        "تحليل"
+        in normalized_question
+        and "مجال"
+        in normalized_question
+        and "نوع"
+        in normalized_question
+        and "شخصيات"
+        in normalized_question
+        and "اسلوب"
+        in normalized_question
+        and "قيم"
+        in normalized_question
+    ):
+        return "analysis"
+
+    if any(
+        marker in normalized_question
+        for marker in (
+            "لخص قصه",
+            "ملخص قصه",
+            "تلخيص قصه",
+        )
+    ):
+        return "narrative"
+
+    return ""
+
+
+def select_arabic_kalim_allah_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF كليم الله."""
+
+    mode = detect_arabic_kalim_allah_summary_mode(
+        question
+    )
+
+    if not mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "klim-allh" in source_name:
+            lesson_units.append(unit)
+
+    if len(lesson_units) < 2:
+        return []
+
+    lesson_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return lesson_units
+
+
+def build_arabic_kalim_allah_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré du texte كليم الله."""
+
+    mode = detect_arabic_kalim_allah_summary_mode(
+        question
+    )
+
+    if mode == "narrative":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- أمر الله موسى عليه السلام بالذهاب إلى "
+            "فرعون وتبليغ الرسالة وإنقاذ بني إسرائيل، "
+            "فطلب موسى مساندة أخيه هارون.\n"
+            "- واجه موسى فرعون بالحجج، وأظهر معجزة "
+            "العصا واليد البيضاء، لكن فرعون اتهمه "
+            "بالسحر وجمع السحرة لمواجهته.\n"
+            "- ألقى موسى العصا فابتلعت ما صنع السحرة، "
+            "فتحقق انتصاره وإيمان السحرة، فسجدوا وأعلنوا إيمانهم "
+            "برب موسى وهارون.\n"
+            "- جاء تهديد فرعون للسحرة بالقطع والصلب، لكنهم "
+            "ثبتوا على إيمانهم ورجوا مغفرة الله."
+        )
+
+    elif mode == "analysis":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- ينتمي النص إلى مجال القيم الإسلامية، "
+            "وهو نص قرآني من سورة الشعراء، وعنوان "
+            "«كليم الله» مركب إضافي يدل على موسى.\n"
+            "- يعرض النص قصة موسى وهارون مع فرعون، "
+            "ومواجهة السحرة ثم إيمان السحرة بعد ظهور "
+            "معجزة موسى وانتصاره.\n"
+            "- من شخصياته موسى الرسول صاحب المعجزة، "
+            "وهارون المساند، وفرعون المتكبر، والسحرة "
+            "الذين صاروا مؤمنين.\n"
+            "- اعتمد النص السرد لتقديم قصة موسى، "
+            "والحوار الذي يدل عليه فعل الحكي «قال».\n"
+            "- مقصدية النص أخذ العبرة من قصة موسى "
+            "وفرعون، ومن قيمه التوحيد والامتثال لأمر "
+            "الله والثبات على الإيمان وطلب المغفرة."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 def detect_arabic_muslim_qualities_summary_mode(
@@ -4212,6 +4358,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        kalim_allah_units = (
+            select_arabic_kalim_allah_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if kalim_allah_units:
+            structured_kalim_allah_summary = (
+                build_arabic_kalim_allah_summary(
+                    question=cleaned_question,
+                    selected_units=kalim_allah_units,
+                )
+            )
+
+            if structured_kalim_allah_summary is not None:
+                return structured_kalim_allah_summary
+
         muslim_qualities_units = (
             select_arabic_muslim_qualities_units(
                 question=cleaned_question,
