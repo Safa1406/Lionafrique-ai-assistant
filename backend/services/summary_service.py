@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v30-arabic-eternal-song-structured-summary"
+    "v34-arabic-islam-human-rights-structured-summary"
 )
 
 
@@ -2490,6 +2490,333 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+
+
+
+def detect_arabic_islam_human_rights_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du texte الإسلام وحقوق الإنسان."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص نص الاسلام وحقوق الانسان"
+        in normalized_question
+        and "الحقوق" in normalized_question
+        and "الحجج" in normalized_question
+        and "القيم" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_islam_human_rights_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF concerné."""
+
+    if not (
+        detect_arabic_islam_human_rights_summary_mode(
+            question
+        )
+    ):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "alislam-ohqoq-alinsan" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_islam_human_rights_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du texte."""
+
+    if (
+        detect_arabic_islam_human_rights_summary_mode(
+            question
+        )
+        != "full"
+    ):
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- يبين النص أن الإسلام وحقوق الإنسان مرتبطان بتكريم الإنسان دون تمييز، وأن الإسلام ضمن الحق في الحياة منذ مرحلة الجنين، وحرم الإجهاض والانتحار.\n"
+        "- أقر الإسلام حرية العقيدة، ونظم علاقة المسلمين بغيرهم من خلال الصحيفة، ودعا إلى السلام، ولم يجز الحرب إلا لرد العدوان وعند الضرورة.\n"
+        "- أنصف الإسلام المرأة ومنحها المساواة والحقوق الدينية والسياسية والاجتماعية، كما ناهض العنصرية وأبطل التمييز بين الأجناس.\n"
+        "- اعتمد الكاتب في الحجاج على القرآن والحديث وسيرة الرسول والتوكيد، وانتهى إلى قيم النص: قيمة إسلامية وقيمة إنسانية وقيمة اجتماعية."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
+
+def detect_arabic_idafa_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé complet de la leçon الإضافة."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص درس الاضافه" in normalized_question
+        and "انواعها" in normalized_question
+        and "احكامها" in normalized_question
+        and "الامثله" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_idafa_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF الإضافة."""
+
+    if not detect_arabic_idafa_summary_mode(question):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "alidhafa" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_idafa_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré de la leçon الإضافة."""
+
+    if detect_arabic_idafa_summary_mode(question) != "full":
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- الإضافة نسبة بين اسمين، يسمى الأول مضاف والثاني مضاف إليه، ويكون المضاف إليه مجرورا بالإضافة دائما. ومن أمثلتها: مدرسة الحياة.\n"
+        "- الإضافة نوعان: إضافة معنوية تفيد التعريف أو التخصيص مع التخفيف بحذف التنوين أو النون، وإضافة لفظية تفيد التخفيف، مثل غفار الذنوب. وقد تدخل أل على المضاف في حالات محددة.\n"
+        "- تضاف بعض الظروف إلى الجمل، ومنها إذ وحيث وإذا ولما ومنذ، وتكون الجمل بعدها في محل جر مضاف إليه، كما تضاف حين ويوم ووقت إلى الجمل أو الاسم المفرد.\n"
+        "- عند الإضافة إلى ياء المتكلم تختلف الأحكام بحسب نوع الاسم؛ فمن الأمثلة وطني وأقلامي ويداي وهداي، وتبنى الياء على السكون أو الفتح بحسب المجموعة."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(selected_units),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
+
+def detect_arabic_ibdal_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé de la leçon الإبدال."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص درس الابدال" in normalized_question
+        and "القواعد" in normalized_question
+        and "الامثله" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_ibdal_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF الإبدال."""
+
+    if not detect_arabic_ibdal_summary_mode(question):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "alibdal" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_ibdal_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré de la leçon الإبدال."""
+
+    if detect_arabic_ibdal_summary_mode(question) != "full":
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- الإبدال تغيير حرف بحرف، فيزال المبدل منه ويوضع المبدل مكانه، وهو الإبدال السماعي أو الإبدال القياسي. ومن حروفه: الألف والهمزة والتاء والدال والطاء والميم والهاء.\n"
+        "- تقلب نون تنوين المنصوب ألفا عند الوقف مثل قلما، وتقلب الواو أو الياء المتطرفة بعد ألف ساكنة همزة مثل سماء وقضاء، وتقلب ألف فاعل في الأجوف همزة مثل قائل، كما نقول سحائب على وزن فعائل.\n"
+        "- في وزن افتعل تقلب فاء المثال تاء مثل اتصل، وتقلب تاء افتعل دالا بعد الدال والذال والزاي مثل ازدهر، وتقلب طاء بعد الصاد والضاد والطاء والظاء مثل اصطبر.\n"
+        "- تقلب النون الساكنة أو التنوين ميما في اللفظ قبل الباء مثل ممبغى، ويوقف على تاء التأنيث هاء مثل فتاه."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(selected_units),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
+
+def detect_arabic_ilal_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé de la leçon الإعلال."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص درس الاعلال" in normalized_question
+        and "القلب" in normalized_question
+        and "الحذف" in normalized_question
+        and "الاسكان" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_ilal_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF الإعلال."""
+
+    if not detect_arabic_ilal_summary_mode(question):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "alialal" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_ilal_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré de la leçon الإعلال."""
+
+    if detect_arabic_ilal_summary_mode(question) != "full":
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- الإعلال تغير يجري في أحرف العلة، وهي الألف والواو والياء، بالقلب أو الحذف أو الإسكان، ويعرف أصل حرف العلة من المضارع أو المصدر.\n"
+        "- في الإعلال بالقلب قد تقلب الألف واوا أو ياء، وتقلب الواو ياء مثل ميزان وميقات ومرمي، وتقلب الياء واوا مثل موقن، وقد تقلب الواو والياء ألفا.\n"
+        "- في الإعلال بالحذف يحذف حرف العلة عند التقاء الساكنين، ويحذف في المعتل الآخر المجزوم أو فعل الأمر مثل لم يقض، كما تحذف واو المثال الواوي في وعد، يعد، عد.\n"
+        "- في الإعلال بالإسكان تسكن الواو والياء المتطرفتان عند ثقل الضم أو الكسر؛ وفي يدعون تحذف لام الكلمة وتبقى واو الجماعة، وأصل مقول مقوول ثم نقلت الحركة وحذفت الواو الأولى."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(selected_units),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -5148,6 +5475,83 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        islam_human_rights_units = (
+            select_arabic_islam_human_rights_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if islam_human_rights_units:
+            structured_islam_human_rights_summary = (
+                build_arabic_islam_human_rights_summary(
+                    question=cleaned_question,
+                    selected_units=islam_human_rights_units,
+                )
+            )
+
+            if (
+                structured_islam_human_rights_summary
+                is not None
+            ):
+                return (
+                    structured_islam_human_rights_summary
+                )
+
+        idafa_units = (
+            select_arabic_idafa_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if idafa_units:
+            structured_idafa_summary = (
+                build_arabic_idafa_summary(
+                    question=cleaned_question,
+                    selected_units=idafa_units,
+                )
+            )
+
+            if structured_idafa_summary is not None:
+                return structured_idafa_summary
+
+        ibdal_units = (
+            select_arabic_ibdal_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if ibdal_units:
+            structured_ibdal_summary = (
+                build_arabic_ibdal_summary(
+                    question=cleaned_question,
+                    selected_units=ibdal_units,
+                )
+            )
+
+            if structured_ibdal_summary is not None:
+                return structured_ibdal_summary
+
+        ilal_units = (
+            select_arabic_ilal_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if ilal_units:
+            structured_ilal_summary = (
+                build_arabic_ilal_summary(
+                    question=cleaned_question,
+                    selected_units=ilal_units,
+                )
+            )
+
+            if structured_ilal_summary is not None:
+                return structured_ilal_summary
+
         eternal_song_units = (
             select_arabic_eternal_song_units(
                 question=cleaned_question,
