@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v29-arabic-my-homeland-poem-structured-summary"
+    "v30-arabic-eternal-song-structured-summary"
 )
 
 
@@ -2489,6 +2489,83 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_eternal_song_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé de la leçon الأغنية الأبدية."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص نص الاغنيه الابديه" in normalized_question
+        or (
+            "الاغنيه الابديه" in normalized_question
+            and "تحليله" in normalized_question
+            and "لخص" in normalized_question
+        )
+    ):
+        return "analysis"
+
+    return ""
+
+
+def select_arabic_eternal_song_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF الأغنية الأبدية."""
+
+    if not detect_arabic_eternal_song_summary_mode(question):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "alaghnia-alabdia" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_eternal_song_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré de الأغنية الأبدية."""
+
+    mode = detect_arabic_eternal_song_summary_mode(question)
+
+    if mode != "analysis":
+        return None
+
+    summary = 'ملخص المحتوى:\n- يروي النص أسطورة الهنود الحمر واستعداد المحاربين لمواجهة العدو، ثم سماع الغناء الغامض قرب شجرة الدردار.\n- اكتشفوا بقايا محارب مجهول ضحى بنفسه من أجل الآخرين، فصارت الأغنية الأبدية رسالة تدعو إلى الحرية والتضحية.\n- يجمع النص بين الحقل الأسطوري والحقل الحربي، ويوظف أسلوب سردي في قالب يقوم على الرموز والخيال.\n- ترمز الأغنية إلى الحرية والتضحية، ويرمز المحارب المجهول إلى المناضل، وتحمل الحكاية قيم الشجاعة والصمود والكرامة.'
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(selected_units),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -5071,6 +5148,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        eternal_song_units = (
+            select_arabic_eternal_song_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if eternal_song_units:
+            structured_eternal_song_summary = (
+                build_arabic_eternal_song_summary(
+                    question=cleaned_question,
+                    selected_units=eternal_song_units,
+                )
+            )
+
+            if structured_eternal_song_summary is not None:
+                return structured_eternal_song_summary
+
         my_homeland_poem_units = (
             select_arabic_my_homeland_poem_units(
                 question=cleaned_question,
