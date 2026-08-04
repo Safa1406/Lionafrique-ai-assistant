@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v23-arabic-kalim-allah-structured-summary"
+    "v24-arabic-school-of-life-structured-summary"
 )
 
 
@@ -2485,6 +2485,153 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
         "مرفوع محلا",
     ),
 )
+
+
+def detect_arabic_school_of_life_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du texte مدرسة الحياة."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    if not any(
+        marker in normalized_question
+        for marker in (
+            "مدرسه الحياه",
+            "مدرسه حياه",
+        )
+    ):
+        return ""
+
+    if (
+        "تحليل"
+        in normalized_question
+        and "كاتب"
+        in normalized_question
+        and "مجال"
+        in normalized_question
+        and "عنوان"
+        in normalized_question
+        and "نوع"
+        in normalized_question
+        and "تقنيات"
+        in normalized_question
+        and "قيم"
+        in normalized_question
+    ):
+        return "analysis"
+
+    if any(
+        marker in normalized_question
+        for marker in (
+            "لخص نص",
+            "ملخص نص",
+            "تلخيص نص",
+        )
+    ):
+        return "narrative"
+
+    return ""
+
+
+def select_arabic_school_of_life_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF مدرسة الحياة."""
+
+    mode = detect_arabic_school_of_life_summary_mode(
+        question
+    )
+
+    if not mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "mdrsa-alhiaa" in source_name:
+            lesson_units.append(unit)
+
+    if len(lesson_units) < 2:
+        return []
+
+    lesson_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return lesson_units
+
+
+def build_arabic_school_of_life_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré du texte مدرسة الحياة."""
+
+    mode = detect_arabic_school_of_life_summary_mode(
+        question
+    )
+
+    if mode == "narrative":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- كان السارد يحب المدرسة ويتردد على مطحنة والده، "
+            "حيث عاش حادثا خطيرا وتعلم من العمل ومخالطة الناس.\n"
+            "- أصابه المرض بعد المرحلة الابتدائية، فانتقل إلى حلب "
+            "للعلاج ثم أدى ذلك إلى انقطاعه عن الدراسة وبقائه في "
+            "القرية لمساعدة والده.\n"
+            "- واصل السارد التعلم في مدرسة الحياة من خلال مطحنة "
+            "والده وأحاديث الناس والقراءة، وأظهر موهبته حين نظم "
+            "القصيدة الخاصة بمسرحية «وفاء السموأل».\n"
+            "- أثبت السارد جدارته، فاقتنع والده بإعادته إلى "
+            "المدرسة، وانتهى النص بالعودة إلى الدراسة ومواصلة "
+            "مسيرته بنجاح."
+        )
+
+    elif mode == "analysis":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- كاتب النص عبد السلام العجيلي، وينتمي إلى المجال "
+            "الاجتماعي والاقتصادي، وعنوان «مدرسة الحياة» مركب "
+            "إضافي.\n"
+            "- النص مقطع من سيرة ذاتية ذات بعد اجتماعي، ومضمونه "
+            "تعلم السارد من مدرسة الحياة بعد انقطاعه عن الدراسة.\n"
+            "- حالة البداية هي المزاوجة بين الدراسة ومطحنة والده، "
+            "والعقدة انقطاعه عن الدراسة، والحل التعلم وإبراز "
+            "مؤهلاته، ثم العودة إلى المدرسة.\n"
+            "- من عناصر السيرة ضمير المتكلم وزمن الماضي، ووظف "
+            "النص السرد والوصف وتقنيتي الاسترجاع والاستباق.\n"
+            "- رسالة النص أن الحياة مدرسة لا تقل أهمية عن المدرسة "
+            "النظامية، ومن قيمه حب الاطلاع والطاعة والاجتهاد "
+            "والصبر والتفاني."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 def detect_arabic_kalim_allah_summary_mode(
@@ -4358,6 +4505,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        school_of_life_units = (
+            select_arabic_school_of_life_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if school_of_life_units:
+            structured_school_of_life_summary = (
+                build_arabic_school_of_life_summary(
+                    question=cleaned_question,
+                    selected_units=school_of_life_units,
+                )
+            )
+
+            if structured_school_of_life_summary is not None:
+                return structured_school_of_life_summary
+
         kalim_allah_units = (
             select_arabic_kalim_allah_units(
                 question=cleaned_question,

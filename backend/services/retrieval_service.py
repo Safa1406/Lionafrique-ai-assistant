@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v19-arabic-kalim-allah-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v20-arabic-school-of-life-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -558,6 +558,39 @@ def retrieve_relevant_passages(
         else ""
     )
 
+    asks_school_of_life_lesson = (
+        question_is_arabic
+        and (
+            "mdrsa-alhiaa"
+            in normalized_source_name
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "مدرسه الحياه",
+                    "عبد السلام العجيلي",
+                    "ابحرت في كل المواني",
+                    "مطحنه والده",
+                    "سيره ذاتيه",
+                    "حاله البدايه",
+                    "الحدث المحرك",
+                    "الاسترجاع والاستباق",
+                    "عناصر السيره الذاتيه",
+                )
+            )
+        )
+    )
+
+    # Le texte مدرسة الحياة comprend treize segments
+    # répartis sur quatre pages. Les informations sur
+    # l'auteur, les événements, les procédés et les valeurs
+    # doivent rester accessibles dans une même requête.
+    if asks_school_of_life_lesson:
+        number_of_results = max(
+            number_of_results,
+            20,
+        )
+
     asks_kalim_allah_lesson = (
         question_is_arabic
         and (
@@ -995,6 +1028,7 @@ def retrieve_relevant_passages(
             and not asks_wonderful_dialogue_lesson
             and not asks_muslim_qualities_lesson
             and not asks_kalim_allah_lesson
+            and not asks_school_of_life_lesson
         ):
             continue
 
@@ -1009,6 +1043,7 @@ def retrieve_relevant_passages(
             and not asks_wonderful_dialogue_lesson
             and not asks_muslim_qualities_lesson
             and not asks_kalim_allah_lesson
+            and not asks_school_of_life_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,
@@ -1083,8 +1118,11 @@ def retrieve_relevant_passages(
 
         summary_page_limit = (
             5
-            if asks_kalim_allah_lesson
+            if asks_school_of_life_lesson
             else (
+                5
+                if asks_kalim_allah_lesson
+                else (
                 4
                 if asks_muslim_qualities_lesson
                 else (
@@ -1096,7 +1134,8 @@ def retrieve_relevant_passages(
                     or asks_comparative_lesson
                     or asks_wonderful_dialogue_lesson
                 )
-                    else 2
+                        else 2
+                    )
                 )
             )
         )
