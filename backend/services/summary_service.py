@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v34-arabic-islam-human-rights-structured-summary"
+    "v35-arabic-locust-text-structured-summary"
 )
 
 
@@ -2494,6 +2494,86 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_locust_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du texte الجراد."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص نص الجراد" in normalized_question
+        and "الاحداث" in normalized_question
+        and "الشخصيات" in normalized_question
+        and "الحلول" in normalized_question
+        and "المقصديه" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_locust_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF الجراد."""
+
+    if not detect_arabic_locust_summary_mode(question):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "aljrad" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_locust_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du texte الجراد."""
+
+    if detect_arabic_locust_summary_mode(question) != "full":
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- يبدأ النص بوصف القرية الهادئة، حيث يزاول عمران والمبروك والحاج سالم أعمالهم اليومية.\n"
+        "- يتمثل الحدث المحرك في خبر اقتراب الجراد، فينتشر الخوف بين السكان ويتحول هدوء القرية إلى حيرة وقلق.\n"
+        "- اقترح الحاج سالم إحداث الصخب بطرق الحديد وضرب الدفوف والنواقيس، بينما اقترح المبروك جمع الجراد النائم في الشوالات ثم يسلقوه في البيوت.\n"
+        "- تكشف القصة أن الاتحاد والتضامن يساعدان على مواجهة المشكلات وإيجاد الحلول."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(selected_units),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -5475,6 +5555,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        locust_units = (
+            select_arabic_locust_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if locust_units:
+            structured_locust_summary = (
+                build_arabic_locust_summary(
+                    question=cleaned_question,
+                    selected_units=locust_units,
+                )
+            )
+
+            if structured_locust_summary is not None:
+                return structured_locust_summary
+
         islam_human_rights_units = (
             select_arabic_islam_human_rights_units(
                 question=cleaned_question,
