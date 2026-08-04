@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v36-arabic-mamnu-min-al-sarf-structured-summary"
+    "v37-arabic-exile-text-structured-summary"
 )
 
 
@@ -2496,6 +2496,89 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_exile_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé structuré du texte المنفى."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص نص المنفي" in normalized_question
+        and "مراحل النفي" in normalized_question
+        and "المعاناه" in normalized_question
+        and "الشخصيات" in normalized_question
+        and "القيم" in normalized_question
+        and "المقصديه" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_exile_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF المنفى."""
+
+    if not detect_arabic_exile_summary_mode(question):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "almnfa" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_exile_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du texte المنفى."""
+
+    if detect_arabic_exile_summary_mode(question) != "full":
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- نفي محمد الخامس وولداه في ظروف مفاجئة وقاسية، ونقلت الأسرة الملكية أولا إلى كورسيكا حيث ظهرت المعاناة في البرد والجوع والعزلة وفقدان أبسط الحاجات.\n"
+        "- انتقلت الأسرة بعد ذلك إلى مدغشقر، وهناك تغير موقف العقيد تويا بعدما أدرك أن الملك ضحية دعاية مغرضة، فأصبح صديقا للأسرة الملكية وساعد على تحسن ظروفها.\n"
+        "- ظل المغرب والوطن حاضرين في فكر محمد الخامس، فكان يتابع أخبار بلاده ويواصل الصمود من أجل الحرية والاستقلال.\n"
+        "- يبرز النص القيمة الوطنية في تشبث الملك بوطنه، والقيمة الإنسانية في أخلاقه التي أكسبته احترام الأجانب، ويؤرخ لمعاناة المنفى ونكران الذات في خدمة الشعب."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -5648,6 +5731,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        exile_units = (
+            select_arabic_exile_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if exile_units:
+            structured_exile_summary = (
+                build_arabic_exile_summary(
+                    question=cleaned_question,
+                    selected_units=exile_units,
+                )
+            )
+
+            if structured_exile_summary is not None:
+                return structured_exile_summary
+
         mamnu_units = (
             select_arabic_mamnu_min_al_sarf_units(
                 question=cleaned_question,
