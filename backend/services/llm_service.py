@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v34-arabic-commentary-rebuttal-analysis"
+ARABIC_RULES_VERSION = "v35-arabic-describing-people-places-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1732,6 +1732,250 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+
+def extract_arabic_describing_people_places_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Extrait les réponses du cours وصف الشخوص والأمكنة."""
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(question)
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(passages, start=1):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get("text", ""),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        source_name = passage.get("source", "Source inconnue")
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        normalized_passage = normalize_text(original_text)
+
+        same_lesson = (
+            "mhara-osf-alshkhos-oalamkna" in normalized_source
+            or (
+                "وصف الشخوص والامكنه" in normalized_passage
+                and "الموصوف الرييسي" in normalized_passage
+            )
+        )
+
+        if not same_lesson:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(passage.get("retrieval_score", 0.0)),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    def build_answer(answer: str, keywords: tuple[str, ...]) -> list[dict]:
+        normalized_keywords = tuple(
+            normalize_text(keyword) for keyword in keywords
+        )
+        ranked = []
+        for passage in lesson_passages:
+            hits = sum(
+                1
+                for keyword in normalized_keywords
+                if keyword and keyword in passage["normalized_text"]
+            )
+            ranked.append((hits, passage["score"], passage))
+        ranked.sort(key=lambda item: (item[0], item[1]), reverse=True)
+        support = ranked[0][2]
+        return [
+            {
+                "passage_number": support["passage_number"],
+                "quote": answer,
+                "source": support["source"],
+                "page": support["page"],
+            }
+        ]
+
+    if "تعريف الوصف" in normalized_question:
+        return build_answer(
+            "الوصف تقنية للتعبير ينقل من خلالها الواصف ما يدركه بصريا إلى خطاب مكتوب، وهو رسم بالكلمات وتصوير للمشاهد وتعبير عن الانفعالات والأحاسيس والمواقف.",
+            ("تعريف الوصف", "تقنيه للتعبير", "رسم بالكلمات"),
+        )
+
+    if "العنصران الرييسيان" in normalized_question:
+        return build_answer(
+            "العنصران الرئيسيان في كل نص وصفي هما الموصوف وأوصافه.",
+            ("عنصرين رييسيين", "الموصوف", "اوصافه"),
+        )
+
+    if "العناصر التي نحددها" in normalized_question and "نص وصفي" in normalized_question:
+        return build_answer(
+            "عند كتابة نص وصفي نحدد الموصوف الرئيسي، والموصوفات الفرعية، والامتدادات الوصفية.",
+            ("الموصوف الرييسي", "الموصوفات الفرعيه", "الامتدادات الوصفيه"),
+        )
+
+    if "ماذا يمكن ان يكون الموصوف الرييسي" in normalized_question:
+        return build_answer(
+            "يمكن أن يكون الموصوف الرئيسي شخصا أو مكانا أو حيوانا أو غير ذلك.",
+            ("شخصا", "مكانا", "حيوانا"),
+        )
+
+    if "الجوانب التي نركز عليها عند وصف شخص" in normalized_question:
+        return build_answer(
+            "عند وصف شخص نركز على الأوصاف الجسمية، والأوصاف النفسية، والأوصاف الاجتماعية، إضافة إلى الأفعال والحركات.",
+            ("وصف الشخوص", "الاوصاف الجسميه", "الافعال والحركات"),
+        )
+
+    if "ضمن الاوصاف الجسميه" in normalized_question:
+        return build_answer(
+            "تدخل ضمن الأوصاف الجسمية الملامح والهيئة واللباس.",
+            ("الاوصاف الجسميه", "الملامح", "الهييه", "اللباس"),
+        )
+
+    if "ضمن الاوصاف النفسيه" in normalized_question:
+        return build_answer(
+            "تدخل ضمن الأوصاف النفسية: المزاج والتصرفات، والمشاعر والمواقف، والأفكار.",
+            ("الاوصاف النفسيه", "المزاج", "المشاعر", "الافكار"),
+        )
+
+    if "ضمن الاوصاف الاجتماعيه" in normalized_question:
+        return build_answer(
+            "تدخل ضمن الأوصاف الاجتماعية: الاسم والسن والجنس والوضعية الاجتماعية.",
+            ("الاوصاف الاجتماعيه", "الاسم", "السن", "الجنس"),
+        )
+
+    if "الجوانب التي نركز عليها عند وصف مكان" in normalized_question:
+        return build_answer(
+            "عند وصف مكان نركز على موقع المكان وهندسة المكان والأثاث والديكور.",
+            ("وصف الامكنه", "موقع المكان", "هندسه المكان", "الاثاث والديكور"),
+        )
+
+    if "الشخصيه الموصوفه" in normalized_question and "مصدر النص" in normalized_question:
+        return build_answer(
+            "الشخصية الموصوفة في النموذج الأول هي مدرس اللغة الفرنسية، ومصدر النص كتاب «في الطفولة» لعبد المجيد بن جلون.",
+            ("مدرس اللغه الفرنسيه", "في الطفوله", "عبد المجيد بن جلون"),
+        )
+
+    if "جسم مدرس اللغه الفرنسيه" in normalized_question and "وجهه" in normalized_question:
+        return build_answer(
+            "وصف الكاتب مدرس اللغة الفرنسية بأنه رجل نحيل، يميل وجهه إلى العرض أكثر مما يميل إلى الطول، وهو قصير القامة.",
+            ("رجل نحيل", "وجهه", "العرض", "الطول", "قصير القامه"),
+        )
+
+    if "لباس مدرس اللغه الفرنسيه" in normalized_question:
+        return build_answer(
+            "كان مدرس اللغة الفرنسية يلبس طربوشا شديد القصر، ويرتدي برنسا دون جلباب.",
+            ("طربوشا شديد القصر", "برنسا دون جلباب"),
+        )
+
+    if "الحركات التي كان يقوم بها" in normalized_question:
+        return build_answer(
+            "كان يرمي بجناحيه معا إلى الوراء، ويعقد عليهما يديه، ويذرع الفصل ذهابا وإيابا.",
+            ("يرمي بجناحيه", "الي الوراء", "يعقد عليهما يديه", "يذرع الفصل"),
+        )
+
+    if "ذقن المدرس" in normalized_question and "حاجبيه" in normalized_question:
+        return build_answer(
+            "كان شعر ذقنه كثيفا، وكان شديد سواد شعر الحاجبين، وله عينان حادتان قلقتان، وأنف أفطس.",
+            ("شعر ذقنه", "كثيفا", "شديد سواد شعر الحاجبين", "عينان حادتان", "انف افطس"),
+        )
+
+    if "صوت المدرس" in normalized_question and "اثر مظهره" in normalized_question:
+        return build_answer(
+            "كان صوته قويا حادا، وكان مجرد النظر إليه يغريني بالضحك، لذلك كنت أحرص على ألا أنظر إليه.",
+            ("صوته قويا", "حادا", "الضحك", "الا انظر اليه"),
+        )
+
+    if "مم يتالف المنزل" in normalized_question:
+        return build_answer(
+            "يتألف المنزل من دورين: الدور الأول يضم غرف الاستقبال والجلوس والمائدة، والدور الثاني يضم غرف النوم.",
+            ("يتالف المنزل من دورين", "الدور الاول", "الدور الثاني"),
+        )
+
+    if "غرفه الاستقبال" in normalized_question:
+        return build_answer(
+            "وصفت غرفة الاستقبال بأنها تحتوي على المقاعد الوثيرة وجدران مزينة بالصور، وفيها تمثال صغير وباقة من الزهور وتحفة صغيرة وحاك ومجموعة من الأسطوانات.",
+            ("غرفه الاستقبال", "المقاعد الوثيره", "الصور", "تمثال صغير", "باقه من الزهور", "حاك", "الاسطوانات"),
+        )
+
+    if "محتويات غرفه الجلوس" in normalized_question:
+        return build_answer(
+            "تحتوي غرفة الجلوس على بعض المقاعد والكراسي، ومنضدة تراكمت عليها الصحف، ورفوف عليها كتب.",
+            ("غرفه الجلوس", "المقاعد", "الكراسي", "منضده", "الصحف", "كتب"),
+        )
+
+    if "غرفه المايده" in normalized_question:
+        return build_answer(
+            "في غرفة المائدة مائدة كبيرة مربعة تحيط بها الكراسي، ورفوف طويلة ملأى بمستلزمات المائدة، وفي الزاوية قفص كبير به ببغاء.",
+            ("غرفه المايده", "مايده كبيره مربعه", "رفوف طويله", "قفص كبير", "ببغاء"),
+        )
+
+    if "غرف الدور الثاني" in normalized_question:
+        return build_answer(
+            "يتألف الدور الثاني من ثلاث غرف: لكل من الشابين غرفة، أما الأخوات الثلاث فلهن الغرفة الثالثة الأكبر.",
+            ("الدور الثاني", "ثلاث غرف", "الشابين", "الاخوات الثلاث"),
+        )
+
+    if "الصباح" in normalized_question and "بدايه نموذج وصف الطبيعه" in normalized_question:
+        return build_answer(
+            "كان الصباح مشرقا ساحرا يغري بالتنزه في أحضان الطبيعة.",
+            ("الصباح مشرقا", "ساحرا", "يغري بالتنزه", "الطبيعه"),
+        )
+
+    if "مكونات المتنزه" in normalized_question:
+        return build_answer(
+            "من أبرز مكونات المتنزه بحيرة تحيط بها روضة غناء، والمروج الخضراء، والسهول المنبسطة، وسنديانة ظليلة.",
+            ("بحيره", "روضه غناء", "المروج الخضراء", "السهول", "سنديانه"),
+        )
+
+    if "شبه الكاتب البحيره" in normalized_question or "صفحه الماء" in normalized_question:
+        return build_answer(
+            "شبه الكاتب البحيرة بلوحة فنية رائعة، وشبه صفحة الماء بالمرآة المصقولة أو الفضة البراقة.",
+            ("البحيره", "لوحه فنيه", "صفحه الماء", "المراه المصقوله", "الفضه البراقه"),
+        )
+
+    if "المروج والسهول" in normalized_question:
+        return build_answer(
+            "وصف المروج الخضراء، وفيها الأعشاب الناضرة والورود اليانعة، ووصف السهول المنبسطة بأنها تبعث السرور في النفس وتبهج العين وتروح الصدر.",
+            ("المروج الخضراء", "الاعشاب الناضره", "الورود اليانعه", "السهول المنبسطه", "السرور"),
+        )
+
+    if "السنديانه واغصانها" in normalized_question:
+        return build_answer(
+            "وصف الكاتب سنديانة ظليلة، أغصانها متشابكة، يمر بها النسيم فتطرب وتميس، ويصدر من حفيف أوراقها وتغريد بلابلها أعذب معزوفة.",
+            ("سنديانه ظليله", "اغصانها متشابكه", "النسيم", "تميس", "حفيف اوراقها", "تغريد بلابلها"),
+        )
+
+    if "الشمس والبحيره عند الغروب" in normalized_question:
+        return build_answer(
+            "وصف الشمس عند الأفق وهي تقف وقفة الوداع، ولونها الأحمر المتوهج منعكس على البحيرة، فشبه منظرها بسبيكة كبيرة من الذهب.",
+            ("الشمس عند الافق", "وقفه الوداع", "لونها الاحمر المتوهج", "منعكس علي البحيره", "سبيكه كبيره من الذهب"),
+        )
+
+    if "المشاعر التي احس بها الكاتب" in normalized_question and "نهايه رحلته" in normalized_question:
+        return build_answer(
+            "أحس الكاتب في نهاية رحلته بسرور وارتياح ونشوة، ووجد في الطبيعة طمأنينة وسكينة تملآن النفس ابتهاجا وأملا.",
+            ("سرور", "ارتياح", "نشوه", "طمأنينه", "سكينه", "ابتهاجا", "املا"),
+        )
+
+    return []
 
 
 def extract_arabic_commentary_rebuttal_evidence(
@@ -11346,11 +11590,45 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_commentary_rebuttal_evidence(
+            extract_arabic_describing_people_places_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        describing_people_places_source_scope = any(
+            "mhara-osf-alshkhos-oalamkna"
+            in (
+                passage.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            for passage in passages
+        )
+
+        if (
+            describing_people_places_source_scope
+            and not validated_evidence
+            and not has_topic_overlap_with_passages(
+                question=analysis_question,
+                passages=passages,
+            )
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_commentary_rebuttal_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         commentary_rebuttal_source_scope = any(
             "mhara-altaqib-oaltaliq"

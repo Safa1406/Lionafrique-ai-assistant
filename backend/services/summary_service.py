@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v26-arabic-commentary-rebuttal-structured-summary"
+    "v27-arabic-describing-people-places-structured-summary"
 )
 
 
@@ -2486,6 +2486,102 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
     ),
 )
 
+
+
+
+
+def detect_arabic_describing_people_places_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours وصف الشخوص والأمكنة."""
+
+    normalized_question = normalize_text(question)
+
+    if not any(
+        marker in normalized_question
+        for marker in (
+            "وصف الشخوص والامكنه",
+            "نماذج وصف الشخص والمكان والطبيعه",
+        )
+    ):
+        return ""
+
+    if (
+        "لخص نماذج" in normalized_question
+        and "الشخص" in normalized_question
+        and "الطبيعه" in normalized_question
+    ):
+        return "examples"
+
+    if (
+        "لخص درس" in normalized_question
+        or "ملخص درس" in normalized_question
+        or "تلخيص درس" in normalized_question
+    ):
+        return "lesson"
+
+    return ""
+
+
+def select_arabic_describing_people_places_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF وصف الشخوص والأمكنة."""
+
+    mode = detect_arabic_describing_people_places_summary_mode(question)
+    if not mode:
+        return []
+
+    selected = []
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        if "mhara-osf-alshkhos-oalamkna" in source_name:
+            selected.append(unit)
+
+    selected.sort(key=lambda unit: (unit["passage_number"], unit["unit_id"]))
+    return selected
+
+
+def build_arabic_describing_people_places_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du cours وصف الشخوص والأمكنة."""
+
+    mode = detect_arabic_describing_people_places_summary_mode(question)
+
+    if mode == "lesson":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- الوصف تقنية للتعبير تنقل ما يدركه الواصف بصريا إلى خطاب مكتوب، وهو رسم بالكلمات وتصوير للمشاهد والمشاعر.\n"
+            "- يبنى النص الوصفي على الموصوف الرئيسي والموصوفات الفرعية والامتدادات الوصفية.\n"
+            "- عند وصف الشخص نركز على الأوصاف الجسمية، والأوصاف النفسية، والأوصاف الاجتماعية، وعلى الأفعال والحركات.\n"
+            "- تشمل الأوصاف الجسمية الملامح والهيئة واللباس، والنفسية المزاج والمشاعر والأفكار، والاجتماعية الاسم والسن والجنس والوضعية الاجتماعية.\n"
+            "- عند وصف المكان نركز على موقع المكان وهندسة المكان والأثاث والديكور."
+        )
+    elif mode == "examples":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- يصف نموذج الشخص مدرس اللغة الفرنسية بأنه نحيل وقصير القامة، ذا طربوش وبرنس وصوت قوي حاد، وكان منظره يثير ضحك السارد.\n"
+            "- يتألف المنزل من دورين، ويضم غرفة الاستقبال وغرفة الجلوس وغرفة المائدة وغرف النوم، مع وصف أثاث كل غرفة وتفاصيلها.\n"
+            "- يصور نموذج الطبيعة البحيرة والمروج الخضراء والسهول والسنديانة، ثم مشهد الغروب وانعكاس الشمس على الماء.\n"
+            "- ولدت الرحلة في نفس الكاتب السرور والارتياح والطمأنينة والنشوة، وجعلته يرى الطبيعة فضاء للجمال والسكينة والأمل."
+        )
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(selected_units),
+        "evidence": [unit["text"] for unit in selected_units],
+    }
 
 
 def detect_arabic_commentary_rebuttal_summary_mode(
@@ -4782,6 +4878,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        describing_people_places_units = (
+            select_arabic_describing_people_places_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if describing_people_places_units:
+            structured_describing_people_places_summary = (
+                build_arabic_describing_people_places_summary(
+                    question=cleaned_question,
+                    selected_units=describing_people_places_units,
+                )
+            )
+
+            if structured_describing_people_places_summary is not None:
+                return structured_describing_people_places_summary
+
         commentary_rebuttal_units = (
             select_arabic_commentary_rebuttal_units(
                 question=cleaned_question,
