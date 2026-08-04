@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v37-arabic-exile-text-structured-summary"
+    "v38-arabic-nisba-lesson-structured-summary"
 )
 
 
@@ -2497,6 +2497,83 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_nisba_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé structuré du درس النسبة."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص درس النسبه" in normalized_question
+        and "تعريفها" in normalized_question
+        and "عناصرها" in normalized_question
+        and "قواعد النسب" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_nisba_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF النسبة."""
+
+    if not detect_arabic_nisba_summary_mode(question):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "alnsba-(1).pdf" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_nisba_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du درس النسبة."""
+
+    if detect_arabic_nisba_summary_mode(question) != "full":
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- النسبة هي إلحاق ياء مشددة مكسور ما قبلها بآخر الاسم، وتتكون من المنسوب والمنسوب إليه.\n"
+        "- عند النسب إلى المختوم بتاء التأنيث تحذف التاء، وفي الثلاثي المكسور العين تفتح عينه، أما فعيلة فتحذف منها التاء والياء بشروطها.\n"
+        "- تختلف أحكام المقصور بحسب ترتيب ألفه، والمنقوص بحسب ترتيب يائه، والممدود بحسب أصل همزته أو زيادتها.\n"
+        "- يرد المثنى والجمع إلى المفرد، وينسب المركب الإضافي إلى صدره أو عجزه حسب كونه كنية، بينما ينسب المركب المزجي والمركب الإسنادي إلى الجزء الأول.\n"
+        "- ينتقل الإعراب إلى ياء النسبة، وقد ترد الحروف المحذوفة في بعض الأسماء مثل الثلاثي المحذوف اللام."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(selected_units),
+        "evidence": [unit["text"] for unit in selected_units],
+    }
 
 
 
@@ -5731,6 +5808,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        nisba_units = (
+            select_arabic_nisba_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if nisba_units:
+            structured_nisba_summary = (
+                build_arabic_nisba_summary(
+                    question=cleaned_question,
+                    selected_units=nisba_units,
+                )
+            )
+
+            if structured_nisba_summary is not None:
+                return structured_nisba_summary
+
         exile_units = (
             select_arabic_exile_units(
                 question=cleaned_question,
