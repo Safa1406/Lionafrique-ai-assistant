@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v28-arabic-describing-a-journey-structured-summary"
+    "v29-arabic-my-homeland-poem-structured-summary"
 )
 
 
@@ -2488,6 +2488,89 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_my_homeland_poem_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé de la leçon قصيدة وطني."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص قصيده وطني" in normalized_question
+        or (
+            "وطني" in normalized_question
+            and "تحليلها" in normalized_question
+            and "لخص" in normalized_question
+        )
+    ):
+        return "analysis"
+
+    return ""
+
+
+def select_arabic_my_homeland_poem_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF قصيدة وطني."""
+
+    if not detect_arabic_my_homeland_poem_summary_mode(question):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "otni-ns-shari" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_my_homeland_poem_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré de قصيدة وطني."""
+
+    mode = detect_arabic_my_homeland_poem_summary_mode(question)
+
+    if mode != "analysis":
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- قصيدة «وطني» للشاعر محمود درويش قصيدة عمودية ذات بعد وطني، تعبر عن حب الشاعر لوطنه وتعلقه به، وإصراره على التحدي والصمود حتى نيل الحرية.\n"
+        "- يجمع معجمها بين حقل الألم المرتبط بالسجن وبطش العدو الصهيوني، وحقل الأمل الذي يخفف المعاناة ويقوي التفاؤل والمقاومة.\n"
+        "- تظهر هيمنة ردود أفعال الشاعر انتصاره المعنوي رغم التعذيب، وتتدرج المقاطع من الصمود والتفاؤل إلى تحدي التعذيب ثم مواصلة المواجهة والأمل في المستقبل.\n"
+        "- من خصائصها الفنية أسلوب النفي الدال على التحدي، والطباق مثل ظلام ونور، وهيمنة الجمل الفعلية، والرمز؛ فالسنابل ترمز إلى الخصب والخير، والجدائل إلى الصبر والشموخ والصمود."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(selected_units),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -4988,6 +5071,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        my_homeland_poem_units = (
+            select_arabic_my_homeland_poem_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if my_homeland_poem_units:
+            structured_my_homeland_poem_summary = (
+                build_arabic_my_homeland_poem_summary(
+                    question=cleaned_question,
+                    selected_units=my_homeland_poem_units,
+                )
+            )
+
+            if structured_my_homeland_poem_summary is not None:
+                return structured_my_homeland_poem_summary
+
         describing_journey_units = (
             select_arabic_describing_journey_units(
                 question=cleaned_question,

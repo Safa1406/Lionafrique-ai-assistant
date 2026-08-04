@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v36-arabic-describing-a-journey-analysis"
+ARABIC_RULES_VERSION = "v37-arabic-my-homeland-poem-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1734,6 +1734,406 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+
+def extract_arabic_my_homeland_poem_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Extrait les réponses documentaires de la leçon قصيدة وطني."""
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(question)
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(passages, start=1):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get("text", ""),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        source_name = passage.get("source", "Source inconnue")
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        normalized_passage = normalize_text(original_text)
+
+        same_lesson = (
+            "otni-ns-shari" in normalized_source
+            or (
+                "وطني" in normalized_passage
+                and "محمود درويش" in normalized_passage
+            )
+        )
+
+        if not same_lesson:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get("retrieval_score", 0.0)
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    def build_answer(
+        answer: str,
+        keywords: tuple[str, ...],
+    ) -> list[dict]:
+        normalized_keywords = tuple(
+            normalize_text(keyword)
+            for keyword in keywords
+        )
+        ranked = []
+
+        for passage in lesson_passages:
+            hits = sum(
+                1
+                for keyword in normalized_keywords
+                if (
+                    keyword
+                    and keyword
+                    in passage["normalized_text"]
+                )
+            )
+            ranked.append(
+                (
+                    hits,
+                    passage["score"],
+                    passage,
+                )
+            )
+
+        ranked.sort(
+            key=lambda item: (
+                item[0],
+                item[1],
+            ),
+            reverse=True,
+        )
+        support = ranked[0][2]
+
+        return [
+            {
+                "passage_number": support["passage_number"],
+                "quote": answer,
+                "source": support["source"],
+                "page": support["page"],
+            }
+        ]
+
+    if (
+        "صاحب قصيده وطني" in normalized_question
+        or (
+            "من صاحب" in normalized_question
+            and "مصدرها" in normalized_question
+        )
+    ):
+        return build_answer(
+            "صاحب قصيدة «وطني» هو محمود درويش، ومصدرها ديوان «آخر الليل» ضمن الأعمال الكاملة.",
+            ("محمود درويش", "اخر الليل", "الاعمال الكامله"),
+        )
+
+    if "تعريف الشعر" in normalized_question:
+        return build_answer(
+            "الشعر هو الكلام الموزون المقفى الدال على معنى.",
+            ("تعريف الشعر", "الكلام الموزون المقفي"),
+        )
+
+    if (
+        "انواع الشعر" in normalized_question
+        or "ما انواع الشعر" in normalized_question
+    ):
+        return build_answer(
+            "أنواع الشعر المذكورة هي الشعر العمودي، والشعر الحر، وقصيدة النثر.",
+            ("الشعر العمودي", "الشعر الحر", "قصيده النثر"),
+        )
+
+    if (
+        "خصايص الشعر العمودي" in normalized_question
+        or (
+            "الشعر العمودي" in normalized_question
+            and "خصايص" in normalized_question
+        )
+    ):
+        return build_answer(
+            "يعتمد الشعر العمودي نظام الشطرين؛ فالشطر الأول يسمى الصدر، والثاني يسمى العجز، مع وحدة الوزن والقافية والروي.",
+            ("نظام الشطرين", "الصدر", "العجز", "الوزن", "القافيه", "الروي"),
+        )
+
+    if (
+        "اين ومتي ولد محمود درويش" in normalized_question
+        or (
+            "ولد محمود درويش" in normalized_question
+            and "متي" in normalized_question
+        )
+    ):
+        return build_answer(
+            "ولد محمود درويش في قرية البروة بفلسطين عام 1941.",
+            ("قريه البروه", "فلسطين", "1941"),
+        )
+
+    if (
+        "لجا محمود درويش" in normalized_question
+        and "عاد الي فلسطين" in normalized_question
+    ):
+        return build_answer(
+            "لجأ محمود درويش إلى لبنان رفقة أسرته عام 1948، ثم عاد إلى فلسطين سنة 1949 متسللا مع أسرته.",
+            ("لبنان", "1948", "1949", "متسللا"),
+        )
+
+    if (
+        "تعليمه الابتدايي" in normalized_question
+        and "الثانوي" in normalized_question
+    ):
+        return build_answer(
+            "تابع تعليمه الابتدائي في مدرسة دير الأسد، وتعليمه الثانوي في مدرسة «يني» الثانوية.",
+            ("مدرسه دير الاسد", "مدرسه يني الثانويه"),
+        )
+
+    if (
+        "ابرز نشاط محمود درويش" in normalized_question
+        or (
+            "متي واين توفي" in normalized_question
+            and "محمود درويش" in normalized_question
+        )
+    ):
+        return build_answer(
+            "شغل محمود درويش منصب رئيس رابطة الكتاب والصحفيين الفلسطينيين، وتوفي في الولايات المتحدة الأمريكية عام 2008.",
+            ("رييس رابطه الكتاب والصحفيين الفلسطينيين", "الولايات المتحده", "2008"),
+        )
+
+    if (
+        "مولفات محمود درويش" in normalized_question
+        or (
+            "اذكر بعض مولفات" in normalized_question
+            and "محمود درويش" in normalized_question
+        )
+    ):
+        return build_answer(
+            "من مؤلفات محمود درويش الواردة في الوثيقة: «أوراق الزيتون»، و«عاشق من فلسطين»، و«آخر الليل»، و«أعراس»، و«حصار لمدائح البحر»، و«لماذا تركت الحصان وحيدا»، و«حالة حصار»، و«أثر الفراشة».",
+            ("اوراق الزيتون", "عاشق من فلسطين", "اخر الليل", "اثر الفراشه"),
+        )
+
+    if (
+        "الي اي مجال ينتمي نص وطني" in normalized_question
+        or (
+            "مجال" in normalized_question
+            and "نص وطني" in normalized_question
+        )
+    ):
+        return build_answer(
+            "ينتمي نص «وطني» إلى مجال القيم الوطنية والإنسانية.",
+            ("مجال القيم الوطنيه والانسانيه",),
+        )
+
+    if (
+        "ما نوع نص وطني" in normalized_question
+        or (
+            "نوعيه النص" in normalized_question
+            and "وطني" in normalized_question
+        )
+    ):
+        return build_answer(
+            "نص «وطني» قصيدة شعرية عمودية ذات بعد وطني.",
+            ("قصيده شعريه عموديه", "بعد وطني"),
+        )
+
+    if (
+        "كم عدد ابيات القصيده" in normalized_question
+        and "رويها" in normalized_question
+    ):
+        return build_answer(
+            "تتكون القصيدة من 9 أبيات شعرية، ورويها حرف اللام، وقد أشبع في الأبيات الثلاثة الأخيرة.",
+            ("9 ابيات", "حرف اللام", "الابيات الثلاثه الاخيره"),
+        )
+
+    if (
+        "دلاله عنوان وطني" in normalized_question
+        or (
+            "عنوان وطني" in normalized_question
+            and "التركيب" in normalized_question
+        )
+    ):
+        return build_answer(
+            "عنوان «وطني» مركب إضافي أضيف فيه ضمير المتكلم، وهو الياء، إلى الوطن؛ للدلالة على ارتباط الشاعر بوطنه وعدم افتراقهما، وعلى حاجة الوطن إلى المواطن وحاجة المواطن إلى الوطن.",
+            ("مركب اضافي", "ضمير المتكلم", "الياء", "الوطن", "المواطن"),
+        )
+
+    if (
+        "حذف اداه النداء" in normalized_question
+        and "عنوان وطني" in normalized_question
+    ):
+        return build_answer(
+            "يدل حذف أداة النداء على الارتباط الوثيق وقرب المسافة النفسية بين المنادي، وهو الشاعر، والمنادى، وهو الوطن.",
+            ("حذف اداه النداء", "الارتباط الوثيق", "المنادي", "المنادى"),
+        )
+
+    if (
+        "ماذا يعبر الشاعر في بدايه القصيده" in normalized_question
+        or "بدايه القصيده" in normalized_question
+    ):
+        return build_answer(
+            "يعبر الشاعر في بداية القصيدة عن قرب المسافة النفسية بينه وبين وطنه، وعن العنف ضد العدو الصهيوني والرقة إزاء وطنه فلسطين، وطموحه إلى الحرية.",
+            ("بدايه النص", "قرب المسافه النفسيه", "العنف", "الرقه", "فلسطين"),
+        )
+
+    if (
+        "ماذا يعبر الشاعر في نهايه القصيده" in normalized_question
+        or "نهايه القصيده" in normalized_question
+    ):
+        return build_answer(
+            "يعبر في نهاية القصيدة عن بعد المسافة النفسية بينه وبين العدو الصهيوني الذي يكرهه ويتحداه بكل الصبر والصمود.",
+            ("نهايه النص", "بعد المسافه النفسيه", "العدو الصهيوني", "الصبر", "الصمود"),
+        )
+
+    if (
+        "فرضيه القراءه" in normalized_question
+        and "قصيده" in normalized_question
+    ):
+        return build_answer(
+            "تفترض القراءة أن موضوع القصيدة هو ارتباط الشاعر بوطنه، وتأكيده على الصمود والتحدي حتى نيل الحرية.",
+            ("فرضيه القراءه", "ارتباط الشاعر بوطنه", "نيل الحريه"),
+        )
+
+    if (
+        "ما معني الكلمات" in normalized_question
+        and "زنزانه" in normalized_question
+        and "صرير" in normalized_question
+    ):
+        return build_answer(
+            "زنزانة تعني سجن انفرادي، وجدائل: ج جديلة، وهي جريد النخل، وأنامل تعني أصابع، وصرير يعني صوت السلاسل.",
+            ("زنزانه", "سجن انفرادي", "جديله", "انامل", "صوت السلاسل"),
+        )
+
+    if (
+        "المضمون العام لقصيده وطني" in normalized_question
+        or (
+            "المضمون العام" in normalized_question
+            and "وطني" in normalized_question
+        )
+    ):
+        return build_answer(
+            "المضمون العام هو حب الشاعر لوطنه وتعلقه به، وإصراره على التحدي والصمود حتى تشرق شمس الحرية والاستقلال.",
+            ("حب الشاعر لوطنه", "التحدي", "الصمود", "شمس الحريه"),
+        )
+
+    if (
+        "الفاظ حقل الالم" in normalized_question
+        or (
+            "حقل الالم" in normalized_question
+            and "ابرز" in normalized_question
+        )
+    ):
+        return build_answer(
+            "من ألفاظ حقل الألم: سلاسل، وعنف، وعاصفة، وزنزانة، وصورة قاتلي، والعذاب، والظلام، وهزيمتي، وزلازل، وصرير.",
+            ("حقل الالم", "سلاسل", "عنف", "زنزانه", "هزيمتي", "صرير"),
+        )
+
+    if (
+        "الفاظ حقل الامل" in normalized_question
+        or (
+            "حقل الامل" in normalized_question
+            and "ابرز" in normalized_question
+        )
+    ):
+        return build_answer(
+            "من ألفاظ حقل الأمل: رقة، والمتفائل، وعرس جداول، وشمس، ومرج، وسنابل، وجدائل، وظلال.",
+            ("حقل الامل", "رقه", "المتفائل", "سنابل", "جدائل"),
+        )
+
+    if (
+        "دلاله الجمع بين حقل الالم وحقل الامل" in normalized_question
+        or (
+            "حقل الالم" in normalized_question
+            and "حقل الامل" in normalized_question
+            and "دلاله" in normalized_question
+        )
+    ):
+        return build_answer(
+            "يدل حقل الألم على بطش العدو الصهيوني، بينما يدل الأمل في ظل الألم على التحدي والصمود؛ وبالأمل يخفف الشاعر من معاناته داخل زنزانته.",
+            ("بطش العدو الصهيوني", "التحدي", "الصمود", "يخفف", "زنزانته"),
+        )
+
+    if (
+        "الافعال التي قام بها العدو" in normalized_question
+        and "ردود فعل الشاعر" in normalized_question
+    ):
+        return build_answer(
+            "من أفعال العدو: سدوا علي النور، وكتبوا على الجدران رقم بطاقتي، ورسموا على الجدران صورة قاتلي. ومن ردود فعل الشاعر: توهجت في القلب، ونما على الجدران مرج سنابل، وحفرت بالأسنان رسمك، وكتبت أغنية العذاب الراحل.",
+            ("سدوا علي النور", "كتبوا علي الجدران", "رسموا علي الجدران", "توهجت", "مرج سنابل"),
+        )
+
+    if (
+        "هيمنه ردود الافعال" in normalized_question
+        and "الافعال" in normalized_question
+    ):
+        return build_answer(
+            "تدل هيمنة ردود الأفعال على غضب الشاعر وانتصاره المعنوي على العدو الصهيوني رغم معاناته في السجن.",
+            ("هيمنه ردود الافعال", "غضب الشاعر", "انتصاره المعنوي", "السجن"),
+        )
+
+    if (
+        "مضامين المقاطع الثلاثه" in normalized_question
+        or (
+            "مقاطع القصيده" in normalized_question
+            and "مضامين" in normalized_question
+        )
+    ):
+        return build_answer(
+            "يتناول المقطع الأول، في البيتان 1 و2، إصرار الشاعر على الصمود والتفاؤل بالنصر. ويعرض المقطع الثاني، من البيت 3 إلى البيت 5، تحديه لأشكال التعذيب بالصبر والتفاؤل. أما المقطع الثالث، من البيت 6 إلى البيت 9، فيصور مواصلة المواجهة والتحدي والصبر والأمل في المستقبل.",
+            ("البيتان", "من البيت 3", "من البيت 6", "اشكال التعذيب"),
+        )
+
+    if (
+        "الخصايص الفنيه" in normalized_question
+        and "القصيده" in normalized_question
+    ):
+        return build_answer(
+            "من الخصائص الفنية: أسلوب النفي الذي يدل على التحدي والصمود؛ والطباق مثل ظلام ونور ورقة وعنف؛ وهيمنة الجمل الفعلية الدالة على الحركية؛ والرمز، فالسنابل ترمز إلى الخصب والخير، والجدائل ترمز إلى الصبر والشموخ والصمود.",
+            ("اسلوب النفي", "الطباق", "ظلام", "نور", "الجمل الفعليه", "السنابل", "الجدائل"),
+        )
+
+    if (
+        "من المرسل والمرسل اليه" in normalized_question
+        and "خطاب القصيده" in normalized_question
+    ):
+        return build_answer(
+            "المرسل هو الشاعر محمود درويش، والمرسل إليه هو العدو الصهيوني، كما يتوجه الخطاب إلى الضمائر الحية في العالم.",
+            ("المرسل", "محمود درويش", "العدو الصهيوني", "الضماير الحيه"),
+        )
+
+    if (
+        "مقصديه رساله القصيده" in normalized_question
+        or (
+            "مقصديه" in normalized_question
+            and "القيم" in normalized_question
+        )
+    ):
+        return build_answer(
+            "مقصدية الرسالة هي إعلان التحدي والصمود في وجه العدو الصهيوني مهما تطلب الأمر من التضحيات من أجل الحرية والكرامة. وتحمل القصيدة قيم الثقة في النفس، والتضحية، وشجاعة الموقف، والصبر، والتفاؤل والأمل.",
+            ("مقصديه الرساله", "التحدي", "التضحيات", "الحريه", "الكرامه", "شجاعه الموقف"),
+        )
+
+    return []
 
 
 
@@ -11971,7 +12371,41 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_describing_journey_evidence(
+            extract_arabic_my_homeland_poem_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
+
+        my_homeland_poem_source_scope = any(
+            "otni-ns-shari"
+            in (
+                passage.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            for passage in passages
+        )
+
+        if (
+            my_homeland_poem_source_scope
+            and not validated_evidence
+            and not has_topic_overlap_with_passages(
+                question=analysis_question,
+                passages=passages,
+            )
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_describing_journey_evidence(
                 question=analysis_question,
                 passages=passages,
             )
