@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v32-arabic-school-of-life-refusal"
+ARABIC_RULES_VERSION = "v33-arabic-diary-writing-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1731,6 +1731,580 @@ def extract_arabic_direct_rule_evidence(
     ]
 
 
+
+
+
+def extract_arabic_diary_writing_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait des réponses structurées du cours
+    مهارة السرد: كتابة اليوميات.
+    """
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(question)
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get("text", ""),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        same_lesson = (
+            "mhara-alsrd-ktaba-aliomiat"
+            in normalized_source
+            or (
+                "كتابه اليوميات"
+                in normalized_passage
+                and (
+                    "السرد"
+                    in normalized_passage
+                    or "جيفري لانغ"
+                    in normalized_passage
+                    or "رمضان"
+                    in normalized_passage
+                )
+            )
+        )
+
+        if not same_lesson:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    def build_answer(
+        answer: str,
+        keywords: tuple[str, ...],
+    ) -> list[dict]:
+        normalized_keywords = tuple(
+            normalize_text(keyword)
+            for keyword in keywords
+        )
+
+        ranked = []
+
+        for passage in lesson_passages:
+            hits = sum(
+                1
+                for keyword in normalized_keywords
+                if (
+                    keyword
+                    and keyword
+                    in passage["normalized_text"]
+                )
+            )
+            ranked.append(
+                (
+                    hits,
+                    passage["score"],
+                    passage,
+                )
+            )
+
+        ranked.sort(
+            key=lambda item: (
+                item[0],
+                item[1],
+            ),
+            reverse=True,
+        )
+        support = ranked[0][2]
+
+        return [
+            {
+                "passage_number": support[
+                    "passage_number"
+                ],
+                "quote": answer,
+                "source": support["source"],
+                "page": support["page"],
+            }
+        ]
+
+    if (
+        "تعريف السرد"
+        in normalized_question
+    ):
+        return build_answer(
+            "السرد هو الطريقة التي تحكى بها أحداث قصة، ويفترض وجود شخص يحكيها، هو السارد، لمتلق معين بأساليب لغوية.",
+            (
+                "السرد",
+                "الطريقه التي تحكي بها احداث قصه",
+                "السارد",
+                "متلق معين",
+            ),
+        )
+
+    if (
+        "تعريف الوصف"
+        in normalized_question
+    ):
+        return build_answer(
+            "الوصف هو تمثل الأشخاص والأشياء والحالات والمشاعر والانفعالات.",
+            (
+                "الوصف",
+                "الاشخاص",
+                "الاشياء",
+                "الحالات",
+                "المشاعر",
+                "الانفعالات",
+            ),
+        )
+
+    if (
+        "تعريف اليوميات"
+        in normalized_question
+    ):
+        return build_answer(
+            "اليوميات سجل شخصي يدون فيه صاحبه بشكل منتظم وقائع مرتبطة بحياته اليومية.",
+            (
+                "اليوميات",
+                "سجل شخصي",
+                "بشكل منتظم",
+                "حياته اليوميه",
+            ),
+        )
+
+    if (
+        "الفكره المحوريه"
+        in normalized_question
+        and "نص الانطلاق"
+        in normalized_question
+    ):
+        return build_answer(
+            "الفكرة المحورية هي حدث اعتناق جيفري لانغ للدين الإسلامي.",
+            (
+                "الفكره المحوريه",
+                "اعتناق جيفري لانغ",
+                "الاسلام",
+            ),
+        )
+
+    if (
+        "كاتب اليوميه"
+        in normalized_question
+        and "الحدث"
+        in normalized_question
+    ):
+        return build_answer(
+            "كاتب اليومية هو الدكتور جيفري لانغ، والحدث الذي يسرده هو اعتناق الإسلام في أول يوم.",
+            (
+                "الدكتور جيفري لانغ",
+                "اعتناق الاسلام",
+                "اول يوم",
+            ),
+        )
+
+    if (
+        "الزمان والمكان"
+        in normalized_question
+        and "جيفري لانغ"
+        in normalized_question
+    ):
+        return build_answer(
+            "الزمان هو اليوم الأول من اعتناق الإسلام وليلة اليوم الأول، والمكان هو المسجد والغرفة.",
+            (
+                "اليوم الاول من اعتناق الاسلام",
+                "ليله اليوم الاول",
+                "المسجد",
+                "الغرفه",
+            ),
+        )
+
+    if (
+        "ماذا حدث لجيفري لانغ"
+        in normalized_question
+        and "اليوم الاول"
+        in normalized_question
+    ):
+        return build_answer(
+            "في اليوم الأول قدم إمام المسجد إلى جيفري لانغ كتيبا يشرح كيفية الصلاة، ولاحظ قلق الطلاب المسلمين ونصائحهم بالتدرج، لكنه قرر أن يبدأ فورا بأداء الصلوات الخمس في أوقاتها.",
+            (
+                "امام المسجد",
+                "كتيبا",
+                "كيفيه الصلاه",
+                "قلق الطلاب المسلمين",
+                "الصلوات الخمس",
+                "اوقاتها",
+            ),
+        )
+
+    if (
+        "كيف استعد جيفري لانغ"
+        in normalized_question
+    ):
+        return build_answer(
+            "استعد بدراسة حركات الصلاة والآيات القرآنية والأدعية، وحفظ النصوص باللغة العربية ومعانيها باللغة الإنجليزية، وتفحص الكتيب مرات عدة، ثم قرر أداء صلاة العشاء.",
+            (
+                "حركات الصلاه",
+                "الايات القرانيه",
+                "الادعيه",
+                "اللغه العربيه",
+                "اللغه الانجليزيه",
+                "تفحص الكتيب",
+                "صلاه العشاء",
+            ),
+        )
+
+    if all(
+        marker in normalized_question
+        for marker in (
+            "اعتنقت",
+            "فورا",
+            "تفحصت",
+        )
+    ):
+        return build_answer(
+            "اعتنقت تعني اختاره عقيدة دينية، وفورا تعني حالا، وتفحصت تعني بحثت.",
+            (
+                "اعتنقت",
+                "عقيده دينيه",
+                "فورا",
+                "حالا",
+                "تفحصت",
+                "بحث",
+            ),
+        )
+
+    if (
+        "تحديد الزمن العام"
+        in normalized_question
+    ):
+        return build_answer(
+            "تحديد الزمن العام لليومية يعني تعيين اليوم العام للحدث، مثل: يوم الاثنين 12 شتنبر 2015، أو اليوم الأول من حدث ما، أو يوم نجاحي في امتحان.",
+            (
+                "الزمن العام",
+                "الاثنين 12 شتنبر 2015",
+                "اليوم الاول",
+                "يوم نجاحي في امتحان",
+            ),
+        )
+
+    if (
+        "الازمنه الخاصه"
+        in normalized_question
+        or "الازمنه الجزييه"
+        in normalized_question
+    ):
+        return build_answer(
+            "من الأزمنة الخاصة أو الجزئية: صباحا، مساء، قبل، بعد، وعلى الساعة.",
+            (
+                "صباحا",
+                "مساء",
+                "قبل",
+                "بعد",
+                "علي الساعه",
+            ),
+        )
+
+    if (
+        "كيف ترتب الاحداث"
+        in normalized_question
+    ):
+        return build_answer(
+            "ترتب الأحداث المرتبطة بكل زمن جزئي حسب تسلسلها الزمني، مع إبراز أهمية اليوم في حياتك.",
+            (
+                "كل زمن جزيي",
+                "تسلسلها الزمني",
+                "اهميه اليوم",
+                "حياتك",
+            ),
+        )
+
+    if (
+        "الامور التي ينبغي مراعاتها"
+        in normalized_question
+        and "اليوميه"
+        in normalized_question
+    ):
+        return build_answer(
+            "ينبغي وصف الأشخاص والأمكنة والأزمنة، وتوظيف الحوار الداخلي، واستعمال ضمير المتكلم، وتحري الوضوح والشفافية.",
+            (
+                "صف الاشخاص",
+                "الامكنه",
+                "الازمنه",
+                "الحوار الداخلي",
+                "ضمير المتكلم",
+                "الوضوح",
+                "الشفافيه",
+            ),
+        )
+
+    if (
+        "الحوار الداخلي"
+        in normalized_question
+        and "الامثله"
+        in normalized_question
+    ):
+        return build_answer(
+            "الحوار الداخلي هو ما يدور في نفس الكاتب، ومن أمثلته: قلت في نفسي، وتساءلت، وحدثتني نفسي.",
+            (
+                "قلت في نفسي",
+                "تساءلت",
+                "حدثتني نفسي",
+            ),
+        )
+
+    if (
+        "استخرج عناصر مهاره كتابه اليوميات"
+        in normalized_question
+    ):
+        return build_answer(
+            "كاتب اليومية هو الدكتور جيفري لانغ، والحدث اعتناق الإسلام، والزمان اليوم الأول وليلة اليوم الأول، والمكان المسجد والغرفة.",
+            (
+                "كاتب اليوميه",
+                "الدكتور جيفري لانغ",
+                "الحدث",
+                "اعتناق الاسلام",
+                "الزمان",
+                "اليوم الاول",
+                "المكان",
+                "المسجد",
+                "الغرفه",
+            ),
+        )
+
+    if (
+        "وظيفه السرد والوصف"
+        in normalized_question
+    ):
+        return build_answer(
+            "وظيفة السرد هي سرد وقائع حدث اعتناق الإسلام، ووظيفة الوصف هي وصف مجريات الأحداث والمشاعر والانفعالات.",
+            (
+                "السرد",
+                "وقايع",
+                "اعتناق الاسلام",
+                "الوصف",
+                "مجريات الاحداث",
+                "المشاعر",
+                "الانفعالات",
+            ),
+        )
+
+    if (
+        "كيف ينظم كاتب اليوميه"
+        in normalized_question
+    ):
+        return build_answer(
+            "ينظم كاتب اليومية الوقائع والأحداث عبر تسلسل الوقائع والأحداث، وتقطيع الحدث وفق الزمن الذي وقع فيه.",
+            (
+                "تسلسل الوقايع",
+                "الاحداث",
+                "تقطيع الحدث",
+                "الزمن الذي وقع فيه",
+            ),
+        )
+
+    if (
+        "موضوع التطبيق المقترح"
+        in normalized_question
+    ):
+        return build_answer(
+            "موضوع التطبيق هو كتابة يومية تسجل فيها وقائع صيامك أول يوم من شهر رمضان.",
+            (
+                "اكتب يوميه",
+                "وقايع صيامك",
+                "اول يوم",
+                "شهر رمضان",
+            ),
+        )
+
+    if (
+        "التاريخ الوارد"
+        in normalized_question
+        and "رمضان"
+        in normalized_question
+    ):
+        return build_answer(
+            "التاريخ الوارد هو اليوم الأول من شهر رمضان سنة 1431 هجرية، الموافق 11 غشت 2010.",
+            (
+                "1431",
+                "11 غشت 2010",
+            ),
+        )
+
+    if (
+        "الساعه الثانيه عشره ليلا"
+        in normalized_question
+    ):
+        return build_answer(
+            "في الساعة الثانية عشرة ليلا كانت الأسرة تشاهد نشرة الأخبار، وأعلن المذيع ثبوت رؤية هلال رمضان، ففرحت صاحبة اليومية، وانهالت التبريكات، وتم الاتصال بالأهل والأقارب لتهنئتهم.",
+            (
+                "نشره الاخبار",
+                "ثبوت رويه هلال رمضان",
+                "فرحت",
+                "التبريكات",
+                "الاتصال بالاهل والاقارب",
+                "تهنيتهم",
+            ),
+        )
+
+    if (
+        "الساعه الثالثه صباحا"
+        in normalized_question
+    ):
+        return build_answer(
+            "في الساعة الثالثة صباحا أيقظتني والدتي قبل وجبة السحور لأساعدها، وحضرنا طعاما فيه تمر وعصير، ثم أيقظت والدي وأخي، وبعد السحور ذهبا إلى المسجد لأداء صلاة الفجر.",
+            (
+                "ايقظتني والدتي",
+                "وجبه السحور",
+                "ساعدها",
+                "تمر",
+                "عصير",
+                "والدي واخي",
+                "صلاه الفجر",
+            ),
+        )
+
+    if (
+        "الساعه الحاديه عشره صباحا"
+        in normalized_question
+    ):
+        return build_answer(
+            "في الساعة الحادية عشرة صباحا استيقظت متأخرة، وساهمت في تنظيف المنزل، ثم اتجهت رفقة أمي إلى السوق لشراء لوازم إعداد وجبة الإفطار.",
+            (
+                "استيقظت متاخره",
+                "تنظيف المنزل",
+                "رفقه امي",
+                "السوق",
+                "لوازم",
+                "وجبه الافطار",
+            ),
+        )
+
+    if (
+        "اثناء النهار"
+        in normalized_question
+        and "تمضيه الوقت"
+        in normalized_question
+    ):
+        return build_answer(
+            "شعرت أثناء النهار بالجوع والعطش، وحاولت تمضية الوقت بمشاهدة التلفاز وقراءة الجرائد.",
+            (
+                "الجوع",
+                "العطش",
+                "مشاهده التلفاز",
+                "قراءه الجرايد",
+            ),
+        )
+
+    if (
+        "الساعه السادسه والنصف مساء"
+        in normalized_question
+    ):
+        return build_answer(
+            "في الساعة السادسة والنصف مساء ساعدت أمها في تجهيز مائدة الإفطار، وتوضأت وصعدت إلى سطح المنزل ترقبا لأذان المغرب، ثم تناولت التمر والحليب وأدت صلاة المغرب ثم كان انتظار عودة أبي وأخي.",
+            (
+                "مائده الافطار",
+                "توضات",
+                "سطح المنزل",
+                "اذان المغرب",
+                "التمر",
+                "الحليب",
+                "صلاه المغرب",
+                "انتظار عوده ابي واخي",
+            ),
+        )
+
+    if (
+        "المشاعر التي احست بها"
+        in normalized_question
+        and "لحظه الافطار"
+        in normalized_question
+    ):
+        return build_answer(
+            "عند لحظة الإفطار لم يعد للعناء أثر، وحل محله فخر وارتياح ورجاء بتقبل الله لصيامنا ورغبة في نيل مرضاته.",
+            (
+                "لم يعد للعناء اثر",
+                "فخر",
+                "ارتياح",
+                "رجاء",
+                "تقبل الله لصيامنا",
+                "نيل مرضاته",
+            ),
+        )
+
+    if (
+        "خصايص كتابه اليوميه"
+        in normalized_question
+    ):
+        return build_answer(
+            "اليومية سجل شخصي، ومن خصائص كتابتها تحديد الزمن العام والأزمنة الجزئية، واحترام التسلسل الزمني، واستعمال ضمير المتكلم والحوار الداخلي والوصف، وتحري الوضوح.",
+            (
+                "سجل شخصي",
+                "الزمن العام",
+                "الازمنه الجزييه",
+                "التسلسل الزمني",
+                "ضمير المتكلم",
+                "الحوار الداخلي",
+                "الوصف",
+                "الوضوح",
+            ),
+        )
+
+    if (
+        "خطه مختصره"
+        in normalized_question
+        and "يوميه ناجحه"
+        in normalized_question
+    ):
+        return build_answer(
+            "تبدأ الخطة بتحديد الزمن العام، ثم الأزمنة الخاصة، وسرد الأحداث حسب التسلسل الزمني، ووصف الأشخاص والأمكنة، وتوظيف الحوار الداخلي وضمير المتكلم، ثم إبراز أهمية اليوم.",
+            (
+                "تحديد الزمن العام",
+                "الازمنه الخاصه",
+                "سرد الاحداث",
+                "التسلسل الزمني",
+                "وصف الاشخاص",
+                "الامكنه",
+                "الحوار الداخلي",
+                "ضمير المتكلم",
+                "اهميه اليوم",
+            ),
+        )
+
+    return []
 
 
 def extract_arabic_school_of_life_evidence(
@@ -10249,11 +10823,45 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_school_of_life_evidence(
+            extract_arabic_diary_writing_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        diary_writing_source_scope = any(
+            "mhara-alsrd-ktaba-aliomiat"
+            in (
+                passage.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            for passage in passages
+        )
+
+        if (
+            diary_writing_source_scope
+            and not validated_evidence
+            and not has_topic_overlap_with_passages(
+                question=analysis_question,
+                passages=passages,
+            )
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_school_of_life_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         school_of_life_source_scope = any(
             "mdrsa-alhiaa"

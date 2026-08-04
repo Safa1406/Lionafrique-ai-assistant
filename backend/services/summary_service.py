@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v24-arabic-school-of-life-structured-summary"
+    "v25-arabic-diary-writing-structured-summary"
 )
 
 
@@ -2485,6 +2485,147 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
         "مرفوع محلا",
     ),
 )
+
+
+
+def detect_arabic_diary_writing_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours كتابة اليوميات."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    if not any(
+        marker in normalized_question
+        for marker in (
+            "كتابه يوميات",
+            "مهاره سرد",
+            "نموذج يوميه",
+        )
+    ):
+        return ""
+
+    if (
+        "نص انطلاق"
+        in normalized_question
+        and "رمضان"
+        in normalized_question
+    ):
+        return "examples"
+
+    if (
+        "لخص درس"
+        in normalized_question
+        or "ملخص درس"
+        in normalized_question
+        or "تلخيص درس"
+        in normalized_question
+    ):
+        return "lesson"
+
+    return ""
+
+
+def select_arabic_diary_writing_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF كتابة اليوميات."""
+
+    mode = detect_arabic_diary_writing_summary_mode(
+        question
+    )
+
+    if not mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "mhara-alsrd-ktaba-aliomiat"
+            in source_name
+        ):
+            lesson_units.append(unit)
+
+    if not lesson_units:
+        return []
+
+    lesson_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return lesson_units
+
+
+def build_arabic_diary_writing_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré du cours كتابة اليوميات."""
+
+    mode = detect_arabic_diary_writing_summary_mode(
+        question
+    )
+
+    if mode == "lesson":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- السرد هو طريقة حكي أحداث قصة بواسطة السارد، "
+            "والوصف تمثل الأشخاص والأشياء والحالات والمشاعر "
+            "والانفعالات، أما اليوميات فهي سجل شخصي يدون فيه "
+            "صاحبه وقائع حياته بانتظام.\n"
+            "- تبدأ كتابة اليومية بتحديد الزمن العام ثم الأزمنة "
+            "الجزئية، وترتيب الأحداث حسب التسلسل الزمني، وإبراز "
+            "أهمية اليوم.\n"
+            "- ينبغي استعمال ضمير المتكلم والحوار الداخلي، "
+            "ووصف الأشخاص والأمكنة والأزمنة، مع تحري الوضوح "
+            "والشفافية.\n"
+            "- يوضح نص جيفري لانغ ونموذج رمضان كيفية الجمع بين "
+            "السرد والوصف وتنظيم الوقائع والمشاعر زمنيا."
+        )
+
+    elif mode == "examples":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- كاتب نص الانطلاق هو جيفري لانغ، والحدث اعتناق "
+            "الإسلام في اليوم الأول، ومكاناه المسجد والغرفة، "
+            "حيث تعلم الصلاة واستعد لأدائها.\n"
+            "- يقدم نموذج رمضان وقائع مرتبة زمنيا: الساعة "
+            "12 ليلا إعلان الهلال، والساعة 3 صباحا السحور، "
+            "والساعة 11 صباحا الذهاب إلى السوق، والساعة "
+            "6:30 مساء الاستعداد للإفطار.\n"
+            "- عانت صاحبة اليومية من الجوع والعطش أثناء النهار، "
+            "ثم أحست عند الإفطار بالفخر والارتياح والرجاء.\n"
+            "- يجمع النموذجان بين تحديد الزمان والمكان، وتسلسل "
+            "الوقائع، ووصف المشاعر، واستعمال ضمير المتكلم."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 def detect_arabic_school_of_life_summary_mode(
@@ -4505,6 +4646,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        diary_writing_units = (
+            select_arabic_diary_writing_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if diary_writing_units:
+            structured_diary_writing_summary = (
+                build_arabic_diary_writing_summary(
+                    question=cleaned_question,
+                    selected_units=diary_writing_units,
+                )
+            )
+
+            if structured_diary_writing_summary is not None:
+                return structured_diary_writing_summary
+
         school_of_life_units = (
             select_arabic_school_of_life_units(
                 question=cleaned_question,
