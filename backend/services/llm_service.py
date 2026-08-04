@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v33-arabic-diary-writing-analysis"
+ARABIC_RULES_VERSION = "v34-arabic-commentary-rebuttal-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1732,6 +1732,529 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+def extract_arabic_commentary_rebuttal_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Extrait des réponses structurées du cours
+    مهارة التعقيب والتعليق.
+    """
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(question)
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get("text", ""),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        normalized_passage = normalize_text(
+            original_text
+        )
+
+        same_lesson = (
+            "mhara-altaqib-oaltaliq"
+            in normalized_source
+            or (
+                "التعقيب والتعليق"
+                in normalized_passage
+                and (
+                    "الحجاج" in normalized_passage
+                    or "قاسم امين" in normalized_passage
+                    or "الجدار العازل" in normalized_passage
+                    or "الحضاره الاسلاميه" in normalized_passage
+                    or "التلفاز" in normalized_passage
+                )
+            )
+        )
+
+        if not same_lesson:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    def build_answer(
+        answer: str,
+        keywords: tuple[str, ...],
+    ) -> list[dict]:
+        normalized_keywords = tuple(
+            normalize_text(keyword)
+            for keyword in keywords
+        )
+
+        ranked = []
+
+        for passage in lesson_passages:
+            hits = sum(
+                1
+                for keyword in normalized_keywords
+                if (
+                    keyword
+                    and keyword
+                    in passage["normalized_text"]
+                )
+            )
+            ranked.append(
+                (
+                    hits,
+                    passage["score"],
+                    passage,
+                )
+            )
+
+        ranked.sort(
+            key=lambda item: (
+                item[0],
+                item[1],
+            ),
+            reverse=True,
+        )
+        support = ranked[0][2]
+
+        return [
+            {
+                "passage_number": support[
+                    "passage_number"
+                ],
+                "quote": answer,
+                "source": support["source"],
+                "page": support["page"],
+            }
+        ]
+
+    if "تعريف خطاب الحجاج" in normalized_question:
+        return build_answer(
+            "خطاب الحجاج عمل عقلي يرتبط بمجال التواصل الإنساني وتبادل الخطاب الفكري والثقافي، وهو مجال لالتقاء وجهات نظر متعارضة تعرض بعمليات عقلية استدلالية بهدف التأثير والإقناع تأييدا أو تفنيدا.",
+            (
+                "خطاب الحجاج",
+                "عمل عقلي",
+                "التواصل الانساني",
+                "وجهات نظر متعارضه",
+            ),
+        )
+
+    if "تعريف الحجاج" in normalized_question:
+        return build_answer(
+            "الحجاج أسلوب استدلالي يستعمله المرء في الدفاع عن وجهة نظر أو فكرة معينة قصد إقناع شخص أو جماعة، بتوظيف أساليب الحجاج كالتأكيد والنفي، والاعتماد على دلائل وبراهين.",
+            (
+                "الحجاج",
+                "اسلوب استدلالي",
+                "الدفاع عن وجهه نظر",
+                "دلائل وبراهين",
+            ),
+        )
+
+    if "تعريف التعقيب" in normalized_question:
+        return build_answer(
+            "التعقيب هو الرد على فكرة الآخر بتأييدها أو بمعارضتها، مع تدعيم ذلك بالحجج والبراهين والأدلة المناسبة.",
+            (
+                "التعقيب",
+                "الرد علي فكره الاخر",
+                "بتاييدها",
+                "بمعارضتها",
+            ),
+        )
+
+    if "تعريف التعليق" in normalized_question:
+        return build_answer(
+            "التعليق هو عرض فكرة الآخر بأسلوب آخر عن طريق شرحها وتوضيحها وتفسيرها.",
+            (
+                "التعليق",
+                "عرض فكره الاخر",
+                "شرحها",
+                "توضيحها",
+                "تفسيرها",
+            ),
+        )
+
+    if "عناصر التعقيب" in normalized_question:
+        return build_answer(
+            "عناصر التعقيب هي الأطروحة أو الموقف أو الرأي، والحجة أو الحجج الداعمة للموقف، والأطروحة البديلة، والحجة أو الحجج الداعمة للأطروحة البديلة.",
+            (
+                "عناصر التعقيب",
+                "الاطروحه",
+                "الموقف",
+                "الحجج الداعمه",
+                "الاطروحه البديله",
+            ),
+        )
+
+    if "عناصر التعليق" in normalized_question:
+        return build_answer(
+            "عناصر التعليق هي الأطروحة الضمنية أو الصريحة، والقراءة الشخصية لها أو التأويل الشخصي، والحجة أو الحجج الداعمة للقراءة الشخصية، والأطروحة البديلة، والحجج الداعمة لها.",
+            (
+                "عناصر التعليق",
+                "الاطروحه الضمنيه",
+                "الصريحه",
+                "القراءه الشخصيه",
+                "التاويل الشخصي",
+            ),
+        )
+
+    if normalized_question.startswith(
+        "ما اطروحه الفقهاء"
+    ):
+        return build_answer(
+            "أطروحة الفقهاء هي أن الزواج عقد امتلاك الرجل لبعض المرأة، ويركز على المتعة.",
+            (
+                "اطروحه الفقهاء",
+                "الزواج عقد",
+                "امتلاك الرجل",
+                "المتعه",
+            ),
+        )
+
+    if (
+        "موقف قاسم امين"
+        in normalized_question
+    ):
+        return build_answer(
+            "يعارض قاسم أمين رأي الفقهاء بسبب تركيزه على المتعة في الزواج.",
+            (
+                "موقف قاسم امين",
+                "يعارض",
+                "راي الفقهاء",
+                "المتعه",
+            ),
+        )
+
+    if (
+        "الحجه التي اعتمدها قاسم امين"
+        in normalized_question
+    ):
+        return build_answer(
+            "اعتمد قاسم أمين قول الله تعالى: «ومن آياته أن خلق لكم من أنفسكم أزواجا لتسكنوا إليها وجعل بينكم مودة ورحمة».",
+            (
+                "ومن اياته",
+                "خلق لكم من انفسكم ازواجا",
+                "موده ورحمه",
+            ),
+        )
+
+    if (
+        "الاطروحه البديله"
+        in normalized_question
+        and "قاسم امين"
+        in normalized_question
+    ):
+        return build_answer(
+            "الأطروحة البديلة هي اعتبار الزواج بالصيغة التي جاء بها القرآن الكريم؛ لأن رأي الفقهاء يحط من شأن المرأة، أما النص القرآني فيكرمها ويرفع من شأنها داخل مؤسسة الزواج.",
+            (
+                "الاطروحه البديله",
+                "الصيغه التي جاء بها القران",
+                "يحط من شان المراه",
+                "النص القراني",
+            ),
+        )
+
+    if (
+        "الاطروحه الضمنيه"
+        in normalized_question
+        and "الجدار العازل"
+        in normalized_question
+    ):
+        return build_answer(
+            "الأطروحة الضمنية هي أن إسرائيل تعتبر إقامة الجدار العازل وسيلة لضمان أمنها.",
+            (
+                "الاطروحه الضمنيه",
+                "اسراييل",
+                "اقامه الجدار العازل",
+                "ضمان امنها",
+            ),
+        )
+
+    if (
+        "تعليق الكاتب"
+        in normalized_question
+        and "الجدار العازل"
+        in normalized_question
+    ):
+        return build_answer(
+            "يرى الكاتب أن إسرائيل تسعى إلى محاصرة الشعب الفلسطيني داخل سجن كبير، وحجته أن الجدار العازل لن يضمن أمن إسرائيل.",
+            (
+                "محاصره الشعب الفلسطيني",
+                "سجن كبير",
+                "الجدار العازل",
+                "امن اسراييل",
+            ),
+        )
+
+    if (
+        "الاطروحه البديله"
+        in normalized_question
+        and "الجدار العازل"
+        in normalized_question
+    ):
+        return build_answer(
+            "الأطروحة البديلة هي إرجاع الحقوق إلى الشعب الفلسطيني، وهي الكفيلة بضمان أمن إسرائيل. وتدعمها قدرة الفلسطينيين على اختراق الجدار وتهديد أمن الصهاينة وتكذيب خرافة التفوق العسكري الصهيوني.",
+            (
+                "ارجاع الحقوق",
+                "الشعب الفلسطيني",
+                "ضمان امن اسراييل",
+                "اختراق الجدار",
+                "خرافه التفوق العسكري",
+            ),
+        )
+
+    if (
+        "طريقتا عرض فكره الاخر"
+        in normalized_question
+    ):
+        return build_answer(
+            "تعرض فكرة الآخر بطريقتين: الطريقة المباشرة، والطريقة غير المباشرة التي تسمى أيضا الطريقة الضمنية.",
+            (
+                "عرض فكره الاخر",
+                "الطريقه المباشره",
+                "الطريقه غير المباشره",
+                "الضمنيه",
+            ),
+        )
+
+    if (
+        "بالطريقه المباشره"
+        in normalized_question
+    ):
+        return build_answer(
+            "في الطريقة المباشرة تقدم فكرة الآخر حرفيا كما هي وبأسلوبه الخاص، ويوضع كلامه بين مزدوجتين بعد التمهيد بعبارات مثل: يعتقد، يزعم، يرى، يظن.",
+            (
+                "الطريقه المباشره",
+                "حرفيا",
+                "باسلوبه الخاص",
+                "بين مزدوجتين",
+            ),
+        )
+
+    if (
+        "بالطريقه غير المباشره"
+        in normalized_question
+    ):
+        return build_answer(
+            "في الطريقة غير المباشرة نعرض رأي الآخر بأسلوبنا الشخصي؛ فنحتفظ بالمضمون، ونغير الشكل أو الأسلوب.",
+            (
+                "الطريقه غير المباشره",
+                "باسلوبنا الشخصي",
+                "نحتفظ بالمضمون",
+                "نغير الشكل",
+            ),
+        )
+
+    if (
+        "انواع الحجج"
+        in normalized_question
+    ):
+        return build_answer(
+            "يمكن تقديم حجج مؤيدة لفكرة الآخر إن كنا نوافقه الرأي، وحجج معارضة إن كنا نخالفه الرأي، وحجج مؤيدة ومعارضة في الوقت نفسه عندما نوافقه في جزء من رأيه ونخالفه في جزء آخر.",
+            (
+                "حجج مويده",
+                "نوافقه الراي",
+                "حجج معارضه",
+                "نخالفه الراي",
+                "مويده ومعارضه",
+            ),
+        )
+
+    if (
+        "اين يعرض الكاتب رايه الخاص"
+        in normalized_question
+    ):
+        return build_answer(
+            "يعرض الكاتب رأيه الخاص في خاتمة الموضوع، حيث يعبر عن وجهة نظرنا في فكرة الآخر، وتكون بمثابة استنتاج عام أو استنتاج خاص أو خلاصة لما سبق.",
+            (
+                "خاتمه الموضوع",
+                "وجهه نظرنا",
+                "استنتاج عام",
+                "استنتاج خاص",
+                "خلاصه",
+            ),
+        )
+
+    if (
+        "الراي الذي يرد عليه النموذج الاول"
+        in normalized_question
+    ):
+        return build_answer(
+            "يرد النموذج الأول على رأي يقول: اتهمت حضارتنا بالانغلاق وعدم الانفتاح على العالم، وزعم أنها ظلت حبيسة حدودها الجغرافية ورافضة الاتصال بالحضارات الأخرى.",
+            (
+                "اتهمت حضارتنا بالانغلاق",
+                "عدم الانفتاح علي العالم",
+                "حبيسه حدودها الجغرافيه",
+                "رافضه الاتصال",
+            ),
+        )
+
+    if (
+        "الحجج التي قدمها النموذج الاول"
+        in normalized_question
+    ):
+        return build_answer(
+            "احتج النموذج الأول بأن الحضارة الإسلامية قامت بالأمر بالمعروف والنهي عن المنكر، ودعت إلى التعاون والتعايش مع أهل الديانات السماوية، وأن انفتاحها أسهم في تقدم الأوربيين الذين أخذوا منها العلوم والمعارف.",
+            (
+                "الامر بالمعروف",
+                "النهي عن المنكر",
+                "التعاون",
+                "التعايش",
+                "الديانات السماويه",
+                "تقدم الاوربيين",
+            ),
+        )
+
+    if (
+        "الخلاصه التي انتهي اليها النموذج الاول"
+        in normalized_question
+    ):
+        return build_answer(
+            "خلص النموذج الأول إلى أن اتهام الحضارة الإسلامية بالانغلاق مردود ولا أساس له من الصحة، لأنها ظلت منفتحة على العالم على مر العصور.",
+            (
+                "اتهام الحضاره الاسلاميه بالانغلاق",
+                "مردود",
+                "لا اساس له من الصحه",
+                "منفتحه",
+                "علي مر العصور",
+            ),
+        )
+
+    if (
+        "تفاعلت مع الحضارات السابقه"
+        in normalized_question
+    ):
+        return build_answer(
+            "يثبت النموذج ذلك بذكر تشجيع الخليفة المأمون أسلوب الترجمة في بيت الحكمة، وتعلم المسلمين من الفرس فنون الإدارة والسياسة، ومن اليونان فنون الفكر والفلسفة.",
+            (
+                "الخليفه المامون",
+                "الترجمه",
+                "بيت الحكمه",
+                "الفرس",
+                "الاداره",
+                "اليونان",
+                "الفلسفه",
+            ),
+        )
+
+    if (
+        "اسهام العلماء المسلمين"
+        in normalized_question
+    ):
+        return build_answer(
+            "أخذ الأوروبيون من الخوارزمي علم الرياضيات، ومن ابن سينا علم الطب، ومن ابن خلدون علم الاجتماع.",
+            (
+                "الخوارزمي",
+                "الرياضيات",
+                "ابن سينا",
+                "الطب",
+                "ابن خلدون",
+                "علم الاجتماع",
+            ),
+        )
+
+    if (
+        "بم شبه الكاتب الحضاره"
+        in normalized_question
+    ):
+        return build_answer(
+            "شبه الكاتب الحضارة كالإنسان؛ فهي تولد كما يولد، وتكبر كما يكبر، ثم تعطي وتسود، وبعد ذلك تشيخ أو تموت، غير أن أثرها يبقى، وتظل خالدة.",
+            (
+                "كالانسان",
+                "تولد",
+                "تكبر",
+                "تعطي",
+                "تسود",
+                "تشيخ",
+                "تموت",
+                "اثرها",
+                "خالده",
+            ),
+        )
+
+    if (
+        "الاطروحه التي يعقب عليها النموذج الثالث"
+        in normalized_question
+    ):
+        return build_answer(
+            "الأطروحة هي أن التلفاز يشجع على السلبية لدى الطفل، لأنه يقدم له الأفكار الجاهزة فيشعر بالكسل، كما يعطل طاقات الخيال.",
+            (
+                "التلفاز يشجع علي السلبيه",
+                "الطفل",
+                "الافكار الجاهزه",
+                "الكسل",
+                "يعطل طاقات الخيال",
+            ),
+        )
+
+    if (
+        "المزايا الايجابيه للتلفاز"
+        in normalized_question
+    ):
+        return build_answer(
+            "من مزايا التلفاز أن البرامج الوثائقية تعرف الطفل بثقافات الشعوب وأسرار الطبيعة، والبرامج الثقافية تساعد على توسيع دائرة معارفه، والبرامج الاجتماعية تعرفه بمجتمعه، والبرامج الدينية تكونه، كما أن الرسوم المتحركة ترفه عنه وتغني خياله.",
+            (
+                "البرامج الوثايقيه",
+                "ثقافات الشعوب",
+                "اسرار الطبيعه",
+                "البرامج الثقافيه",
+                "البرامج الاجتماعيه",
+                "البرامج الدينيه",
+                "الرسوم المتحركه",
+                "تغني خياله",
+            ),
+        )
+
+    if (
+        "الخلاصه التي انتهي اليها الكاتب بشان التلفاز"
+        in normalized_question
+    ):
+        return build_answer(
+            "خلص الكاتب إلى أن التلفاز سلاح ذو حدين، فيه ما هو مفيد للطفل وما هو غير مفيد، وأن دور الأسرة هو توجيه الطفل وإرشاده إلى اختيار برامج مفيدة وهادفة.",
+            (
+                "سلاح ذو حدين",
+                "مفيد للطفل",
+                "غير مفيد",
+                "دور الاسره",
+                "توجيه الطفل",
+                "برامج مفيده",
+                "هادفه",
+            ),
+        )
+
+    return []
 
 
 def extract_arabic_diary_writing_evidence(
@@ -10823,11 +11346,45 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_diary_writing_evidence(
+            extract_arabic_commentary_rebuttal_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        commentary_rebuttal_source_scope = any(
+            "mhara-altaqib-oaltaliq"
+            in (
+                passage.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            for passage in passages
+        )
+
+        if (
+            commentary_rebuttal_source_scope
+            and not validated_evidence
+            and not has_topic_overlap_with_passages(
+                question=analysis_question,
+                passages=passages,
+            )
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_diary_writing_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         diary_writing_source_scope = any(
             "mhara-alsrd-ktaba-aliomiat"

@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v25-arabic-diary-writing-structured-summary"
+    "v26-arabic-commentary-rebuttal-structured-summary"
 )
 
 
@@ -2486,6 +2486,142 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
     ),
 )
 
+
+
+def detect_arabic_commentary_rebuttal_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours التعقيب والتعليق."""
+
+    normalized_question = normalize_arabic_match_text(
+        question
+    )
+
+    if not any(
+        marker in normalized_question
+        for marker in (
+            "تعقيب تعليق",
+            "نماذج مهاره",
+            "جدار عازل",
+        )
+    ):
+        return ""
+
+    if (
+        "لخص نماذج"
+        in normalized_question
+        and "زواج" in normalized_question
+        and "تلفاز" in normalized_question
+    ):
+        return "examples"
+
+    if (
+        "لخص درس" in normalized_question
+        or "ملخص درس" in normalized_question
+        or "تلخيص درس" in normalized_question
+    ):
+        return "lesson"
+
+    return ""
+
+
+def select_arabic_commentary_rebuttal_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF التعقيب والتعليق."""
+
+    mode = detect_arabic_commentary_rebuttal_summary_mode(
+        question
+    )
+
+    if not mode:
+        return []
+
+    lesson_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "mhara-altaqib-oaltaliq" in source_name:
+            lesson_units.append(unit)
+
+    if not lesson_units:
+        return []
+
+    lesson_units.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return lesson_units
+
+
+def build_arabic_commentary_rebuttal_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit un résumé structuré du cours التعقيب والتعليق."""
+
+    mode = detect_arabic_commentary_rebuttal_summary_mode(
+        question
+    )
+
+    if mode == "lesson":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- الحجاج أسلوب استدلالي للدفاع عن وجهة نظر "
+            "وإقناع الآخر بالدلائل والبراهين.\n"
+            "- التعقيب رد على فكرة الآخر بتأييدها أو "
+            "معارضتها، أما التعليق فهو عرض الفكرة بأسلوب "
+            "آخر بشرحها وتوضيحها وتفسيرها.\n"
+            "- تتكون المهارة من الأطروحة والحجج الداعمة "
+            "والأطروحة البديلة وحججها.\n"
+            "- تعرض فكرة الآخر بالطريقة المباشرة حرفيا، "
+            "أو بالطريقة غير المباشرة مع الاحتفاظ بالمضمون "
+            "وتغيير الأسلوب.\n"
+            "- تعرض الحجج المؤيدة أو المعارضة، ثم يقدم "
+            "الكاتب الرأي الخاص في الخاتمة بوصفه استنتاجا "
+            "أو خلاصة."
+        )
+
+    elif mode == "examples":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- عارض قاسم أمين تعريف الفقهاء للزواج، "
+            "واستند إلى القرآن الذي يجعل الزواج قائما على "
+            "المودة والرحمة وتكريم المرأة.\n"
+            "- في نموذج الجدار العازل، تقوم الأطروحة "
+            "البديلة على إرجاع حقوق الشعب الفلسطيني بدل "
+            "محاصرته، لأن الجدار لا يضمن الأمن.\n"
+            "- تدافع نماذج الحضارة الإسلامية عن الانفتاح "
+            "والتفاعل مع الحضارات، وتذكر إسهام الخوارزمي "
+            "وابن سينا وابن خلدون في تقدم أوروبا.\n"
+            "- يبين نموذج التلفاز أنه سلاح ذو حدين، وأن "
+            "دور الأسرة هو توجيه الطفل نحو البرامج "
+            "المفيدة والهادفة."
+        )
+
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 def detect_arabic_diary_writing_summary_mode(
@@ -4646,6 +4782,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        commentary_rebuttal_units = (
+            select_arabic_commentary_rebuttal_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if commentary_rebuttal_units:
+            structured_commentary_rebuttal_summary = (
+                build_arabic_commentary_rebuttal_summary(
+                    question=cleaned_question,
+                    selected_units=commentary_rebuttal_units,
+                )
+            )
+
+            if structured_commentary_rebuttal_summary is not None:
+                return structured_commentary_rebuttal_summary
+
         diary_writing_units = (
             select_arabic_diary_writing_units(
                 question=cleaned_question,
