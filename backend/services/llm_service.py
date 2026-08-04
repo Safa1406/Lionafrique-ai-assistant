@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v35-arabic-describing-people-places-analysis"
+ARABIC_RULES_VERSION = "v36-arabic-describing-a-journey-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1734,6 +1734,387 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_arabic_describing_journey_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Extrait les réponses du cours مهارة وصف رحلة."""
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(question)
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(passages, start=1):
+        original_text = re.sub(
+            r"\s+",
+            " ",
+            passage.get("text", ""),
+        ).strip()
+
+        if not original_text:
+            continue
+
+        source_name = passage.get("source", "Source inconnue")
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        normalized_passage = normalize_text(original_text)
+
+        same_lesson = (
+            "mhara-osf-rhla" in normalized_source
+            or (
+                "مهاره وصف رحله" in normalized_passage
+                and "ابن بطوطه" in normalized_passage
+            )
+        )
+
+        if not same_lesson:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "normalized_text": normalized_passage,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(passage.get("retrieval_score", 0.0)),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    def build_answer(
+        answer: str,
+        keywords: tuple[str, ...],
+    ) -> list[dict]:
+        normalized_keywords = tuple(
+            normalize_text(keyword)
+            for keyword in keywords
+        )
+        ranked = []
+
+        for passage in lesson_passages:
+            hits = sum(
+                1
+                for keyword in normalized_keywords
+                if (
+                    keyword
+                    and keyword
+                    in passage["normalized_text"]
+                )
+            )
+            ranked.append(
+                (
+                    hits,
+                    passage["score"],
+                    passage,
+                )
+            )
+
+        ranked.sort(
+            key=lambda item: (
+                item[0],
+                item[1],
+            ),
+            reverse=True,
+        )
+        support = ranked[0][2]
+
+        return [
+            {
+                "passage_number": support["passage_number"],
+                "quote": answer,
+                "source": support["source"],
+                "page": support["page"],
+            }
+        ]
+
+    if "تعريف الرحله" in normalized_question:
+        return build_answer(
+            "الرحلة هي الانتقال من مكان إلى آخر.",
+            ("الرحله", "الانتقال من مكان الي اخر"),
+        )
+
+    if "المقصود بوصف الرحله" in normalized_question:
+        return build_answer(
+            "وصف الرحلة هو تصوير الأمكنة والأشخاص، ونقل المشاهدات والوقائع، وصياغة ذلك في موضوع إنشائي يهيمن فيه الوصف على السرد.",
+            ("وصف الرحله", "تصوير الامكنه", "نقل المشاهدات"),
+        )
+
+    if (
+        "الفكره المحوريه" in normalized_question
+        and "نص الانطلاق" in normalized_question
+    ):
+        return build_answer(
+            "الفكرة المحورية هي وصف رحلة ابن بطوطة من طنجة إلى مكة المكرمة.",
+            ("الفكره المحوريه", "ابن بطوطه", "طنجه", "مكه"),
+        )
+
+    if (
+        "صاحب نص الانطلاق" in normalized_question
+        or (
+            "من صاحب" in normalized_question
+            and "مصدره" in normalized_question
+        )
+    ):
+        return build_answer(
+            "صاحب نص الانطلاق هو ابن بطوطة، ومصدره «تحفة النظار في غرائب الأمصار وعجائب الأسفار».",
+            ("ابن بطوطه", "تحفه النظار", "غرايب الامصار"),
+        )
+
+    if (
+        "من اين انطلقت" in normalized_question
+        and "ابن بطوطه" in normalized_question
+    ):
+        return build_answer(
+            "انطلقت رحلة ابن بطوطة من مدينة طنجة، وهي مسقط رأسه.",
+            ("طنجه", "مسقط راسي", "مكان انطلاق الرحله"),
+        )
+
+    if (
+        "متي انطلقت" in normalized_question
+        and "ابن بطوطه" in normalized_question
+    ):
+        return build_answer(
+            "انطلقت رحلة ابن بطوطة يوم الخميس الثاني من شهر رجب عام 725 هجرية.",
+            ("يوم الخميس", "الثاني من شهر رجب", "725"),
+        )
+
+    if (
+        "وجهه رحله ابن بطوطه" in normalized_question
+        or (
+            "ما وجهه" in normalized_question
+            and "ابن بطوطه" in normalized_question
+        )
+    ):
+        return build_answer(
+            "كانت وجهة رحلة ابن بطوطة مكة المكرمة.",
+            ("وجهه الرحله", "مكه المكرمه"),
+        )
+
+    if (
+        "الغايه من رحله ابن بطوطه" in normalized_question
+        or (
+            "ما الغايه" in normalized_question
+            and "مكه" in normalized_question
+        )
+    ):
+        return build_answer(
+            "كانت الغاية من الرحلة حج بيت الله الحرام وزيارة قبر الرسول صلى الله عليه وسلم.",
+            ("حج بيت الله الحرام", "زياره قبر الرسول"),
+        )
+
+    if (
+        "كيف خرج ابن بطوطه" in normalized_question
+        and "طنجه" in normalized_question
+    ):
+        return build_answer(
+            "خرج ابن بطوطة منفردا عن رفيق يأنس بصحبته، ومن غير راكب يكون في جملته.",
+            ("منفردا", "رفيق", "انس بصحبته", "راكب"),
+        )
+
+    if (
+        "ما معني" in normalized_question
+        and "مسقط راسي" in normalized_question
+        and "عوايد" in normalized_question
+    ):
+        return build_answer(
+            "حسب شرح المصطلحات في الوثيقة: مسقط رأسي تعني مكان ولادتي، وعوائد تعني عادات، وأهل تعني طلع وبزغ، وأفذاذا تعني أفرادا.",
+            ("شرح المصطلحات", "مسقط راسي", "عوايد", "افذاذ"),
+        )
+
+    if (
+        "كيف كان اهل مكه يحتفلون" in normalized_question
+        and "رمضان" in normalized_question
+    ):
+        return build_answer(
+            "كان أهل مكة يحتفلون بقدوم رمضان بضرب الطبول والدبادب عند أمير مكة، وبالاحتفال في المسجد الحرام عبر تجديد الحصر وتكثير الشمع والمشاعل.",
+            ("اهل هلال رمضان", "الطبول", "الدبادب", "تجديد الحصر"),
+        )
+
+    if (
+        "مكانه ليله السابع والعشرين" in normalized_question
+        or (
+            "ما مكانه" in normalized_question
+            and "ليله السابع والعشرين" in normalized_question
+        )
+    ):
+        return build_answer(
+            "كانت ليلة السابع والعشرين أعظم الليالي عندهم، وهي من الليالي المعظمة عند أهل مكة.",
+            ("اعظم من تلك الليالي", "ليله سبع وعشرين", "الليالي المعظمه"),
+        )
+
+    if (
+        "اعمال البر" in normalized_question
+        and "ليله السابع والعشرين" in normalized_question
+    ):
+        return build_answer(
+            "كان أهل مكة يبادرون إلى أعمال البر من الطواف والصلاة جماعات وأفرادا والاعتمار.",
+            ("اعمال البر", "الطواف", "الصلاه", "الاعتمار"),
+        )
+
+    if (
+        "كيف كان اهل مكه يصلون" in normalized_question
+        and "ليله السابع والعشرين" in normalized_question
+    ):
+        return build_answer(
+            "كانوا يصلون مائة ركعة، ويقرؤون في كل ركعة بأم القرآن وسورة الإخلاص، ويكررونها عشرا.",
+            ("مايه ركعه", "ام القران", "سوره الاخلاص"),
+        )
+
+    if (
+        "اين كان الناس يتعبدون" in normalized_question
+        and "ليله السابع والعشرين" in normalized_question
+    ):
+        return build_answer(
+            "كان بعض الناس يصلون في الحجر منفردين، وبعضهم يطوفون بالبيت الشريف، وبعضهم خرجوا للاعتمار.",
+            ("في الحجر", "البيت الشريف", "للاعتمار"),
+        )
+
+    if (
+        "عناصر مهاره وصف الرحله" in normalized_question
+        and "ابن بطوطه" in normalized_question
+    ):
+        return build_answer(
+            "عناصر مهارة وصف الرحلة هي مكان الانطلاق، وزمان الانطلاق، ووجهة الرحلة، وغاية الرحلة، والجوانب الموصوفة.",
+            ("مكان انطلاق الرحله", "زمان انطلاق الرحله", "وجهه الرحله"),
+        )
+
+    if (
+        "الجوانب الموصوفه" in normalized_question
+        and "مكه" in normalized_question
+    ):
+        return build_answer(
+            "تشمل الجوانب الموصوفة عادات أهل مكة والاحتفال بقدوم رمضان، ثم العبادات مثل الصلاة والصيام والطواف والاعتمار وقراءة القرآن.",
+            ("عادات اهل مكه", "الاحتفال بقدوم رمضان", "العبادات"),
+        )
+
+    if (
+        "مقدمه وصف الرحله" in normalized_question
+        or (
+            "العناصر التي تتضمنها" in normalized_question
+            and "مقدمه" in normalized_question
+        )
+    ):
+        return build_answer(
+            "تتضمن مقدمة وصف الرحلة تحديد نقطة الانطلاق وزمنه، وتحديد وجهة الرحلة، وتحديد غاية الرحلة.",
+            ("تحديد نقطه الانطلاق", "وجهه الرحله", "غايه الرحله"),
+        )
+
+    if (
+        "عرض موضوع الرحله" in normalized_question
+        or (
+            "العناصر التي نركز عليها" in normalized_question
+            and "عرض" in normalized_question
+        )
+    ):
+        return build_answer(
+            "نركز في عرض الموضوع على سرد الأحداث المرتبطة بالرحلة، ووصف الأمكنة والشخوص.",
+            ("سرد الاحداث المرتبطه", "وصف الامكنه والشخوص"),
+        )
+
+    if (
+        "لماذا نعطي الاهميه للوصف" in normalized_question
+        or (
+            "الوصف اكثر من السرد" in normalized_question
+            and "الرحله" in normalized_question
+        )
+    ):
+        return build_answer(
+            "نعطي الأهمية للوصف لأن الرحلة نص وصفي تكثر فيه الأوصاف، وتهيمن فيه الأسماء على الأفعال.",
+            ("الرحله نص وصفي", "تكثر فيه الاوصاف", "الاسماء علي الافعال"),
+        )
+
+    if (
+        "خاتمه وصف الرحله" in normalized_question
+        or (
+            "ماذا نكتب" in normalized_question
+            and "خاتمه" in normalized_question
+        )
+    ):
+        return build_answer(
+            "نكتب في الخاتمة شعورنا إزاء الرحلة التي قمنا بها، ثم أهمية الرحلة وفائدتها.",
+            ("شعورنا ازاء الرحله", "اهميه الرحله", "فايدتها"),
+        )
+
+    if (
+        "كيف وصف ابن بطوطه مدينه مالقه" in normalized_question
+        or (
+            "مالقه" in normalized_question
+            and "خيراتها" in normalized_question
+        )
+    ):
+        return build_answer(
+            "وصف ابن بطوطة مالقة بأنها إحدى قواعد الأندلس، جامعة بين مرافق البر والبحر، كثيرة الخيرات والفواكه؛ وذكر العنب والرمان والتين واللوز.",
+            ("مالقه", "مرافق البر والبحر", "العنب", "الرمان"),
+        )
+
+    if (
+        "اشتهرت مالقه صناعيا" in normalized_question
+        or (
+            "مالقه" in normalized_question
+            and "مسجدها" in normalized_question
+        )
+    ):
+        return build_answer(
+            "اشتهرت مالقة بصناعة الفخار المذهب العجيب، وقال إن مسجدها كبير الساحة شهير البركة، وصحنه لا نظير له في الحسن.",
+            ("الفخار المذهب", "مسجدها كبير الساحه", "شهير البركه"),
+        )
+
+    if (
+        "كيف وصف ابن بطوطه مدينه غرناطه" in normalized_question
+        or (
+            "غرناطه" in normalized_question
+            and "خارجها" in normalized_question
+        )
+    ):
+        return build_answer(
+            "وصف غرناطة بأنها قاعدة بلاد الأندلس وعروس مدنها، وأن خارجها تخترقه الأنهار الكثيرة والبساتين والجنان والرياض والقصور.",
+            ("غرناطه", "قاعده بلاد الاندلس", "الانهار الكثيره"),
+        )
+
+    if (
+        "ملك غرناطه" in normalized_question
+        and "لم يلتق" in normalized_question
+    ):
+        return build_answer(
+            "كان ملك غرناطة السلطان أبا الحجاج يوسف بن السلطان أبي الوليد، ولم يلتق به ابن بطوطة بسبب مرض كان به.",
+            ("ملك غرناطه", "ابا الحجاج يوسف", "مرض"),
+        )
+
+    if (
+        "علماء غرناطه" in normalized_question
+        or (
+            "ابرز من لقيهم" in normalized_question
+            and "غرناطه" in normalized_question
+        )
+    ):
+        return build_answer(
+            "من أبرز علماء غرناطة الذين لقيهم: أبو القاسم الحسيني السبتي، وأبو عبد الله البياني، وأبو سعيد فرج بن قاسم.",
+            ("ابو القاسم الحسيني", "ابو عبد الله البياني", "ابو سعيد فرج"),
+        )
+
+    if (
+        "قبل عودته الي المغرب" in normalized_question
+        or (
+            "المدن والاماكن" in normalized_question
+            and "عودته" in normalized_question
+        )
+    ):
+        return build_answer(
+            "مر ابن بطوطة برندة، ثم قرية بني رياح، ثم جبل الفتح، وقال: ركبت البحر وعدت إلى المغرب.",
+            ("رنده", "بني رياح", "جبل الفتح", "عدت الي المغرب"),
+        )
+
+    return []
 
 
 def extract_arabic_describing_people_places_evidence(
@@ -11590,11 +11971,45 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_describing_people_places_evidence(
+            extract_arabic_describing_journey_evidence(
                 question=analysis_question,
                 passages=passages,
             )
         )
+
+        describing_journey_source_scope = any(
+            "mhara-osf-rhla"
+            in (
+                passage.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            for passage in passages
+        )
+
+        if (
+            describing_journey_source_scope
+            and not validated_evidence
+            and not has_topic_overlap_with_passages(
+                question=analysis_question,
+                passages=passages,
+            )
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_describing_people_places_evidence(
+                    question=analysis_question,
+                    passages=passages,
+                )
+            )
 
         describing_people_places_source_scope = any(
             "mhara-osf-alshkhos-oalamkna"

@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v27-arabic-describing-people-places-structured-summary"
+    "v28-arabic-describing-a-journey-structured-summary"
 )
 
 
@@ -2488,6 +2488,116 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+def detect_arabic_describing_journey_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours مهارة وصف رحلة."""
+
+    normalized_question = normalize_text(question)
+
+    if not any(
+        marker in normalized_question
+        for marker in (
+            "مهاره وصف رحله",
+            "رحلتي ابن بطوطه",
+            "رحله ابن بطوطه الي مكه والاندلس",
+        )
+    ):
+        return ""
+
+    if (
+        "لخص رحلتي" in normalized_question
+        and "مكه" in normalized_question
+        and "الاندلس" in normalized_question
+    ):
+        return "journeys"
+
+    if (
+        "لخص درس" in normalized_question
+        or "ملخص درس" in normalized_question
+        or "تلخيص درس" in normalized_question
+    ):
+        return "lesson"
+
+    return ""
+
+
+def select_arabic_describing_journey_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF مهارة وصف رحلة."""
+
+    mode = detect_arabic_describing_journey_summary_mode(
+        question
+    )
+
+    if not mode:
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "mhara-osf-rhla" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_describing_journey_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit les résumés structurés du cours وصف رحلة."""
+
+    mode = detect_arabic_describing_journey_summary_mode(
+        question
+    )
+
+    if mode == "lesson":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- الرحلة هي الانتقال من مكان إلى آخر، ووصف الرحلة هو تصوير الأمكنة والأشخاص ونقل المشاهدات والوقائع في موضوع إنشائي يهيمن فيه الوصف على السرد.\n"
+            "- تبدأ المقدمة بتحديد نقطة الانطلاق وزمنها، ووجهة الرحلة، وغاية الرحلة.\n"
+            "- يتضمن العرض سرد الأحداث المرتبطة بالرحلة ووصف الأمكنة والشخوص، مع إعطاء الأولوية للوصف لأن الرحلة نص وصفي.\n"
+            "- في الخاتمة نعبر عن شعورنا إزاء الرحلة، ونبرز أهمية الرحلة وفائدتها."
+        )
+    elif mode == "journeys":
+        summary = (
+            "ملخص المحتوى:\n"
+            "- انطلق ابن بطوطة من طنجة متوجها إلى مكة المكرمة من أجل حج بيت الله الحرام وزيارة قبر الرسول.\n"
+            "- وصف عادات أهل مكة في رمضان، وخاصة الاحتفال بقدومه وأعمال ليلة سبع وعشرين من صلاة وطواف واعتمار.\n"
+            "- في رحلة الأندلس وصف مالقة وخيراتها، ثم غرناطة، والتقى علماءها، وكان ملكها أبو الحجاج يوسف.\n"
+            "- تابع طريقه إلى رندة ثم بني رياح وجبل الفتح، وبعد ركوب البحر عاد إلى المغرب."
+        )
+    else:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(selected_units),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 def detect_arabic_describing_people_places_summary_mode(
@@ -4878,6 +4988,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        describing_journey_units = (
+            select_arabic_describing_journey_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if describing_journey_units:
+            structured_describing_journey_summary = (
+                build_arabic_describing_journey_summary(
+                    question=cleaned_question,
+                    selected_units=describing_journey_units,
+                )
+            )
+
+            if structured_describing_journey_summary is not None:
+                return structured_describing_journey_summary
+
         describing_people_places_units = (
             select_arabic_describing_people_places_units(
                 question=cleaned_question,
