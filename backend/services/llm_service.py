@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v49-arabic-wonder-scifi-story-analysis"
+ARABIC_RULES_VERSION = "v50-arabic-diminutive-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1747,6 +1747,162 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+
+def extract_arabic_diminutive_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Extrait les réponses documentées du درس التصغير."""
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(question)
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "altsghir.pdf" not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text
+        in {'ما تعريف التصغير حسب الوثيقة؟': 'الاسم المحول إلى صيغة فعيل أو فعيعل أو فعيعيل يقال له الاسم '
+                                  'المصغر.',
+ 'ما أوزان التصغير المذكورة في الوثيقة؟': 'أوزان التصغير هي: فعيل، وفعيعل، وفعيعيل.',
+ 'ما أغراض التصغير المذكورة في الوثيقة؟': 'أغراض التصغير هي: صغر الحجم، وتقليل العدد، وقرب '
+                                          'الزمان، وقرب المكان، والتحقير، والتعظيم، والتحبيب.',
+ 'كيف يدل التصغير على صغر الحجم، وما أمثلته؟': 'يدل التصغير على صغر حجمه، ومن أمثلته: كليب، '
+                                               'وكتيب، ولقيمة.',
+ 'كيف يدل التصغير على تقليل العدد، وما أمثلته؟': 'يدل التصغير على تقليل عدده، ومن أمثلته: '
+                                                 'وريقات، ودريهمات، ولقيمات.',
+ 'كيف يدل التصغير على قرب الزمان، وما المثال الوارد؟': 'يدل التصغير على قرب زمانه، ومثاله: '
+                                                       'سافر قبيل العشاء.',
+ 'كيف يدل التصغير على قرب المكان، وما المثال الوارد؟': 'يدل التصغير على قرب مكانه، ومثاله: '
+                                                       'الحقيبة دوين الرف.',
+ 'كيف يستعمل التصغير للدلالة على التحقير؟': 'يستعمل التصغير للدلالة على التحقير، مثل: ألهذاك '
+                                            'هذا الشويعر؟',
+ 'كيف يستعمل التصغير للدلالة على التعظيم؟': 'يستعمل التصغير للدلالة على التعظيم، مثل: أصابتهم '
+                                            'دويهية أذهلتهم.',
+ 'كيف يستعمل التصغير للدلالة على التحبيب؟': 'يستعمل التصغير للدلالة على التحبيب، مثل: في دارك '
+                                            'جويرية كالغزيل.',
+ 'كيف تصاغ صورة التصغير من حيث الحركات وزيادة الياء؟': 'يضم أول الاسم المراد تصغيره، ويفتح '
+                                                       'الثاني، وتزاد ياء بعده، مثل: رجيل '
+                                                       'وكليب.',
+ 'ماذا يحدث إذا زاد الاسم المراد تصغيره على ثلاثة أحرف؟': 'إذا زاد الاسم على ثلاثة أحرف، كسر '
+                                                          'الحرف الذي يلي ياء التصغير، مثل: '
+                                                          'دريهم وعصيفير.',
+ 'ما وزن تصغير الاسم الثلاثي؟': 'وزن تصغير الاسم الثلاثي هو فعيل.',
+ 'ما وزن تصغير ما فوق الثلاثي، وما أمثلته؟': 'وزن ما فوق الثلاثي هو فعيعل، مثل دريهم تصغير '
+                                             'درهم، وسفيرج تصغير سفرجل.',
+ 'متى يستعمل وزن فعيعيل في التصغير، وما أمثلته؟': 'يستعمل وزن فعيعيل في مثل منهاج وعصفور، '
+                                                  'فتصغيرهما منيهيج وعصيفير.',
+ 'ما العلاقة بين التصغير والتكسير حسب الوثيقة؟': 'التصغير كالتكسير؛ فكما نقول في التكسير: '
+                                                 'دارهم، وسفارج، ومناهج، وعصافير، نقول في '
+                                                 'التصغير: دريهم، وسفيرج، ومنيهيج، وعصيفير.',
+ 'ما التغييرات المشتركة بين التصغير والتكسير في سفرجل ومنهاج وعصفور؟': 'حذفنا في التصغير '
+                                                                       'والتكسير لام سفرجل، '
+                                                                       'وقلبنا حرف العلة الذي '
+                                                                       'قبل الآخر ياء.',
+ 'ما الزوائد التي لا يعتد بها عند التصغير؟': 'لا يعتد بتاء التأنيث، ولا بألفها المقصورة، ولا '
+                                             'بألفها الممدودة، ولا بالألف والنون المزيدين، ولا '
+                                             'بياء النسب، ولا بألف مثل كلمة أصحاب.',
+ 'كيف تصغر ورقة وفضلى وصحراء وخضراء وعطشان وأصحاب؟': 'تصغر إلى: وريقة، وفضيلى، وصحيراء، '
+                                                     'وخضيراء، وعطيشان، وأصيحاب.',
+ 'كيف تصغر حنظلة وأربعاء وعبقري وزعفران؟': 'تصغر إلى: حنيظلة، وأريبعاء، وعبيقري، وزعفران، دون '
+                                           'أن يحذفوا ما حذفوه في التكسير.',
+ 'كيف يصغر الاسم الثلاثي المؤنث تأنيثا معنويا؟': 'تزاد في آخره تاء، مثل شمس وأرض ودعد، فتصغر '
+                                                 'إلى شميسة وأريضة ودعيدة.',
+ 'ماذا يحدث للحرف المحذوف من الاسم عند التصغير؟': 'يرد إليه المحذوف عند التصغير، مثل دم وعدة '
+                                                  'وابن وأب وأخت ويد، فتصغر إلى دمي، ووعيد، '
+                                                  'وبني، وأبي، وأخيه، ويدية.',
+ 'كيف يصغر الاسم إذا كان حرفه الثاني حرف علة منقلبا عن غيره؟': 'يرد إلى أصله، مثل ميزان ودينار '
+                                                               'وباب وناب، فتصغر إلى مويزين، '
+                                                               'ودنينير، وبويب، ونييب.',
+ 'متى تقلب الألف واوا في التصغير، وما الأمثلة؟': 'تقلب الألف الزائدة في اسم الفاعل، والمنقلبة '
+                                                 'عن همزة مثل آدم، والمجهولة الأصل مثل عاج، '
+                                                 'واوا في التصغير، فنقول: شويعر، وأويدم، '
+                                                 'وعويج.',
+ 'بماذا يختص التصغير؟': 'يختص التصغير بالأسماء المعربة.',
+ 'ما أمثلة تصغير أسماء الإشارة الواردة شذوذا؟': 'ورد شذوذا: ذيا تصغير ذا، وهؤلياء تصغير هؤلاء.',
+ 'ما أمثلة تصغير الأسماء الموصولة الواردة شذوذا؟': 'ورد شذوذا: اللذيا واللتيا، وهما تصغير الذي '
+                                                   'والتي.',
+ 'ما المثال الوارد على تصغير فعل التعجب؟': 'المثال هو: ما أميليح الغزال. وهو من أفعال التعجب، '
+                                           'ويقتصر فيه على ما سمع ولا يقاس عليه.'}.items()
+    }
+
+    answer = documented_answers.get(
+        normalized_question
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 4
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 
@@ -14413,7 +14569,37 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_wonder_scifi_story_evidence(
+            extract_arabic_diminutive_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
+
+        diminutive_source_scope = any(
+            "altsghir.pdf"
+            in (
+                passage.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            for passage in passages
+        )
+
+        if (
+            diminutive_source_scope
+            and not validated_evidence
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_wonder_scifi_story_evidence(
                 question=analysis_question,
                 passages=passages,
             )

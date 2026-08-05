@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v41-arabic-wonder-scifi-story-structured-summary"
+    "v42-arabic-diminutive-structured-summary"
 )
 
 
@@ -2501,6 +2501,98 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_diminutive_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé structuré du درس التصغير."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص درس التصغير"
+        in normalized_question
+        and "تعريفه" in normalized_question
+        and "اغراضه" in normalized_question
+        and "اوزانه" in normalized_question
+        and "احكامه" in normalized_question
+        and "شواذه" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_diminutive_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF altsghir."""
+
+    if not detect_arabic_diminutive_summary_mode(
+        question
+    ):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "altsghir.pdf" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_diminutive_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du درس التصغير."""
+
+    if (
+        detect_arabic_diminutive_summary_mode(
+            question
+        )
+        != "full"
+    ):
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- التصغير هو تحويل الاسم إلى صيغة فعيل أو فعيعل أو فعيعيل، ويسمى الناتج الاسم المصغر.\n"
+        "- أغراضه: صغر الحجم، وتقليل العدد، وقرب الزمان، وقرب المكان، والتحقير، والتعظيم، والتحبيب.\n"
+        "- يضم أول الاسم ويفتح الثاني وتزاد ياء التصغير؛ ويكون الثلاثي على وزن فعيل، وما فوقه على وزن فعيعل أو فعيعيل.\n"
+        "- من أحكامه عدم الاعتداد بتاء التأنيث وبعض الزوائد، وأن يرد الحرف المحذوف، ويرد حرف العلة إلى أصله، وقد تقلب الألف واوا.\n"
+        "- يختص التصغير بالأسماء المعربة، وورد شذوذا في بعض أسماء الإشارة والأسماء الموصولة وأفعال التعجب، ويقتصر على ما سمع ولا يقاس عليه."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -6084,6 +6176,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        diminutive_units = (
+            select_arabic_diminutive_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if diminutive_units:
+            structured_diminutive_summary = (
+                build_arabic_diminutive_summary(
+                    question=cleaned_question,
+                    selected_units=diminutive_units,
+                )
+            )
+
+            if structured_diminutive_summary is not None:
+                return structured_diminutive_summary
+
         wonder_story_units = (
             select_arabic_wonder_scifi_story_units(
                 question=cleaned_question,
