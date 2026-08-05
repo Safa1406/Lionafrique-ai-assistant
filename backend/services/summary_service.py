@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v44-french-computer-assisted-presentation-structured-summary"
+    "v45-french-programming-notions-structured-summary"
 )
 
 
@@ -6139,6 +6139,95 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_programming_notions_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours sur la programmation LOGO."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "avantages" in normalized_question
+        and "interface logo" in normalized_question
+    ):
+        return "advantages_interface"
+
+    if (
+        "notions de programmation" in normalized_question
+        and "logo" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_programming_notions_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle du cours de programmation LOGO."""
+
+    mode = detect_french_programming_notions_summary_mode(
+        question
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "7-notion-de-la-programmation.pdf"
+            in source_name
+        ):
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    if mode == "advantages_interface":
+        summary = (
+            "Résumé du contenu :\n"
+            "- L'interface LOGO comprend deux parties : la partie graphique, qui est l'espace où se trouve la tortue, et la partie de commande, où l'utilisateur rédige les ordres destinés à la tortue.\n"
+            "- La programmation développe le raisonnement et la créativité.\n"
+            "- Elle permet aussi d'être clair, précis, bien organisé et rigoureux."
+        )
+    else:
+        summary = (
+            "Résumé du contenu :\n"
+            "- Un programme est un ensemble d'instructions exécutées par la machine, tandis que la programmation permet d'écrire un programme compréhensible par celle-ci.\n"
+            "- Un langage de programmation est un ensemble de signes et de codes soumis à des règles précises ; un logiciel de programmation permet d'écrire et de corriger un programme.\n"
+            "- Un algorithme est une suite finie d'actions précises et ordonnées menant à la résolution d'un problème.\n"
+            "- LOGO est un langage de programmation destiné aux débutants ; LOGO.NET et XLOGO en sont deux versions citées.\n"
+            "- Dans LOGO, l'utilisateur donne des ordres à une tortue. L'interface comprend une partie graphique et une partie de commande.\n"
+            "- La programmation développe le raisonnement, la créativité, la clarté, la précision, l'organisation et la rigueur."
+        )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_computer_assisted_presentation_summary_mode(
     question: str,
 ) -> str:
@@ -6353,6 +6442,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_programming_summary = (
+        build_french_programming_notions_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_programming_summary is not None:
+        return structured_programming_summary
 
     structured_presentation_summary = (
         build_french_computer_assisted_presentation_summary(

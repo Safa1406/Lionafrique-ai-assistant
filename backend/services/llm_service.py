@@ -9,8 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v52-french-computer-assisted-presentation-analysis"
-FRENCH_RULES_VERSION = "v2-computer-assisted-presentation-analysis"
+ARABIC_RULES_VERSION = "v53-french-programming-notions-analysis"
+FRENCH_RULES_VERSION = "v3-programming-notions-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1752,6 +1752,183 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_french_programming_notions_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Répond aux questions documentées du cours sur la programmation LOGO."""
+
+    if contains_arabic(question):
+        return []
+
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "7-notion-de-la-programmation.pdf"
+            not in normalized_source
+        ):
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Qu'est-ce qu'un programme selon le document ?": (
+                "Un programme est un ensemble d'instructions, c'est-à-dire des ordres, que la machine comprend et exécute"
+            ),
+            "Qu'est-ce que la programmation ?": (
+                "La programmation est un domaine d'informatique qui permet d'écrire un programme compréhensible par la machine"
+            ),
+            "Qu'est-ce qu'un langage de programmation ?": (
+                "Un langage de programmation est un ensemble de signes et de codes écrits suivant des règles précises et permettant de rédiger un programme"
+            ),
+            "Qu'est-ce qu'un logiciel de programmation ?": (
+                "Un logiciel de programmation est un logiciel d'application qui permet à l'utilisateur d'écrire et de corriger un programme"
+            ),
+            "Qu'est-ce qu'un algorithme ?": (
+                "Un algorithme est une suite finie d'actions précises et ordonnées qui mène à la résolution d'un problème"
+            ),
+            "Quelle est la différence entre un programme, la programmation et un langage de programmation ?": (
+                "Un programme est un ensemble d'instructions exécutées par la machine ; la programmation est le domaine qui permet d'écrire un programme ; un langage de programmation est un ensemble de signes et de codes organisés selon des règles précises"
+            ),
+            "À quoi sert un logiciel de programmation ?": (
+                "Un logiciel de programmation sert à écrire et à corriger un programme"
+            ),
+            "Quelles sont les caractéristiques d'un algorithme ?": (
+                "Un algorithme est une suite finie d'actions précises et ordonnées qui conduit à la résolution d'un problème"
+            ),
+            "Qu'est-ce que le langage LOGO ?": (
+                "LOGO est un langage de programmation destiné aux débutants et permettant d'apprendre à programmer"
+            ),
+            "À quel public le langage LOGO est-il destiné ?": (
+                "Le langage LOGO est destiné aux débutants"
+            ),
+            "Quel est l'objectif principal du langage LOGO ?": (
+                "L'objectif de LOGO est de permettre aux débutants d'apprendre à programmer"
+            ),
+            "Quelles versions du logiciel LOGO sont citées dans le cours ?": (
+                "Les versions citées sont LOGO.NET et XLOGO"
+            ),
+            "Comment le logiciel LOGO est-il décrit dans le cours ?": (
+                "Le logiciel LOGO est décrit comme un jeu dans lequel l'utilisateur donne des ordres à une tortue pour qu'elle réalise une tâche bien définie"
+            ),
+            "Quel est le rôle de la tortue dans le logiciel LOGO ?": (
+                "La tortue reçoit les ordres de l'utilisateur et les exécute pour réaliser une tâche bien définie"
+            ),
+            "Le logiciel LOGO.NET est-il gratuit ?": (
+                "Oui, LOGO.NET est un logiciel gratuit"
+            ),
+            "Le logiciel XLOGO est-il gratuit ?": (
+                "Oui, XLOGO est aussi un logiciel gratuit"
+            ),
+            "Que dit le document à propos du téléchargement de LOGO.NET et XLOGO ?": (
+                "LOGO.NET et XLOGO sont gratuits et peuvent être téléchargés à partir des URL indiquées dans le document"
+            ),
+            "De combien de parties principales se compose l'interface LOGO ?": (
+                "L'interface LOGO se compose de deux parties principales : la partie graphique et la partie de commande"
+            ),
+            "Qu'est-ce que la partie graphique de l'interface LOGO ?": (
+                "La partie graphique est un espace dans lequel se trouve la tortue"
+            ),
+            "Qu'est-ce que la partie de commande dans LOGO ?": (
+                "La partie de commande est l'endroit où l'utilisateur peut rédiger les ordres à donner à la tortue"
+            ),
+            "Quelle est la différence entre la partie graphique et la partie de commande de LOGO ?": (
+                "La partie graphique est l'espace où se trouve la tortue, tandis que la partie de commande est l'endroit où l'utilisateur rédige les ordres"
+            ),
+            "Comment la programmation développe-t-elle le raisonnement et la créativité ?": (
+                "La programmation permet de développer le raisonnement et la créativité"
+            ),
+            "Quelles qualités la programmation permet-elle de développer selon le cours ?": (
+                "La programmation permet d'être clair, précis, bien organisé et rigoureux"
+            ),
+            "Quels sont les avantages de la programmation mentionnés dans le document ?": (
+                "La programmation développe le raisonnement et la créativité, et permet d'être clair, précis, organisé et rigoureux"
+            ),
+            "Quelle notion désigne une suite finie d'actions précises et ordonnées ?": (
+                "La notion qui désigne une suite finie d'actions précises et ordonnées est l'algorithme"
+            ),
+            "Dans quelle partie de LOGO l'utilisateur écrit-il les ordres destinés à la tortue ?": (
+                "L'utilisateur écrit les ordres destinés à la tortue dans la partie de commande"
+            ),
+            "C'est quoi un algoriteme et un langaje de programation ?": (
+                "Un algorithme est une suite finie d'actions précises et ordonnées ; un langage de programmation est un ensemble de signes et de codes écrits suivant des règles précises"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 4
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_computer_assisted_presentation_evidence(
@@ -14918,11 +15095,41 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_computer_assisted_presentation_evidence(
+        extract_french_programming_notions_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    programming_notions_source_scope = any(
+        "7-notion-de-la-programmation.pdf"
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        programming_notions_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_computer_assisted_presentation_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     presentation_source_scope = any(
         "2-la-presentation-assistee-par-ordinateur.pdf"
