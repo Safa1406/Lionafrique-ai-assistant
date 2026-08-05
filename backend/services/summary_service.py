@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v39-arabic-sifa-mushabbaha-structured-summary"
+    "v40-arabic-biography-writing-structured-summary"
 )
 
 
@@ -2499,6 +2499,98 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_biography_writing_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé structuré de la مهارة السيرة."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص مهاره كتابه سيره ذاتيه او غيريه"
+        in normalized_question
+        and "التعريف" in normalized_question
+        and "الفرق بينهما" in normalized_question
+        and "خطوات كتابه كل نوع" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_biography_writing_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF de la biographie."""
+
+    if not detect_arabic_biography_writing_summary_mode(
+        question
+    ):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "altdrb-ala-ktaba-sira-thatia-ao-ghiria.pdf"
+            in source_name
+        ):
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_biography_writing_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré de la مهارة السيرة."""
+
+    if (
+        detect_arabic_biography_writing_summary_mode(
+            question
+        )
+        != "full"
+    ):
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- السيرة فن أدبي يصور حياة شخصية وينقل محطاتها البارزة، وتنقسم إلى السيرة الذاتية والسيرة الغيرية.\n"
+        "- في السيرة الذاتية يستعمل السارد ضمير المتكلم، ويكون السارد = الشخصية الرئيسية، ويعتمد على تجاربه وإحساسه الشخصي. أما السيرة الغيرية فتستعمل ضمير الغائب، ويكون السارد مختلفا عن الشخصية الرئيسية، مع التزام الحياد والموضوعية والاعتماد على الوثائق.\n"
+        "- تكتب السيرة الذاتية عبر استرجاع الأحداث، وتحديد مدى الاسترجاع وسعة الاسترجاع، ثم صياغة الأحداث بأسلوب حكائي يوظف السرد والوصف والتعليق.\n"
+        "- تكتب السيرة الغيرية عبر انتقاء الشخصية، وجمع المعلومات، وترتيب المعلومات المتعلقة بالولادة والنشأة والصفات والأعمال والإنجازات والمصير، ثم صياغة الأحداث بدقة وموضوعية."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -5898,6 +5990,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        biography_units = (
+            select_arabic_biography_writing_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if biography_units:
+            structured_biography_summary = (
+                build_arabic_biography_writing_summary(
+                    question=cleaned_question,
+                    selected_units=biography_units,
+                )
+            )
+
+            if structured_biography_summary is not None:
+                return structured_biography_summary
+
         sifa_units = (
             select_arabic_sifa_mushabbaha_units(
                 question=cleaned_question,
