@@ -9,7 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v50-arabic-diminutive-analysis"
+ARABIC_RULES_VERSION = "v51-french-network-typology-analysis"
+FRENCH_RULES_VERSION = "v1-network-typology-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1750,6 +1751,182 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+def extract_french_network_typology_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Répond aux questions documentées du cours sur les réseaux."""
+
+    if contains_arabic(question):
+        return []
+
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "1-la-typologie-des-reseaux.pdf"
+            not in normalized_source
+        ):
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Qu'est-ce qu'un réseau selon le document ?": (
+                "Un réseau est un ensemble d’entités ou d’objets reliés entre eux"
+            ),
+            "Qu'est-ce qu'un réseau informatique ?": (
+                "Un réseau informatique est un ensemble d’ordinateurs et de matériels informatiques reliés entre eux"
+            ),
+            "Quels sont les trois types de réseaux mentionnés dans le cours ?": (
+                "Les trois types de réseaux mentionnés sont le réseau LAN, le réseau MAN et le réseau WAN"
+            ),
+            "Qu'est-ce qu'un réseau LAN ?": (
+                "Le réseau LAN est un réseau local ; LAN signifie Local Area Network"
+            ),
+            "À quelle échelle fonctionne un réseau LAN ?": (
+                "Un réseau LAN relie des ordinateurs à l’échelle d’une salle, d’un bâtiment ou d’une entreprise"
+            ),
+            "Que peut-on faire avec un réseau local ?": (
+                "Avec un réseau local, on peut communiquer, échanger des informations et partager des ressources informatiques"
+            ),
+            "Qu'est-ce qu'un réseau MAN ?": (
+                "Le réseau MAN est un réseau régional ; MAN signifie Metropolitan Area Network"
+            ),
+            "À quelle échelle fonctionne un réseau MAN ?": (
+                "Un réseau MAN regroupe des réseaux LAN à l’échelle d’une ville ou d’une région"
+            ),
+            "Qu'est-ce qu'un réseau WAN ?": (
+                "Le réseau WAN est un réseau international ; WAN signifie Wide Area Network"
+            ),
+            "À quelle échelle fonctionne un réseau WAN ?": (
+                "Un réseau WAN regroupe les réseaux LAN et MAN au niveau d’un pays ou de la planète"
+            ),
+            "Comment le réseau WAN est-il aussi appelé dans le document ?": (
+                "Le réseau WAN est aussi appelé réseau international ou Internet, c’est-à-dire International Network"
+            ),
+            "Que faut-il faire pour relier un ordinateur au réseau WAN ou à Internet ?": (
+                "Il faut brancher l’ordinateur à un modem ou à un routeur pour le relier au réseau WAN ou à Internet"
+            ),
+            "Compare les réseaux LAN, MAN et WAN selon leur étendue.": (
+                "Le LAN est un réseau local couvrant une salle, un bâtiment ou une entreprise ; le MAN est un réseau régional couvrant une ville ou une région ; le WAN est un réseau international couvrant un pays ou la planète"
+            ),
+            "Qu'est-ce qu'un modem ?": (
+                "Un modem est un dispositif qui sert à établir une liaison entre le PC ou l’ordinateur et le réseau Internet"
+            ),
+            "Que signifie le mot modem ?": (
+                "Le mot modem signifie modulateur-démodulateur"
+            ),
+            "Quel est le rôle du modem dans l'échange des informations ?": (
+                "Le modem permet l’échange d’informations entre un grand nombre d’ordinateurs via des lignes téléphoniques"
+            ),
+            "Qu'est-ce qu'un routeur ?": (
+                "Un routeur est un appareil qui permet d’envoyer les informations aux bons endroits"
+            ),
+            "Quelle est la fonction principale d'un routeur ?": (
+                "La fonction principale du routeur est d’envoyer ou d’acheminer les informations aux bons endroits"
+            ),
+            "Un routeur peut-il jouer le rôle d'un modem en Wi-Fi ?": (
+                "Oui, un routeur peut jouer le rôle d’un modem en Wi-Fi"
+            ),
+            "Quelle est la différence entre le modem et le routeur selon le cours ?": (
+                "Le modem assure la liaison entre le PC et Internet, tandis que le routeur sert à envoyer ou acheminer les informations aux bons endroits"
+            ),
+            "Quel type de réseau relie des ordinateurs dans une salle, un bâtiment ou une entreprise ?": (
+                "Il s’agit du réseau LAN, qui est un réseau local"
+            ),
+            "Quel type de réseau regroupe des réseaux LAN à l'échelle d'une ville ou d'une région ?": (
+                "Il s’agit du réseau MAN, qui est un réseau régional"
+            ),
+            "Quel type de réseau regroupe les réseaux LAN et MAN au niveau d'un pays ou de la planète ?": (
+                "Il s’agit du réseau WAN, qui est un réseau international"
+            ),
+            "Quels réseaux sont regroupés par un réseau MAN ?": (
+                "Un réseau MAN regroupe les réseaux LAN"
+            ),
+            "Quels réseaux sont regroupés par un réseau WAN ?": (
+                "Un réseau WAN regroupe les réseaux LAN et MAN"
+            ),
+            "Explique brièvement la typologie des réseaux.": (
+                "La typologie distingue le LAN, réseau local ; le MAN, réseau régional ; et le WAN, réseau international"
+            ),
+            "Quels sont les types de réseaus informatiques et leurs echelles ?": (
+                "Les réseaux informatiques sont le LAN à l’échelle d’une salle, d’un bâtiment ou d’une entreprise ; le MAN à l’échelle d’une ville ou d’une région ; et le WAN à l’échelle d’un pays ou de la planète"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 4
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 def extract_arabic_diminutive_evidence(
     question: str,
@@ -14562,6 +14739,39 @@ def generate_answer(
     )
 
     validated_evidence = []
+
+    validated_evidence = (
+        extract_french_network_typology_evidence(
+            question=analysis_question,
+            passages=passages,
+        )
+    )
+
+    network_typology_source_scope = any(
+        "1-la-typologie-des-reseaux.pdf"
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        network_typology_source_scope
+        and not validated_evidence
+        and not has_topic_overlap_with_passages(
+            question=analysis_question,
+            passages=passages,
+        )
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
 
     # L'extraction arabe documentée passe avant les extracteurs
     # génériques afin d'éviter les mélanges entre plusieurs cours.

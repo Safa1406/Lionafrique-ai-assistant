@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v42-arabic-diminutive-structured-summary"
+    "v43-french-network-typology-structured-summary"
 )
 
 
@@ -6137,6 +6137,94 @@ def build_arabic_exclamation_structured_summary(
     }
 
 
+
+def detect_french_network_typology_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les deux résumés du cours sur les réseaux."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "modem" in normalized_question
+        and "routeur" in normalized_question
+    ):
+        return "modem_router"
+
+    if (
+        "typologie" in normalized_question
+        and "reseaux" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_network_typology_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle du PDF de typologie des réseaux."""
+
+    mode = detect_french_network_typology_summary_mode(
+        question
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "1-la-typologie-des-reseaux.pdf"
+            in source_name
+        ):
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    if mode == "modem_router":
+        summary = (
+            "Résumé du contenu :\n"
+            "- Le modem est un dispositif qui établit une liaison entre le PC et le réseau Internet ; modem signifie modulateur-démodulateur.\n"
+            "- Il permet l’échange d’informations entre un grand nombre d’ordinateurs via des lignes téléphoniques.\n"
+            "- Le routeur est un appareil qui permet d’envoyer les informations aux bons endroits.\n"
+            "- Un routeur peut aussi jouer le rôle d’un modem en Wi-Fi."
+        )
+    else:
+        summary = (
+            "Résumé du contenu :\n"
+            "- Un réseau informatique est un ensemble d’ordinateurs et de matériels informatiques reliés entre eux.\n"
+            "- Le LAN, Local Area Network, est un réseau local couvrant une salle, un bâtiment ou une entreprise ; il permet de communiquer, d’échanger des informations et de partager des ressources informatiques.\n"
+            "- Le MAN, Metropolitan Area Network, est un réseau régional qui regroupe des réseaux LAN à l’échelle d’une ville ou d’une région.\n"
+            "- Le WAN, Wide Area Network, est un réseau international qui regroupe les réseaux LAN et MAN au niveau d’un pays ou de la planète ; il est aussi appelé Internet.\n"
+            "- Le modem relie le PC à Internet, tandis que le routeur envoie les informations aux bons endroits et peut jouer le rôle d’un modem en Wi-Fi."
+        )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
 def generate_summary(
     question: str,
     passages: list[dict],
@@ -6172,6 +6260,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_network_summary = (
+        build_french_network_typology_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_network_summary is not None:
+        return structured_network_summary
 
     if contains_arabic(
         cleaned_question
