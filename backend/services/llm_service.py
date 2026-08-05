@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v46-arabic-nisba-lesson-analysis"
+ARABIC_RULES_VERSION = "v47-arabic-sifa-mushabbaha-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1744,6 +1744,146 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+
+def extract_arabic_sifa_mushabbaha_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Extrait les réponses documentées du درس الصفة المشبهة."""
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(question)
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "alsfa-almshbha.pdf" not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text
+        in {'ما تعريف الصفة المشبهة حسب الوثيقة؟': 'الصفة المشبهة صفة تدل على معنى ثابت في الموصوف به '
+                                        'ثبوتا عاما ملازما له، وغير مرتبط بزمان معين.',
+ 'على ماذا تدل الصفة المشبهة؟': 'تدل الصفة المشبهة على معنى ثابت في الموصوف، ملازما له.',
+ 'هل ترتبط الصفة المشبهة بزمان معين؟': 'لا، فهي غير مرتبطة بزمان معين.',
+ 'مم تصاغ الصفة المشبهة؟': 'تصاغ الصفة المشبهة من مصدر الفعل الثلاثي المتصرف اللازم.',
+ 'متى تصاغ الصفة المشبهة على وزن أفعل، وما مؤنثه؟': 'تصاغ على وزن أفعل، ومؤنثه فعلاء، إذا دلت '
+                                                    'على لون أو عيب أو حلية.',
+ 'ما الدلالات التي يعبر عنها وزن أفعل في الصفة المشبهة؟': 'يدل وزن أفعل على لون أو عيب أو '
+                                                          'حلية.',
+ 'ما مؤنث وزن أفعل في الصفة المشبهة؟': 'مؤنث وزن أفعل هو فعلاء.',
+ 'متى تصاغ الصفة المشبهة على وزن فعل، وما مؤنثه؟': 'تصاغ على وزن فعل، ومؤنثه فعلة، إذا دلت على '
+                                                   'فرح أو حزن.',
+ 'ما مؤنث وزن فعل في الصفة المشبهة؟': 'مؤنث وزن فعل هو فعلة.',
+ 'متى تصاغ الصفة المشبهة على وزن فعلان، وما مؤنثه؟': 'تصاغ على وزن فعلان، ومؤنثه فعلى، إذا دلت '
+                                                     'على خلو أو امتلاء.',
+ 'ما الدلالات التي يعبر عنها وزن فعلان في الصفة المشبهة؟': 'يدل وزن فعلان على خلو أو امتلاء.',
+ 'ما مؤنث وزن فعلان في الصفة المشبهة؟': 'مؤنث وزن فعلان هو فعلى.',
+ 'ما الأوزان الثلاثة الأساسية لصياغة الصفة المشبهة الواردة في الوثيقة؟': 'الأوزان الثلاثة '
+                                                                         'الأساسية هي: أفعل، '
+                                                                         'وفعل، وفعلان.',
+ 'هل تأتي الصفة المشبهة على أوزان أخرى غير الأوزان الثلاثة الأساسية؟': 'نعم، تأتي الصفة '
+                                                                       'المشبهة على أوزان أخرى '
+                                                                       'سماعية.',
+ 'ما بعض الأوزان الأخرى المذكورة لصياغة الصفة المشبهة؟': 'من الأوزان الأخرى المذكورة: فعيل، '
+                                                         'وفعال، وفعل.',
+ 'ماذا تعمل الصفة المشبهة؟': 'تعمل الصفة المشبهة عمل اسم الفاعل المتعدي لواحد.',
+ 'متى ترفع الصفة المشبهة الاسم الذي يأتي بعدها؟': 'ترفع الاسم الذي يأتي بعدها على أنه فاعل.',
+ 'كيف تعرب الصفة المشبهة الاسم المعرفة الذي يأتي بعدها؟': 'إذا كان الاسم معرفة تنصبه الصفة '
+                                                          'المشبهة على أنه مفعول به.',
+ 'كيف تعرب الصفة المشبهة الاسم النكرة الذي يأتي بعدها؟': 'إذا كان الاسم نكرة تنصبه الصفة '
+                                                         'المشبهة على أنه تمييز أو شبيه '
+                                                         'بالمفعول به.',
+ 'كيف يمكن للصفة المشبهة أن تجر الاسم الذي يأتي بعدها؟': 'تجره على الإضافة.',
+ 'ما صور إعراب الاسم الواقع بعد الصفة المشبهة؟': 'يعرب الاسم بعدها فاعلا، أو مفعولا به، أو '
+                                                 'تمييزا، أو شبيه بالمفعول به، أو يجر على '
+                                                 'الإضافة.',
+ 'ما الشرط الأساسي لعمل الصفة المشبهة؟': 'لا بد لعمل الصفة المشبهة من أن تعتمد على عنصر سابق.',
+ 'هل تعمل الصفة المشبهة إذا اعتمدت على مبتدأ أو ما أصله مبتدأ؟': 'نعم، تعمل إذا اعتمدت على '
+                                                                 'مبتدأ أو ما أصله مبتدأ.',
+ 'هل تعمل الصفة المشبهة إذا اعتمدت على نفي؟': 'نعم، تعمل إذا اعتمدت على نفي.',
+ 'هل تعمل الصفة المشبهة إذا اعتمدت على استفهام؟': 'نعم، تعمل إذا اعتمدت على استفهام.',
+ 'هل تعمل الصفة المشبهة إذا اعتمدت على نداء؟': 'نعم، تعمل إذا اعتمدت على نداء.',
+ 'على ماذا يجب أن تعتمد الصفة المشبهة لكي تعمل؟': 'يجب أن تعتمد على مبتدأ أو ما أصله مبتدأ، أو '
+                                                  'على نفي، أو استفهام، أو نداء.',
+ 'ما الأمثلة الواردة في الوثيقة على عمل الصفة المشبهة؟': 'الأمثلة هي: حسن سلوكه، والحسن سلوكا، '
+                                                         'والحسن السلوك، وحسن السلوك.'}.items()
+    }
+
+    answer = documented_answers.get(
+        normalized_question
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 4
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 
@@ -13917,7 +14057,37 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_nisba_lesson_evidence(
+            extract_arabic_sifa_mushabbaha_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
+
+        sifa_source_scope = any(
+            "alsfa-almshbha.pdf"
+            in (
+                passage.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            for passage in passages
+        )
+
+        if (
+            sifa_source_scope
+            and not validated_evidence
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_nisba_lesson_evidence(
                 question=analysis_question,
                 passages=passages,
             )

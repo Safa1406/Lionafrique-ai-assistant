@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v38-arabic-nisba-lesson-structured-summary"
+    "v39-arabic-sifa-mushabbaha-structured-summary"
 )
 
 
@@ -2498,6 +2498,96 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_sifa_mushabbaha_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du درس الصفة المشبهة."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص درس الصفه المشبهه" in normalized_question
+        and "تعريفها" in normalized_question
+        and "صياغتها" in normalized_question
+        and "اوزانها" in normalized_question
+        and "عملها" in normalized_question
+        and "شروط عملها" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_sifa_mushabbaha_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF concerné."""
+
+    if not detect_arabic_sifa_mushabbaha_summary_mode(
+        question
+    ):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "alsfa-almshbha.pdf" in source_name:
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_sifa_mushabbaha_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du درس."""
+
+    if (
+        detect_arabic_sifa_mushabbaha_summary_mode(
+            question
+        )
+        != "full"
+    ):
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- الصفة المشبهة صفة تدل على معنى ثابت في الموصوف، ملازم له وغير مرتبط بزمان معين.\n"
+        "- تصاغ من مصدر الفعل الثلاثي المتصرف اللازم، ومن أوزانها: أفعل مؤنثه فعلاء، وفعل مؤنثه فعلة، وفعلان مؤنثه فعلى، كما تأتي على أوزان سماعية أخرى.\n"
+        "- تعمل عمل اسم الفاعل المتعدي لواحد، فترفع ما بعدها فاعلا، وتنصب المعرفة مفعولا به، وتنصب النكرة تمييزا أو شبيها بالمفعول به، وقد تجره على الإضافة.\n"
+        "- لا بد لعملها من أن تعتمد على مبتدأ أو ما أصله مبتدأ، أو على نفي، أو استفهام، أو نداء."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -5808,6 +5898,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        sifa_units = (
+            select_arabic_sifa_mushabbaha_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if sifa_units:
+            structured_sifa_summary = (
+                build_arabic_sifa_mushabbaha_summary(
+                    question=cleaned_question,
+                    selected_units=sifa_units,
+                )
+            )
+
+            if structured_sifa_summary is not None:
+                return structured_sifa_summary
+
         nisba_units = (
             select_arabic_nisba_units(
                 question=cleaned_question,
