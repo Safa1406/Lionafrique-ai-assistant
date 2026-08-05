@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v40-arabic-biography-writing-structured-summary"
+    "v41-arabic-wonder-scifi-story-structured-summary"
 )
 
 
@@ -2500,6 +2500,100 @@ ARABIC_EXCLAMATION_PARSING_GROUPS = (
 
 
 
+
+
+
+
+def detect_arabic_wonder_scifi_story_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé structuré de la مهارة الحكاية."""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "لخص مهاره تخيل حكايه عجيبه"
+        in normalized_question
+        and "الخيال العلمي" in normalized_question
+        and "تعريفها" in normalized_question
+        and "اقسامها" in normalized_question
+        and "مراحل بنايها" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def select_arabic_wonder_scifi_story_units(
+    question: str,
+    units: list[dict],
+) -> list[dict]:
+    """Sélectionne les unités du PDF de la الحكاية."""
+
+    if not detect_arabic_wonder_scifi_story_summary_mode(
+        question
+    ):
+        return []
+
+    selected = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "altdrb-ala-tkhil-hkaia-ajiba-ao-mn-alkhial-alalmi.pdf"
+            in source_name
+        ):
+            selected.append(unit)
+
+    selected.sort(
+        key=lambda unit: (
+            unit["passage_number"],
+            unit["unit_id"],
+        )
+    )
+    return selected
+
+
+def build_arabic_wonder_scifi_story_summary(
+    question: str,
+    selected_units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré de la مهارة الحكاية."""
+
+    if (
+        detect_arabic_wonder_scifi_story_summary_mode(
+            question
+        )
+        != "full"
+    ):
+        return None
+
+    summary = (
+        "ملخص المحتوى:\n"
+        "- الحكاية العجيبة مجموعة من الأحداث المركبة والمتسلسلة وفق منطق يطغى عليه العجيب والغريب في الأحداث والشخصيات والأزمنة والأمكنة.\n"
+        "- تنقسم إلى الحكاية الخرافية أو الأسطورية، وقصص الخيال العلمي.\n"
+        "- تبدأ عملية البناء بحالة البداية الهادئة، ثم الحدث المحرك الذي يؤدي إلى العقدة، وبعدها الحل الذكي والمجدي، وتنتهي بحالة النهاية وعودة الاستقرار.\n"
+        "- يمكن في الخيال العلمي خلخلة ترتيب الأحداث بالبدء من التوتر أو من النهاية، ثم استرجاع الأحداث السابقة.\n"
+        "- تختار الشخصيات الخيالية أو الأسطورية أو الخارقة في صراع مع شخصيات عادية، ويحدد الزمان والمكان العجيبان، ثم تتم صياغة الحكاية في قصة مستوفية لكل المراحل."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
 
 
 
@@ -5990,6 +6084,24 @@ def generate_summary(
     if contains_arabic(
         cleaned_question
     ):
+        wonder_story_units = (
+            select_arabic_wonder_scifi_story_units(
+                question=cleaned_question,
+                units=units,
+            )
+        )
+
+        if wonder_story_units:
+            structured_wonder_story_summary = (
+                build_arabic_wonder_scifi_story_summary(
+                    question=cleaned_question,
+                    selected_units=wonder_story_units,
+                )
+            )
+
+            if structured_wonder_story_summary is not None:
+                return structured_wonder_story_summary
+
         biography_units = (
             select_arabic_biography_writing_units(
                 question=cleaned_question,

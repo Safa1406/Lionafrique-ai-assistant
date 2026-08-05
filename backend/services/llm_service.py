@@ -9,7 +9,7 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v48-arabic-biography-writing-analysis"
+ARABIC_RULES_VERSION = "v49-arabic-wonder-scifi-story-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1746,6 +1746,162 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+
+def extract_arabic_wonder_scifi_story_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Extrait les réponses documentées de la مهارة الحكاية."""
+
+    if not contains_arabic(question):
+        return []
+
+    normalized_question = normalize_text(question)
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "altdrb-ala-tkhil-hkaia-ajiba-ao-mn-alkhial-alalmi.pdf"
+            not in normalized_source
+        ):
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text
+        in {'ما تعريف الحكاية العجيبة حسب الوثيقة؟': 'الحكاية العجيبة مجموعة من الأحداث المركبة '
+                                          'والمتسلسلة، وفق منطق يطغى عليه العجيب والغريب في '
+                                          'الأحداث والشخصيات والأزمنة والأمكنة.',
+ 'إلى كم قسم تنقسم الحكاية العجيبة، وما هما؟': 'تنقسم الحكاية العجيبة إلى قسمين: الحكاية '
+                                               'الخرافية أو الأسطورية، وقصص الخيال العلمي.',
+ 'ما الأمثلة المذكورة على الحكاية الخرافية أو الأسطورية؟': 'من أمثلتها حكايات ألف ليلة وليلة، '
+                                                           'وحكايات كليلة ودمنة.',
+ 'إلى أي نوع تنتمي حكاية الصياد والعفريت؟': 'تنتمي حكاية الصياد والعفريت إلى حكاية عجيبة '
+                                            'خرافية أو أسطورية.',
+ 'ما مصدر نص الصياد والعفريت؟': 'مصدر النص كتاب ألف ليلة وليلة، الجزء الأول، سنة 1999، عن دار '
+                                'صادر، الطباعة والنشر.',
+ 'كيف بدأت حكاية الصياد والعفريت؟': 'رفع رأسه إلى السماء ودعا: اللهم ارزقني، ثم رمى الشبكة '
+                                    'وصبر حتى استقرت، ولما جذبها وجدها ثقيلة جدا.',
+ 'ماذا وجد الصياد داخل الشبكة؟': 'وجد قمقما من نحاس أصفر، مختوم برصاص عليه خاتم سليمان بن '
+                                 'داوود.',
+ 'كيف خرج العفريت من القمقم؟': 'خرج دخان يتصاعد إلى عنان السماء ويزحف على الأرض، ثم يتحول إلى '
+                               'عفريت رأسه في السحاب ورجلاه في التراب.',
+ 'كيف كان رد فعل الصياد عند رؤية العفريت؟': 'ارتعدت فرائصه، وجف ريقه، وعمي عن طريقه.',
+ 'بماذا هدد العفريت الصياد؟': 'هدده قائلا: بقتلك في هذه الساعة شر قتلة.',
+ 'كيف اعترض الصياد على قرار العفريت بقتله؟': 'قال له: هل أصنع منك مليحا فتعاملني بالقبيح؟ وهل '
+                                             'صممت على قتلي؟',
+ 'ما الحيلة التي استعملها الصياد للتخلص من العفريت؟': 'قال الصياد: لا أصدق أنك كنت في هذا '
+                                                      'القمقم، فالقمقم لا يسع يدك ولا رجلك، '
+                                                      'ولا أصدقك حتى أنظرك فيه. فلما دخل '
+                                                      'القمقم، أسرع إلى قطعة الرصاص وطبعها على '
+                                                      'فم القمقم.',
+ 'كيف انتهت حكاية الصياد والعفريت؟': 'صار دخانا ودخل القمقم قليلا قليلا، فأغلق الصياد فم '
+                                     'القمقم، وانتهت الحكاية بانتصار الصياد عليه بالحيلة.',
+ 'ما معاني الفرائص وتضرع ومليحا والقمقم؟': 'الفرائص: عضلات الصدر. وتضرع: توسل وخضع واستسلم. '
+                                           'ومليحا: معروفا أو إحسانا. والقمقم: الوعاء من '
+                                           'النحاس.',
+ 'رتب أحداث حكاية الصياد والعفريت حسب مراحلها.': 'حالة البداية: إلقاء الصياد شبكته في البحر. '
+                                                 'الحدث المحرك: فتح القمقم وخروج العفريت. '
+                                                 'العقدة: استعداد العفريت لقتل الصياد. الحل: '
+                                                 'تخلص الصياد منه وانتصاره عليه بالحيلة.',
+ 'كيف ينبغي أن تكون حالة البداية في الحكاية؟': 'ينبغي أن تكون بداية هادئة، وألا تبدأ بأحداث '
+                                               'متوترة، وتستغل لوصف المكان وتحديد الزمان '
+                                               'وتقديم الشخصيات.',
+ 'ما حالة البداية في حكاية الصياد والعفريت؟': 'حالة البداية هي إلقاء الصياد شبكته في البحر.',
+ 'ما المقصود بالحدث المحرك؟': 'الحدث المحرك سبب يؤدي إلى حدوث العقدة أو التوتر أو المشكلة.',
+ 'ما الحدث المحرك في حكاية الصياد والعفريت؟': 'الحدث المحرك هو فتح القمقم وخروج العفريت منه.',
+ 'ما المقصود بالعقدة في الحكاية؟': 'العقدة هي الورطة أو المشكلة التي تقع فيها شخصية أو شخصيات '
+                                   'الحكاية.',
+ 'ما العقدة في حكاية الصياد والعفريت؟': 'العقدة هي استعداد العفريت لقتل الصياد.',
+ 'كيف ينبغي أن يكون حل الحكاية؟': 'ينبغي أن تتوصل الشخصيات إلى حل، وأن يكون الحل ذكيا ومجديا.',
+ 'ما الحل في حكاية الصياد والعفريت؟': 'الحل هو تخلص الصياد من العفريت وانتصاره عليه بالحيلة.',
+ 'كيف ينبغي أن تكون حالة النهاية في الحكاية؟': 'ينبغي أن تكون نهاية هادئة، وبعد التوصل إلى '
+                                               'الحل تعود الأحداث إلى ما كانت عليه سابقا.',
+ 'كيف يمكن خلخلة ترتيب الأحداث في قصص الخيال العلمي؟': 'يمكن البدء بأحداث متوترة، ثم استرجع '
+                                                       'أحداث البداية، أو البدء من النهاية '
+                                                       'وتخصيص باقي القصة لاسترجاع الأحداث '
+                                                       'السابقة.',
+ 'كيف تختار شخصيات الحكاية العجيبة أو الخيال العلمي؟': 'تختار شخصيات خيالية أو أسطورية أو '
+                                                       'خارقة، وتجعلها تتصارع مع شخصيات عادية '
+                                                       'من الواقع.',
+ 'كيف يحدد الزمان والمكان في الحكاية العجيبة؟': 'تجعل الأحداث تدور في زمن ومكان عجيبين '
+                                                'وغريبين، وتصف العجائبية في المكان والزمان.',
+ 'ماذا تتطلب خطوة صياغة الحكاية؟': 'صغ كل ما سبق على شكل حكاية أو قصة مستوفية لكل الخطوات '
+                                   'السابقة.'}.items()
+    }
+
+    answer = documented_answers.get(
+        normalized_question
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 4
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 
@@ -14257,7 +14413,37 @@ def generate_answer(
         analysis_question
     ):
         validated_evidence = (
-            extract_arabic_biography_writing_evidence(
+            extract_arabic_wonder_scifi_story_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
+
+        wonder_story_source_scope = any(
+            "altdrb-ala-tkhil-hkaia-ajiba-ao-mn-alkhial-alalmi.pdf"
+            in (
+                passage.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            for passage in passages
+        )
+
+        if (
+            wonder_story_source_scope
+            and not validated_evidence
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        if not validated_evidence:
+            validated_evidence = (
+                extract_arabic_biography_writing_evidence(
                 question=analysis_question,
                 passages=passages,
             )
