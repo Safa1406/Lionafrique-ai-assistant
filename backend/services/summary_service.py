@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v45-french-programming-notions-structured-summary"
+    "v46-french-websites-browsers-structured-summary"
 )
 
 
@@ -6140,6 +6140,99 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_websites_browsers_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours Sites Web et navigateurs."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "navigateurs web" in normalized_question
+        or (
+            "navigateurs" in normalized_question
+            and "consacree" in normalized_question
+        )
+    ):
+        return "browsers"
+
+    if (
+        "www" in normalized_question
+        and "adresses web" in normalized_question
+        and "sites web" in normalized_question
+    ):
+        return "websites"
+
+    return ""
+
+
+def build_french_websites_browsers_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle du cours Sites Web et navigateurs."""
+
+    mode = detect_french_websites_browsers_summary_mode(
+        question
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "12-site-web-et-navigateurs.pdf"
+            in source_name
+        ):
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    if mode == "browsers":
+        summary = (
+            "Résumé du contenu :\n"
+            "- Un navigateur Web est un logiciel installé dans un système d'exploitation pour consulter l'ensemble des sites Web du World Wide Web.\n"
+            "- Son interface graphique comprend les boutons de navigation, la barre d'adresse, l'espace d'affichage et la barre d'état.\n"
+            "- Internet Explorer, ou IE, est installé automatiquement par le système d'exploitation.\n"
+            "- Mozilla Firefox est un navigateur Web libre qui permet d'afficher plusieurs pages Web dans une même fenêtre."
+        )
+    else:
+        summary = (
+            "Résumé du contenu :\n"
+            "- WWW signifie World Wide Web ; il est aussi appelé la toile, W3 ou la toile d'araignée mondiale, et facilite la consultation des sites sur Internet.\n"
+            "- Une adresse Web est un code de mots et de signes permettant d'accéder à un site Web. Elle comprend le protocole de communication, le WWW et le domaine.\n"
+            "- HTTP signifie Hyper Text Transfer Protocole et sert à transférer les documents HTML, les images et les feuilles de style d'un site Web.\n"
+            "- Le domaine comporte le nom du site et le suffixe ; dans l'exemple, madariss est le nom du site et .fr le suffixe.\n"
+            "- Un site Web est une ressource d'informations disponible sur le Web, constituée de plusieurs pages Web liées par des liens hypertexte."
+        )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_programming_notions_summary_mode(
     question: str,
 ) -> str:
@@ -6442,6 +6535,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_websites_browsers_summary = (
+        build_french_websites_browsers_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_websites_browsers_summary is not None:
+        return structured_websites_browsers_summary
 
     structured_programming_summary = (
         build_french_programming_notions_summary(

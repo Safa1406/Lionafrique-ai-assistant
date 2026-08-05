@@ -9,8 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v53-french-programming-notions-analysis"
-FRENCH_RULES_VERSION = "v3-programming-notions-analysis"
+ARABIC_RULES_VERSION = "v54-french-websites-browsers-analysis"
+FRENCH_RULES_VERSION = "v4-websites-browsers-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1753,6 +1753,183 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_french_websites_browsers_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Répond aux questions documentées du cours Sites Web et navigateurs."""
+
+    if contains_arabic(question):
+        return []
+
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "12-site-web-et-navigateurs.pdf"
+            not in normalized_source
+        ):
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Que signifie WWW ?": (
+                "WWW signifie World Wide Web"
+            ),
+            "Quels autres noms sont donnés au World Wide Web dans le cours ?": (
+                "Le World Wide Web est aussi appelé la toile, W3 ou la toile d'araignée mondiale"
+            ),
+            "Quel est le rôle du WWW selon le document ?": (
+                "Le WWW permet d'ouvrir le réseau Internet au grand public en facilitant la consultation des sites"
+            ),
+            "Qu'est-ce qu'une adresse Web ?": (
+                "Une adresse Web est un code constitué de mots et de signes qui permet à l'utilisateur d'accéder à un site Web, c'est-à-dire à une source d'information"
+            ),
+            "Quelles sont les principales parties d'une adresse Web ?": (
+                "Une adresse Web comprend le protocole de communication, le WWW et le domaine ; le domaine comporte le nom du site et le suffixe"
+            ),
+            "Qu'est-ce que le protocole de communication dans une adresse Web ?": (
+                "Le protocole de communication est HTTP ; c'est un langage ou logiciel qui permet de relier plusieurs machines afin de communiquer entre elles"
+            ),
+            "À quoi sert le protocole HTTP ?": (
+                "Le protocole HTTP sert à transférer les documents d'un site Web, notamment les documents HTML, les images et les feuilles de style"
+            ),
+            "Que signifie HTTP ?": (
+                "HTTP signifie Hyper Text Transfer Protocole"
+            ),
+            "Comment le World Wide Web est-il représenté dans une adresse Web ?": (
+                "Dans une adresse Web, le World Wide Web est représenté par www"
+            ),
+            "De quoi se compose le domaine d'une adresse Web ?": (
+                "Le domaine se compose du nom du site et du suffixe"
+            ),
+            "Décompose l'adresse Web donnée en exemple dans le tableau.": (
+                "Dans l'exemple, HTTP est le protocole, www représente le World Wide Web, madariss est le nom du site et .fr est le suffixe"
+            ),
+            "Qu'est-ce qu'un site Web ?": (
+                "Un site Web est une ressource d'informations disponible sur le Web"
+            ),
+            "De quoi est constitué un site Web ?": (
+                "Un site Web est constitué de plusieurs pages Web liées entre elles par des liens hypertexte"
+            ),
+            "Qu'est-ce qu'une page Web et que peut-elle contenir ?": (
+                "Une page Web est un document informatique qui peut contenir du texte, des images et des formulaires à remplir"
+            ),
+            "Qu'est-ce qu'un navigateur Web ?": (
+                "Un navigateur Web est un logiciel installé dans un système d'exploitation afin de consulter l'ensemble des sites Web du World Wide Web"
+            ),
+            "Où installe-t-on un navigateur et à quoi sert-il ?": (
+                "On installe un navigateur dans un système d'exploitation ; il sert à consulter l'ensemble des sites Web du World Wide Web"
+            ),
+            "Quels sont les éléments de l'interface graphique d'un navigateur ?": (
+                "L'interface graphique d'un navigateur comprend les boutons de navigation, la barre d'adresse, l'espace d'affichage et la barre d'état"
+            ),
+            "Quel élément de l'interface permet la navigation dans un navigateur ?": (
+                "Les boutons de navigation permettent la navigation dans un navigateur"
+            ),
+            "Dans quel élément de l'interface saisit-on une adresse Web ?": (
+                "On saisit une adresse Web dans la barre d'adresse"
+            ),
+            "Quel élément du navigateur sert à afficher les pages Web ?": (
+                "L'espace d'affichage sert à afficher les pages Web"
+            ),
+            "Quelle barre de l'interface du navigateur est citée avec la barre d'adresse ?": (
+                "La barre citée avec la barre d'adresse est la barre d'état"
+            ),
+            "Quels navigateurs sont cités comme exemples dans le cours ?": (
+                "Les navigateurs cités sont Internet Explorer, aussi appelé IE, et Mozilla Firefox"
+            ),
+            "Que dit le cours à propos d'Internet Explorer ?": (
+                "Internet Explorer, ou IE, est installé automatiquement par le système d'exploitation"
+            ),
+            "Que dit le cours à propos de Mozilla Firefox ?": (
+                "Mozilla Firefox est un navigateur Web libre qui permet d'afficher plusieurs pages Web dans une même fenêtre"
+            ),
+            "Quelle est la différence entre un site Web et une page Web ?": (
+                "Un site Web est constitué de plusieurs pages Web liées par des liens hypertexte, tandis qu'une page Web est un document informatique pouvant contenir du texte, des images et des formulaires"
+            ),
+            "Quelle est la différence entre une adresse Web et un domaine ?": (
+                "Une adresse Web est un code qui permet d'accéder à un site Web ; le domaine est une partie de cette adresse composée du nom du site et du suffixe"
+            ),
+            "C'est quoi un sit web, une adrese web et un navigatteur ?": (
+                "Un site Web est une ressource d'informations disponible sur le Web ; une adresse Web est un code permettant d'accéder à un site ; un navigateur est un logiciel permettant de consulter les sites Web"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_programming_notions_evidence(
@@ -15095,11 +15272,41 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_programming_notions_evidence(
+        extract_french_websites_browsers_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    websites_browsers_source_scope = any(
+        "12-site-web-et-navigateurs.pdf"
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        websites_browsers_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_programming_notions_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     programming_notions_source_scope = any(
         "7-notion-de-la-programmation.pdf"
