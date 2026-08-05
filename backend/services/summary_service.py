@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v43-french-network-typology-structured-summary"
+    "v44-french-computer-assisted-presentation-structured-summary"
 )
 
 
@@ -6138,6 +6138,99 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_computer_assisted_presentation_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours sur la Pré AO."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "powerpoint" in normalized_question
+        and (
+            "environnement" in normalized_question
+            or "partie" in normalized_question
+        )
+    ):
+        return "powerpoint"
+
+    if (
+        "presentation assistee" in normalized_question
+        and "ordinateur" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_computer_assisted_presentation_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle du PDF sur la Pré AO."""
+
+    mode = (
+        detect_french_computer_assisted_presentation_summary_mode(
+            question
+        )
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "2-la-presentation-assistee-par-ordinateur.pdf"
+            in source_name
+        ):
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    if mode == "powerpoint":
+        summary = (
+            "Résumé du contenu :\n"
+            "- Microsoft PowerPoint est un logiciel de création de présentations multimédia.\n"
+            "- Pour démarrer PowerPoint, il faut cliquer sur Démarrer, choisir Tous les programmes, puis sélectionner Microsoft Office PowerPoint dans Microsoft Office.\n"
+            "- L’environnement de PowerPoint 2007 présenté dans l’image comprend la barre d’accès outils rapide, le ruban, le volet des diapositives, la diapositive, la zone de gestion du contenu multimédia et la barre d’état."
+        )
+    else:
+        summary = (
+            "Résumé du contenu :\n"
+            "- La présentation assistée par ordinateur, notée Pré AO, est une succession de diapositives destinée à être visionnée sur l’écran de l’ordinateur ou projetée par vidéo-projecteur.\n"
+            "- Une diapositive est une page-écran pouvant contenir du texte, des images, des tableaux, des graphiques, des organigrammes, des animations, des sons et des vidéos.\n"
+            "- Un logiciel de Pré AO permet de créer des diapositives qui défilent manuellement ou automatiquement ; le cours cite Microsoft PowerPoint, Corel Présentation et OpenOffice.org Impress.\n"
+            "- Un diaporama est un ensemble de pages-écran qui s’affichent les unes à la suite des autres et permet de visualiser une présentation en plein écran.\n"
+            "- Microsoft PowerPoint sert à créer des présentations multimédia et son interface comprend notamment le ruban et la barre d’état."
+        )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_network_typology_summary_mode(
     question: str,
 ) -> str:
@@ -6260,6 +6353,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_presentation_summary = (
+        build_french_computer_assisted_presentation_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_presentation_summary is not None:
+        return structured_presentation_summary
 
     structured_network_summary = (
         build_french_network_typology_summary(

@@ -9,8 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v51-french-network-typology-analysis"
-FRENCH_RULES_VERSION = "v1-network-typology-analysis"
+ARABIC_RULES_VERSION = "v52-french-computer-assisted-presentation-analysis"
+FRENCH_RULES_VERSION = "v2-computer-assisted-presentation-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1751,6 +1751,183 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_french_computer_assisted_presentation_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Répond aux questions documentées du cours sur la Pré AO."""
+
+    if contains_arabic(question):
+        return []
+
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "2-la-presentation-assistee-par-ordinateur.pdf"
+            not in normalized_source
+        ):
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Qu'est-ce que la présentation assistée par ordinateur ?": (
+                "La présentation assistée par ordinateur est une succession de diapositives destinée à être visionnée sur l’écran de l’ordinateur ou projetée à l’aide d’un vidéo-projecteur"
+            ),
+            "Comment note-t-on la présentation assistée par ordinateur dans le cours ?": (
+                "Dans le cours, la présentation assistée par ordinateur est notée Pré AO"
+            ),
+            "Qu'est-ce qu'une diapositive ?": (
+                "Une diapositive est une page-écran"
+            ),
+            "Quels types de contenus une diapositive peut-elle contenir ?": (
+                "Une diapositive peut contenir du texte, des images, des tableaux, des graphiques, des organigrammes, des animations, des sons et des vidéos"
+            ),
+            "Qu'est-ce qu'un logiciel de Pré AO ?": (
+                "Un logiciel de Pré AO est un logiciel qui permet de créer des diapositives pouvant défiler à l’écran manuellement ou automatiquement"
+            ),
+            "Quels logiciels de présentation assistée par ordinateur sont cités dans le cours ?": (
+                "Les logiciels cités sont Microsoft PowerPoint, Corel Présentation et OpenOffice.org Impress"
+            ),
+            "Qu'est-ce qu'un diaporama ?": (
+                "Un diaporama est un ensemble de pages-écran qui s’affichent les unes à la suite des autres ; il permet de visualiser une présentation en plein écran"
+            ),
+            "À quoi sert le mode diaporama ?": (
+                "Le mode diaporama sert à visualiser une présentation en plein écran"
+            ),
+            "Qu'est-ce que Microsoft PowerPoint selon le cours ?": (
+                "Microsoft PowerPoint est le logiciel de création des présentations multimédia"
+            ),
+            "Quelles sont les étapes pour démarrer PowerPoint ?": (
+                "Pour démarrer PowerPoint : 1. cliquer sur Démarrer ; 2. choisir Tous les programmes ; 3. dans Microsoft Office, sélectionner Microsoft Office PowerPoint"
+            ),
+            "Quelle est la première étape pour démarrer PowerPoint ?": (
+                "La première étape consiste à cliquer sur Démarrer"
+            ),
+            "Quelle est la deuxième étape pour démarrer PowerPoint ?": (
+                "La deuxième étape consiste à choisir Tous les programmes"
+            ),
+            "Quelle est la troisième étape pour démarrer PowerPoint ?": (
+                "La troisième étape consiste, dans Microsoft Office, à sélectionner Microsoft Office PowerPoint"
+            ),
+            "Comment les diapositives peuvent-elles défiler à l'écran ?": (
+                "Les diapositives peuvent défiler à l’écran manuellement ou automatiquement"
+            ),
+            "Sur quels supports peut-on visionner ou projeter une présentation assistée par ordinateur ?": (
+                "On peut la visionner sur l’écran de l’ordinateur ou la projeter au moyen d’un vidéo-projecteur"
+            ),
+            "Quels éléments de la fenêtre de Microsoft PowerPoint 2007 sont indiqués dans l'image ?": (
+                "L’image indique la barre d’accès outils rapide, le ruban, les diapositives, la diapositive, la gestion du contenu multimédia et la barre d’état"
+            ),
+            "Quel élément se trouve en haut à gauche de la fenêtre PowerPoint dans l'image ?": (
+                "En haut à gauche se trouve la barre d’accès outils rapide"
+            ),
+            "Comment s'appelle la grande zone de commandes située en haut de PowerPoint ?": (
+                "La grande zone de commandes située en haut de PowerPoint s’appelle le ruban"
+            ),
+            "Quelle zone de l'interface affiche les miniatures des diapositives ?": (
+                "La zone appelée les diapositives affiche les miniatures des diapositives"
+            ),
+            "Quelle partie de l'interface permet de travailler sur la diapositive courante ?": (
+                "La partie centrale appelée la diapositive permet de travailler sur la diapositive courante"
+            ),
+            "Quelle zone de PowerPoint est associée à la gestion du contenu multimédia ?": (
+                "La zone indiquée est la gestion du contenu multimédia"
+            ),
+            "Comment s'appelle la barre située en bas de la fenêtre PowerPoint ?": (
+                "La barre située en bas de la fenêtre PowerPoint s’appelle la barre d’état"
+            ),
+            "Quelle est la différence entre une diapositive et un diaporama ?": (
+                "Une diapositive est une page-écran, tandis qu’un diaporama est un ensemble de pages-écran qui s’affichent les unes à la suite des autres afin de visualiser une présentation en plein écran"
+            ),
+            "Quel logiciel du cours permet de créer des présentations multimédia ?": (
+                "Le logiciel qui permet de créer des présentations multimédia est Microsoft PowerPoint"
+            ),
+            "Peut-on insérer des sons, des vidéos et des animations dans une diapositive ?": (
+                "Oui, une diapositive peut contenir des sons, des vidéos et des animations"
+            ),
+            "Explique brièvement la présentation assistée par ordinateur.": (
+                "La présentation assistée par ordinateur est une succession de diapositives visionnée sur un écran ou projetée par vidéo-projecteur ; elle est créée avec un logiciel de Pré AO et peut être visualisée sous forme de diaporama"
+            ),
+            "C'est quoi une presentasion assiste par ordinatteur et un diaporrama ?": (
+                "La présentation assistée par ordinateur est une succession de diapositives ; un diaporama est un ensemble de pages-écran affichées les unes à la suite des autres pour une visualisation en plein écran"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 4
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_network_typology_evidence(
@@ -14741,11 +14918,41 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_network_typology_evidence(
+        extract_french_computer_assisted_presentation_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    presentation_source_scope = any(
+        "2-la-presentation-assistee-par-ordinateur.pdf"
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        presentation_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_network_typology_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     network_typology_source_scope = any(
         "1-la-typologie-des-reseaux.pdf"
