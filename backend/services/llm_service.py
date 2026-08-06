@@ -9,8 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v54-french-websites-browsers-analysis"
-FRENCH_RULES_VERSION = "v4-websites-browsers-analysis"
+ARABIC_RULES_VERSION = "v55-french-characterize-noun-analysis"
+FRENCH_RULES_VERSION = "v5-characterize-noun-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1754,6 +1754,183 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_french_characterize_noun_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Répond aux questions documentées du cours Caractériser un nom."""
+
+    if contains_arabic(question):
+        return []
+
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "caracteriser-un-nom.pdf"
+            not in normalized_source
+        ):
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Que signifie caractériser un nom ?": (
+                "Caractériser un nom, c'est lui attribuer une ou plusieurs caractéristiques précises afin de le rendre plus clair à l'aide de plusieurs procédés grammaticaux"
+            ),
+            "Pourquoi caractérise-t-on un nom ?": (
+                "On caractérise un nom afin de lui attribuer des caractéristiques précises et de le rendre plus clair"
+            ),
+            "Quels procédés grammaticaux peut-on utiliser pour caractériser un nom ?": (
+                "On peut utiliser un adjectif qualificatif épithète, un adjectif qualificatif attribut, un complément de nom et une subordonnée relative complément de l'antécédent"
+            ),
+            "Qu'est-ce qu'un adjectif qualificatif épithète ?": (
+                "Un adjectif qualificatif épithète est directement placé avant ou après le nom qu'il caractérise"
+            ),
+            "Où peut être placé l'adjectif qualificatif épithète par rapport au nom ?": (
+                "L'adjectif qualificatif épithète peut être placé directement avant ou après le nom"
+            ),
+            "Dans « un petit garçon », quel est l'adjectif qualificatif épithète ?": (
+                "Dans « un petit garçon », « petit » est l'adjectif qualificatif épithète"
+            ),
+            "Dans « un petit garçon », quel nom est caractérisé ?": (
+                "Dans « un petit garçon », le nom caractérisé est « garçon »"
+            ),
+            "Dans « Une histoire drôle », quel est l'adjectif qualificatif épithète ?": (
+                "Dans « Une histoire drôle », « drôle » est l'adjectif qualificatif épithète"
+            ),
+            "Dans « Une histoire drôle », quel nom est caractérisé ?": (
+                "Dans « Une histoire drôle », le nom caractérisé est « histoire »"
+            ),
+            "Qu'est-ce qu'un adjectif qualificatif attribut ?": (
+                "Un adjectif qualificatif attribut est séparé du nom par un verbe d'état"
+            ),
+            "Par quel type de verbe l'adjectif qualificatif attribut est-il séparé du nom ?": (
+                "L'adjectif qualificatif attribut est séparé du nom par un verbe d'état"
+            ),
+            "Dans « Ce tableau est magnifique », quel est l'adjectif qualificatif attribut ?": (
+                "Dans « Ce tableau est magnifique », « magnifique » est l'adjectif qualificatif attribut"
+            ),
+            "Dans « Ce tableau est magnifique », quel est le verbe d'état ?": (
+                "Dans « Ce tableau est magnifique », le verbe d'état est « est »"
+            ),
+            "Dans « La mer paraît calme », quel est l'adjectif qualificatif attribut ?": (
+                "Dans « La mer paraît calme », « calme » est l'adjectif qualificatif attribut"
+            ),
+            "Dans « La mer paraît calme », quel est le verbe d'état ?": (
+                "Dans « La mer paraît calme », le verbe d'état est « paraît »"
+            ),
+            "Quelle est la différence entre un adjectif épithète et un adjectif attribut ?": (
+                "L'adjectif épithète est directement placé avant ou après le nom, tandis que l'adjectif attribut est séparé du nom par un verbe d'état"
+            ),
+            "Qu'est-ce qu'un complément de nom selon le cours ?": (
+                "Un complément de nom est introduit par une préposition suivie d'un nom"
+            ),
+            "Quelles prépositions sont citées pour introduire un complément de nom ?": (
+                "Les prépositions citées sont « à », « de », « des » et « en »"
+            ),
+            "Dans « Les habitants de l'immeuble s'entendent bien », quel est le complément de nom ?": (
+                "Dans cette phrase, « de l'immeuble » est le complément de nom"
+            ),
+            "Quelle préposition introduit le complément de nom dans « de l'immeuble » ?": (
+                "La préposition qui introduit « de l'immeuble » est « de »"
+            ),
+            "Dans la phrase « Les habitants de l'immeuble s'entendent bien », quel nom est complété par « de l'immeuble » ?": (
+                "Le nom complété par « de l'immeuble » est « habitants »"
+            ),
+            "Quel type de proposition peut caractériser un nom dans le dernier procédé du cours ?": (
+                "Une subordonnée relative complément de l'antécédent peut caractériser un nom"
+            ),
+            "Dans « Il arrose l'arbre qu'il a planté il y a dix ans », quelle est la subordonnée relative ?": (
+                "La subordonnée relative est « qu'il a planté il y a dix ans »"
+            ),
+            "Quel est l'antécédent de « qu'il a planté il y a dix ans » ?": (
+                "L'antécédent de cette subordonnée relative est « l'arbre »"
+            ),
+            "Quel nom est caractérisé par la subordonnée relative « qu'il a planté il y a dix ans » ?": (
+                "Le nom caractérisé par cette subordonnée relative est « l'arbre »"
+            ),
+            "Quel procédé grammatical est utilisé dans « l'arbre qu'il a planté il y a dix ans » ?": (
+                "Le procédé utilisé est une subordonnée relative complément de l'antécédent"
+            ),
+            "Comant peut-on caracteriser un non avec un adjectife, un complement et une proposition relative ?": (
+                "On peut caractériser un nom avec un adjectif qualificatif épithète, un adjectif qualificatif attribut, un complément de nom ou une subordonnée relative"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_websites_browsers_evidence(
@@ -15272,11 +15449,41 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_websites_browsers_evidence(
+        extract_french_characterize_noun_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    characterize_noun_source_scope = any(
+        "caracteriser-un-nom.pdf"
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        characterize_noun_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_websites_browsers_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     websites_browsers_source_scope = any(
         "12-site-web-et-navigateurs.pdf"

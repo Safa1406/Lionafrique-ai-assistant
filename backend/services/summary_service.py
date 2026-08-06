@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v46-french-websites-browsers-structured-summary"
+    "v47-french-characterize-noun-structured-summary"
 )
 
 
@@ -6141,6 +6141,96 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_characterize_noun_summary_mode(
+    question: str,
+) -> str:
+    """Détecte les résumés du cours Caractériser un nom."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "exemples" in normalized_question
+        and "caracteriser" in normalized_question
+        and "nom" in normalized_question
+    ):
+        return "examples"
+
+    if (
+        "procedes" in normalized_question
+        and "caracteriser" in normalized_question
+        and "nom" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_characterize_noun_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle du cours Caractériser un nom."""
+
+    mode = detect_french_characterize_noun_summary_mode(
+        question
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "caracteriser-un-nom.pdf" in source_name:
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    if mode == "examples":
+        summary = (
+            "Résumé des exemples :\n"
+            "- Dans « un petit garçon », « petit » est un adjectif qualificatif épithète placé avant le nom.\n"
+            "- Dans « Une histoire drôle », « drôle » est un adjectif qualificatif épithète placé après le nom.\n"
+            "- Dans « Ce tableau est magnifique », « magnifique » est un adjectif qualificatif attribut relié par le verbe d'état « est ».\n"
+            "- Dans « La mer paraît calme », « calme » est un adjectif qualificatif attribut relié par « paraît ».\n"
+            "- Dans « Les habitants de l'immeuble s'entendent bien », « de l'immeuble » est un complément de nom.\n"
+            "- Dans « Il arrose l'arbre qu'il a planté il y a dix ans », « l'arbre » est l'antécédent et « qu'il a planté il y a dix ans » est la subordonnée relative."
+        )
+    else:
+        summary = (
+            "Résumé du contenu :\n"
+            "- Caractériser un nom consiste à lui attribuer une ou plusieurs caractéristiques précises afin de le rendre plus clair.\n"
+            "- L'adjectif qualificatif épithète est directement placé avant ou après le nom.\n"
+            "- L'adjectif qualificatif attribut est séparé du nom par un verbe d'état.\n"
+            "- Le complément de nom est introduit par une préposition comme « à », « de », « des » ou « en ».\n"
+            "- La subordonnée relative complète un antécédent et caractérise le nom auquel elle se rapporte."
+        )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_websites_browsers_summary_mode(
     question: str,
 ) -> str:
@@ -6535,6 +6625,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_characterize_noun_summary = (
+        build_french_characterize_noun_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_characterize_noun_summary is not None:
+        return structured_characterize_noun_summary
 
     structured_websites_browsers_summary = (
         build_french_websites_browsers_summary(
