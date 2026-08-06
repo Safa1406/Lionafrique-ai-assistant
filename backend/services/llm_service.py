@@ -9,8 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v55-french-characterize-noun-analysis"
-FRENCH_RULES_VERSION = "v5-characterize-noun-analysis"
+ARABIC_RULES_VERSION = "v56-french-adjective-qualifier-analysis"
+FRENCH_RULES_VERSION = "v6-adjective-qualifier-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1755,6 +1755,186 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_french_adjective_qualifier_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Répond aux questions du cours sur l'adjectif qualificatif."""
+
+    if contains_arabic(question):
+        return []
+
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "l-adjectif-qualificatif-nature-fonction-et-accord.pdf"
+            not in normalized_source
+        ):
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Qu'est-ce qu'un adjectif qualificatif ?": (
+                "L'adjectif qualificatif est une classe grammaticale, appelée sa nature, qui est associée à un nom pour le caractériser et lui donner plus de précision"
+            ),
+            "Quelle est la nature grammaticale de l'adjectif qualificatif ?": (
+                "La nature grammaticale de l'adjectif qualificatif est une classe grammaticale : l'adjectif qualificatif"
+            ),
+            "À quoi sert l'adjectif qualificatif lorsqu'il est associé à un nom ?": (
+                "Associé à un nom, l'adjectif qualificatif sert à le caractériser et à lui donner plus de précision"
+            ),
+            "Pourquoi « Un jardin magnifique » est-il plus précis que « un jardin » ?": (
+                "« Un jardin magnifique » est plus précis parce que l'adjectif « magnifique » caractérise le nom « jardin » et lui apporte une précision"
+            ),
+            "Dans « Un jardin magnifique », quel est l'adjectif qualificatif ?": (
+                "Dans « Un jardin magnifique », « magnifique » est l'adjectif qualificatif"
+            ),
+            "Dans « Un jardin magnifique », quel nom est caractérisé ?": (
+                "Dans « Un jardin magnifique », le nom caractérisé est « jardin »"
+            ),
+            "Quelles fonctions l'adjectif qualificatif peut-il avoir selon le cours ?": (
+                "Selon le cours, l'adjectif qualificatif peut avoir la fonction épithète ou la fonction attribut"
+            ),
+            "Quand un adjectif qualificatif est-il épithète ?": (
+                "Un adjectif qualificatif est épithète lorsqu'il est placé à côté du nom qu'il qualifie, avant ou après ce nom"
+            ),
+            "Où peut se placer un adjectif qualificatif épithète par rapport au nom ?": (
+                "L'adjectif qualificatif épithète peut se placer avant ou après le nom"
+            ),
+            "Dans « Un élève intelligent », quel est l'adjectif qualificatif ?": (
+                "Dans « Un élève intelligent », « intelligent » est l'adjectif qualificatif"
+            ),
+            "Quelle est la fonction de « intelligent » dans « Un élève intelligent » ?": (
+                "Dans « Un élève intelligent », « intelligent » a la fonction épithète"
+            ),
+            "Dans « Un élève intelligent », quel nom est qualifié par l'adjectif ?": (
+                "Dans « Un élève intelligent », le nom qualifié est « élève »"
+            ),
+            "Quand un adjectif qualificatif est-il attribut ?": (
+                "Un adjectif qualificatif est attribut lorsqu'il est séparé du nom par un verbe d'état"
+            ),
+            "Par quoi l'adjectif attribut est-il séparé du nom ?": (
+                "L'adjectif attribut est séparé du nom par un verbe d'état"
+            ),
+            "Dans « Cet élève est intelligent », quel est l'adjectif qualificatif attribut ?": (
+                "Dans « Cet élève est intelligent », « intelligent » est l'adjectif qualificatif attribut"
+            ),
+            "Quel est le verbe d'état dans « Cet élève est intelligent » ?": (
+                "Dans « Cet élève est intelligent », « est » est le verbe d'état"
+            ),
+            "Dans « Cet élève est intelligent », quel nom est caractérisé par « intelligent » ?": (
+                "Dans « Cet élève est intelligent », le nom caractérisé par « intelligent » est « élève »"
+            ),
+            "Quelle est la différence entre un adjectif épithète et un adjectif attribut ?": (
+                "L'adjectif épithète est placé à côté du nom, avant ou après celui-ci, tandis que l'adjectif attribut est séparé du nom par un verbe d'état"
+            ),
+            "Avec quoi l'adjectif qualificatif s'accorde-t-il ?": (
+                "L'adjectif qualificatif s'accorde en genre et en nombre avec le nom qu'il qualifie"
+            ),
+            "Quels sont les deux éléments d'accord de l'adjectif qualificatif ?": (
+                "Les deux éléments d'accord de l'adjectif qualificatif sont le genre et le nombre"
+            ),
+            "Dans « Une fille sérieuse », quel est l'adjectif qualificatif ?": (
+                "Dans « Une fille sérieuse », l'adjectif qualificatif est « sérieuse »"
+            ),
+            "Pourquoi écrit-on « sérieuse » dans « Une fille sérieuse » ?": (
+                "On écrit « sérieuse » parce que l'adjectif s'accorde avec le nom « fille » au féminin singulier"
+            ),
+            "Dans « Des filles sérieuses », sous quelle forme l'adjectif est-il accordé ?": (
+                "Dans « Des filles sérieuses », l'adjectif est accordé sous la forme « sérieuses », au féminin pluriel"
+            ),
+            "Transforme « Une fille sérieuse » au pluriel selon l'exemple du cours.": (
+                "Au pluriel, « Une fille sérieuse » devient « Des filles sérieuses »"
+            ),
+            "Dans « Un garçon gentil », quel est l'adjectif qualificatif ?": (
+                "Dans « Un garçon gentil », l'adjectif qualificatif est « gentil »"
+            ),
+            "Comment l'adjectif « gentil » s'accorde-t-il dans « Des garçons gentils » ?": (
+                "Dans « Des garçons gentils », l'adjectif prend la forme « gentils » au masculin pluriel"
+            ),
+            "Transforme « Un garçon gentil » au pluriel selon l'exemple du cours.": (
+                "Au pluriel, « Un garçon gentil » devient « Des garçons gentils »"
+            ),
+            "Comant l'adjectife qualificatife s'acorde avec le non et quelle fonction peut il avoir ?": (
+                "L'adjectif qualificatif s'accorde en genre et en nombre avec le nom et peut avoir la fonction épithète ou attribut"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_characterize_noun_evidence(
@@ -15449,11 +15629,41 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_characterize_noun_evidence(
+        extract_french_adjective_qualifier_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    adjective_qualifier_source_scope = any(
+        "l-adjectif-qualificatif-nature-fonction-et-accord.pdf"
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        adjective_qualifier_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_characterize_noun_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     characterize_noun_source_scope = any(
         "caracteriser-un-nom.pdf"

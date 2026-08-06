@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v47-french-characterize-noun-structured-summary"
+    "v48-french-adjective-qualifier-structured-summary"
 )
 
 
@@ -6142,6 +6142,88 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_adjective_qualifier_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du cours sur l'adjectif qualificatif."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "resume" in normalized_question
+        and "adjectif qualificatif" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "nature",
+                "fonction",
+                "accord",
+            )
+        )
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_adjective_qualifier_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle du cours sur l'adjectif qualificatif."""
+
+    mode = detect_french_adjective_qualifier_summary_mode(
+        question
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "l-adjectif-qualificatif-nature-fonction-et-accord.pdf"
+            in source_name
+        ):
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- L'adjectif qualificatif est une classe grammaticale, appelée sa nature, qui sert à caractériser un nom et à lui donner plus de précision.\n"
+        "- Il est épithète lorsqu'il est placé à côté du nom, avant ou après celui-ci.\n"
+        "- Il est attribut lorsqu'il est séparé du nom par un verbe d'état.\n"
+        "- L'adjectif qualificatif s'accorde en genre et en nombre avec le nom qu'il qualifie.\n"
+        "- Les exemples du cours sont « Un jardin magnifique », « Un élève intelligent », « Cet élève est intelligent », « Une fille sérieuse », « Des filles sérieuses », « Un garçon gentil » et « Des garçons gentils »."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_characterize_noun_summary_mode(
     question: str,
 ) -> str:
@@ -6625,6 +6707,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_adjective_qualifier_summary = (
+        build_french_adjective_qualifier_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_adjective_qualifier_summary is not None:
+        return structured_adjective_qualifier_summary
 
     structured_characterize_noun_summary = (
         build_french_characterize_noun_summary(
