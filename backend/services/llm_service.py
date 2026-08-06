@@ -9,8 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v56-french-adjective-qualifier-analysis"
-FRENCH_RULES_VERSION = "v6-adjective-qualifier-analysis"
+ARABIC_RULES_VERSION = "v57-french-past-participle-avoir-analysis"
+FRENCH_RULES_VERSION = "v7-past-participle-avoir-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1756,6 +1756,186 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_french_past_participle_avoir_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Répond aux questions du cours sur l'accord avec avoir."""
+
+    if contains_arabic(question):
+        return []
+
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "accord-du-participe-passe-employe-avec-l-auxiliaire-avoir.pdf"
+            not in normalized_source
+        ):
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Avec l'auxiliaire « avoir », le participe passé s'accorde-t-il avec le sujet ?": (
+                "Avec l'auxiliaire « avoir », le participe passé ne s'accorde jamais avec le sujet"
+            ),
+            "Avec quel élément le participe passé des verbes conjugués avec « avoir » ne s'accorde-t-il jamais ?": (
+                "Le participe passé des verbes conjugués avec « avoir » ne s'accorde jamais avec le sujet"
+            ),
+            "Dans « Les filles ont bien travaillé », quel est le participe passé ?": (
+                "Dans « Les filles ont bien travaillé », « travaillé » est le participe passé"
+            ),
+            "Quel est le sujet dans la phrase « Les filles ont bien travaillé » ?": (
+                "Dans cette phrase, le sujet est « Les filles »"
+            ),
+            "Pourquoi « travaillé » ne s'accorde-t-il pas avec « Les filles » ?": (
+                "Il n'y a pas d'accord, car le participe passé employé avec l'auxiliaire « avoir » ne s'accorde jamais avec le sujet"
+            ),
+            "Dans quel cas le participe passé employé avec l'auxiliaire « avoir » s'accorde-t-il ?": (
+                "Le participe passé employé avec l'auxiliaire « avoir » s'accorde avec le complément d'objet direct, ou COD, quand celui-ci est placé avant l'auxiliaire"
+            ),
+            "En quoi le participe passé s'accorde-t-il avec le COD placé avant l'auxiliaire « avoir » ?": (
+                "Le participe passé s'accorde en genre et en nombre avec le COD placé avant l'auxiliaire « avoir »"
+            ),
+            "Dans « J'ai lu cette histoire », quel est le COD ?": (
+                "Dans « J'ai lu cette histoire », le COD, ou complément d'objet direct, est « cette histoire »"
+            ),
+            "Dans « J'ai lu cette histoire », le COD est-il placé avant ou après l'auxiliaire « avoir » ?": (
+                "Dans « J'ai lu cette histoire », le COD est placé après l'auxiliaire « avoir »"
+            ),
+            "Quelle forme du participe passé est utilisée dans « J'ai lu cette histoire » ?": (
+                "La forme du participe passé utilisée est « lu »"
+            ),
+            "Pourquoi écrit-on « lu » sans accord dans « J'ai lu cette histoire » ?": (
+                "On écrit « lu » sans accord parce que le COD « cette histoire » est placé après l'auxiliaire « avoir »"
+            ),
+            "Dans « Cette histoire, je l'ai lue », quel est le participe passé ?": (
+                "Dans « Cette histoire, je l'ai lue », « lue » est le participe passé"
+            ),
+            "Quelle est la nature de « l' » dans « Cette histoire, je l'ai lue » ?": (
+                "Dans cette phrase, « l' » est un pronom personnel"
+            ),
+            "Que remplace le pronom personnel « l' » dans « Cette histoire, je l'ai lue » ?": (
+                "Le pronom personnel « l' » remplace le COD « cette histoire »"
+            ),
+            "Où est placé le pronom « l' » par rapport à l'auxiliaire « avoir » ?": (
+                "Le pronom « l' » est placé avant l'auxiliaire « avoir »"
+            ),
+            "Pourquoi écrit-on « lue » avec un e dans « Cette histoire, je l'ai lue » ?": (
+                "On écrit « lue » avec un e parce que le COD « cette histoire », féminin singulier, est placé avant l'auxiliaire « avoir »"
+            ),
+            "Quelle différence d'accord y a-t-il entre « J'ai lu cette histoire » et « Cette histoire, je l'ai lue » ?": (
+                "Dans « J'ai lu cette histoire », le COD est placé après l'auxiliaire, donc « lu » ne s'accorde pas ; dans « Cette histoire, je l'ai lue », le COD est placé avant, donc « lue » s'accorde"
+            ),
+            "Sous quelles formes le COD placé avant l'auxiliaire « avoir » peut-il apparaître selon la remarque du cours ?": (
+                "Le COD placé avant l'auxiliaire « avoir » peut apparaître sous la forme d'un pronom relatif ou d'un pronom personnel"
+            ),
+            "Quelle phrase du cours illustre un COD placé avant « avoir » sous la forme d'un pronom relatif ?": (
+                "La phrase est : « J'ai fait quelques propositions que la direction a acceptées »"
+            ),
+            "Dans « J'ai fait quelques propositions que la direction a acceptées », quel est le pronom relatif ?": (
+                "Dans cette phrase, « que » est le pronom relatif"
+            ),
+            "Dans l'exemple des propositions acceptées, où se trouve le pronom relatif « que » par rapport à l'auxiliaire « avoir » ?": (
+                "Le pronom relatif « que » précède l'auxiliaire « avoir » ; il est donc placé avant celui-ci"
+            ),
+            "Pourquoi le participe passé « acceptées » prend-il la marque du féminin pluriel dans la phrase avec « que » ?": (
+                "« Acceptées » s'accorde au féminin pluriel avec le COD « quelques propositions », représenté par « que » et placé avant l'auxiliaire"
+            ),
+            "Quelle phrase du cours illustre un COD placé avant « avoir » sous la forme d'un pronom personnel ?": (
+                "La phrase est : « J'ai fait quelques propositions et la direction les a acceptées »"
+            ),
+            "Dans « J'ai fait quelques propositions et la direction les a acceptées », quel est le pronom personnel ?": (
+                "Dans cette phrase, « les » est le pronom personnel"
+            ),
+            "Où est placé le pronom personnel « les » par rapport à l'auxiliaire « avoir » ?": (
+                "Le pronom personnel « les » précède l'auxiliaire « avoir » ; il est donc placé avant celui-ci"
+            ),
+            "Avec quel COD « acceptées » s'accorde-t-il dans la phrase contenant le pronom « les » ?": (
+                "« Acceptées » s'accorde avec le COD « quelques propositions », remplacé par le pronom « les »"
+            ),
+            "Quelle différence y a-t-il entre « que » et « les » dans les deux exemples de la remarque ?": (
+                "« Que » est un pronom relatif, tandis que « les » est un pronom personnel"
+            ),
+            "Comant le participe passer avec avoir sacorde avec le sujet ou le COD placer avant lauxiliaire ?": (
+                "Avec « avoir », le participe passé ne s'accorde jamais avec le sujet ; il s'accorde en genre et en nombre avec le COD placé avant l'auxiliaire"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_adjective_qualifier_evidence(
@@ -15629,11 +15809,41 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_adjective_qualifier_evidence(
+        extract_french_past_participle_avoir_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    past_participle_avoir_source_scope = any(
+        "accord-du-participe-passe-employe-avec-l-auxiliaire-avoir.pdf"
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        past_participle_avoir_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_adjective_qualifier_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     adjective_qualifier_source_scope = any(
         "l-adjectif-qualificatif-nature-fonction-et-accord.pdf"

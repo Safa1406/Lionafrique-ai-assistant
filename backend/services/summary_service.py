@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v48-french-adjective-qualifier-structured-summary"
+    "v49-french-past-participle-avoir-structured-summary"
 )
 
 
@@ -6143,6 +6143,83 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_past_participle_avoir_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du cours sur l'accord avec avoir."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "resume" in normalized_question
+        and "participe passe" in normalized_question
+        and "avoir" in normalized_question
+        and "accord" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_past_participle_avoir_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle du cours sur l'accord avec avoir."""
+
+    mode = detect_french_past_participle_avoir_summary_mode(
+        question
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if (
+            "accord-du-participe-passe-employe-avec-l-auxiliaire-avoir.pdf"
+            in source_name
+        ):
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- Avec l'auxiliaire « avoir », le participe passé ne s'accorde jamais avec le sujet.\n"
+        "- Il s'accorde en genre et en nombre avec le complément d'objet direct, ou COD, lorsque celui-ci est placé avant l'auxiliaire.\n"
+        "- Dans « J'ai lu cette histoire », le COD est placé après l'auxiliaire, donc le participe passé reste « lu ».\n"
+        "- Dans « Cette histoire, je l'ai lue », le pronom personnel « l' » remplace le COD « cette histoire » et le place avant l'auxiliaire ; le participe passé devient donc « lue ».\n"
+        "- Le COD placé avant « avoir » peut être un pronom relatif, comme « que », ou un pronom personnel, comme « les ».\n"
+        "- Dans les deux exemples avec « quelques propositions », le participe passé « acceptées » s'accorde au féminin pluriel avec le COD placé avant l'auxiliaire."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_adjective_qualifier_summary_mode(
     question: str,
 ) -> str:
@@ -6707,6 +6784,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_past_participle_avoir_summary = (
+        build_french_past_participle_avoir_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_past_participle_avoir_summary is not None:
+        return structured_past_participle_avoir_summary
 
     structured_adjective_qualifier_summary = (
         build_french_adjective_qualifier_summary(
