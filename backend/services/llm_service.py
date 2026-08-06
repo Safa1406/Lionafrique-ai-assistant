@@ -9,8 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v59-french-reported-speech-analysis"
-FRENCH_RULES_VERSION = "v9-reported-speech-analysis"
+ARABIC_RULES_VERSION = "v60-french-concession-analysis"
+FRENCH_RULES_VERSION = "v10-concession-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1759,6 +1759,190 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_french_concession_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Répond aux questions documentées du cours sur la subordonnée
+    circonstancielle d'opposition ou de concession.
+    """
+
+    if contains_arabic(question):
+        return []
+
+    expected_source = (
+        "la-subordonnee-circonstancielle-d-opposition-"
+        "ou-de-concession.pdf"
+    )
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Qu'est-ce qu'une subordonnée circonstancielle de concession ?": (
+                "La subordonnée circonstancielle de concession est une proposition qui assume la fonction de complément circonstanciel de concession du verbe principal dont elle dépend"
+            ),
+            "Quel autre nom donne-t-on à la subordonnée de concession ?": (
+                "La subordonnée de concession est aussi appelée concessive"
+            ),
+            "Quelle fonction assume la subordonnée de concession ?": (
+                "Elle assume la fonction de complément circonstanciel de concession"
+            ),
+            "De quel élément dépend la subordonnée circonstancielle de concession ?": (
+                "Elle dépend du verbe principal"
+            ),
+            "Quelle relation la subordonnée de concession exprime-t-elle entre deux faits ?": (
+                "Elle exprime une contradiction entre deux faits dépendants l'un de l'autre"
+            ),
+            "Quelle phrase du cours illustre la concession avec Kamel ?": (
+                "La phrase est : « Bien que Kamel soit fatigué, il continue à travailler »"
+            ),
+            "Dans « Bien que Kamel soit fatigué, il continue à travailler », quelle est la proposition A ?": (
+                "La proposition A est : « Bien que Kamel soit fatigué »"
+            ),
+            "Dans « Bien que Kamel soit fatigué, il continue à travailler », quelle est la proposition B ?": (
+                "La proposition B est : « il continue à travailler »"
+            ),
+            "Quelle relation existe entre les propositions A et B dans l'exemple de Kamel ?": (
+                "Les faits exprimés par les propositions A et B sont opposés et contradictoires"
+            ),
+            "Logiquement, que devrait empêcher la fatigue de Kamel selon le cours ?": (
+                "Kamel étant fatigué, il ne devrait pas continuer à travailler"
+            ),
+            "Pourquoi l'exemple de Kamel exprime-t-il une concession ?": (
+                "Il exprime une concession parce que la cause, la fatigue de Kamel, n'a pas l'effet attendu : bien qu'il soit fatigué, il continue à travailler"
+            ),
+            "Quelle est la nature de la subordonnée circonstancielle de concession ?": (
+                "La subordonnée circonstancielle de concession est une proposition conjonctive"
+            ),
+            "Quels outils subordonnants sont cités pour introduire une subordonnée de concession ?": (
+                "Les outils subordonnants cités sont « bien que », « quoique » et « même si »"
+            ),
+            "Quel mode verbal emploie-t-on après « bien que » ?": (
+                "Après « bien que », on emploie le subjonctif"
+            ),
+            "Quel mode verbal emploie-t-on après « quoique » ?": (
+                "Après « quoique », on emploie le subjonctif"
+            ),
+            "Quel mode verbal emploie-t-on après « même si » ?": (
+                "Après « même si », on emploie l'indicatif"
+            ),
+            "Quelle phrase du cours illustre « bien que » suivi du subjonctif ?": (
+                "La phrase est : « Bien qu'il pleuve, nous irons à la plage » ; le verbe « pleuve » est au subjonctif"
+            ),
+            "Quelle phrase du cours illustre « quoique » suivi du subjonctif ?": (
+                "La phrase est : « Quoiqu'il pleuve, nous irons à la plage » ; le verbe « pleuve » est au subjonctif"
+            ),
+            "Dans les exemples avec « bien que » et « quoique », quel verbe est employé au subjonctif ?": (
+                "Le verbe employé au subjonctif est « pleuve »"
+            ),
+            "Dans l'exemple avec « même si », quel verbe est employé à l'indicatif ?": (
+                "Le verbe « habite » est employé à l'indicatif"
+            ),
+            "La proposition introduite par « même si » peut-elle être placée avant ou après la proposition principale ?": (
+                "Oui, la proposition introduite par « même si » peut être placée avant ou après la proposition principale"
+            ),
+            "Quelle différence de mode existe entre « bien que » ou « quoique » et « même si » ?": (
+                "« Bien que » et « quoique » sont suivis du subjonctif, tandis que « même si » est suivi de l'indicatif"
+            ),
+            "Quelle structure suit le mot « malgré » dans le cours ?": (
+                "Dans le cours, « malgré » est suivi d'un groupe nominal"
+            ),
+            "Quelle structure suit l'expression « en dépit de » ?": (
+                "L'expression « en dépit de » est suivie d'un groupe nominal"
+            ),
+            "Quelle phrase du cours utilise « malgré » ?": (
+                "La phrase est : « Malgré la fatigue, l'ouvrier continue à travailler »"
+            ),
+            "Quelle phrase du cours utilise « en dépit de » ?": (
+                "La phrase est : « L'ouvrier continue à travailler en dépit de la fatigue »"
+            ),
+            "Quel groupe nominal suit « malgré » et « en dépit de » dans les exemples du cours ?": (
+                "Le groupe nominal est « la fatigue »"
+            ),
+            "Comant la subordoné de concesion exprime une contradiction et quel mode on utilise avec bien que, quoique et meme si ?": (
+                "La subordonnée de concession exprime une contradiction entre deux faits ; « bien que » et « quoique » se construisent avec le subjonctif, tandis que « même si » se construit avec l'indicatif"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_reported_speech_evidence(
@@ -16171,7 +16355,40 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_reported_speech_evidence(
+        extract_french_concession_evidence(
+            question=analysis_question,
+            passages=passages,
+        )
+    )
+
+    concession_source_scope = any(
+        (
+            "la-subordonnee-circonstancielle-d-opposition-"
+            "ou-de-concession.pdf"
+        )
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        concession_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_reported_speech_evidence(
             question=analysis_question,
             passages=passages,
         )

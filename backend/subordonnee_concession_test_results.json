@@ -1,0 +1,614 @@
+{
+  "generated_at": "2026-08-06T15:37:16",
+  "test_version": "v1-subordonnee-concession-baseline",
+  "program": "Programme marocain",
+  "subject": "Français",
+  "source": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf",
+  "total_tests": 30,
+  "passed_tests": 30,
+  "failed_tests": 0,
+  "categories": {
+    "Définition": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Autre nom": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Fonction": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Dépendance": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Sens": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Exemple Kamel": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Proposition A": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Proposition B": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Opposition A B": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Logique attendue": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Effet inattendu": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Nature proposition": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Outils principaux": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Bien que mode": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Quoique mode": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Même si mode": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Exemple bien que": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Exemple quoique": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Verbe pleuve": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Exemple même si": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Position même si": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Comparaison modes": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Malgré structure": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "En dépit de structure": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Exemple malgré": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Exemple en dépit": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Groupe nominal": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Erreur orthographique": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Résumé": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Refus correct": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "results": [
+    {
+      "number": 1,
+      "category": "Définition",
+      "endpoint": "/ask",
+      "question": "Qu'est-ce qu'une subordonnée circonstancielle de concession ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 7.755,
+      "response": "D'après le document :\n- La subordonnée circonstancielle de concession est une proposition qui assume la fonction de complément circonstanciel de concession du verbe principal dont elle dépend.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 2,
+      "category": "Autre nom",
+      "endpoint": "/ask",
+      "question": "Quel autre nom donne-t-on à la subordonnée de concession ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.099,
+      "response": "D'après le document :\n- La subordonnée de concession est aussi appelée concessive.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 3,
+      "category": "Fonction",
+      "endpoint": "/ask",
+      "question": "Quelle fonction assume la subordonnée de concession ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.089,
+      "response": "D'après le document :\n- Elle assume la fonction de complément circonstanciel de concession.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 4,
+      "category": "Dépendance",
+      "endpoint": "/ask",
+      "question": "De quel élément dépend la subordonnée circonstancielle de concession ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.076,
+      "response": "D'après le document :\n- Elle dépend du verbe principal.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 5,
+      "category": "Sens",
+      "endpoint": "/ask",
+      "question": "Quelle relation la subordonnée de concession exprime-t-elle entre deux faits ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.082,
+      "response": "D'après le document :\n- Elle exprime une contradiction entre deux faits dépendants l'un de l'autre.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 6,
+      "category": "Exemple Kamel",
+      "endpoint": "/ask",
+      "question": "Quelle phrase du cours illustre la concession avec Kamel ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.082,
+      "response": "D'après le document :\n- La phrase est : « Bien que Kamel soit fatigué, il continue à travailler ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 7,
+      "category": "Proposition A",
+      "endpoint": "/ask",
+      "question": "Dans « Bien que Kamel soit fatigué, il continue à travailler », quelle est la proposition A ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.092,
+      "response": "D'après le document :\n- La proposition A est : « Bien que Kamel soit fatigué ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 8,
+      "category": "Proposition B",
+      "endpoint": "/ask",
+      "question": "Dans « Bien que Kamel soit fatigué, il continue à travailler », quelle est la proposition B ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.101,
+      "response": "D'après le document :\n- La proposition B est : « il continue à travailler ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 9,
+      "category": "Opposition A B",
+      "endpoint": "/ask",
+      "question": "Quelle relation existe entre les propositions A et B dans l'exemple de Kamel ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.094,
+      "response": "D'après le document :\n- Les faits exprimés par les propositions A et B sont opposés et contradictoires.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 10,
+      "category": "Logique attendue",
+      "endpoint": "/ask",
+      "question": "Logiquement, que devrait empêcher la fatigue de Kamel selon le cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.071,
+      "response": "D'après le document :\n- Kamel étant fatigué, il ne devrait pas continuer à travailler.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 11,
+      "category": "Effet inattendu",
+      "endpoint": "/ask",
+      "question": "Pourquoi l'exemple de Kamel exprime-t-il une concession ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.07,
+      "response": "D'après le document :\n- Il exprime une concession parce que la cause, la fatigue de Kamel, n'a pas l'effet attendu : bien qu'il soit fatigué, il continue à travailler.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 12,
+      "category": "Nature proposition",
+      "endpoint": "/ask",
+      "question": "Quelle est la nature de la subordonnée circonstancielle de concession ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.089,
+      "response": "D'après le document :\n- La subordonnée circonstancielle de concession est une proposition conjonctive.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 13,
+      "category": "Outils principaux",
+      "endpoint": "/ask",
+      "question": "Quels outils subordonnants sont cités pour introduire une subordonnée de concession ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.077,
+      "response": "D'après le document :\n- Les outils subordonnants cités sont « bien que », « quoique » et « même si ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 14,
+      "category": "Bien que mode",
+      "endpoint": "/ask",
+      "question": "Quel mode verbal emploie-t-on après « bien que » ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.089,
+      "response": "D'après le document :\n- Après « bien que », on emploie le subjonctif.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 15,
+      "category": "Quoique mode",
+      "endpoint": "/ask",
+      "question": "Quel mode verbal emploie-t-on après « quoique » ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.082,
+      "response": "D'après le document :\n- Après « quoique », on emploie le subjonctif.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 16,
+      "category": "Même si mode",
+      "endpoint": "/ask",
+      "question": "Quel mode verbal emploie-t-on après « même si » ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.075,
+      "response": "D'après le document :\n- Après « même si », on emploie l'indicatif.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 17,
+      "category": "Exemple bien que",
+      "endpoint": "/ask",
+      "question": "Quelle phrase du cours illustre « bien que » suivi du subjonctif ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.083,
+      "response": "D'après le document :\n- La phrase est : « Bien qu'il pleuve, nous irons à la plage » ; le verbe « pleuve » est au subjonctif.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 18,
+      "category": "Exemple quoique",
+      "endpoint": "/ask",
+      "question": "Quelle phrase du cours illustre « quoique » suivi du subjonctif ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.08,
+      "response": "D'après le document :\n- La phrase est : « Quoiqu'il pleuve, nous irons à la plage » ; le verbe « pleuve » est au subjonctif.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 19,
+      "category": "Verbe pleuve",
+      "endpoint": "/ask",
+      "question": "Dans les exemples avec « bien que » et « quoique », quel verbe est employé au subjonctif ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.078,
+      "response": "D'après le document :\n- Le verbe employé au subjonctif est « pleuve ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 20,
+      "category": "Exemple même si",
+      "endpoint": "/ask",
+      "question": "Dans l'exemple avec « même si », quel verbe est employé à l'indicatif ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.082,
+      "response": "D'après le document :\n- Le verbe « habite » est employé à l'indicatif.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 21,
+      "category": "Position même si",
+      "endpoint": "/ask",
+      "question": "La proposition introduite par « même si » peut-elle être placée avant ou après la proposition principale ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.084,
+      "response": "D'après le document :\n- Oui, la proposition introduite par « même si » peut être placée avant ou après la proposition principale.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 22,
+      "category": "Comparaison modes",
+      "endpoint": "/ask",
+      "question": "Quelle différence de mode existe entre « bien que » ou « quoique » et « même si » ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.087,
+      "response": "D'après le document :\n- « Bien que » et « quoique » sont suivis du subjonctif, tandis que « même si » est suivi de l'indicatif.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 23,
+      "category": "Malgré structure",
+      "endpoint": "/ask",
+      "question": "Quelle structure suit le mot « malgré » dans le cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.091,
+      "response": "D'après le document :\n- Dans le cours, « malgré » est suivi d'un groupe nominal.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 24,
+      "category": "En dépit de structure",
+      "endpoint": "/ask",
+      "question": "Quelle structure suit l'expression « en dépit de » ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.09,
+      "response": "D'après le document :\n- L'expression « en dépit de » est suivie d'un groupe nominal.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 25,
+      "category": "Exemple malgré",
+      "endpoint": "/ask",
+      "question": "Quelle phrase du cours utilise « malgré » ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.079,
+      "response": "D'après le document :\n- La phrase est : « Malgré la fatigue, l'ouvrier continue à travailler ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 26,
+      "category": "Exemple en dépit",
+      "endpoint": "/ask",
+      "question": "Quelle phrase du cours utilise « en dépit de » ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.072,
+      "response": "D'après le document :\n- La phrase est : « L'ouvrier continue à travailler en dépit de la fatigue ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 27,
+      "category": "Groupe nominal",
+      "endpoint": "/ask",
+      "question": "Quel groupe nominal suit « malgré » et « en dépit de » dans les exemples du cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.081,
+      "response": "D'après le document :\n- Le groupe nominal est « la fatigue ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 28,
+      "category": "Erreur orthographique",
+      "endpoint": "/ask",
+      "question": "Comant la subordoné de concesion exprime une contradiction et quel mode on utilise avec bien que, quoique et meme si ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.105,
+      "response": "D'après le document :\n- La subordonnée de concession exprime une contradiction entre deux faits ; « bien que » et « quoique » se construisent avec le subjonctif, tandis que « même si » se construit avec l'indicatif.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 29,
+      "category": "Résumé",
+      "endpoint": "/summarize",
+      "question": "Résume le cours sur la subordonnée circonstancielle d'opposition ou de concession.",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.082,
+      "response": "Résumé du contenu :\n- La subordonnée de concession, appelée aussi concessive, est une proposition conjonctive qui assume la fonction de complément circonstanciel de concession du verbe principal dont elle dépend.\n- Elle exprime une contradiction entre deux faits dépendants l'un de l'autre : la cause n'a pas l'effet attendu. Dans « Bien que Kamel soit fatigué, il continue à travailler », la fatigue devrait logiquement l'empêcher de travailler, mais il continue.\n- « Bien que » et « quoique » introduisent la concession avec le subjonctif, comme dans « Bien qu'il pleuve » ou « Quoiqu'il pleuve ».\n- « Même si » est suivi de l'indicatif ; la proposition qu'il introduit peut être placée avant ou après la proposition principale.\n- La concession peut aussi être exprimée par « malgré » ou « en dépit de », suivis d'un groupe nominal.\n- Les exemples sont « Malgré la fatigue, l'ouvrier continue à travailler » et « L'ouvrier continue à travailler en dépit de la fatigue ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1 ; la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 30,
+      "category": "Refus correct",
+      "endpoint": "/ask",
+      "question": "Comment fonctionne un moteur à réaction ?",
+      "expected_status": "insufficient_context",
+      "actual_status": "insufficient_context",
+      "test_passed": "oui",
+      "duration_seconds": 0.104,
+      "response": "Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "",
+      "error": ""
+    }
+  ]
+}

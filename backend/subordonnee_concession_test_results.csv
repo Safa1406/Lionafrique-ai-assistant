@@ -1,0 +1,65 @@
+﻿number,category,endpoint,question,expected_status,actual_status,test_passed,duration_seconds,response,missing_groups,correct_source,sources,error
+1,Définition,/ask,Qu'est-ce qu'une subordonnée circonstancielle de concession ?,success,success,oui,7.755,"D'après le document :
+- La subordonnée circonstancielle de concession est une proposition qui assume la fonction de complément circonstanciel de concession du verbe principal dont elle dépend.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+2,Autre nom,/ask,Quel autre nom donne-t-on à la subordonnée de concession ?,success,success,oui,0.099,"D'après le document :
+- La subordonnée de concession est aussi appelée concessive.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+3,Fonction,/ask,Quelle fonction assume la subordonnée de concession ?,success,success,oui,0.089,"D'après le document :
+- Elle assume la fonction de complément circonstanciel de concession.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+4,Dépendance,/ask,De quel élément dépend la subordonnée circonstancielle de concession ?,success,success,oui,0.076,"D'après le document :
+- Elle dépend du verbe principal.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+5,Sens,/ask,Quelle relation la subordonnée de concession exprime-t-elle entre deux faits ?,success,success,oui,0.082,"D'après le document :
+- Elle exprime une contradiction entre deux faits dépendants l'un de l'autre.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+6,Exemple Kamel,/ask,Quelle phrase du cours illustre la concession avec Kamel ?,success,success,oui,0.082,"D'après le document :
+- La phrase est : « Bien que Kamel soit fatigué, il continue à travailler ».",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+7,Proposition A,/ask,"Dans « Bien que Kamel soit fatigué, il continue à travailler », quelle est la proposition A ?",success,success,oui,0.092,"D'après le document :
+- La proposition A est : « Bien que Kamel soit fatigué ».",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+8,Proposition B,/ask,"Dans « Bien que Kamel soit fatigué, il continue à travailler », quelle est la proposition B ?",success,success,oui,0.101,"D'après le document :
+- La proposition B est : « il continue à travailler ».",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+9,Opposition A B,/ask,Quelle relation existe entre les propositions A et B dans l'exemple de Kamel ?,success,success,oui,0.094,"D'après le document :
+- Les faits exprimés par les propositions A et B sont opposés et contradictoires.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+10,Logique attendue,/ask,"Logiquement, que devrait empêcher la fatigue de Kamel selon le cours ?",success,success,oui,0.071,"D'après le document :
+- Kamel étant fatigué, il ne devrait pas continuer à travailler.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+11,Effet inattendu,/ask,Pourquoi l'exemple de Kamel exprime-t-il une concession ?,success,success,oui,0.07,"D'après le document :
+- Il exprime une concession parce que la cause, la fatigue de Kamel, n'a pas l'effet attendu : bien qu'il soit fatigué, il continue à travailler.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+12,Nature proposition,/ask,Quelle est la nature de la subordonnée circonstancielle de concession ?,success,success,oui,0.089,"D'après le document :
+- La subordonnée circonstancielle de concession est une proposition conjonctive.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+13,Outils principaux,/ask,Quels outils subordonnants sont cités pour introduire une subordonnée de concession ?,success,success,oui,0.077,"D'après le document :
+- Les outils subordonnants cités sont « bien que », « quoique » et « même si ».",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+14,Bien que mode,/ask,Quel mode verbal emploie-t-on après « bien que » ?,success,success,oui,0.089,"D'après le document :
+- Après « bien que », on emploie le subjonctif.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+15,Quoique mode,/ask,Quel mode verbal emploie-t-on après « quoique » ?,success,success,oui,0.082,"D'après le document :
+- Après « quoique », on emploie le subjonctif.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+16,Même si mode,/ask,Quel mode verbal emploie-t-on après « même si » ?,success,success,oui,0.075,"D'après le document :
+- Après « même si », on emploie l'indicatif.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+17,Exemple bien que,/ask,Quelle phrase du cours illustre « bien que » suivi du subjonctif ?,success,success,oui,0.083,"D'après le document :
+- La phrase est : « Bien qu'il pleuve, nous irons à la plage » ; le verbe « pleuve » est au subjonctif.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+18,Exemple quoique,/ask,Quelle phrase du cours illustre « quoique » suivi du subjonctif ?,success,success,oui,0.08,"D'après le document :
+- La phrase est : « Quoiqu'il pleuve, nous irons à la plage » ; le verbe « pleuve » est au subjonctif.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+19,Verbe pleuve,/ask,"Dans les exemples avec « bien que » et « quoique », quel verbe est employé au subjonctif ?",success,success,oui,0.078,"D'après le document :
+- Le verbe employé au subjonctif est « pleuve ».",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+20,Exemple même si,/ask,"Dans l'exemple avec « même si », quel verbe est employé à l'indicatif ?",success,success,oui,0.082,"D'après le document :
+- Le verbe « habite » est employé à l'indicatif.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+21,Position même si,/ask,La proposition introduite par « même si » peut-elle être placée avant ou après la proposition principale ?,success,success,oui,0.084,"D'après le document :
+- Oui, la proposition introduite par « même si » peut être placée avant ou après la proposition principale.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+22,Comparaison modes,/ask,Quelle différence de mode existe entre « bien que » ou « quoique » et « même si » ?,success,success,oui,0.087,"D'après le document :
+- « Bien que » et « quoique » sont suivis du subjonctif, tandis que « même si » est suivi de l'indicatif.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+23,Malgré structure,/ask,Quelle structure suit le mot « malgré » dans le cours ?,success,success,oui,0.091,"D'après le document :
+- Dans le cours, « malgré » est suivi d'un groupe nominal.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2,
+24,En dépit de structure,/ask,Quelle structure suit l'expression « en dépit de » ?,success,success,oui,0.09,"D'après le document :
+- L'expression « en dépit de » est suivie d'un groupe nominal.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2,
+25,Exemple malgré,/ask,Quelle phrase du cours utilise « malgré » ?,success,success,oui,0.079,"D'après le document :
+- La phrase est : « Malgré la fatigue, l'ouvrier continue à travailler ».",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2,
+26,Exemple en dépit,/ask,Quelle phrase du cours utilise « en dépit de » ?,success,success,oui,0.072,"D'après le document :
+- La phrase est : « L'ouvrier continue à travailler en dépit de la fatigue ».",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2,
+27,Groupe nominal,/ask,Quel groupe nominal suit « malgré » et « en dépit de » dans les exemples du cours ?,success,success,oui,0.081,"D'après le document :
+- Le groupe nominal est « la fatigue ».",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2,
+28,Erreur orthographique,/ask,"Comant la subordoné de concesion exprime une contradiction et quel mode on utilise avec bien que, quoique et meme si ?",success,success,oui,0.105,"D'après le document :
+- La subordonnée de concession exprime une contradiction entre deux faits ; « bien que » et « quoique » se construisent avec le subjonctif, tandis que « même si » se construit avec l'indicatif.",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1,
+29,Résumé,/summarize,Résume le cours sur la subordonnée circonstancielle d'opposition ou de concession.,success,success,oui,0.082,"Résumé du contenu :
+- La subordonnée de concession, appelée aussi concessive, est une proposition conjonctive qui assume la fonction de complément circonstanciel de concession du verbe principal dont elle dépend.
+- Elle exprime une contradiction entre deux faits dépendants l'un de l'autre : la cause n'a pas l'effet attendu. Dans « Bien que Kamel soit fatigué, il continue à travailler », la fatigue devrait logiquement l'empêcher de travailler, mais il continue.
+- « Bien que » et « quoique » introduisent la concession avec le subjonctif, comme dans « Bien qu'il pleuve » ou « Quoiqu'il pleuve ».
+- « Même si » est suivi de l'indicatif ; la proposition qu'il introduit peut être placée avant ou après la proposition principale.
+- La concession peut aussi être exprimée par « malgré » ou « en dépit de », suivis d'un groupe nominal.
+- Les exemples sont « Malgré la fatigue, l'ouvrier continue à travailler » et « L'ouvrier continue à travailler en dépit de la fatigue ».",[],oui,la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 1 ; la-subordonnee-circonstancielle-d-opposition-ou-de-concession.pdf | page 2,
+30,Refus correct,/ask,Comment fonctionne un moteur à réaction ?,insufficient_context,insufficient_context,oui,0.104,Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.,[],oui,,

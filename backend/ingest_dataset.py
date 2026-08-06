@@ -1,32 +1,50 @@
+import argparse
 import hashlib
 import json
 import re
 import unicodedata
 from pathlib import Path
 
-from services.pdf_service import extract_pdf_pages
-from services.text_splitter import split_pages_into_chunks
-from services.vector_store_service import store_chunks
+from services.pdf_service import (
+    extract_pdf_pages,
+)
+from services.text_splitter import (
+    split_pages_into_chunks,
+)
+from services.vector_store_service import (
+    build_metadata_filter,
+    get_document_collection,
+    store_chunks,
+)
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DATA_ROOT = PROJECT_ROOT / "data" / "raw"
+PROJECT_ROOT = (
+    Path(__file__)
+    .resolve()
+    .parent
+    .parent
+)
 
-REPORT_PATH = (
+DATA_ROOT = (
+    PROJECT_ROOT
+    / "data"
+    / "raw"
+)
+
+REPORT_DIRECTORY = (
     PROJECT_ROOT
     / "data"
     / "processed"
-    / "ingestion_report.json"
 )
-
-# Utiliser None pour traiter tous les fichiers PDF.
-# Utiliser un nombre, par exemple 5, pour effectuer un test limité.
-MAX_FILES: int | None = None
 
 
 PROGRAM_ALIASES = {
-    "programme francais": "Programme français",
-    "programme marocain": "Programme marocain",
+    "programme francais": (
+        "Programme français"
+    ),
+    "programme marocain": (
+        "Programme marocain"
+    ),
 }
 
 
@@ -34,28 +52,105 @@ SUBJECT_ALIASES = {
     "francais": "Français",
     "anglais": "Anglais",
     "arabe": "Arabe",
-    "education islamique": "Éducation islamique",
-    "histoire geographique": "Histoire-Géographie",
+    "education islamique": (
+        "Éducation islamique"
+    ),
+    "histoire geographique": (
+        "Histoire-Géographie"
+    ),
     "informatique": "Informatique",
     "math": "Mathématiques",
-    "math arabe": "Mathématiques arabe",
+    "math arabe": (
+        "Mathématiques arabe"
+    ),
     "pc": "Physique-Chimie",
-    "phisique chimie": "Physique-Chimie",
-    "physique chimie": "Physique-Chimie",
-    "pc arabe": "Physique-Chimie arabe",
+    "phisique chimie": (
+        "Physique-Chimie"
+    ),
+    "physique chimie": (
+        "Physique-Chimie"
+    ),
+    "pc arabe": (
+        "Physique-Chimie arabe"
+    ),
     "svt": "SVT",
     "svt arabe": "SVT arabe",
 }
 
 
-def calculate_file_hash(file_path: Path) -> str:
+def parse_arguments() -> argparse.Namespace:
+    """
+    Lit les options de la commande d'ingestion.
+    """
+
+    parser = argparse.ArgumentParser(
+        description=(
+            "Analyse les fichiers PDF "
+            "et les enregistre dans ChromaDB."
+        )
+    )
+
+    parser.add_argument(
+        "--program",
+        default=None,
+        help=(
+            "Programme à traiter, par exemple "
+            "\"Programme marocain\"."
+        ),
+    )
+
+    parser.add_argument(
+        "--subject",
+        default=None,
+        help=(
+            "Matière à traiter, par exemple "
+            "\"Arabe\"."
+        ),
+    )
+
+    parser.add_argument(
+        "--semester",
+        default=None,
+        help=(
+            "Semestre à traiter, par exemple "
+            "\"S1\"."
+        ),
+    )
+
+    parser.add_argument(
+        "--max-files",
+        type=int,
+        default=None,
+        help=(
+            "Nombre maximal de fichiers "
+            "à traiter."
+        ),
+    )
+
+    parser.add_argument(
+        "--replace",
+        action="store_true",
+        help=(
+            "Supprime les anciens segments "
+            "correspondant aux filtres avant l'ingestion."
+        ),
+    )
+
+    return parser.parse_args()
+
+
+def calculate_file_hash(
+    file_path: Path,
+) -> str:
     """
     Calcule l'empreinte SHA-256 d'un fichier.
     """
 
     digest = hashlib.sha256()
 
-    with file_path.open("rb") as file:
+    with file_path.open(
+        "rb"
+    ) as file:
         while True:
             file_chunk = file.read(
                 1024 * 1024
@@ -64,16 +159,19 @@ def calculate_file_hash(file_path: Path) -> str:
             if not file_chunk:
                 break
 
-            digest.update(file_chunk)
+            digest.update(
+                file_chunk
+            )
 
     return digest.hexdigest()
 
 
-def normalize_label(value: str) -> str:
+def normalize_label(
+    value: str,
+) -> str:
     """
-    Normalise une valeur pour comparer les noms
-    de dossiers sans tenir compte des accents,
-    des majuscules et des séparateurs.
+    Normalise une valeur
+    pour comparer les noms de dossiers.
     """
 
     if not value:
@@ -87,7 +185,9 @@ def normalize_label(value: str) -> str:
     normalized_value = "".join(
         character
         for character in normalized_value
-        if not unicodedata.combining(character)
+        if not unicodedata.combining(
+            character
+        )
     )
 
     normalized_value = normalized_value.replace(
@@ -114,16 +214,24 @@ def get_clean_path_parts(
 ) -> list[str]:
     """
     Supprime les dossiers racines inutiles
-    ou mal encodés avant le dossier du programme.
+    avant le dossier du programme.
     """
 
-    parts = list(relative_path.parts)
+    parts = list(
+        relative_path.parts
+    )
 
-    for index, part in enumerate(parts):
-        normalized_part = normalize_label(part)
+    for index, part in enumerate(
+        parts
+    ):
+        normalized_part = normalize_label(
+            part
+        )
 
         if normalized_part in PROGRAM_ALIASES:
-            return parts[index:]
+            return parts[
+                index:
+            ]
 
     return parts
 
@@ -140,7 +248,9 @@ def build_clean_relative_path(
         relative_path
     )
 
-    return "/".join(clean_parts)
+    return "/".join(
+        clean_parts
+    )
 
 
 def extract_document_metadata(
@@ -159,22 +269,32 @@ def extract_document_metadata(
     subject = "Non définie"
     semester = "Non défini"
 
-    for index, part in enumerate(parts):
-        normalized_part = normalize_label(part)
+    for index, part in enumerate(
+        parts
+    ):
+        normalized_part = normalize_label(
+            part
+        )
 
         if normalized_part in PROGRAM_ALIASES:
             program = PROGRAM_ALIASES[
                 normalized_part
             ]
 
-            if index + 1 < len(parts):
+            if index + 1 < len(
+                parts
+            ):
                 subject_key = normalize_label(
-                    parts[index + 1]
+                    parts[
+                        index + 1
+                    ]
                 )
 
                 subject = SUBJECT_ALIASES.get(
                     subject_key,
-                    parts[index + 1],
+                    parts[
+                        index + 1
+                    ],
                 )
 
         if normalized_part in {
@@ -189,8 +309,13 @@ def extract_document_metadata(
         }:
             semester = "S2"
 
-    if subject == "Non définie" and len(parts) >= 2:
-        possible_subject = parts[-2]
+    if (
+        subject == "Non définie"
+        and len(parts) >= 2
+    ):
+        possible_subject = parts[
+            -2
+        ]
 
         subject_key = normalize_label(
             possible_subject
@@ -206,6 +331,124 @@ def extract_document_metadata(
         "subject": subject,
         "semester": semester,
     }
+
+
+def matches_filters(
+    metadata: dict,
+    program: str | None,
+    subject: str | None,
+    semester: str | None,
+) -> bool:
+    """
+    Vérifie si un document
+    correspond aux filtres demandés.
+    """
+
+    if (
+        program
+        and metadata["program"]
+        != program
+    ):
+        return False
+
+    if (
+        subject
+        and metadata["subject"]
+        != subject
+    ):
+        return False
+
+    if (
+        semester
+        and metadata["semester"]
+        != semester
+    ):
+        return False
+
+    return True
+
+
+def build_report_path(
+    program: str | None,
+    subject: str | None,
+    semester: str | None,
+) -> Path:
+    """
+    Construit un nom de rapport
+    adapté aux filtres utilisés.
+    """
+
+    filter_values = [
+        value
+        for value in (
+            program,
+            subject,
+            semester,
+        )
+        if value
+    ]
+
+    if not filter_values:
+        return (
+            REPORT_DIRECTORY
+            / "ingestion_report.json"
+        )
+
+    normalized_suffix = "_".join(
+        normalize_label(
+            value
+        ).replace(
+            " ",
+            "_",
+        )
+        for value in filter_values
+    )
+
+    return (
+        REPORT_DIRECTORY
+        / (
+            "ingestion_report_"
+            f"{normalized_suffix}.json"
+        )
+    )
+
+
+def delete_existing_chunks(
+    program: str | None,
+    subject: str | None,
+    semester: str | None,
+) -> int:
+    """
+    Supprime les anciens segments
+    correspondant aux filtres demandés.
+    """
+
+    metadata_filter = build_metadata_filter(
+        program=program,
+        subject=subject,
+        semester=semester,
+    )
+
+    if metadata_filter is None:
+        raise ValueError(
+            "L'option --replace nécessite "
+            "au moins un filtre."
+        )
+
+    collection = get_document_collection()
+
+    count_before = collection.count()
+
+    collection.delete(
+        where=metadata_filter
+    )
+
+    count_after = collection.count()
+
+    return max(
+        0,
+        count_before - count_after,
+    )
 
 
 def prepare_document_chunks(
@@ -227,7 +470,9 @@ def prepare_document_chunks(
         )
     )
 
-    document_id = file_hash[:20]
+    document_id = file_hash[
+        :20
+    ]
 
     pages = extract_pdf_pages(
         pdf_path
@@ -236,11 +481,15 @@ def prepare_document_chunks(
     pages_with_text = sum(
         1
         for page in pages
-        if page.get("has_text", False)
+        if page.get(
+            "has_text",
+            False,
+        )
     )
 
     empty_pages = (
-        len(pages) - pages_with_text
+        len(pages)
+        - pages_with_text
     )
 
     if pages_with_text == 0:
@@ -263,22 +512,30 @@ def prepare_document_chunks(
     )
 
     for chunk in chunks:
-        chunk["document_id"] = document_id
+        chunk["document_id"] = (
+            document_id
+        )
 
         chunk["relative_path"] = (
             relative_path_text
         )
 
         chunk["program"] = (
-            document_metadata["program"]
+            document_metadata[
+                "program"
+            ]
         )
 
         chunk["subject"] = (
-            document_metadata["subject"]
+            document_metadata[
+                "subject"
+            ]
         )
 
         chunk["semester"] = (
-            document_metadata["semester"]
+            document_metadata[
+                "semester"
+            ]
         )
 
         chunk["chunk_id"] = (
@@ -294,9 +551,70 @@ def prepare_document_chunks(
     )
 
 
-def ingest_dataset() -> None:
+def find_pdf_files(
+    program: str | None,
+    subject: str | None,
+    semester: str | None,
+) -> tuple[
+    list[Path],
+    list[Path],
+]:
     """
-    Analyse tous les fichiers PDF
+    Retourne tous les PDF
+    et ceux correspondant aux filtres.
+    """
+
+    all_pdf_files = sorted(
+        DATA_ROOT.rglob(
+            "*.pdf"
+        ),
+        key=lambda file_path: (
+            str(
+                file_path
+            ).lower()
+        ),
+    )
+
+    selected_pdf_files = []
+
+    for pdf_path in all_pdf_files:
+        relative_path = (
+            pdf_path.relative_to(
+                DATA_ROOT
+            )
+        )
+
+        metadata = (
+            extract_document_metadata(
+                relative_path
+            )
+        )
+
+        if matches_filters(
+            metadata=metadata,
+            program=program,
+            subject=subject,
+            semester=semester,
+        ):
+            selected_pdf_files.append(
+                pdf_path
+            )
+
+    return (
+        all_pdf_files,
+        selected_pdf_files,
+    )
+
+
+def ingest_dataset(
+    program: str | None = None,
+    subject: str | None = None,
+    semester: str | None = None,
+    max_files: int | None = None,
+    replace: bool = False,
+) -> None:
+    """
+    Analyse les PDF sélectionnés
     et les enregistre dans ChromaDB.
     """
 
@@ -306,36 +624,79 @@ def ingest_dataset() -> None:
             f"{DATA_ROOT}"
         )
 
-    all_pdf_files = sorted(
-        DATA_ROOT.rglob("*.pdf"),
-        key=lambda file_path: (
-            str(file_path).lower()
-        ),
+    (
+        all_pdf_files,
+        selected_pdf_files,
+    ) = find_pdf_files(
+        program=program,
+        subject=subject,
+        semester=semester,
     )
 
-    pdf_files = all_pdf_files
+    if max_files is not None:
+        if max_files <= 0:
+            raise ValueError(
+                "Le nombre maximal de fichiers "
+                "doit être supérieur à zéro."
+            )
 
-    if MAX_FILES is not None:
-        pdf_files = pdf_files[:MAX_FILES]
+        selected_pdf_files = (
+            selected_pdf_files[
+                :max_files
+            ]
+        )
 
-    if not pdf_files:
+    if not selected_pdf_files:
         print(
-            "Aucun fichier PDF n'a été trouvé "
-            "dans le dossier des données."
+            "Aucun fichier PDF ne correspond "
+            "aux filtres demandés."
         )
         return
 
-    REPORT_PATH.parent.mkdir(
+    report_path = build_report_path(
+        program=program,
+        subject=subject,
+        semester=semester,
+    )
+
+    report_path.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
+    removed_chunks = 0
+
+    if replace:
+        removed_chunks = (
+            delete_existing_chunks(
+                program=program,
+                subject=subject,
+                semester=semester,
+            )
+        )
+
+        print(
+            "Anciens segments supprimés : "
+            f"{removed_chunks}"
+        )
+
     report = {
+        "filters": {
+            "program": program,
+            "subject": subject,
+            "semester": semester,
+        },
+        "replacement_enabled": (
+            replace
+        ),
+        "removed_chunks": (
+            removed_chunks
+        ),
         "total_files_available": len(
             all_pdf_files
         ),
         "total_files_detected": len(
-            pdf_files
+            selected_pdf_files
         ),
         "processed_files": 0,
         "duplicate_files": 0,
@@ -349,10 +710,13 @@ def ingest_dataset() -> None:
         "errors": [],
     }
 
-    seen_hashes: dict[str, str] = {}
+    seen_hashes: dict[
+        str,
+        str,
+    ] = {}
 
     for index, pdf_path in enumerate(
-        pdf_files,
+        selected_pdf_files,
         start=1,
     ):
         original_relative_path = (
@@ -368,7 +732,8 @@ def ingest_dataset() -> None:
         )
 
         print(
-            f"\n[{index}/{len(pdf_files)}] "
+            f"\n[{index}/"
+            f"{len(selected_pdf_files)}] "
             f"Traitement : {displayed_path}"
         )
 
@@ -378,13 +743,19 @@ def ingest_dataset() -> None:
             )
 
             if file_hash in seen_hashes:
-                report["duplicate_files"] += 1
+                report[
+                    "duplicate_files"
+                ] += 1
 
-                report["duplicates"].append(
+                report[
+                    "duplicates"
+                ].append(
                     {
                         "file": displayed_path,
                         "duplicate_of": (
-                            seen_hashes[file_hash]
+                            seen_hashes[
+                                file_hash
+                            ]
                         ),
                     }
                 )
@@ -396,9 +767,9 @@ def ingest_dataset() -> None:
 
                 continue
 
-            seen_hashes[file_hash] = (
-                displayed_path
-            )
+            seen_hashes[
+                file_hash
+            ] = displayed_path
 
             (
                 chunks,
@@ -458,10 +829,14 @@ def ingest_dataset() -> None:
                 "failed_files"
             ] += 1
 
-            report["errors"].append(
+            report[
+                "errors"
+            ].append(
                 {
                     "file": displayed_path,
-                    "error": str(error),
+                    "error": str(
+                        error
+                    ),
                 }
             )
 
@@ -470,7 +845,7 @@ def ingest_dataset() -> None:
                 f"{error}"
             )
 
-    with REPORT_PATH.open(
+    with report_path.open(
         "w",
         encoding="utf-8",
     ) as report_file:
@@ -532,9 +907,19 @@ def ingest_dataset() -> None:
 
     print(
         "Rapport enregistré dans : "
-        f"{REPORT_PATH}"
+        f"{report_path}"
     )
 
 
 if __name__ == "__main__":
-    ingest_dataset()
+    arguments = parse_arguments()
+
+    ingest_dataset(
+        program=arguments.program,
+        subject=arguments.subject,
+        semester=arguments.semester,
+        max_files=(
+            arguments.max_files
+        ),
+        replace=arguments.replace,
+    )

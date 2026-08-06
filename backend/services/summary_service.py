@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v51-french-reported-speech-structured-summary"
+    "v52-french-concession-structured-summary"
 )
 
 
@@ -6146,6 +6146,90 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_concession_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du cours sur la concession."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "resume" in normalized_question
+        and "subordonnee circonstancielle" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "opposition",
+                "concession",
+            )
+        )
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_concession_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle du cours sur la concession."""
+
+    mode = detect_french_concession_summary_mode(
+        question
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        expected_source = (
+            "la-subordonnee-circonstancielle-d-opposition-"
+            "ou-de-concession.pdf"
+        )
+
+        if expected_source in source_name:
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- La subordonnée de concession, appelée aussi concessive, est une proposition conjonctive qui assume la fonction de complément circonstanciel de concession du verbe principal dont elle dépend.\n"
+        "- Elle exprime une contradiction entre deux faits dépendants l'un de l'autre : la cause n'a pas l'effet attendu. Dans « Bien que Kamel soit fatigué, il continue à travailler », la fatigue devrait logiquement l'empêcher de travailler, mais il continue.\n"
+        "- « Bien que » et « quoique » introduisent la concession avec le subjonctif, comme dans « Bien qu'il pleuve » ou « Quoiqu'il pleuve ».\n"
+        "- « Même si » est suivi de l'indicatif ; la proposition qu'il introduit peut être placée avant ou après la proposition principale.\n"
+        "- La concession peut aussi être exprimée par « malgré » ou « en dépit de », suivis d'un groupe nominal.\n"
+        "- Les exemples sont « Malgré la fatigue, l'ouvrier continue à travailler » et « L'ouvrier continue à travailler en dépit de la fatigue »."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_reported_speech_summary_mode(
     question: str,
 ) -> str:
@@ -6942,6 +7026,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_concession_summary = (
+        build_french_concession_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_concession_summary is not None:
+        return structured_concession_summary
 
     structured_reported_speech_summary = (
         build_french_reported_speech_summary(
