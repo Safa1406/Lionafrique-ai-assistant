@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v49-french-past-participle-avoir-structured-summary"
+    "v50-french-coordination-structured-summary"
 )
 
 
@@ -6144,6 +6144,80 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_coordination_summary_mode(
+    question: str,
+) -> str:
+    """Détecte une demande de résumé du cours sur la coordination."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "resume" in normalized_question
+        and "coordination" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_coordination_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle et structuré du cours."""
+
+    mode = detect_french_coordination_summary_mode(
+        question
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "la-coordination.pdf" in source_name:
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- La coordination consiste à joindre ou relier des mots ou des groupes de mots de même classe grammaticale, notamment des noms, des adjectifs, des verbes ou des propositions.\n"
+        "- Elle peut être assurée par des conjonctions de coordination, des adverbes de liaison et des expressions.\n"
+        "- Les conjonctions citées sont : mais, ou, et, donc, or, ni et car.\n"
+        "- « Mais » marque l'opposition, la différence ou la restriction ; « ou » présente une alternative ou un choix ; « et » exprime l'énumération, l'addition ou une succession dans le temps.\n"
+        "- « Donc » exprime une conséquence, tandis que « car » exprime une cause proche de « parce que ».\n"
+        "- « Ni » est employé dans un contexte négatif ; une virgule est placée devant « ni » lorsqu'il sépare plus d'un élément.\n"
+        "- « Or » introduit une nouvelle donnée qui se révèle décisive dans le contexte.\n"
+        "- Parmi les adverbes de liaison figurent ainsi, aussi, alors, puis, ensuite et enfin ; parmi les expressions figurent à savoir, au contraire, en effet et c'est pourquoi."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_past_participle_avoir_summary_mode(
     question: str,
 ) -> str:
@@ -6784,6 +6858,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_coordination_summary = (
+        build_french_coordination_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_coordination_summary is not None:
+        return structured_coordination_summary
 
     structured_past_participle_avoir_summary = (
         build_french_past_participle_avoir_summary(

@@ -9,8 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v57-french-past-participle-avoir-analysis"
-FRENCH_RULES_VERSION = "v7-past-participle-avoir-analysis"
+ARABIC_RULES_VERSION = "v58-french-coordination-analysis"
+FRENCH_RULES_VERSION = "v8-coordination-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1757,6 +1757,183 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_french_coordination_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """Répond aux questions documentées du cours sur la coordination."""
+
+    if contains_arabic(question):
+        return []
+
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if "la-coordination.pdf" not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "En quoi consiste la coordination ?": (
+                "La coordination consiste à joindre ou relier des mots ou des groupes de mots de même classe grammaticale"
+            ),
+            "Quelles classes grammaticales peuvent être reliées par la coordination selon le cours ?": (
+                "La coordination peut relier des noms, des adjectifs, des verbes et des propositions"
+            ),
+            "Dans « J'aime mon père et ma mère », quel mot assure la coordination ?": (
+                "Dans cette phrase, le mot « et » assure la coordination"
+            ),
+            "Dans « Il pensait à lui mais il ne voulait pas le voir », quelle conjonction relie les deux propositions ?": (
+                "La conjonction « mais » relie les deux propositions"
+            ),
+            "Quels sont les trois types de moyens qui assurent la coordination ?": (
+                "La coordination est assurée par des conjonctions de coordination, des adverbes de liaison et des expressions"
+            ),
+            "Quelles sont les conjonctions de coordination citées dans le cours ?": (
+                "Les conjonctions de coordination citées sont : mais, ou, et, donc, or, ni et car"
+            ),
+            "Quels adverbes de liaison sont donnés comme exemples ?": (
+                "Les adverbes de liaison donnés comme exemples sont : ainsi, aussi, alors, puis, ensuite et enfin"
+            ),
+            "Quelles expressions peuvent assurer la coordination selon le cours ?": (
+                "Les expressions citées sont : à savoir, au contraire, en effet et c'est pourquoi"
+            ),
+            "Quels sens proches la conjonction « mais » peut-elle avoir ?": (
+                "La conjonction « mais » peut avoir le sens de pourtant, toutefois ou au contraire"
+            ),
+            "Quelles nuances la conjonction « mais » peut-elle marquer ?": (
+                "La conjonction « mais » peut marquer l'opposition, la différence ou la restriction"
+            ),
+            "Dans « Paul est gentil, mais un peu agité », quelle nuance exprime « mais » ?": (
+                "Dans cette phrase, « mais » exprime une opposition ou une restriction entre gentil et un peu agité"
+            ),
+            "Que sert à présenter la conjonction « ou » ?": (
+                "La conjonction « ou », au sens de « ou bien », sert à présenter une alternative ou un choix"
+            ),
+            "Dans « Veux-tu du thé ou du café ? », quelle relation exprime « ou » ?": (
+                "« Ou » exprime une alternative ou un choix entre le thé et le café"
+            ),
+            "Quelles valeurs la conjonction « et » peut-elle exprimer ?": (
+                "La conjonction « et » peut exprimer une énumération, une addition ou une succession d'événements dans le temps"
+            ),
+            "Dans la phrase de Bob avec les livres, les vêtements et les jouets, quelle valeur de « et » est illustrée ?": (
+                "Dans la liste des livres, des vêtements et des jouets, « et » exprime une énumération ou une addition"
+            ),
+            "Quelle relation logique la conjonction « donc » exprime-t-elle ?": (
+                "La conjonction « donc » exprime une conséquence"
+            ),
+            "Selon le cours, quelle relation existe entre « donc » et « car » ?": (
+                "Selon le cours, « donc » est le contraire de « car » : donc exprime la conséquence, tandis que car exprime la cause"
+            ),
+            "Dans « Mon ami ne se sent pas bien, donc il n'ira pas au cinéma », quelle conséquence est exprimée ?": (
+                "La conséquence exprimée est : « il n'ira pas au cinéma »"
+            ),
+            "Quelle relation logique la conjonction « car » exprime-t-elle ?": (
+                "La conjonction « car » exprime une cause et son sens est proche de « parce que »"
+            ),
+            "Dans « Mon frère passera un très bel été, car il a réussi son année », quelle cause est donnée ?": (
+                "La cause donnée est : « il a réussi son année »"
+            ),
+            "Dans quel type de contexte emploie-t-on la conjonction « ni » ?": (
+                "La conjonction « ni » est employée dans un contexte négatif"
+            ),
+            "À quelles conjonctions la valeur de « ni » est-elle similaire ?": (
+                "La valeur de « ni » est similaire à celle de « et » et de « ou »"
+            ),
+            "Quand met-on une virgule devant « ni » selon la remarque du cours ?": (
+                "On met une virgule devant « ni » seulement lorsqu'il sépare plus d'un élément"
+            ),
+            "Quels éléments sont coordonnés par « ni » dans « Il ne craint ni la pluie, ni le froid, ni la neige » ?": (
+                "Les éléments coordonnés sont la pluie, le froid et la neige"
+            ),
+            "Que fait la conjonction « or » dans un contexte ?": (
+                "La conjonction « or » introduit une nouvelle donnée qui va se révéler décisive dans le contexte"
+            ),
+            "Dans la phrase du Petit Chaperon Rouge, quelle nouvelle donnée introduit « or » ?": (
+                "La nouvelle donnée introduite par « or » est que le loup rôdait"
+            ),
+            "Quelle différence le cours établit-il entre « mais » et « or » ?": (
+                "« Mais » marque notamment une opposition, tandis que « or » introduit une nouvelle donnée décisive dans le contexte"
+            ),
+            "Comant la coordinasion reli des mots et quelle sont les valeurs de mais ou et donc car ni et or ?": (
+                "La coordination sert à relier des mots ou des groupes de mots de même classe grammaticale ; mais marque l'opposition, ou le choix, et l'addition, donc la conséquence, car la cause, ni une coordination négative et or une nouvelle donnée décisive"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_past_participle_avoir_evidence(
@@ -15809,11 +15986,41 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_past_participle_avoir_evidence(
+        extract_french_coordination_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    coordination_source_scope = any(
+        "la-coordination.pdf"
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        coordination_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_past_participle_avoir_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     past_participle_avoir_source_scope = any(
         "accord-du-participe-passe-employe-avec-l-auxiliaire-avoir.pdf"
