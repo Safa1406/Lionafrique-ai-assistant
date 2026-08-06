@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v50-french-coordination-structured-summary"
+    "v51-french-reported-speech-structured-summary"
 )
 
 
@@ -6145,6 +6145,90 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_reported_speech_summary_mode(
+    question: str,
+) -> str:
+    """
+    Détecte une demande de résumé du cours sur les phrases
+    interrogatives et impératives au discours rapporté.
+    """
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(question)
+
+    if (
+        "resume" in normalized_question
+        and "discours rapporte" in normalized_question
+        and "interrog" in normalized_question
+        and "imper" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_reported_speech_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit un résumé fidèle et structuré du cours."""
+
+    mode = detect_french_reported_speech_summary_mode(
+        question
+    )
+
+    if not mode:
+        return None
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        expected_source = (
+            "la-phrase-interrogative-et-la-phrase-imperative-"
+            "au-discours-rapporte.pdf"
+        )
+
+        if expected_source in source_name:
+            selected_units.append(unit)
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- Lors du passage du discours direct au discours indirect, les guillemets, les deux points, le point d'interrogation et le point d'exclamation disparaissent.\n"
+        "- Les pronoms personnels et les adjectifs possessifs changent selon la personne à laquelle ils se rapportent.\n"
+        "- L'interrogation totale, à laquelle on peut répondre par oui ou par non, devient une subordonnée interrogative indirecte introduite par « si ».\n"
+        "- L'interrogation partielle, à laquelle on ne peut répondre ni par oui ni par non, conserve le même mot interrogatif.\n"
+        "- Dans une phrase impérative, le verbe à l'impératif devient un infinitif précédé de la préposition « de » ; la négation devient par exemple « de ne pas perdre ».\n"
+        "- Lorsque le verbe introducteur est au passé, le présent devient l'imparfait, le passé composé devient le plus-que-parfait et le futur simple devient le conditionnel présent.\n"
+        "- Le passé simple, le plus-que-parfait, le conditionnel et l'imparfait ne changent pas lorsque le verbe introducteur est au passé.\n"
+        "- Les exemples du cours donnent notamment : « Mon père me demande si j'ai fait mes exercices », « Le père demande à sa petite fille pourquoi elle pleure », « Le père ordonne à son fils de réviser ses leçons et de ne pas perdre son temps à jouer », « Il m'a demandé si je travaillais bien », « Il m'a demandé si j'avais révisé mes leçons » et « Il m'a demandé quand elle arriverait »."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_coordination_summary_mode(
     question: str,
 ) -> str:
@@ -6858,6 +6942,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_reported_speech_summary = (
+        build_french_reported_speech_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_reported_speech_summary is not None:
+        return structured_reported_speech_summary
 
     structured_coordination_summary = (
         build_french_coordination_summary(

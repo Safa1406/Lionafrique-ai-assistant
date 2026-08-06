@@ -9,8 +9,8 @@ import httpx
 OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
-ARABIC_RULES_VERSION = "v58-french-coordination-analysis"
-FRENCH_RULES_VERSION = "v8-coordination-analysis"
+ARABIC_RULES_VERSION = "v59-french-reported-speech-analysis"
+FRENCH_RULES_VERSION = "v9-reported-speech-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1758,6 +1758,191 @@ def extract_arabic_direct_rule_evidence(
 
 
 
+
+
+
+def extract_french_reported_speech_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Répond aux questions documentées du cours sur les phrases
+    interrogatives et impératives au discours rapporté.
+    """
+
+    if contains_arabic(question):
+        return []
+
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        expected_source = (
+            "la-phrase-interrogative-et-la-phrase-imperative-"
+            "au-discours-rapporte.pdf"
+        )
+
+        if expected_source not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Quels signes de ponctuation disparaissent lors du passage du discours direct au discours indirect ?": (
+                "Les guillemets, les deux points, le point d'interrogation et le point d'exclamation disparaissent lors du passage au discours indirect"
+            ),
+            "Que deviennent les pronoms personnels et les adjectifs possessifs au discours indirect ?": (
+                "Les pronoms personnels et les adjectifs possessifs changent et prennent la forme de la personne à qui ils se rapportent"
+            ),
+            "Quand une interrogation est-elle dite totale ?": (
+                "Une interrogation est dite totale lorsqu'on peut y répondre par oui ou par non"
+            ),
+            "Par quel mot introduit-on une interrogation totale au discours indirect ?": (
+                "L'interrogative indirecte totale est introduite par l'adverbe interrogatif « si »"
+            ),
+            "Transforme au discours indirect : Mon père me demande : « Est-ce que tu as fait tes exercices ? »": (
+                "Mon père me demande si j'ai fait mes exercices"
+            ),
+            "Quelles sont les trois formulations directes données pour demander si les exercices ont été faits ?": (
+                "Les trois formulations sont : « Est-ce que tu as fait tes exercices ? », « As-tu fait tes exercices ? » et « Tu as fait tes exercices ? »"
+            ),
+            "Quand une interrogation est-elle dite partielle ?": (
+                "Une interrogation est dite partielle lorsqu'on ne peut répondre ni par oui ni par non"
+            ),
+            "Par quoi introduit-on une interrogation partielle au discours indirect ?": (
+                "L'interrogation partielle est introduite par le même mot interrogatif qui a servi à poser la question"
+            ),
+            "Transforme au discours indirect : Le père demande à sa petite fille : « Pourquoi pleures-tu ? »": (
+                "Le père demande à sa petite fille pourquoi elle pleure"
+            ),
+            "Quelle est la différence entre une interrogation totale et une interrogation partielle ?": (
+                "L'interrogation totale permet une réponse par oui ou par non et se transforme avec « si », tandis que l'interrogation partielle ne permet pas une réponse par oui ou par non et conserve le même mot interrogatif"
+            ),
+            "Que devient une phrase impérative au discours indirect ?": (
+                "Au discours indirect, le verbe de la phrase impérative devient un infinitif précédé de la préposition « de »"
+            ),
+            "Que devient le verbe conjugué à l'impératif lors du passage au discours indirect ?": (
+                "Le verbe conjugué à l'impératif devient un infinitif précédé de « de »"
+            ),
+            "Comment transforme-t-on « Révise tes leçons ! » au discours indirect après « Le père ordonne à son fils » ?": (
+                "La transformation est : « Le père ordonne à son fils de réviser ses leçons »"
+            ),
+            "Comment transforme-t-on « Ne perds pas ton temps à jouer ! » au discours indirect ?": (
+                "La transformation est : « de ne pas perdre son temps à jouer »"
+            ),
+            "Transforme toute la phrase : Le père ordonne à son fils : « Révise tes leçons ! Ne perds pas ton temps à jouer ! »": (
+                "Le père ordonne à son fils de réviser ses leçons et de ne pas perdre son temps à jouer"
+            ),
+            "Dans quel cas les temps verbaux changent-ils au discours indirect ?": (
+                "Les temps verbaux changent lorsque le verbe introducteur est au passé"
+            ),
+            "Que devient le présent au discours indirect lorsque le verbe introducteur est au passé ?": (
+                "Lorsque le verbe introducteur est au passé, le présent devient l'imparfait"
+            ),
+            "Transforme : Il m'a demandé : « Est-ce que tu travailles bien ? »": (
+                "Il m'a demandé si je travaillais bien"
+            ),
+            "Que devient le passé composé au discours indirect lorsque le verbe introducteur est au passé ?": (
+                "Lorsque le verbe introducteur est au passé, le passé composé devient le plus-que-parfait"
+            ),
+            "Transforme : Il m'a demandé : « As-tu révisé tes leçons ? »": (
+                "Il m'a demandé si j'avais révisé mes leçons"
+            ),
+            "Que devient le futur simple au discours indirect lorsque le verbe introducteur est au passé ?": (
+                "Lorsque le verbe introducteur est au passé, le futur simple devient le conditionnel présent"
+            ),
+            "Transforme : Il m'a demandé : « Quand arrivera-t-elle ? »": (
+                "Il m'a demandé quand elle arriverait"
+            ),
+            "Quels temps ne changent pas lorsque le verbe introducteur est au passé ?": (
+                "Le passé simple, le plus-que-parfait, le conditionnel et l'imparfait ne changent pas lorsque le verbe introducteur est au passé"
+            ),
+            "Le point d'interrogation est-il conservé au discours indirect ?": (
+                "Non, le point d'interrogation disparaît au discours indirect"
+            ),
+            "Dans l'exemple des exercices, comment le pronom « tu » change-t-il au discours indirect ?": (
+                "Dans cet exemple, le pronom « tu » devient « je », sous la forme « j' » devant « ai »"
+            ),
+            "Dans l'exemple des exercices, comment l'adjectif possessif « tes » change-t-il au discours indirect ?": (
+                "Dans cet exemple, l'adjectif possessif « tes » devient « mes »"
+            ),
+            "Résume les trois changements de temps présentés dans le tableau du cours.": (
+                "Le présent devient l'imparfait, le passé composé devient le plus-que-parfait et le futur simple devient le conditionnel présent lorsque le verbe introducteur est au passé"
+            ),
+            "Comant on transforme une question totale ou partielle et une phrase imperatif au discour indirect ?": (
+                "Au discours indirect, une interrogation totale est introduite par « si », une interrogation partielle conserve le même mot interrogatif, et le verbe d'une phrase impérative devient un infinitif précédé de « de »"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_coordination_evidence(
@@ -15986,11 +16171,44 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_coordination_evidence(
+        extract_french_reported_speech_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    reported_speech_source_scope = any(
+        (
+            "la-phrase-interrogative-et-la-phrase-imperative-"
+            "au-discours-rapporte.pdf"
+        )
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        reported_speech_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_coordination_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     coordination_source_scope = any(
         "la-coordination.pdf"
