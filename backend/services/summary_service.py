@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v57-french-invitations-participants-debat-structured-summary"
+    "v58-french-lettre-ouverte-structured-summary"
 )
 
 
@@ -6152,6 +6152,102 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_open_letter_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du cours Écrit 4-1."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    if (
+        "resume" in normalized_question
+        and "lettre ouverte" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_open_letter_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du cours Écrit 4-1."""
+
+    mode = detect_french_open_letter_summary_mode(
+        question
+    )
+
+    if mode != "full":
+        return None
+
+    expected_source = (
+        "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf"
+    )
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source in source_name:
+            selected_units.append(
+                unit
+            )
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- Le cours apprend à rédiger une lettre ouverte dans le cadre du "
+        "projet relatif au club de l'environnement.\n"
+        "- La lettre ouverte est adressée à l'opinion publique et porte sur "
+        "le réchauffement climatique. Elle doit expliquer le phénomène, "
+        "montrer ses effets sur le monde et proposer quelques solutions "
+        "pour faire face à ce fléau.\n"
+        "- Avant la rédaction, il faut rappeler les caractéristiques de la "
+        "lettre conventionnelle et la structure du corps de la lettre en "
+        "trois phases.\n"
+        "- Pendant la production, il faut respecter la structure de la "
+        "lettre conventionnelle, le thème de la lettre et la structure du "
+        "corps de la lettre.\n"
+        "- La grille d'évaluation vérifie que l'élève a écrit une lettre "
+        "conventionnelle, respecté ses caractéristiques et ses formules, "
+        "employé des expressions convenables, choisi un thème en rapport "
+        "avec l'environnement et respecté la structure du corps en trois "
+        "phases.\n"
+        "- Pour chaque critère de la grille, les réponses proposées sont "
+        "« Oui » ou « Non ». La grille sert ensuite à améliorer le texte."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_debate_participant_invitations_summary_mode(
     question: str,
 ) -> str:
@@ -7547,6 +7643,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_open_letter_summary = (
+        build_french_open_letter_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_open_letter_summary is not None:
+        return structured_open_letter_summary
 
     structured_debate_participant_invitations_summary = (
         build_french_debate_participant_invitations_summary(

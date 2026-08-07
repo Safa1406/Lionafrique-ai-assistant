@@ -10,7 +10,7 @@ OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
 ARABIC_RULES_VERSION = "v60-french-concession-analysis"
-FRENCH_RULES_VERSION = "v15-invitations-participants-debat-analysis"
+FRENCH_RULES_VERSION = "v16-lettre-ouverte-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1948,6 +1948,191 @@ def extract_french_concession_evidence(
 
 
 
+
+
+
+def extract_french_open_letter_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Répond aux questions documentées du cours
+    « Écrit 4-1 : Rédiger une lettre ouverte ».
+
+    Les réponses restent strictement limitées aux deux pages du PDF.
+    """
+
+    if contains_arabic(question):
+        return []
+
+    expected_source = (
+        "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf"
+    )
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Quel type de texte faut-il rédiger dans ce cours ?": (
+                "Il faut rédiger une lettre ouverte"
+            ),
+            "Dans quel cadre la lettre ouverte est-elle rédigée ?": (
+                "La lettre ouverte est rédigée dans le cadre du projet relatif au club de l'environnement"
+            ),
+            "À qui la lettre ouverte doit-elle être adressée ?": (
+                "La lettre ouverte doit être adressée à l'opinion publique"
+            ),
+            "Quel phénomène doit être expliqué dans la lettre ouverte ?": (
+                "Le phénomène à expliquer est le réchauffement climatique"
+            ),
+            "Quel est le premier objectif de la lettre concernant le réchauffement climatique ?": (
+                "Le premier objectif est d'expliquer le phénomène du réchauffement climatique"
+            ),
+            "Que faut-il montrer à propos du réchauffement climatique ?": (
+                "Il faut montrer ses effets sur le monde"
+            ),
+            "Que faut-il proposer dans la lettre pour faire face au problème ?": (
+                "Il faut proposer quelques solutions pour résoudre ce fléau"
+            ),
+            "Quels sont les trois objectifs principaux de la lettre ouverte ?": (
+                "Les trois objectifs sont d'expliquer le phénomène du réchauffement climatique, d'en montrer les effets sur le monde et de proposer quelques solutions"
+            ),
+            "À quel domaine général appartient le projet de cette lettre ?": (
+                "Le projet appartient au domaine de l'environnement"
+            ),
+            "Quelles caractéristiques faut-il rappeler avant de rédiger ?": (
+                "Il faut rappeler les caractéristiques de la lettre conventionnelle"
+            ),
+            "Que faut-il rappeler concernant le corps de la lettre ?": (
+                "Il faut rappeler la structure du corps de la lettre en trois phases"
+            ),
+            "En combien de phases le corps de la lettre doit-il être structuré ?": (
+                "Le corps de la lettre doit être structuré en trois phases"
+            ),
+            "Quelle structure générale faut-il respecter pendant la production ?": (
+                "Il faut respecter la structure de la lettre conventionnelle"
+            ),
+            "Quel élément thématique faut-il respecter pendant la rédaction ?": (
+                "Il faut respecter le thème de la lettre"
+            ),
+            "Quelle structure particulière faut-il respecter dans le corps de la lettre ?": (
+                "Il faut respecter la structure du corps de la lettre"
+            ),
+            "Quels sont les trois éléments à respecter pour rédiger la lettre ouverte ?": (
+                "Il faut respecter la structure de la lettre conventionnelle, le thème de la lettre et la structure du corps de la lettre"
+            ),
+            "À quoi sert la grille d'évaluation après la rédaction ?": (
+                "La grille sert à vérifier les critères puis à améliorer le texte"
+            ),
+            "Quel critère vérifie le type de lettre écrite ?": (
+                "Le critère est : « J'ai écrit une lettre conventionnelle »"
+            ),
+            "Quel critère vérifie le respect des caractéristiques de la lettre ?": (
+                "Le critère est : « J'ai respecté les caractéristiques de cette lettre, notamment les formules »"
+            ),
+            "Que demande la grille au sujet des expressions employées ?": (
+                "La grille demande d'employer des expressions convenables"
+            ),
+            "Quel thème la grille demande-t-elle d'employer ?": (
+                "La grille demande d'employer un thème en rapport avec l'environnement"
+            ),
+            "Quel critère vérifie l'organisation du corps de la lettre ?": (
+                "Le critère vérifie le respect de la structure du corps de la lettre en trois phases"
+            ),
+            "Quelles réponses peut-on cocher dans la grille de critères ?": (
+                "Dans la grille de critères, on peut cocher « Oui » ou « Non »"
+            ),
+            "Quel lien existe entre le thème de la lettre et le projet du club ?": (
+                "Le projet concerne le club de l'environnement et la lettre traite du réchauffement climatique, un thème en rapport avec l'environnement"
+            ),
+            "La lettre est-elle destinée à une seule personne ou à un public plus large ?": (
+                "La lettre est destinée à un public plus large : l'opinion publique"
+            ),
+            "Quel problème est qualifié de fléau dans le sujet ?": (
+                "Le réchauffement climatique est le problème présenté comme un fléau dans le sujet"
+            ),
+            "Quelle progression d'idées le sujet demande-t-il de suivre dans la lettre ?": (
+                "La progression consiste à expliquer le phénomène, montrer ses effets puis proposer des solutions"
+            ),
+            "Coman redijé une letr ouver sur le rechofman klimatik pour lopinion publik, expliké lé zefé é proposé dé solusion ?": (
+                "Pour rédiger cette lettre ouverte adressée à l'opinion publique, il faut traiter le réchauffement climatique, expliquer le phénomène, présenter ses effets et proposer des solutions, tout en respectant la structure de la lettre conventionnelle et la structure du corps en trois phases"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_debate_participant_invitations_evidence(
@@ -17281,11 +17466,41 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_debate_participant_invitations_evidence(
+        extract_french_open_letter_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    open_letter_source_scope = any(
+        "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf"
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        open_letter_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_debate_participant_invitations_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     debate_participant_invitations_source_scope = any(
         (

@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v25-french-invitations-participants-debat-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v26-french-lettre-ouverte-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -559,6 +559,35 @@ def retrieve_relevant_passages(
     )
 
 
+    asks_french_open_letter_lesson = (
+        not question_is_arabic
+        and (
+            "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf"
+            in normalized_source_name
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "lettre ouverte",
+                    "opinion publique",
+                    "rechauffement climatique",
+                    "club de l environnement",
+                    "trois phases",
+                )
+            )
+        )
+    )
+
+    # Le contenu utile de la lettre ouverte est réparti sur deux pages :
+    # le sujet et la structure sur la première, la grille sur la seconde.
+    # Avec une source exacte, on conserve donc un ensemble élargi.
+    if asks_french_open_letter_lesson:
+        number_of_results = max(
+            number_of_results,
+            12,
+        )
+
+
     asks_french_debate_participant_invitations_lesson = (
         not question_is_arabic
         and (
@@ -1087,7 +1116,8 @@ def retrieve_relevant_passages(
         )
 
     if (
-        asks_french_debate_participant_invitations_lesson
+        asks_french_open_letter_lesson
+        or asks_french_debate_participant_invitations_lesson
         or asks_french_beneficiary_invitation_lesson
         or asks_french_authorization_letter_lesson
     ):
@@ -1200,6 +1230,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_open_letter_lesson
             and not asks_french_debate_participant_invitations_lesson
             and not asks_french_beneficiary_invitation_lesson
             and not asks_french_invitation_writing_lesson
@@ -1220,6 +1251,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_open_letter_lesson
             and not asks_french_debate_participant_invitations_lesson
             and not asks_french_beneficiary_invitation_lesson
             and not asks_french_invitation_writing_lesson

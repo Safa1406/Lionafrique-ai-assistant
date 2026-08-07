@@ -1,0 +1,65 @@
+﻿number,category,endpoint,question,expected_status,actual_status,test_passed,duration_seconds,response,missing_groups,correct_source,sources,error
+1,Type de production,/ask,Quel type de texte faut-il rédiger dans ce cours ?,success,success,oui,13.588,"D'après le document :
+- Il faut rédiger une lettre ouverte.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+2,Cadre du projet,/ask,Dans quel cadre la lettre ouverte est-elle rédigée ?,success,success,oui,0.128,"D'après le document :
+- La lettre ouverte est rédigée dans le cadre du projet relatif au club de l'environnement.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+3,Destinataire,/ask,À qui la lettre ouverte doit-elle être adressée ?,success,success,oui,0.12,"D'après le document :
+- La lettre ouverte doit être adressée à l'opinion publique.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+4,Phénomène,/ask,Quel phénomène doit être expliqué dans la lettre ouverte ?,success,success,oui,0.118,"D'après le document :
+- Le phénomène à expliquer est le réchauffement climatique.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+5,Premier objectif,/ask,Quel est le premier objectif de la lettre concernant le réchauffement climatique ?,success,success,oui,0.134,"D'après le document :
+- Le premier objectif est d'expliquer le phénomène du réchauffement climatique.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+6,Deuxième objectif,/ask,Que faut-il montrer à propos du réchauffement climatique ?,success,success,oui,0.115,"D'après le document :
+- Il faut montrer ses effets sur le monde.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+7,Troisième objectif,/ask,Que faut-il proposer dans la lettre pour faire face au problème ?,success,success,oui,0.141,"D'après le document :
+- Il faut proposer quelques solutions pour résoudre ce fléau.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+8,Objectifs complets,/ask,Quels sont les trois objectifs principaux de la lettre ouverte ?,success,success,oui,0.097,"D'après le document :
+- Les trois objectifs sont d'expliquer le phénomène du réchauffement climatique, d'en montrer les effets sur le monde et de proposer quelques solutions.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+9,Projet environnement,/ask,À quel domaine général appartient le projet de cette lettre ?,success,success,oui,0.136,"D'après le document :
+- Le projet appartient au domaine de l'environnement.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+10,Rappel caractéristiques,/ask,Quelles caractéristiques faut-il rappeler avant de rédiger ?,success,success,oui,0.116,"D'après le document :
+- Il faut rappeler les caractéristiques de la lettre conventionnelle.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+11,Rappel structure corps,/ask,Que faut-il rappeler concernant le corps de la lettre ?,success,success,oui,0.146,"D'après le document :
+- Il faut rappeler la structure du corps de la lettre en trois phases.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2,
+12,Nombre phases,/ask,En combien de phases le corps de la lettre doit-il être structuré ?,success,success,oui,0.118,"D'après le document :
+- Le corps de la lettre doit être structuré en trois phases.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2,
+13,Production structure conventionnelle,/ask,Quelle structure générale faut-il respecter pendant la production ?,success,success,oui,0.127,"D'après le document :
+- Il faut respecter la structure de la lettre conventionnelle.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+14,Production thème,/ask,Quel élément thématique faut-il respecter pendant la rédaction ?,success,success,oui,0.13,"D'après le document :
+- Il faut respecter le thème de la lettre.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+15,Production corps,/ask,Quelle structure particulière faut-il respecter dans le corps de la lettre ?,success,success,oui,0.136,"D'après le document :
+- Il faut respecter la structure du corps de la lettre.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+16,Critères production,/ask,Quels sont les trois éléments à respecter pour rédiger la lettre ouverte ?,success,success,oui,0.115,"D'après le document :
+- Il faut respecter la structure de la lettre conventionnelle, le thème de la lettre et la structure du corps de la lettre.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+17,Grille amélioration,/ask,À quoi sert la grille d'évaluation après la rédaction ?,success,success,oui,0.141,"D'après le document :
+- La grille sert à vérifier les critères puis à améliorer le texte.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+18,Critère lettre,/ask,Quel critère vérifie le type de lettre écrite ?,success,success,oui,0.12,"D'après le document :
+- Le critère est : « J'ai écrit une lettre conventionnelle ».",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2,
+19,Critère caractéristiques,/ask,Quel critère vérifie le respect des caractéristiques de la lettre ?,success,success,oui,0.128,"D'après le document :
+- Le critère est : « J'ai respecté les caractéristiques de cette lettre, notamment les formules ».",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2,
+20,Critère expressions,/ask,Que demande la grille au sujet des expressions employées ?,success,success,oui,0.117,"D'après le document :
+- La grille demande d'employer des expressions convenables.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2,
+21,Critère thème,/ask,Quel thème la grille demande-t-elle d'employer ?,success,success,oui,0.119,"D'après le document :
+- La grille demande d'employer un thème en rapport avec l'environnement.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2,
+22,Critère trois phases,/ask,Quel critère vérifie l'organisation du corps de la lettre ?,success,success,oui,0.109,"D'après le document :
+- Le critère vérifie le respect de la structure du corps de la lettre en trois phases.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2,
+23,Colonnes grille,/ask,Quelles réponses peut-on cocher dans la grille de critères ?,success,success,oui,0.124,"D'après le document :
+- Dans la grille de critères, on peut cocher « Oui » ou « Non ».",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2,
+24,Lien thème projet,/ask,Quel lien existe entre le thème de la lettre et le projet du club ?,success,success,oui,0.148,"D'après le document :
+- Le projet concerne le club de l'environnement et la lettre traite du réchauffement climatique, un thème en rapport avec l'environnement.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+25,Public large,/ask,La lettre est-elle destinée à une seule personne ou à un public plus large ?,success,success,oui,0.127,"D'après le document :
+- La lettre est destinée à un public plus large : l'opinion publique.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+26,Fléau,/ask,Quel problème est qualifié de fléau dans le sujet ?,success,success,oui,0.115,"D'après le document :
+- Le réchauffement climatique est le problème présenté comme un fléau dans le sujet.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+27,Séquence logique,/ask,Quelle progression d'idées le sujet demande-t-il de suivre dans la lettre ?,success,success,oui,0.101,"D'après le document :
+- La progression consiste à expliquer le phénomène, montrer ses effets puis proposer des solutions.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+28,Erreur orthographique,/ask,"Coman redijé une letr ouver sur le rechofman klimatik pour lopinion publik, expliké lé zefé é proposé dé solusion ?",success,success,oui,0.148,"D'après le document :
+- Pour rédiger cette lettre ouverte adressée à l'opinion publique, il faut traiter le réchauffement climatique, expliquer le phénomène, présenter ses effets et proposer des solutions, tout en respectant la structure de la lettre conventionnelle et la structure du corps en trois phases.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1,
+29,Résumé,/summarize,Résume le cours sur la rédaction d'une lettre ouverte.,success,success,oui,0.109,"Résumé du contenu :
+- Le cours apprend à rédiger une lettre ouverte dans le cadre du projet relatif au club de l'environnement.
+- La lettre ouverte est adressée à l'opinion publique et porte sur le réchauffement climatique. Elle doit expliquer le phénomène, montrer ses effets sur le monde et proposer quelques solutions pour faire face à ce fléau.
+- Avant la rédaction, il faut rappeler les caractéristiques de la lettre conventionnelle et la structure du corps de la lettre en trois phases.
+- Pendant la production, il faut respecter la structure de la lettre conventionnelle, le thème de la lettre et la structure du corps de la lettre.
+- La grille d'évaluation vérifie que l'élève a écrit une lettre conventionnelle, respecté ses caractéristiques et ses formules, employé des expressions convenables, choisi un thème en rapport avec l'environnement et respecté la structure du corps en trois phases.
+- Pour chaque critère de la grille, les réponses proposées sont « Oui » ou « Non ». La grille sert ensuite à améliorer le texte.",[],oui,ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1 ; ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2,
+30,Refus correct,/ask,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,insufficient_context,oui,0.122,Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.,[],oui,,

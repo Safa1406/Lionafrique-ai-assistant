@@ -1,0 +1,614 @@
+{
+  "generated_at": "2026-08-07T22:28:05",
+  "test_version": "v1-lettre-ouverte-baseline",
+  "program": "Programme marocain",
+  "subject": "Français",
+  "source": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf",
+  "total_tests": 30,
+  "passed_tests": 30,
+  "failed_tests": 0,
+  "categories": {
+    "Type de production": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Cadre du projet": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Destinataire": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Phénomène": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Premier objectif": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Deuxième objectif": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Troisième objectif": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Objectifs complets": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Projet environnement": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Rappel caractéristiques": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Rappel structure corps": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Nombre phases": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Production structure conventionnelle": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Production thème": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Production corps": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critères production": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Grille amélioration": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère lettre": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère caractéristiques": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère expressions": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère thème": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère trois phases": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Colonnes grille": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Lien thème projet": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Public large": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Fléau": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Séquence logique": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Erreur orthographique": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Résumé": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Refus correct": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "results": [
+    {
+      "number": 1,
+      "category": "Type de production",
+      "endpoint": "/ask",
+      "question": "Quel type de texte faut-il rédiger dans ce cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 13.588,
+      "response": "D'après le document :\n- Il faut rédiger une lettre ouverte.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 2,
+      "category": "Cadre du projet",
+      "endpoint": "/ask",
+      "question": "Dans quel cadre la lettre ouverte est-elle rédigée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.128,
+      "response": "D'après le document :\n- La lettre ouverte est rédigée dans le cadre du projet relatif au club de l'environnement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 3,
+      "category": "Destinataire",
+      "endpoint": "/ask",
+      "question": "À qui la lettre ouverte doit-elle être adressée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.12,
+      "response": "D'après le document :\n- La lettre ouverte doit être adressée à l'opinion publique.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 4,
+      "category": "Phénomène",
+      "endpoint": "/ask",
+      "question": "Quel phénomène doit être expliqué dans la lettre ouverte ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.118,
+      "response": "D'après le document :\n- Le phénomène à expliquer est le réchauffement climatique.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 5,
+      "category": "Premier objectif",
+      "endpoint": "/ask",
+      "question": "Quel est le premier objectif de la lettre concernant le réchauffement climatique ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.134,
+      "response": "D'après le document :\n- Le premier objectif est d'expliquer le phénomène du réchauffement climatique.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 6,
+      "category": "Deuxième objectif",
+      "endpoint": "/ask",
+      "question": "Que faut-il montrer à propos du réchauffement climatique ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.115,
+      "response": "D'après le document :\n- Il faut montrer ses effets sur le monde.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 7,
+      "category": "Troisième objectif",
+      "endpoint": "/ask",
+      "question": "Que faut-il proposer dans la lettre pour faire face au problème ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.141,
+      "response": "D'après le document :\n- Il faut proposer quelques solutions pour résoudre ce fléau.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 8,
+      "category": "Objectifs complets",
+      "endpoint": "/ask",
+      "question": "Quels sont les trois objectifs principaux de la lettre ouverte ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.097,
+      "response": "D'après le document :\n- Les trois objectifs sont d'expliquer le phénomène du réchauffement climatique, d'en montrer les effets sur le monde et de proposer quelques solutions.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 9,
+      "category": "Projet environnement",
+      "endpoint": "/ask",
+      "question": "À quel domaine général appartient le projet de cette lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.136,
+      "response": "D'après le document :\n- Le projet appartient au domaine de l'environnement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 10,
+      "category": "Rappel caractéristiques",
+      "endpoint": "/ask",
+      "question": "Quelles caractéristiques faut-il rappeler avant de rédiger ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.116,
+      "response": "D'après le document :\n- Il faut rappeler les caractéristiques de la lettre conventionnelle.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 11,
+      "category": "Rappel structure corps",
+      "endpoint": "/ask",
+      "question": "Que faut-il rappeler concernant le corps de la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.146,
+      "response": "D'après le document :\n- Il faut rappeler la structure du corps de la lettre en trois phases.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 12,
+      "category": "Nombre phases",
+      "endpoint": "/ask",
+      "question": "En combien de phases le corps de la lettre doit-il être structuré ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.118,
+      "response": "D'après le document :\n- Le corps de la lettre doit être structuré en trois phases.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 13,
+      "category": "Production structure conventionnelle",
+      "endpoint": "/ask",
+      "question": "Quelle structure générale faut-il respecter pendant la production ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.127,
+      "response": "D'après le document :\n- Il faut respecter la structure de la lettre conventionnelle.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 14,
+      "category": "Production thème",
+      "endpoint": "/ask",
+      "question": "Quel élément thématique faut-il respecter pendant la rédaction ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.13,
+      "response": "D'après le document :\n- Il faut respecter le thème de la lettre.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 15,
+      "category": "Production corps",
+      "endpoint": "/ask",
+      "question": "Quelle structure particulière faut-il respecter dans le corps de la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.136,
+      "response": "D'après le document :\n- Il faut respecter la structure du corps de la lettre.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 16,
+      "category": "Critères production",
+      "endpoint": "/ask",
+      "question": "Quels sont les trois éléments à respecter pour rédiger la lettre ouverte ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.115,
+      "response": "D'après le document :\n- Il faut respecter la structure de la lettre conventionnelle, le thème de la lettre et la structure du corps de la lettre.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 17,
+      "category": "Grille amélioration",
+      "endpoint": "/ask",
+      "question": "À quoi sert la grille d'évaluation après la rédaction ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.141,
+      "response": "D'après le document :\n- La grille sert à vérifier les critères puis à améliorer le texte.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 18,
+      "category": "Critère lettre",
+      "endpoint": "/ask",
+      "question": "Quel critère vérifie le type de lettre écrite ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.12,
+      "response": "D'après le document :\n- Le critère est : « J'ai écrit une lettre conventionnelle ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 19,
+      "category": "Critère caractéristiques",
+      "endpoint": "/ask",
+      "question": "Quel critère vérifie le respect des caractéristiques de la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.128,
+      "response": "D'après le document :\n- Le critère est : « J'ai respecté les caractéristiques de cette lettre, notamment les formules ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 20,
+      "category": "Critère expressions",
+      "endpoint": "/ask",
+      "question": "Que demande la grille au sujet des expressions employées ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.117,
+      "response": "D'après le document :\n- La grille demande d'employer des expressions convenables.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 21,
+      "category": "Critère thème",
+      "endpoint": "/ask",
+      "question": "Quel thème la grille demande-t-elle d'employer ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.119,
+      "response": "D'après le document :\n- La grille demande d'employer un thème en rapport avec l'environnement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 22,
+      "category": "Critère trois phases",
+      "endpoint": "/ask",
+      "question": "Quel critère vérifie l'organisation du corps de la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.109,
+      "response": "D'après le document :\n- Le critère vérifie le respect de la structure du corps de la lettre en trois phases.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 23,
+      "category": "Colonnes grille",
+      "endpoint": "/ask",
+      "question": "Quelles réponses peut-on cocher dans la grille de critères ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.124,
+      "response": "D'après le document :\n- Dans la grille de critères, on peut cocher « Oui » ou « Non ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 24,
+      "category": "Lien thème projet",
+      "endpoint": "/ask",
+      "question": "Quel lien existe entre le thème de la lettre et le projet du club ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.148,
+      "response": "D'après le document :\n- Le projet concerne le club de l'environnement et la lettre traite du réchauffement climatique, un thème en rapport avec l'environnement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 25,
+      "category": "Public large",
+      "endpoint": "/ask",
+      "question": "La lettre est-elle destinée à une seule personne ou à un public plus large ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.127,
+      "response": "D'après le document :\n- La lettre est destinée à un public plus large : l'opinion publique.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 26,
+      "category": "Fléau",
+      "endpoint": "/ask",
+      "question": "Quel problème est qualifié de fléau dans le sujet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.115,
+      "response": "D'après le document :\n- Le réchauffement climatique est le problème présenté comme un fléau dans le sujet.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 27,
+      "category": "Séquence logique",
+      "endpoint": "/ask",
+      "question": "Quelle progression d'idées le sujet demande-t-il de suivre dans la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.101,
+      "response": "D'après le document :\n- La progression consiste à expliquer le phénomène, montrer ses effets puis proposer des solutions.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 28,
+      "category": "Erreur orthographique",
+      "endpoint": "/ask",
+      "question": "Coman redijé une letr ouver sur le rechofman klimatik pour lopinion publik, expliké lé zefé é proposé dé solusion ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.148,
+      "response": "D'après le document :\n- Pour rédiger cette lettre ouverte adressée à l'opinion publique, il faut traiter le réchauffement climatique, expliquer le phénomène, présenter ses effets et proposer des solutions, tout en respectant la structure de la lettre conventionnelle et la structure du corps en trois phases.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 29,
+      "category": "Résumé",
+      "endpoint": "/summarize",
+      "question": "Résume le cours sur la rédaction d'une lettre ouverte.",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.109,
+      "response": "Résumé du contenu :\n- Le cours apprend à rédiger une lettre ouverte dans le cadre du projet relatif au club de l'environnement.\n- La lettre ouverte est adressée à l'opinion publique et porte sur le réchauffement climatique. Elle doit expliquer le phénomène, montrer ses effets sur le monde et proposer quelques solutions pour faire face à ce fléau.\n- Avant la rédaction, il faut rappeler les caractéristiques de la lettre conventionnelle et la structure du corps de la lettre en trois phases.\n- Pendant la production, il faut respecter la structure de la lettre conventionnelle, le thème de la lettre et la structure du corps de la lettre.\n- La grille d'évaluation vérifie que l'élève a écrit une lettre conventionnelle, respecté ses caractéristiques et ses formules, employé des expressions convenables, choisi un thème en rapport avec l'environnement et respecté la structure du corps en trois phases.\n- Pour chaque critère de la grille, les réponses proposées sont « Oui » ou « Non ». La grille sert ensuite à améliorer le texte.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 1 ; ecrit-4-1-rediger-une-lettre-ouverte-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 30,
+      "category": "Refus correct",
+      "endpoint": "/ask",
+      "question": "Comment calcule-t-on la dérivée de la fonction x au carré ?",
+      "expected_status": "insufficient_context",
+      "actual_status": "insufficient_context",
+      "test_passed": "oui",
+      "duration_seconds": 0.122,
+      "response": "Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "",
+      "error": ""
+    }
+  ]
+}
