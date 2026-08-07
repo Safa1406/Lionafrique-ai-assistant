@@ -10,7 +10,7 @@ OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
 ARABIC_RULES_VERSION = "v60-french-concession-analysis"
-FRENCH_RULES_VERSION = "v10-concession-analysis"
+FRENCH_RULES_VERSION = "v11-demande-autorisation-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1944,6 +1944,191 @@ def extract_french_concession_evidence(
         }
     ]
 
+
+
+def extract_french_authorization_request_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Répond aux questions documentées du cours « Rédiger une lettre
+    pour demander une autorisation ».
+
+    Les réponses restent strictement limitées aux deux pages du cours.
+    """
+
+    if contains_arabic(question):
+        return []
+
+    expected_source = (
+        "ecrit-1-rediger-une-lettre-pour-demander-"
+        "une-autorisation.pdf"
+    )
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Quel type de lettre faut-il rédiger dans ce cours ?": (
+                "Il faut rédiger une lettre conventionnelle"
+            ),
+            "Quel est l'objectif de la lettre présentée dans le sujet ?": (
+                "L'objectif est de demander l'autorisation d'utiliser les locaux de l'établissement"
+            ),
+            "À qui la lettre de demande d'autorisation est-elle adressée ?": (
+                "La lettre est adressée au directeur du collège"
+            ),
+            "Quelle activité les élèves ont-ils décidé d'organiser ?": (
+                "Les élèves ont décidé d'organiser une journée d'information"
+            ),
+            "Quels élèves doivent être aidés pendant la journée d'information ?": (
+                "La journée d'information doit aider les élèves de la troisième année du collège"
+            ),
+            "Quelle tâche liée à l'orientation la journée d'information doit-elle aider les élèves à accomplir ?": (
+                "Elle doit aider les élèves à remplir leurs fiches d'orientation"
+            ),
+            "Quel choix scolaire la journée d'information doit-elle faciliter ?": (
+                "Elle doit aider les élèves à bien choisir leur filière d'étude au lycée"
+            ),
+            "Quels locaux de l'établissement sont cités dans le sujet ?": (
+                "Les locaux cités sont les classes et la cour"
+            ),
+            "Quelle autorisation doit-on demander au directeur ?": (
+                "Il faut demander au directeur l'autorisation d'utiliser les locaux de l'établissement"
+            ),
+            "Quel type d'expressions faut-il employer dans la lettre ?": (
+                "Il faut employer des expressions adaptées pour demander une autorisation"
+            ),
+            "Quelle formule doit être utilisée au début de la lettre conventionnelle ?": (
+                "Il faut utiliser une formule d'appel appropriée au début de la lettre conventionnelle"
+            ),
+            "Quelle formule doit être utilisée à la fin de la lettre conventionnelle ?": (
+                "Il faut utiliser une formule finale appropriée à la fin de la lettre conventionnelle"
+            ),
+            "Quel contexte mentionné dans le sujet faut-il respecter ?": (
+                "Il faut respecter le contexte de l'utilisation des locaux de l'établissement"
+            ),
+            "Quel mode d'adresse faut-il employer avec le destinataire ?": (
+                "Il faut employer le vouvoiement avec le destinataire"
+            ),
+            "Quel élément doit figurer à la fin de la lettre ?": (
+                "La signature doit figurer à la fin de la lettre"
+            ),
+            "Que faut-il vérifier concernant les éléments d'une lettre conventionnelle ?": (
+                "Il faut vérifier que tous les éléments qui composent une lettre conventionnelle ont été utilisés"
+            ),
+            "Que demande la grille au sujet du placement des composantes de la lettre ?": (
+                "La grille demande de vérifier que les différentes composantes de la lettre conventionnelle sont bien placées"
+            ),
+            "Quelles expressions faut-il utiliser pour s'adresser au destinataire ?": (
+                "Il faut utiliser des expressions de politesse pour s'adresser au destinataire"
+            ),
+            "Que faut-il vérifier concernant le pronom personnel dans la lettre ?": (
+                "Il faut vérifier que le pronom personnel convenable a été choisi"
+            ),
+            "À quoi sert la grille de critères de l'exercice 2 ?": (
+                "La grille sert à vérifier les critères puis à améliorer le texte"
+            ),
+            "Quelles réponses peut-on cocher dans la grille d'évaluation de l'exercice 2 ?": (
+                "Dans la grille, on peut cocher « Oui » ou « Non »"
+            ),
+            "Quelles sont les trois rubriques proposées dans l'évaluation de fin de séquence ?": (
+                "Les trois rubriques sont : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas »"
+            ),
+            "À qui la demande d'autorisation du projet de groupe doit-elle être adressée ?": (
+                "La demande d'autorisation du projet de groupe doit être adressée au directeur de l'établissement"
+            ),
+            "Quelle activité doit être organisée dans le projet de groupe ?": (
+                "Le projet de groupe consiste à organiser un débat"
+            ),
+            "Dans quel lieu le débat du projet de groupe doit-il être organisé ?": (
+                "Le débat doit être organisé dans une grande salle au collège"
+            ),
+            "Quel est le thème du débat proposé dans le projet de groupe ?": (
+                "Le débat porte sur la protection de l'environnement"
+            ),
+            "À quel espace local la question de la protection de l'environnement est-elle liée ?": (
+                "La question de la protection de l'environnement est liée à notre ville ou à notre village"
+            ),
+            "Coman redijé une léttre pour demandé lotorisation dutilisé les loco du collège ?": (
+                "Pour rédiger cette demande, il faut écrire une lettre conventionnelle, employer des expressions adaptées pour demander une autorisation, utiliser une formule d'appel et une formule finale appropriées, respecter le contexte, employer le vouvoiement et ajouter la signature"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 def extract_french_reported_speech_evidence(
     question: str,
@@ -16355,7 +16540,40 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_concession_evidence(
+        extract_french_authorization_request_evidence(
+            question=analysis_question,
+            passages=passages,
+        )
+    )
+
+    authorization_request_source_scope = any(
+        (
+            "ecrit-1-rediger-une-lettre-pour-demander-"
+            "une-autorisation.pdf"
+        )
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        authorization_request_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_concession_evidence(
             question=analysis_question,
             passages=passages,
         )

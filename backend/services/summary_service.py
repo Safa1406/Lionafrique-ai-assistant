@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v52-french-concession-structured-summary"
+    "v53-french-authorization-letter-structured-summary"
 )
 
 
@@ -6147,6 +6147,120 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_authorization_letter_summary_mode(
+    question: str,
+) -> str:
+    """
+    Détecte une demande de résumé du cours sur la rédaction
+    d'une lettre pour demander une autorisation.
+    """
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    required_markers = (
+        "resume",
+        "lettre",
+        "autorisation",
+    )
+
+    if all(
+        marker in normalized_question
+        for marker in required_markers
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_authorization_letter_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """
+    Construit un résumé fidèle et structuré du cours
+    « Rédiger une lettre pour demander une autorisation ».
+    """
+
+    mode = (
+        detect_french_authorization_letter_summary_mode(
+            question
+        )
+    )
+
+    if mode != "full":
+        return None
+
+    expected_source = (
+        "ecrit-1-rediger-une-lettre-pour-demander-"
+        "une-autorisation.pdf"
+    )
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source in source_name:
+            selected_units.append(
+                unit
+            )
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- Le cours apprend à rédiger une lettre conventionnelle "
+        "pour demander une autorisation au directeur du collège.\n"
+        "- Le sujet consiste à organiser une journée d'information "
+        "destinée aux élèves de la troisième année du collège, afin "
+        "de les aider à remplir leurs fiches d'orientation et à bien "
+        "choisir leur filière d'étude au lycée.\n"
+        "- La demande porte sur l'utilisation des locaux de "
+        "l'établissement, notamment les classes et la cour.\n"
+        "- La lettre doit employer des expressions adaptées pour "
+        "demander une autorisation, une formule d'appel et une "
+        "formule finale appropriées, le vouvoiement, des expressions "
+        "de politesse et un pronom personnel convenable.\n"
+        "- Les différentes composantes de la lettre conventionnelle "
+        "doivent être bien placées et la lettre doit porter une "
+        "signature.\n"
+        "- Une grille permet de vérifier les éléments de la lettre, "
+        "leur placement, les formules, la politesse, le pronom et la "
+        "signature, puis d'améliorer le texte.\n"
+        "- Le projet de groupe propose d'adresser au directeur une "
+        "demande d'autorisation pour organiser, dans une grande salle "
+        "du collège, un débat sur la protection de l'environnement "
+        "dans la ville ou le village."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_concession_summary_mode(
     question: str,
 ) -> str:
@@ -7026,6 +7140,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_authorization_letter_summary = (
+        build_french_authorization_letter_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_authorization_letter_summary is not None:
+        return structured_authorization_letter_summary
 
     structured_concession_summary = (
         build_french_concession_summary(

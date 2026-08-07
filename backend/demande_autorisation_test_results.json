@@ -1,0 +1,614 @@
+{
+  "generated_at": "2026-08-07T10:32:07",
+  "test_version": "v1-demande-autorisation-baseline",
+  "program": "Programme marocain",
+  "subject": "Français",
+  "source": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf",
+  "total_tests": 30,
+  "passed_tests": 30,
+  "failed_tests": 0,
+  "categories": {
+    "Type de lettre": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "But général": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Destinataire": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Activité organisée": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Public concerné": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Fiches d'orientation": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Choix de filière": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Locaux demandés": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Demande précise": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Expressions adaptées": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Formule d'appel": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Formule finale": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Contexte": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Vouvoiement": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Signature": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Composantes": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Placement": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Politesse": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Pronom": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Amélioration": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Colonnes grille": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Évaluation finale": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Projet destinataire": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Projet activité": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Projet lieu": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Projet thème": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Projet contexte local": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Erreur orthographique": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Résumé": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Refus correct": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "results": [
+    {
+      "number": 1,
+      "category": "Type de lettre",
+      "endpoint": "/ask",
+      "question": "Quel type de lettre faut-il rédiger dans ce cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 8.422,
+      "response": "D'après le document :\n- Il faut rédiger une lettre conventionnelle.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 2,
+      "category": "But général",
+      "endpoint": "/ask",
+      "question": "Quel est l'objectif de la lettre présentée dans le sujet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.104,
+      "response": "D'après le document :\n- L'objectif est de demander l'autorisation d'utiliser les locaux de l'établissement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 3,
+      "category": "Destinataire",
+      "endpoint": "/ask",
+      "question": "À qui la lettre de demande d'autorisation est-elle adressée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.097,
+      "response": "D'après le document :\n- La lettre est adressée au directeur du collège.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 4,
+      "category": "Activité organisée",
+      "endpoint": "/ask",
+      "question": "Quelle activité les élèves ont-ils décidé d'organiser ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.08,
+      "response": "D'après le document :\n- Les élèves ont décidé d'organiser une journée d'information.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 5,
+      "category": "Public concerné",
+      "endpoint": "/ask",
+      "question": "Quels élèves doivent être aidés pendant la journée d'information ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.085,
+      "response": "D'après le document :\n- La journée d'information doit aider les élèves de la troisième année du collège.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 6,
+      "category": "Fiches d'orientation",
+      "endpoint": "/ask",
+      "question": "Quelle tâche liée à l'orientation la journée d'information doit-elle aider les élèves à accomplir ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.083,
+      "response": "D'après le document :\n- Elle doit aider les élèves à remplir leurs fiches d'orientation.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 7,
+      "category": "Choix de filière",
+      "endpoint": "/ask",
+      "question": "Quel choix scolaire la journée d'information doit-elle faciliter ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.08,
+      "response": "D'après le document :\n- Elle doit aider les élèves à bien choisir leur filière d'étude au lycée.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 8,
+      "category": "Locaux demandés",
+      "endpoint": "/ask",
+      "question": "Quels locaux de l'établissement sont cités dans le sujet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.076,
+      "response": "D'après le document :\n- Les locaux cités sont les classes et la cour.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 9,
+      "category": "Demande précise",
+      "endpoint": "/ask",
+      "question": "Quelle autorisation doit-on demander au directeur ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.071,
+      "response": "D'après le document :\n- Il faut demander au directeur l'autorisation d'utiliser les locaux de l'établissement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 10,
+      "category": "Expressions adaptées",
+      "endpoint": "/ask",
+      "question": "Quel type d'expressions faut-il employer dans la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.105,
+      "response": "D'après le document :\n- Il faut employer des expressions adaptées pour demander une autorisation.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 11,
+      "category": "Formule d'appel",
+      "endpoint": "/ask",
+      "question": "Quelle formule doit être utilisée au début de la lettre conventionnelle ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.073,
+      "response": "D'après le document :\n- Il faut utiliser une formule d'appel appropriée au début de la lettre conventionnelle.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 12,
+      "category": "Formule finale",
+      "endpoint": "/ask",
+      "question": "Quelle formule doit être utilisée à la fin de la lettre conventionnelle ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.062,
+      "response": "D'après le document :\n- Il faut utiliser une formule finale appropriée à la fin de la lettre conventionnelle.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 13,
+      "category": "Contexte",
+      "endpoint": "/ask",
+      "question": "Quel contexte mentionné dans le sujet faut-il respecter ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.07,
+      "response": "D'après le document :\n- Il faut respecter le contexte de l'utilisation des locaux de l'établissement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 14,
+      "category": "Vouvoiement",
+      "endpoint": "/ask",
+      "question": "Quel mode d'adresse faut-il employer avec le destinataire ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.074,
+      "response": "D'après le document :\n- Il faut employer le vouvoiement avec le destinataire.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 15,
+      "category": "Signature",
+      "endpoint": "/ask",
+      "question": "Quel élément doit figurer à la fin de la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.085,
+      "response": "D'après le document :\n- La signature doit figurer à la fin de la lettre.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 16,
+      "category": "Composantes",
+      "endpoint": "/ask",
+      "question": "Que faut-il vérifier concernant les éléments d'une lettre conventionnelle ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.089,
+      "response": "D'après le document :\n- Il faut vérifier que tous les éléments qui composent une lettre conventionnelle ont été utilisés.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 17,
+      "category": "Placement",
+      "endpoint": "/ask",
+      "question": "Que demande la grille au sujet du placement des composantes de la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.069,
+      "response": "D'après le document :\n- La grille demande de vérifier que les différentes composantes de la lettre conventionnelle sont bien placées.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 18,
+      "category": "Politesse",
+      "endpoint": "/ask",
+      "question": "Quelles expressions faut-il utiliser pour s'adresser au destinataire ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.078,
+      "response": "D'après le document :\n- Il faut utiliser des expressions de politesse pour s'adresser au destinataire.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 19,
+      "category": "Pronom",
+      "endpoint": "/ask",
+      "question": "Que faut-il vérifier concernant le pronom personnel dans la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.088,
+      "response": "D'après le document :\n- Il faut vérifier que le pronom personnel convenable a été choisi.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 20,
+      "category": "Amélioration",
+      "endpoint": "/ask",
+      "question": "À quoi sert la grille de critères de l'exercice 2 ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.092,
+      "response": "D'après le document :\n- La grille sert à vérifier les critères puis à améliorer le texte.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 21,
+      "category": "Colonnes grille",
+      "endpoint": "/ask",
+      "question": "Quelles réponses peut-on cocher dans la grille d'évaluation de l'exercice 2 ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.077,
+      "response": "D'après le document :\n- Dans la grille, on peut cocher « Oui » ou « Non ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 22,
+      "category": "Évaluation finale",
+      "endpoint": "/ask",
+      "question": "Quelles sont les trois rubriques proposées dans l'évaluation de fin de séquence ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.087,
+      "response": "D'après le document :\n- Les trois rubriques sont : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 23,
+      "category": "Projet destinataire",
+      "endpoint": "/ask",
+      "question": "À qui la demande d'autorisation du projet de groupe doit-elle être adressée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.079,
+      "response": "D'après le document :\n- La demande d'autorisation du projet de groupe doit être adressée au directeur de l'établissement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 24,
+      "category": "Projet activité",
+      "endpoint": "/ask",
+      "question": "Quelle activité doit être organisée dans le projet de groupe ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.1,
+      "response": "D'après le document :\n- Le projet de groupe consiste à organiser un débat.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 25,
+      "category": "Projet lieu",
+      "endpoint": "/ask",
+      "question": "Dans quel lieu le débat du projet de groupe doit-il être organisé ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.093,
+      "response": "D'après le document :\n- Le débat doit être organisé dans une grande salle au collège.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 26,
+      "category": "Projet thème",
+      "endpoint": "/ask",
+      "question": "Quel est le thème du débat proposé dans le projet de groupe ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.094,
+      "response": "D'après le document :\n- Le débat porte sur la protection de l'environnement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 27,
+      "category": "Projet contexte local",
+      "endpoint": "/ask",
+      "question": "À quel espace local la question de la protection de l'environnement est-elle liée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.092,
+      "response": "D'après le document :\n- La question de la protection de l'environnement est liée à notre ville ou à notre village.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 28,
+      "category": "Erreur orthographique",
+      "endpoint": "/ask",
+      "question": "Coman redijé une léttre pour demandé lotorisation dutilisé les loco du collège ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.096,
+      "response": "D'après le document :\n- Pour rédiger cette demande, il faut écrire une lettre conventionnelle, employer des expressions adaptées pour demander une autorisation, utiliser une formule d'appel et une formule finale appropriées, respecter le contexte, employer le vouvoiement et ajouter la signature.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 29,
+      "category": "Résumé",
+      "endpoint": "/summarize",
+      "question": "Résume le cours sur la rédaction d'une lettre pour demander une autorisation.",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.118,
+      "response": "Résumé du contenu :\n- Le cours apprend à rédiger une lettre conventionnelle pour demander une autorisation au directeur du collège.\n- Le sujet consiste à organiser une journée d'information destinée aux élèves de la troisième année du collège, afin de les aider à remplir leurs fiches d'orientation et à bien choisir leur filière d'étude au lycée.\n- La demande porte sur l'utilisation des locaux de l'établissement, notamment les classes et la cour.\n- La lettre doit employer des expressions adaptées pour demander une autorisation, une formule d'appel et une formule finale appropriées, le vouvoiement, des expressions de politesse et un pronom personnel convenable.\n- Les différentes composantes de la lettre conventionnelle doivent être bien placées et la lettre doit porter une signature.\n- Une grille permet de vérifier les éléments de la lettre, leur placement, les formules, la politesse, le pronom et la signature, puis d'améliorer le texte.\n- Le projet de groupe propose d'adresser au directeur une demande d'autorisation pour organiser, dans une grande salle du collège, un débat sur la protection de l'environnement dans la ville ou le village.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 2 ; ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 30,
+      "category": "Refus correct",
+      "endpoint": "/ask",
+      "question": "Comment calcule-t-on la vitesse d'un satellite en orbite autour de la Terre ?",
+      "expected_status": "insufficient_context",
+      "actual_status": "insufficient_context",
+      "test_passed": "oui",
+      "duration_seconds": 0.098,
+      "response": "Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "",
+      "error": ""
+    }
+  ]
+}

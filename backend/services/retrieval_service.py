@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v20-arabic-school-of-life-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v21-french-authorization-letter-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -558,6 +558,39 @@ def retrieve_relevant_passages(
         else ""
     )
 
+    asks_french_authorization_letter_lesson = (
+        not question_is_arabic
+        and (
+            "ecrit-1-rediger-une-lettre-pour-demander-une-autorisation.pdf"
+            in normalized_source_name
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "lettre pour demander une autorisation",
+                    "demande d autorisation",
+                    "journee d information",
+                    "fiches d orientation",
+                    "utiliser les locaux",
+                    "formule d appel",
+                    "formule finale",
+                    "vouvoiement",
+                    "protection de l environnement",
+                )
+            )
+        )
+    )
+
+    # Ce petit cours ne contient que trois segments répartis sur
+    # deux pages. Avec un filtre de source exact, on conserve tout
+    # le document afin que les questions courtes ne soient pas
+    # rejetées par un seuil vectoriel trop strict.
+    if asks_french_authorization_letter_lesson:
+        number_of_results = max(
+            number_of_results,
+            10,
+        )
+
     asks_school_of_life_lesson = (
         question_is_arabic
         and (
@@ -925,7 +958,12 @@ def retrieve_relevant_passages(
             10,
         )
 
-    if question_is_arabic:
+    if asks_french_authorization_letter_lesson:
+        candidate_count = max(
+            20,
+            number_of_results * 4,
+        )
+    elif question_is_arabic:
         # Les embeddings arabes peuvent classer le passage exact
         # plus bas que prévu, surtout pour les courtes questions
         # de définition ou de grammaire. On élargit donc le vivier
@@ -1029,6 +1067,7 @@ def retrieve_relevant_passages(
             and not asks_muslim_qualities_lesson
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
+            and not asks_french_authorization_letter_lesson
         ):
             continue
 
@@ -1044,6 +1083,7 @@ def retrieve_relevant_passages(
             and not asks_muslim_qualities_lesson
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
+            and not asks_french_authorization_letter_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,
