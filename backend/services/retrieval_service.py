@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v21-french-authorization-letter-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v22-french-invitations-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -558,6 +558,37 @@ def retrieve_relevant_passages(
         else ""
     )
 
+    asks_french_invitation_writing_lesson = (
+        not question_is_arabic
+        and (
+            "ecrit-2-1-rediger-des-invitations.pdf"
+            in normalized_source_name
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "lettre d invitation",
+                    "rediger des invitations",
+                    "directeur provincial",
+                    "manifestation culturelle",
+                    "club artistique et culturel",
+                    "expressions pour inviter",
+                    "confirmation de participation",
+                    "trois paragraphes",
+                )
+            )
+        )
+    )
+
+    # Le cours Écrit 2-1 contient peu de segments sur deux pages.
+    # Avec le filtre de source exact, on garde tout le document
+    # pour couvrir le sujet, les expressions et la grille.
+    if asks_french_invitation_writing_lesson:
+        number_of_results = max(
+            number_of_results,
+            12,
+        )
+
     asks_french_authorization_letter_lesson = (
         not question_is_arabic
         and (
@@ -1068,6 +1099,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_invitation_writing_lesson
         ):
             continue
 
@@ -1084,6 +1116,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_invitation_writing_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,

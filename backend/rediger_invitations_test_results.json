@@ -1,0 +1,614 @@
+{
+  "generated_at": "2026-08-07T10:58:21",
+  "test_version": "v1-rediger-invitations-baseline",
+  "program": "Programme marocain",
+  "subject": "Français",
+  "source": "ecrit-2-1-rediger-des-invitations.pdf",
+  "total_tests": 30,
+  "passed_tests": 30,
+  "failed_tests": 0,
+  "categories": {
+    "Type de production": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Cadre du projet": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Destinataire": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Objet de l'invitation": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Organisateur": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Travail préparatoire": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Cadre formel": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Expressions à rappeler": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Politesse": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Corps de lettre": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Premier paragraphe": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Qui invite": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Attente envers invité": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Confirmation": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Expression invitation 1": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Expression invitation 2": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Expression invitation 3": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Formule finale": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Canevas": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Grille amélioration": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère canevas": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère expressions": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Trois paragraphes": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère politesse": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Colonnes grille": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Évaluation finale": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Structure globale": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Erreur orthographique": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Résumé": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Refus correct": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "results": [
+    {
+      "number": 1,
+      "category": "Type de production",
+      "endpoint": "/ask",
+      "question": "Quel type de lettre faut-il rédiger dans ce cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 10.45,
+      "response": "D'après le document :\n- Il faut rédiger une lettre d'invitation formelle.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 2,
+      "category": "Cadre du projet",
+      "endpoint": "/ask",
+      "question": "Dans quel cadre la lettre d'invitation est-elle rédigée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.089,
+      "response": "D'après le document :\n- La lettre d'invitation est rédigée dans le cadre du projet relatif au club artistique et culturel de l'établissement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 3,
+      "category": "Destinataire",
+      "endpoint": "/ask",
+      "question": "À qui la lettre d'invitation doit-elle être adressée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.093,
+      "response": "D'après le document :\n- La lettre d'invitation doit être adressée au directeur provincial.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 4,
+      "category": "Objet de l'invitation",
+      "endpoint": "/ask",
+      "question": "À quoi le directeur provincial est-il invité ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.076,
+      "response": "D'après le document :\n- Le directeur provincial est invité à assister à la manifestation culturelle organisée par le club.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 5,
+      "category": "Organisateur",
+      "endpoint": "/ask",
+      "question": "Qui organise la manifestation culturelle ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.084,
+      "response": "D'après le document :\n- La manifestation culturelle est organisée par le club artistique et culturel de l'établissement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 6,
+      "category": "Travail préparatoire",
+      "endpoint": "/ask",
+      "question": "Que doivent élaborer les élèves avec leurs camarades avant de rédiger la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.103,
+      "response": "D'après le document :\n- Les élèves doivent élaborer avec leurs camarades le canevas d'écriture de la lettre d'invitation au directeur provincial.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 7,
+      "category": "Cadre formel",
+      "endpoint": "/ask",
+      "question": "Dans quel cadre la structure de la lettre d'invitation doit-elle être rappelée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.106,
+      "response": "D'après le document :\n- La structure de la lettre d'invitation doit être rappelée dans un cadre formel.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 8,
+      "category": "Expressions à rappeler",
+      "endpoint": "/ask",
+      "question": "Quel type d'expressions faut-il rappeler avant de rédiger la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.105,
+      "response": "D'après le document :\n- Il faut rappeler les expressions qui servent à inviter.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 9,
+      "category": "Politesse",
+      "endpoint": "/ask",
+      "question": "Quel type de formules faut-il utiliser dans une lettre d'invitation formelle ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.202,
+      "response": "D'après le document :\n- Il faut utiliser des formules de politesse dans la lettre d'invitation formelle.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 10,
+      "category": "Corps de lettre",
+      "endpoint": "/ask",
+      "question": "Combien de grandes parties du corps de la lettre d'invitation sont indiquées dans le cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.08,
+      "response": "D'après le document :\n- Le cours indique trois grandes parties dans le corps de la lettre d'invitation.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 11,
+      "category": "Premier paragraphe",
+      "endpoint": "/ask",
+      "question": "Que doit-on annoncer dans la première partie du corps de la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.07,
+      "response": "D'après le document :\n- Il faut annoncer l'événement en précisant l'objet de l'invitation, qui invite, le lieu et la date.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 12,
+      "category": "Qui invite",
+      "endpoint": "/ask",
+      "question": "Parmi les informations sur l'événement, doit-on préciser qui invite ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.097,
+      "response": "D'après le document :\n- Oui, parmi les informations sur l'événement, il faut préciser qui invite.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 13,
+      "category": "Attente envers invité",
+      "endpoint": "/ask",
+      "question": "Que faut-il dire concernant la personne invitée dans la deuxième partie du corps de la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.076,
+      "response": "D'après le document :\n- Il faut dire ce que l'on attend de la personne invitée.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 14,
+      "category": "Confirmation",
+      "endpoint": "/ask",
+      "question": "Quelle confirmation doit-on demander à la personne invitée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.076,
+      "response": "D'après le document :\n- Il faut demander la confirmation de participation de la personne invitée.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 15,
+      "category": "Expression invitation 1",
+      "endpoint": "/ask",
+      "question": "Quelle expression formelle du cours commence par « Nous avons le plaisir » ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.097,
+      "response": "D'après le document :\n- L'expression est : « Nous avons le plaisir de vous inviter ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 16,
+      "category": "Expression invitation 2",
+      "endpoint": "/ask",
+      "question": "Quelle expression formelle du cours utilise le mot « ravis » ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.071,
+      "response": "D'après le document :\n- L'expression est : « Nous sommes ravis de vous inviter ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 17,
+      "category": "Expression invitation 3",
+      "endpoint": "/ask",
+      "question": "Quelle expression du cours indique que l'acceptation de l'invitation ferait plaisir ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.081,
+      "response": "D'après le document :\n- L'expression est : « Vous nous ferez tellement plaisir si vous acceptez notre invitation ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 18,
+      "category": "Formule finale",
+      "endpoint": "/ask",
+      "question": "Que faut-il insérer à la fin de la lettre d'invitation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.092,
+      "response": "D'après le document :\n- Il faut insérer une formule finale de politesse à la fin de la lettre d'invitation.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 19,
+      "category": "Canevas",
+      "endpoint": "/ask",
+      "question": "Sur quel élément les élèves doivent-ils s'appuyer pour rédiger la lettre formelle ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.089,
+      "response": "D'après le document :\n- Les élèves doivent s'appuyer sur le canevas de la lettre formelle.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 20,
+      "category": "Grille amélioration",
+      "endpoint": "/ask",
+      "question": "À quoi sert la grille de critères après la rédaction ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.078,
+      "response": "D'après le document :\n- La grille sert à vérifier les critères puis à améliorer le texte.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 21,
+      "category": "Critère canevas",
+      "endpoint": "/ask",
+      "question": "Quel critère de la grille concerne le canevas de la lettre ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.092,
+      "response": "D'après le document :\n- Le critère est : « J'ai respecté le canevas de la lettre formelle ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 22,
+      "category": "Critère expressions",
+      "endpoint": "/ask",
+      "question": "Quel critère vérifie l'emploi des expressions d'invitation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.098,
+      "response": "D'après le document :\n- Le critère est : « J'ai utilisé les expressions pour inviter ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 23,
+      "category": "Trois paragraphes",
+      "endpoint": "/ask",
+      "question": "Sous quelle forme la lettre doit-elle être structurée selon la grille ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.099,
+      "response": "D'après le document :\n- La lettre doit être structurée sous forme de trois paragraphes.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 24,
+      "category": "Critère politesse",
+      "endpoint": "/ask",
+      "question": "Que demande la grille au sujet des formules de politesse ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.082,
+      "response": "D'après le document :\n- La grille demande de vérifier que des formules de politesse convenables ont été utilisées.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 25,
+      "category": "Colonnes grille",
+      "endpoint": "/ask",
+      "question": "Quelles réponses peut-on cocher dans la grille d'évaluation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.1,
+      "response": "D'après le document :\n- Dans la grille d'évaluation, on peut cocher « Oui » ou « Non ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 26,
+      "category": "Évaluation finale",
+      "endpoint": "/ask",
+      "question": "Quelles sont les trois rubriques proposées à la fin des activités ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.073,
+      "response": "D'après le document :\n- Les trois rubriques sont : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 27,
+      "category": "Structure globale",
+      "endpoint": "/ask",
+      "question": "Quels éléments essentiels doivent apparaître dans une lettre d'invitation formelle selon le cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.09,
+      "response": "D'après le document :\n- La lettre d'invitation formelle doit annoncer l'événement, dire ce que l'on attend de la personne invitée, demander la confirmation de participation et insérer une formule finale de politesse.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 28,
+      "category": "Erreur orthographique",
+      "endpoint": "/ask",
+      "question": "Coman redijé une letre dinvitasion formel pour invité le directeur provinsial ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.086,
+      "response": "D'après le document :\n- Pour rédiger une lettre d'invitation formelle au directeur provincial, il faut annoncer la manifestation culturelle, structurer la lettre en trois paragraphes, utiliser des expressions pour inviter, demander la confirmation de participation et terminer par une formule finale de politesse.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 29,
+      "category": "Résumé",
+      "endpoint": "/summarize",
+      "question": "Résume le cours sur la rédaction des invitations.",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.09,
+      "response": "Résumé du contenu :\n- Le cours apprend à rédiger une lettre d'invitation formelle dans le cadre du projet relatif au club artistique et culturel de l'établissement.\n- Le sujet consiste à inviter le directeur provincial à assister à la manifestation culturelle organisée par le club.\n- Avant la rédaction, les élèves élaborent un canevas d'écriture et rappellent la structure de la lettre d'invitation dans un cadre formel, les expressions pour inviter et les formules de politesse.\n- Le corps de la lettre est structuré en trois paragraphes : annoncer l'événement en indiquant l'objet de l'invitation, qui invite, le lieu et la date ; dire ce que l'on attend de la personne invitée ; demander la confirmation de participation.\n- Parmi les expressions proposées figurent « Nous avons le plaisir de vous inviter », « Nous sommes ravis de vous inviter » et « Vous nous ferez tellement plaisir si vous acceptez notre invitation ».\n- La lettre se termine par une formule finale de politesse.\n- La grille d'évaluation vérifie le respect du canevas de la lettre formelle, l'utilisation des expressions pour inviter, la structure en trois paragraphes et l'emploi de formules de politesse convenables ; elle permet ensuite d'améliorer le texte.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-2-1-rediger-des-invitations.pdf | page 1 ; ecrit-2-1-rediger-des-invitations.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 30,
+      "category": "Refus correct",
+      "endpoint": "/ask",
+      "question": "Comment calcule-t-on l'énergie cinétique d'une voiture ?",
+      "expected_status": "insufficient_context",
+      "actual_status": "insufficient_context",
+      "test_passed": "oui",
+      "duration_seconds": 0.079,
+      "response": "Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "",
+      "error": ""
+    }
+  ]
+}

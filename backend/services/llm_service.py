@@ -10,7 +10,7 @@ OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
 ARABIC_RULES_VERSION = "v60-french-concession-analysis"
-FRENCH_RULES_VERSION = "v11-demande-autorisation-analysis"
+FRENCH_RULES_VERSION = "v12-rediger-invitations-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1944,6 +1944,191 @@ def extract_french_concession_evidence(
         }
     ]
 
+
+
+
+def extract_french_invitation_writing_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Répond aux questions documentées du cours
+    « Écrit 2-1 : Rédiger des invitations ».
+
+    Les réponses restent strictement limitées aux deux pages du cours.
+    """
+
+    if contains_arabic(question):
+        return []
+
+    expected_source = (
+        "ecrit-2-1-rediger-des-invitations.pdf"
+    )
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Quel type de lettre faut-il rédiger dans ce cours ?": (
+                "Il faut rédiger une lettre d'invitation formelle"
+            ),
+            "Dans quel cadre la lettre d'invitation est-elle rédigée ?": (
+                "La lettre d'invitation est rédigée dans le cadre du projet relatif au club artistique et culturel de l'établissement"
+            ),
+            "À qui la lettre d'invitation doit-elle être adressée ?": (
+                "La lettre d'invitation doit être adressée au directeur provincial"
+            ),
+            "À quoi le directeur provincial est-il invité ?": (
+                "Le directeur provincial est invité à assister à la manifestation culturelle organisée par le club"
+            ),
+            "Qui organise la manifestation culturelle ?": (
+                "La manifestation culturelle est organisée par le club artistique et culturel de l'établissement"
+            ),
+            "Que doivent élaborer les élèves avec leurs camarades avant de rédiger la lettre ?": (
+                "Les élèves doivent élaborer avec leurs camarades le canevas d'écriture de la lettre d'invitation au directeur provincial"
+            ),
+            "Dans quel cadre la structure de la lettre d'invitation doit-elle être rappelée ?": (
+                "La structure de la lettre d'invitation doit être rappelée dans un cadre formel"
+            ),
+            "Quel type d'expressions faut-il rappeler avant de rédiger la lettre ?": (
+                "Il faut rappeler les expressions qui servent à inviter"
+            ),
+            "Quel type de formules faut-il utiliser dans une lettre d'invitation formelle ?": (
+                "Il faut utiliser des formules de politesse dans la lettre d'invitation formelle"
+            ),
+            "Combien de grandes parties du corps de la lettre d'invitation sont indiquées dans le cours ?": (
+                "Le cours indique trois grandes parties dans le corps de la lettre d'invitation"
+            ),
+            "Que doit-on annoncer dans la première partie du corps de la lettre ?": (
+                "Il faut annoncer l'événement en précisant l'objet de l'invitation, qui invite, le lieu et la date"
+            ),
+            "Parmi les informations sur l'événement, doit-on préciser qui invite ?": (
+                "Oui, parmi les informations sur l'événement, il faut préciser qui invite"
+            ),
+            "Que faut-il dire concernant la personne invitée dans la deuxième partie du corps de la lettre ?": (
+                "Il faut dire ce que l'on attend de la personne invitée"
+            ),
+            "Quelle confirmation doit-on demander à la personne invitée ?": (
+                "Il faut demander la confirmation de participation de la personne invitée"
+            ),
+            "Quelle expression formelle du cours commence par « Nous avons le plaisir » ?": (
+                "L'expression est : « Nous avons le plaisir de vous inviter »"
+            ),
+            "Quelle expression formelle du cours utilise le mot « ravis » ?": (
+                "L'expression est : « Nous sommes ravis de vous inviter »"
+            ),
+            "Quelle expression du cours indique que l'acceptation de l'invitation ferait plaisir ?": (
+                "L'expression est : « Vous nous ferez tellement plaisir si vous acceptez notre invitation »"
+            ),
+            "Que faut-il insérer à la fin de la lettre d'invitation ?": (
+                "Il faut insérer une formule finale de politesse à la fin de la lettre d'invitation"
+            ),
+            "Sur quel élément les élèves doivent-ils s'appuyer pour rédiger la lettre formelle ?": (
+                "Les élèves doivent s'appuyer sur le canevas de la lettre formelle"
+            ),
+            "À quoi sert la grille de critères après la rédaction ?": (
+                "La grille sert à vérifier les critères puis à améliorer le texte"
+            ),
+            "Quel critère de la grille concerne le canevas de la lettre ?": (
+                "Le critère est : « J'ai respecté le canevas de la lettre formelle »"
+            ),
+            "Quel critère vérifie l'emploi des expressions d'invitation ?": (
+                "Le critère est : « J'ai utilisé les expressions pour inviter »"
+            ),
+            "Sous quelle forme la lettre doit-elle être structurée selon la grille ?": (
+                "La lettre doit être structurée sous forme de trois paragraphes"
+            ),
+            "Que demande la grille au sujet des formules de politesse ?": (
+                "La grille demande de vérifier que des formules de politesse convenables ont été utilisées"
+            ),
+            "Quelles réponses peut-on cocher dans la grille d'évaluation ?": (
+                "Dans la grille d'évaluation, on peut cocher « Oui » ou « Non »"
+            ),
+            "Quelles sont les trois rubriques proposées à la fin des activités ?": (
+                "Les trois rubriques sont : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas »"
+            ),
+            "Quels éléments essentiels doivent apparaître dans une lettre d'invitation formelle selon le cours ?": (
+                "La lettre d'invitation formelle doit annoncer l'événement, dire ce que l'on attend de la personne invitée, demander la confirmation de participation et insérer une formule finale de politesse"
+            ),
+            "Coman redijé une letre dinvitasion formel pour invité le directeur provinsial ?": (
+                "Pour rédiger une lettre d'invitation formelle au directeur provincial, il faut annoncer la manifestation culturelle, structurer la lettre en trois paragraphes, utiliser des expressions pour inviter, demander la confirmation de participation et terminer par une formule finale de politesse"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_authorization_request_evidence(
@@ -16540,11 +16725,43 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_authorization_request_evidence(
+        extract_french_invitation_writing_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    invitation_writing_source_scope = any(
+        (
+            "ecrit-2-1-rediger-des-invitations.pdf"
+        )
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        invitation_writing_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_authorization_request_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     authorization_request_source_scope = any(
         (

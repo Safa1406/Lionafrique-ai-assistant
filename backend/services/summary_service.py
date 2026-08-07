@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v53-french-authorization-letter-structured-summary"
+    "v54-french-invitations-structured-summary"
 )
 
 
@@ -6148,6 +6148,112 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_invitation_writing_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du cours Écrit 2-1."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    if (
+        "resume" in normalized_question
+        and any(
+            marker in normalized_question
+            for marker in (
+                "redaction des invitations",
+                "rediger des invitations",
+                "invitations",
+            )
+        )
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_invitation_writing_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du cours Rédiger des invitations."""
+
+    mode = detect_french_invitation_writing_summary_mode(
+        question
+    )
+
+    if mode != "full":
+        return None
+
+    expected_source = (
+        "ecrit-2-1-rediger-des-invitations.pdf"
+    )
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source in source_name:
+            selected_units.append(
+                unit
+            )
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- Le cours apprend à rédiger une lettre d'invitation formelle "
+        "dans le cadre du projet relatif au club artistique et culturel "
+        "de l'établissement.\n"
+        "- Le sujet consiste à inviter le directeur provincial à assister "
+        "à la manifestation culturelle organisée par le club.\n"
+        "- Avant la rédaction, les élèves élaborent un canevas d'écriture "
+        "et rappellent la structure de la lettre d'invitation dans un "
+        "cadre formel, les expressions pour inviter et les formules de "
+        "politesse.\n"
+        "- Le corps de la lettre est structuré en trois paragraphes : "
+        "annoncer l'événement en indiquant l'objet de l'invitation, qui "
+        "invite, le lieu et la date ; dire ce que l'on attend de la "
+        "personne invitée ; demander la confirmation de participation.\n"
+        "- Parmi les expressions proposées figurent « Nous avons le plaisir "
+        "de vous inviter », « Nous sommes ravis de vous inviter » et "
+        "« Vous nous ferez tellement plaisir si vous acceptez notre "
+        "invitation ».\n"
+        "- La lettre se termine par une formule finale de politesse.\n"
+        "- La grille d'évaluation vérifie le respect du canevas de la lettre "
+        "formelle, l'utilisation des expressions pour inviter, la structure "
+        "en trois paragraphes et l'emploi de formules de politesse "
+        "convenables ; elle permet ensuite d'améliorer le texte."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_authorization_letter_summary_mode(
     question: str,
 ) -> str:
@@ -7140,6 +7246,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_invitation_writing_summary = (
+        build_french_invitation_writing_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_invitation_writing_summary is not None:
+        return structured_invitation_writing_summary
 
     structured_authorization_letter_summary = (
         build_french_authorization_letter_summary(

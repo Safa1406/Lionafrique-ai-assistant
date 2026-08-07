@@ -1,0 +1,66 @@
+﻿number,category,endpoint,question,expected_status,actual_status,test_passed,duration_seconds,response,missing_groups,correct_source,sources,error
+1,Type de production,/ask,Quel type de lettre faut-il rédiger dans ce cours ?,success,success,oui,10.45,"D'après le document :
+- Il faut rédiger une lettre d'invitation formelle.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+2,Cadre du projet,/ask,Dans quel cadre la lettre d'invitation est-elle rédigée ?,success,success,oui,0.089,"D'après le document :
+- La lettre d'invitation est rédigée dans le cadre du projet relatif au club artistique et culturel de l'établissement.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+3,Destinataire,/ask,À qui la lettre d'invitation doit-elle être adressée ?,success,success,oui,0.093,"D'après le document :
+- La lettre d'invitation doit être adressée au directeur provincial.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+4,Objet de l'invitation,/ask,À quoi le directeur provincial est-il invité ?,success,success,oui,0.076,"D'après le document :
+- Le directeur provincial est invité à assister à la manifestation culturelle organisée par le club.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+5,Organisateur,/ask,Qui organise la manifestation culturelle ?,success,success,oui,0.084,"D'après le document :
+- La manifestation culturelle est organisée par le club artistique et culturel de l'établissement.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+6,Travail préparatoire,/ask,Que doivent élaborer les élèves avec leurs camarades avant de rédiger la lettre ?,success,success,oui,0.103,"D'après le document :
+- Les élèves doivent élaborer avec leurs camarades le canevas d'écriture de la lettre d'invitation au directeur provincial.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+7,Cadre formel,/ask,Dans quel cadre la structure de la lettre d'invitation doit-elle être rappelée ?,success,success,oui,0.106,"D'après le document :
+- La structure de la lettre d'invitation doit être rappelée dans un cadre formel.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+8,Expressions à rappeler,/ask,Quel type d'expressions faut-il rappeler avant de rédiger la lettre ?,success,success,oui,0.105,"D'après le document :
+- Il faut rappeler les expressions qui servent à inviter.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+9,Politesse,/ask,Quel type de formules faut-il utiliser dans une lettre d'invitation formelle ?,success,success,oui,0.202,"D'après le document :
+- Il faut utiliser des formules de politesse dans la lettre d'invitation formelle.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+10,Corps de lettre,/ask,Combien de grandes parties du corps de la lettre d'invitation sont indiquées dans le cours ?,success,success,oui,0.08,"D'après le document :
+- Le cours indique trois grandes parties dans le corps de la lettre d'invitation.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+11,Premier paragraphe,/ask,Que doit-on annoncer dans la première partie du corps de la lettre ?,success,success,oui,0.07,"D'après le document :
+- Il faut annoncer l'événement en précisant l'objet de l'invitation, qui invite, le lieu et la date.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+12,Qui invite,/ask,"Parmi les informations sur l'événement, doit-on préciser qui invite ?",success,success,oui,0.097,"D'après le document :
+- Oui, parmi les informations sur l'événement, il faut préciser qui invite.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+13,Attente envers invité,/ask,Que faut-il dire concernant la personne invitée dans la deuxième partie du corps de la lettre ?,success,success,oui,0.076,"D'après le document :
+- Il faut dire ce que l'on attend de la personne invitée.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+14,Confirmation,/ask,Quelle confirmation doit-on demander à la personne invitée ?,success,success,oui,0.076,"D'après le document :
+- Il faut demander la confirmation de participation de la personne invitée.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+15,Expression invitation 1,/ask,Quelle expression formelle du cours commence par « Nous avons le plaisir » ?,success,success,oui,0.097,"D'après le document :
+- L'expression est : « Nous avons le plaisir de vous inviter ».",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+16,Expression invitation 2,/ask,Quelle expression formelle du cours utilise le mot « ravis » ?,success,success,oui,0.071,"D'après le document :
+- L'expression est : « Nous sommes ravis de vous inviter ».",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+17,Expression invitation 3,/ask,Quelle expression du cours indique que l'acceptation de l'invitation ferait plaisir ?,success,success,oui,0.081,"D'après le document :
+- L'expression est : « Vous nous ferez tellement plaisir si vous acceptez notre invitation ».",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+18,Formule finale,/ask,Que faut-il insérer à la fin de la lettre d'invitation ?,success,success,oui,0.092,"D'après le document :
+- Il faut insérer une formule finale de politesse à la fin de la lettre d'invitation.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+19,Canevas,/ask,Sur quel élément les élèves doivent-ils s'appuyer pour rédiger la lettre formelle ?,success,success,oui,0.089,"D'après le document :
+- Les élèves doivent s'appuyer sur le canevas de la lettre formelle.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+20,Grille amélioration,/ask,À quoi sert la grille de critères après la rédaction ?,success,success,oui,0.078,"D'après le document :
+- La grille sert à vérifier les critères puis à améliorer le texte.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+21,Critère canevas,/ask,Quel critère de la grille concerne le canevas de la lettre ?,success,success,oui,0.092,"D'après le document :
+- Le critère est : « J'ai respecté le canevas de la lettre formelle ».",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+22,Critère expressions,/ask,Quel critère vérifie l'emploi des expressions d'invitation ?,success,success,oui,0.098,"D'après le document :
+- Le critère est : « J'ai utilisé les expressions pour inviter ».",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+23,Trois paragraphes,/ask,Sous quelle forme la lettre doit-elle être structurée selon la grille ?,success,success,oui,0.099,"D'après le document :
+- La lettre doit être structurée sous forme de trois paragraphes.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+24,Critère politesse,/ask,Que demande la grille au sujet des formules de politesse ?,success,success,oui,0.082,"D'après le document :
+- La grille demande de vérifier que des formules de politesse convenables ont été utilisées.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+25,Colonnes grille,/ask,Quelles réponses peut-on cocher dans la grille d'évaluation ?,success,success,oui,0.1,"D'après le document :
+- Dans la grille d'évaluation, on peut cocher « Oui » ou « Non ».",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+26,Évaluation finale,/ask,Quelles sont les trois rubriques proposées à la fin des activités ?,success,success,oui,0.073,"D'après le document :
+- Les trois rubriques sont : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas ».",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 2,
+27,Structure globale,/ask,Quels éléments essentiels doivent apparaître dans une lettre d'invitation formelle selon le cours ?,success,success,oui,0.09,"D'après le document :
+- La lettre d'invitation formelle doit annoncer l'événement, dire ce que l'on attend de la personne invitée, demander la confirmation de participation et insérer une formule finale de politesse.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+28,Erreur orthographique,/ask,Coman redijé une letre dinvitasion formel pour invité le directeur provinsial ?,success,success,oui,0.086,"D'après le document :
+- Pour rédiger une lettre d'invitation formelle au directeur provincial, il faut annoncer la manifestation culturelle, structurer la lettre en trois paragraphes, utiliser des expressions pour inviter, demander la confirmation de participation et terminer par une formule finale de politesse.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1,
+29,Résumé,/summarize,Résume le cours sur la rédaction des invitations.,success,success,oui,0.09,"Résumé du contenu :
+- Le cours apprend à rédiger une lettre d'invitation formelle dans le cadre du projet relatif au club artistique et culturel de l'établissement.
+- Le sujet consiste à inviter le directeur provincial à assister à la manifestation culturelle organisée par le club.
+- Avant la rédaction, les élèves élaborent un canevas d'écriture et rappellent la structure de la lettre d'invitation dans un cadre formel, les expressions pour inviter et les formules de politesse.
+- Le corps de la lettre est structuré en trois paragraphes : annoncer l'événement en indiquant l'objet de l'invitation, qui invite, le lieu et la date ; dire ce que l'on attend de la personne invitée ; demander la confirmation de participation.
+- Parmi les expressions proposées figurent « Nous avons le plaisir de vous inviter », « Nous sommes ravis de vous inviter » et « Vous nous ferez tellement plaisir si vous acceptez notre invitation ».
+- La lettre se termine par une formule finale de politesse.
+- La grille d'évaluation vérifie le respect du canevas de la lettre formelle, l'utilisation des expressions pour inviter, la structure en trois paragraphes et l'emploi de formules de politesse convenables ; elle permet ensuite d'améliorer le texte.",[],oui,ecrit-2-1-rediger-des-invitations.pdf | page 1 ; ecrit-2-1-rediger-des-invitations.pdf | page 2,
+30,Refus correct,/ask,Comment calcule-t-on l'énergie cinétique d'une voiture ?,insufficient_context,insufficient_context,oui,0.079,Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.,[],oui,,
