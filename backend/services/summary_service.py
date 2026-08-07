@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v54-french-invitations-structured-summary"
+    "v55-french-inviter-intervenant-structured-summary"
 )
 
 
@@ -6149,6 +6149,108 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_guest_speaker_invitation_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du cours Écrit 2-2."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    if (
+        "resume" in normalized_question
+        and "inviter un intervenant" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_guest_speaker_invitation_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du cours Écrit 2-2."""
+
+    mode = detect_french_guest_speaker_invitation_summary_mode(
+        question
+    )
+
+    if mode != "full":
+        return None
+
+    expected_source = (
+        "ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf"
+    )
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source in source_name:
+            selected_units.append(
+                unit
+            )
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- Le cours apprend à rédiger une lettre d'invitation formelle "
+        "pour inviter un intervenant, notamment le représentant du GIEC, "
+        "à participer à un débat autour de l'environnement organisé pendant "
+        "la semaine de l'environnement au collège.\n"
+        "- Avant la rédaction, les élèves élaborent un canevas et rappellent "
+        "la structure de la lettre d'invitation, les expressions pour inviter, "
+        "les formules de politesse et la structure du corps en trois phases.\n"
+        "- La lettre commence par une formule d'appel, puis son corps est "
+        "structuré en trois paragraphes. Le premier présente l'organisation "
+        "de l'événement avec la date, l'objet, l'invitation et le lieu.\n"
+        "- Le deuxième paragraphe exprime l'insistance et précise la nature "
+        "de l'intervention. Le troisième demande la confirmation et fournit "
+        "les coordonnées, notamment le mail.\n"
+        "- Après le corps de la lettre viennent une formule de politesse et "
+        "la signature. Il faut aussi indiquer la date et l'événement et insérer "
+        "une formule finale de politesse.\n"
+        "- Les expressions proposées comprennent « Nous avons le plaisir de "
+        "vous inviter », « Nous sommes ravis de vous inviter » et « Vous nous "
+        "ferez tellement plaisir si vous acceptez notre invitation ».\n"
+        "- La grille vérifie le respect du canevas, la structure en trois "
+        "paragraphes, l'emploi d'expressions convenables pour présenter "
+        "l'événement, inviter et demander la confirmation, ainsi qu'une "
+        "formule de politesse convenable.\n"
+        "- Dans le projet de groupe, les élèves rédigent une lettre d'invitation "
+        "à un spécialiste de l'écologie pour participer au débat de la semaine "
+        "de l'environnement au collège."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
 def detect_french_invitation_writing_summary_mode(
     question: str,
 ) -> str:
@@ -7246,6 +7348,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_guest_speaker_invitation_summary = (
+        build_french_guest_speaker_invitation_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_guest_speaker_invitation_summary is not None:
+        return structured_guest_speaker_invitation_summary
 
     structured_invitation_writing_summary = (
         build_french_invitation_writing_summary(

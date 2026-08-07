@@ -1,0 +1,67 @@
+﻿number,category,endpoint,question,expected_status,actual_status,test_passed,duration_seconds,response,missing_groups,correct_source,sources,error
+1,Type de production,/ask,Quel type de lettre faut-il rédiger dans ce cours ?,success,success,oui,9.231,"D'après le document :
+- Il faut rédiger une lettre d'invitation pour inviter un intervenant ou un représentant.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 1,
+2,Projet de classe,/ask,Quel est le projet de classe mentionné dans le sujet ?,success,success,oui,0.113,"D'après le document :
+- Le projet de classe consiste à organiser un débat autour de l'environnement.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 1,
+3,Destinataire,/ask,À qui la lettre d'invitation du sujet est-elle adressée ?,success,success,oui,0.093,"D'après le document :
+- La lettre d'invitation est adressée au représentant du GIEC.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 1,
+4,But invitation,/ask,Pourquoi invite-t-on le représentant du GIEC ?,success,success,oui,0.099,"D'après le document :
+- On invite le représentant du GIEC pour le convier à participer au débat.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 1,
+5,Période événement,/ask,Pendant quelle période le débat sera-t-il organisé ?,success,success,oui,0.096,"D'après le document :
+- Le débat sera organisé pendant la semaine de l'environnement.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 3,
+6,Lieu événement,/ask,Où le débat sera-t-il organisé ?,success,success,oui,0.1,"D'après le document :
+- Le débat sera organisé au collège.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 3,
+7,Canevas,/ask,Que doivent élaborer les élèves avec leurs camarades avant la rédaction ?,success,success,oui,0.098,"D'après le document :
+- Les élèves doivent élaborer avec leurs camarades le canevas d'écriture de la lettre d'invitation au représentant du GIEC.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 1,
+8,Cadre formel,/ask,Dans quel cadre faut-il rappeler la structure de la lettre d'invitation ?,success,success,oui,0.11,"D'après le document :
+- Il faut rappeler la structure de la lettre d'invitation dans un cadre formel.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+9,Rappels,/ask,Quels éléments faut-il rappeler avant de produire la lettre ?,success,success,oui,0.083,"D'après le document :
+- Il faut rappeler la structure de la lettre d'invitation, les expressions qui servent à inviter, les formules de politesse et la structure du corps de la lettre en trois phases.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 1,
+10,Formule d'appel,/ask,Quel élément doit apparaître avant le corps de la lettre ?,success,success,oui,0.095,"D'après le document :
+- Une formule d'appel doit apparaître avant le corps de la lettre.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 1,
+11,Trois paragraphes,/ask,Combien de paragraphes doit contenir le corps de la lettre ?,success,success,oui,0.118,"D'après le document :
+- Le corps de la lettre doit contenir trois paragraphes.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+12,Premier paragraphe,/ask,Quelles informations doit contenir le premier paragraphe du corps de la lettre ?,success,success,oui,0.082,"D'après le document :
+- Le premier paragraphe donne des informations sur l'organisation de l'événement : la date, l'objet, l'invitation et le lieu.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+13,Deuxième paragraphe,/ask,Que doit contenir le deuxième paragraphe de la lettre ?,success,success,oui,0.097,"D'après le document :
+- Le deuxième paragraphe doit contenir l'insistance et la nature de l'intervention.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+14,Troisième paragraphe,/ask,Que doit contenir le troisième paragraphe de la lettre ?,success,success,oui,0.091,"D'après le document :
+- Le troisième paragraphe doit contenir la demande de confirmation et les coordonnées, notamment le mail.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+15,Formule de politesse,/ask,Quel élément de politesse doit apparaître après le corps de la lettre ?,success,success,oui,0.099,"D'après le document :
+- Une formule de politesse doit apparaître après le corps de la lettre.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+16,Signature,/ask,Quel élément doit accompagner la fin de la lettre après la formule de politesse ?,success,success,oui,0.086,"D'après le document :
+- La signature doit accompagner la fin de la lettre après la formule de politesse.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+17,Expression invitation 1,/ask,Quelle expression formelle commence par « Nous avons le plaisir » ?,success,success,oui,0.092,"D'après le document :
+- L'expression est : « Nous avons le plaisir de vous inviter ».",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+18,Expression invitation 2,/ask,Quelle expression formelle contient le mot « ravis » ?,success,success,oui,0.09,"D'après le document :
+- L'expression est : « Nous sommes ravis de vous inviter ».",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+19,Expression invitation 3,/ask,Quelle expression indique que l'acceptation de l'invitation ferait plaisir ?,success,success,oui,0.103,"D'après le document :
+- L'expression est : « Vous nous ferez tellement plaisir si vous acceptez notre invitation ».",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+20,Date événement,/ask,Quelles deux informations faut-il explicitement indiquer avant la formule finale ?,success,success,oui,0.085,"D'après le document :
+- Il faut explicitement indiquer la date et l'événement.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+21,Formule finale,/ask,Que faut-il insérer à la fin de la lettre ?,success,success,oui,0.079,"D'après le document :
+- Il faut insérer une formule finale de politesse à la fin de la lettre.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+22,Grille canevas,/ask,Quel critère de la grille concerne le canevas de la lettre ?,success,success,oui,0.1,"D'après le document :
+- Le critère est : « J'ai respecté le canevas de la lettre formelle ».",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+23,Grille structure,/ask,Que vérifie la grille concernant le corps de la lettre ?,success,success,oui,0.093,"D'après le document :
+- La grille vérifie que le corps de la lettre a été bien structuré en 3 paragraphes.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+24,Grille expressions,/ask,Quelles expressions la grille demande-t-elle d'utiliser convenablement ?,success,success,oui,0.087,"D'après le document :
+- La grille demande d'utiliser des expressions convenables pour présenter l'événement en précisant l'objet, la date et le lieu, pour inviter et pour demander la confirmation.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+25,Colonnes grille,/ask,Quelles réponses peut-on cocher dans la grille d'évaluation ?,success,success,oui,0.081,"D'après le document :
+- Dans la grille d'évaluation, on peut cocher « Oui » ou « Non ».",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+26,Évaluation finale,/ask,Quelles sont les trois rubriques proposées à la fin des activités ?,success,success,oui,0.11,"D'après le document :
+- Les trois rubriques sont : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas ».",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+27,Projet groupe,/ask,Quel spécialiste faut-il inviter dans le projet de groupe de la page 3 ?,success,success,oui,0.075,"D'après le document :
+- Dans le projet de groupe, il faut inviter un spécialiste de l'écologie.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 3,
+28,Erreur orthographique,/ask,Coman redijé une letre pour invité un intervanan du GIEC au déba denvironeman ?,success,success,oui,0.219,"D'après le document :
+- Pour rédiger une lettre d'invitation au représentant du GIEC, il faut structurer le corps en trois paragraphes, demander une confirmation avec les coordonnées et le mail, utiliser une formule de politesse et terminer par une signature.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2,
+29,Résumé,/summarize,Résume le cours sur la rédaction d'une lettre pour inviter un intervenant.,success,success,oui,0.164,"Résumé du contenu :
+- Le cours apprend à rédiger une lettre d'invitation formelle pour inviter un intervenant, notamment le représentant du GIEC, à participer à un débat autour de l'environnement organisé pendant la semaine de l'environnement au collège.
+- Avant la rédaction, les élèves élaborent un canevas et rappellent la structure de la lettre d'invitation, les expressions pour inviter, les formules de politesse et la structure du corps en trois phases.
+- La lettre commence par une formule d'appel, puis son corps est structuré en trois paragraphes. Le premier présente l'organisation de l'événement avec la date, l'objet, l'invitation et le lieu.
+- Le deuxième paragraphe exprime l'insistance et précise la nature de l'intervention. Le troisième demande la confirmation et fournit les coordonnées, notamment le mail.
+- Après le corps de la lettre viennent une formule de politesse et la signature. Il faut aussi indiquer la date et l'événement et insérer une formule finale de politesse.
+- Les expressions proposées comprennent « Nous avons le plaisir de vous inviter », « Nous sommes ravis de vous inviter » et « Vous nous ferez tellement plaisir si vous acceptez notre invitation ».
+- La grille vérifie le respect du canevas, la structure en trois paragraphes, l'emploi d'expressions convenables pour présenter l'événement, inviter et demander la confirmation, ainsi qu'une formule de politesse convenable.
+- Dans le projet de groupe, les élèves rédigent une lettre d'invitation à un spécialiste de l'écologie pour participer au débat de la semaine de l'environnement au collège.",[],oui,ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 1 ; ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 2 ; ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf | page 3,
+30,Refus correct,/ask,Comment calcule-t-on la masse molaire du dioxyde de carbone ?,insufficient_context,insufficient_context,oui,0.096,Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.,[],oui,,

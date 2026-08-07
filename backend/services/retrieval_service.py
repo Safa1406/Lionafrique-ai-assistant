@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v22-french-invitations-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v23-french-inviter-intervenant-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -557,6 +557,37 @@ def retrieve_relevant_passages(
         if source
         else ""
     )
+
+
+    asks_french_guest_speaker_invitation_lesson = (
+        not question_is_arabic
+        and (
+            "ecrit-2-2-rediger-une-lettre-pour-inviter-un-intervenant.pdf"
+            in normalized_source_name
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "inviter un intervenant",
+                    "representant du giec",
+                    "semaine de l environnement",
+                    "nature de l intervention",
+                    "demande de confirmation",
+                    "coordonnees",
+                    "specialiste de l ecologie",
+                )
+            )
+        )
+    )
+
+    # Le cours Écrit 2-2 s'étend sur trois pages et plusieurs segments.
+    # Avec un filtre de source exact, on conserve tout le petit document
+    # afin de couvrir le sujet, les trois paragraphes, la grille et le projet.
+    if asks_french_guest_speaker_invitation_lesson:
+        number_of_results = max(
+            number_of_results,
+            14,
+        )
 
     asks_french_invitation_writing_lesson = (
         not question_is_arabic
@@ -1100,6 +1131,7 @@ def retrieve_relevant_passages(
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
             and not asks_french_invitation_writing_lesson
+            and not asks_french_guest_speaker_invitation_lesson
         ):
             continue
 
@@ -1117,6 +1149,7 @@ def retrieve_relevant_passages(
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
             and not asks_french_invitation_writing_lesson
+            and not asks_french_guest_speaker_invitation_lesson
             and not should_keep_without_lexical_overlap(
                 distance=distance,
                 intent=intent,
