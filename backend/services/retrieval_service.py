@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v24-french-inviter-beneficiaires-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v25-french-invitations-participants-debat-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -559,6 +559,39 @@ def retrieve_relevant_passages(
     )
 
 
+    asks_french_debate_participant_invitations_lesson = (
+        not question_is_arabic
+        and (
+            "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf"
+            in normalized_source_name
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "participants du debat",
+                    "carte d invitation",
+                    "carte postale",
+                    "directeur regional",
+                    "lettre conventionnelle",
+                    "parents d eleves",
+                    "association",
+                    "email",
+                    "inviter des amis",
+                )
+            )
+        )
+    )
+
+    # Le projet Écrit 3-2 tient sur deux pages et répartit les sept
+    # supports d'invitation entre les deux pages. Avec un filtre de
+    # source exact, on conserve tout le petit document.
+    if asks_french_debate_participant_invitations_lesson:
+        number_of_results = max(
+            number_of_results,
+            12,
+        )
+
+
     asks_french_beneficiary_invitation_lesson = (
         not question_is_arabic
         and (
@@ -1054,7 +1087,8 @@ def retrieve_relevant_passages(
         )
 
     if (
-        asks_french_beneficiary_invitation_lesson
+        asks_french_debate_participant_invitations_lesson
+        or asks_french_beneficiary_invitation_lesson
         or asks_french_authorization_letter_lesson
     ):
         candidate_count = max(
@@ -1166,6 +1200,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_debate_participant_invitations_lesson
             and not asks_french_beneficiary_invitation_lesson
             and not asks_french_invitation_writing_lesson
             and not asks_french_guest_speaker_invitation_lesson
@@ -1185,6 +1220,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_debate_participant_invitations_lesson
             and not asks_french_beneficiary_invitation_lesson
             and not asks_french_invitation_writing_lesson
             and not asks_french_guest_speaker_invitation_lesson

@@ -1,0 +1,614 @@
+{
+  "generated_at": "2026-08-07T21:59:05",
+  "test_version": "v1-invitations-participants-debat-baseline",
+  "program": "Programme marocain",
+  "subject": "Français",
+  "source": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf",
+  "total_tests": 30,
+  "passed_tests": 30,
+  "failed_tests": 0,
+  "categories": {
+    "Objectif général": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Travail de groupe": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Nombre de tâches": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Carte invitation": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Destinataires carte": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Action carte": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Carte postale": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Directeur régional": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Directeur collège": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Parents élèves": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Association environnement": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Association objectif": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Amis": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Supports non lettre": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Supports lettre": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Public institutionnel": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Public familial": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Public amical": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Public associatif": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Lien débat": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Projet": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Premier groupe tâches": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Deux directeurs": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Invitation formelle parents": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Invitation numérique": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Variété supports": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Organisation collective": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Erreur orthographique": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Résumé": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Refus correct": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "results": [
+    {
+      "number": 1,
+      "category": "Objectif général",
+      "endpoint": "/ask",
+      "question": "Que doivent rédiger les élèves avec leurs camarades dans ce projet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 17.094,
+      "response": "D'après le document :\n- Les élèves doivent rédiger avec leurs camarades les invitations à adresser aux différents participants du débat.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 2,
+      "category": "Travail de groupe",
+      "endpoint": "/ask",
+      "question": "Avec qui l'élève réalise-t-il les tâches proposées ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.127,
+      "response": "D'après le document :\n- L'élève réalise les tâches avec les membres de son groupe.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 3,
+      "category": "Nombre de tâches",
+      "endpoint": "/ask",
+      "question": "Combien de tâches différentes sont proposées dans le projet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.13,
+      "response": "D'après le document :\n- Le projet propose sept tâches différentes.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 4,
+      "category": "Carte invitation",
+      "endpoint": "/ask",
+      "question": "Quel premier type de support d'invitation est proposé ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.106,
+      "response": "D'après le document :\n- Le premier support proposé est une carte d'invitation.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 5,
+      "category": "Destinataires carte",
+      "endpoint": "/ask",
+      "question": "À qui la carte d'invitation doit-elle être adressée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.111,
+      "response": "D'après le document :\n- La carte d'invitation doit être adressée aux différents participants.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 6,
+      "category": "Action carte",
+      "endpoint": "/ask",
+      "question": "Que demande le cours de faire avec la carte d'invitation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.133,
+      "response": "D'après le document :\n- Le cours demande de remplir la carte d'invitation.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 7,
+      "category": "Carte postale",
+      "endpoint": "/ask",
+      "question": "Quel deuxième support d'invitation est proposé dans le projet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.12,
+      "response": "D'après le document :\n- Le deuxième support proposé est une carte postale.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 8,
+      "category": "Directeur régional",
+      "endpoint": "/ask",
+      "question": "À quel responsable régional une lettre doit-elle être adressée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.117,
+      "response": "D'après le document :\n- Une lettre doit être adressée au directeur régional.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 9,
+      "category": "Directeur collège",
+      "endpoint": "/ask",
+      "question": "À quel responsable de l'établissement une lettre doit-elle être adressée ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.125,
+      "response": "D'après le document :\n- Une lettre doit être adressée au directeur du collège.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 10,
+      "category": "Parents élèves",
+      "endpoint": "/ask",
+      "question": "Quel type de lettre doit être adressé aux parents d'élèves ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.142,
+      "response": "D'après le document :\n- Une lettre conventionnelle d'invitation doit être adressée aux parents d'élèves.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 11,
+      "category": "Association environnement",
+      "endpoint": "/ask",
+      "question": "Quel support est proposé pour inviter les membres d'une association ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.128,
+      "response": "D'après le document :\n- Un Email est proposé pour inviter les membres d'une association.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 12,
+      "category": "Association objectif",
+      "endpoint": "/ask",
+      "question": "Quelle cause défend l'association mentionnée dans le projet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.108,
+      "response": "D'après le document :\n- L'association mentionnée dans le projet défend l'environnement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 13,
+      "category": "Amis",
+      "endpoint": "/ask",
+      "question": "Quel type de correspondance est proposé pour inviter des amis ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.124,
+      "response": "D'après le document :\n- Une lettre est proposée pour inviter des amis.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 14,
+      "category": "Supports non lettre",
+      "endpoint": "/ask",
+      "question": "Quels supports autres qu'une lettre sont proposés dans le projet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.108,
+      "response": "D'après le document :\n- Les supports autres qu'une lettre sont la carte d'invitation, la carte postale et l'Email.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 15,
+      "category": "Supports lettre",
+      "endpoint": "/ask",
+      "question": "Quels destinataires reçoivent explicitement une lettre dans les tâches proposées ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.107,
+      "response": "D'après le document :\n- Les lettres sont destinées au directeur régional, au directeur du collège, aux parents d'élèves et aux amis.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 16,
+      "category": "Public institutionnel",
+      "endpoint": "/ask",
+      "question": "Quels deux directeurs sont cités comme destinataires de lettres ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.117,
+      "response": "D'après le document :\n- Les deux directeurs cités sont le directeur régional et le directeur du collège.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 17,
+      "category": "Public familial",
+      "endpoint": "/ask",
+      "question": "Quel public familial est cité comme destinataire d'une invitation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.122,
+      "response": "D'après le document :\n- Le public familial cité est les parents d'élèves.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 18,
+      "category": "Public amical",
+      "endpoint": "/ask",
+      "question": "Quel public amical est cité comme destinataire d'une invitation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.128,
+      "response": "D'après le document :\n- Le public amical cité est les amis.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 19,
+      "category": "Public associatif",
+      "endpoint": "/ask",
+      "question": "Quel public associatif doit recevoir un Email ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.117,
+      "response": "D'après le document :\n- Les membres d'une association qui défend l'environnement doivent recevoir un Email.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 20,
+      "category": "Lien débat",
+      "endpoint": "/ask",
+      "question": "À quelle activité commune sont liées toutes les invitations du projet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.146,
+      "response": "D'après le document :\n- Toutes les invitations du projet sont liées au débat.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 21,
+      "category": "Projet",
+      "endpoint": "/ask",
+      "question": "Le cours est-il présenté comme une leçon ordinaire ou comme un projet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.134,
+      "response": "D'après le document :\n- Le cours est présenté comme un projet.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 22,
+      "category": "Premier groupe tâches",
+      "endpoint": "/ask",
+      "question": "Quelles sont les deux premières tâches proposées ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.109,
+      "response": "D'après le document :\n- Les deux premières tâches sont une carte d'invitation et une carte postale.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 23,
+      "category": "Deux directeurs",
+      "endpoint": "/ask",
+      "question": "Quelles sont les deux tâches qui concernent des directeurs ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.109,
+      "response": "D'après le document :\n- Les deux tâches concernent une lettre au directeur régional et une lettre au directeur du collège.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 24,
+      "category": "Invitation formelle parents",
+      "endpoint": "/ask",
+      "question": "Quelle invitation est explicitement qualifiée de conventionnelle ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.119,
+      "response": "D'après le document :\n- La lettre conventionnelle d'invitation à adresser aux parents d'élèves est explicitement qualifiée de conventionnelle.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 25,
+      "category": "Invitation numérique",
+      "endpoint": "/ask",
+      "question": "Quelle invitation numérique est mentionnée dans le projet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.122,
+      "response": "D'après le document :\n- L'invitation numérique mentionnée est un Email pour inviter les membres d'une association.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 26,
+      "category": "Variété supports",
+      "endpoint": "/ask",
+      "question": "Le projet demande-t-il d'utiliser un seul type d'invitation ou plusieurs supports ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.13,
+      "response": "D'après le document :\n- Le projet propose plusieurs supports différents : une carte d'invitation, une carte postale, des lettres et un Email.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 27,
+      "category": "Organisation collective",
+      "endpoint": "/ask",
+      "question": "Comment le travail d'invitation est-il organisé entre les élèves ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.121,
+      "response": "D'après le document :\n- Le travail est organisé collectivement : l'élève rédige avec ses camarades et réalise une tâche avec les membres de son groupe.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 28,
+      "category": "Erreur orthographique",
+      "endpoint": "/ask",
+      "question": "Coman preparé lé invitasion pour lé partisipan du déba: kart, postale, direktèr rejional, paron, asosiasion é ami ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.145,
+      "response": "D'après le document :\n- Pour les participants du débat, le projet propose une carte d'invitation, une carte postale, une lettre au directeur régional, une lettre conventionnelle aux parents d'élèves, un Email pour une association qui défend l'environnement et une lettre pour les amis.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 29,
+      "category": "Résumé",
+      "endpoint": "/summarize",
+      "question": "Résume le projet sur la rédaction des invitations aux différents participants du débat.",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.109,
+      "response": "Résumé du contenu :\n- Le projet demande aux élèves de rédiger, avec leurs camarades, des invitations à adresser aux différents participants du débat. Chaque élève réalise avec les membres de son groupe l'une des tâches proposées.\n- Sept tâches sont proposées afin d'utiliser plusieurs supports d'invitation adaptés aux différents destinataires.\n- Les deux premiers supports sont une carte d'invitation destinée aux différents participants, que l'élève doit remplir, et une carte postale.\n- Le projet prévoit aussi une lettre à adresser au directeur régional et une lettre à adresser au directeur du collège.\n- Une lettre conventionnelle d'invitation doit être adressée aux parents d'élèves.\n- Un Email sert à inviter les membres d'une association qui défend l'environnement.\n- Enfin, une lettre est prévue pour inviter des amis. Ainsi, le projet mobilise des cartes, des lettres et un Email pour inviter les différents publics liés au débat.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 1 ; ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-participants-du-debat-projet-2.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 30,
+      "category": "Refus correct",
+      "endpoint": "/ask",
+      "question": "Comment calcule-t-on la fréquence d'une onde sonore ?",
+      "expected_status": "insufficient_context",
+      "actual_status": "insufficient_context",
+      "test_passed": "oui",
+      "duration_seconds": 0.113,
+      "response": "Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "",
+      "error": ""
+    }
+  ]
+}

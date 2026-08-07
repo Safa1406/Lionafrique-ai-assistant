@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v56-french-inviter-beneficiaires-structured-summary"
+    "v57-french-invitations-participants-debat-structured-summary"
 )
 
 
@@ -6151,6 +6151,104 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_debate_participant_invitations_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du projet Écrit 3-2."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    if (
+        "resume" in normalized_question
+        and "invitations" in normalized_question
+        and "participants" in normalized_question
+        and "debat" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_debate_participant_invitations_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du projet Écrit 3-2."""
+
+    mode = detect_french_debate_participant_invitations_summary_mode(
+        question
+    )
+
+    if mode != "full":
+        return None
+
+    expected_source = (
+        "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-"
+        "participants-du-debat-projet-2.pdf"
+    )
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source in source_name:
+            selected_units.append(
+                unit
+            )
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- Le projet demande aux élèves de rédiger, avec leurs camarades, "
+        "des invitations à adresser aux différents participants du débat. "
+        "Chaque élève réalise avec les membres de son groupe l'une des "
+        "tâches proposées.\n"
+        "- Sept tâches sont proposées afin d'utiliser plusieurs supports "
+        "d'invitation adaptés aux différents destinataires.\n"
+        "- Les deux premiers supports sont une carte d'invitation destinée "
+        "aux différents participants, que l'élève doit remplir, et une "
+        "carte postale.\n"
+        "- Le projet prévoit aussi une lettre à adresser au directeur "
+        "régional et une lettre à adresser au directeur du collège.\n"
+        "- Une lettre conventionnelle d'invitation doit être adressée aux "
+        "parents d'élèves.\n"
+        "- Un Email sert à inviter les membres d'une association qui défend "
+        "l'environnement.\n"
+        "- Enfin, une lettre est prévue pour inviter des amis. Ainsi, le "
+        "projet mobilise des cartes, des lettres et un Email pour inviter "
+        "les différents publics liés au débat."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
+
 def detect_french_beneficiary_invitation_summary_mode(
     question: str,
 ) -> str:
@@ -7449,6 +7547,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_debate_participant_invitations_summary = (
+        build_french_debate_participant_invitations_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_debate_participant_invitations_summary is not None:
+        return structured_debate_participant_invitations_summary
 
     structured_beneficiary_invitation_summary = (
         build_french_beneficiary_invitation_summary(

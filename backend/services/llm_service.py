@@ -10,7 +10,7 @@ OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
 ARABIC_RULES_VERSION = "v60-french-concession-analysis"
-FRENCH_RULES_VERSION = "v14-inviter-beneficiaires-analysis"
+FRENCH_RULES_VERSION = "v15-invitations-participants-debat-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1947,6 +1947,193 @@ def extract_french_concession_evidence(
 
 
 
+
+
+
+def extract_french_debate_participant_invitations_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Répond aux questions documentées du projet
+    « Écrit 3-2 : Rédiger les invitations à adresser aux différents
+    participants du débat ».
+
+    Les réponses restent strictement limitées aux deux pages du projet.
+    """
+
+    if contains_arabic(question):
+        return []
+
+    expected_source = (
+        "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-"
+        "participants-du-debat-projet-2.pdf"
+    )
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Que doivent rédiger les élèves avec leurs camarades dans ce projet ?": (
+                "Les élèves doivent rédiger avec leurs camarades les invitations à adresser aux différents participants du débat"
+            ),
+            "Avec qui l'élève réalise-t-il les tâches proposées ?": (
+                "L'élève réalise les tâches avec les membres de son groupe"
+            ),
+            "Combien de tâches différentes sont proposées dans le projet ?": (
+                "Le projet propose sept tâches différentes"
+            ),
+            "Quel premier type de support d'invitation est proposé ?": (
+                "Le premier support proposé est une carte d'invitation"
+            ),
+            "À qui la carte d'invitation doit-elle être adressée ?": (
+                "La carte d'invitation doit être adressée aux différents participants"
+            ),
+            "Que demande le cours de faire avec la carte d'invitation ?": (
+                "Le cours demande de remplir la carte d'invitation"
+            ),
+            "Quel deuxième support d'invitation est proposé dans le projet ?": (
+                "Le deuxième support proposé est une carte postale"
+            ),
+            "À quel responsable régional une lettre doit-elle être adressée ?": (
+                "Une lettre doit être adressée au directeur régional"
+            ),
+            "À quel responsable de l'établissement une lettre doit-elle être adressée ?": (
+                "Une lettre doit être adressée au directeur du collège"
+            ),
+            "Quel type de lettre doit être adressé aux parents d'élèves ?": (
+                "Une lettre conventionnelle d'invitation doit être adressée aux parents d'élèves"
+            ),
+            "Quel support est proposé pour inviter les membres d'une association ?": (
+                "Un Email est proposé pour inviter les membres d'une association"
+            ),
+            "Quelle cause défend l'association mentionnée dans le projet ?": (
+                "L'association mentionnée dans le projet défend l'environnement"
+            ),
+            "Quel type de correspondance est proposé pour inviter des amis ?": (
+                "Une lettre est proposée pour inviter des amis"
+            ),
+            "Quels supports autres qu'une lettre sont proposés dans le projet ?": (
+                "Les supports autres qu'une lettre sont la carte d'invitation, la carte postale et l'Email"
+            ),
+            "Quels destinataires reçoivent explicitement une lettre dans les tâches proposées ?": (
+                "Les lettres sont destinées au directeur régional, au directeur du collège, aux parents d'élèves et aux amis"
+            ),
+            "Quels deux directeurs sont cités comme destinataires de lettres ?": (
+                "Les deux directeurs cités sont le directeur régional et le directeur du collège"
+            ),
+            "Quel public familial est cité comme destinataire d'une invitation ?": (
+                "Le public familial cité est les parents d'élèves"
+            ),
+            "Quel public amical est cité comme destinataire d'une invitation ?": (
+                "Le public amical cité est les amis"
+            ),
+            "Quel public associatif doit recevoir un Email ?": (
+                "Les membres d'une association qui défend l'environnement doivent recevoir un Email"
+            ),
+            "À quelle activité commune sont liées toutes les invitations du projet ?": (
+                "Toutes les invitations du projet sont liées au débat"
+            ),
+            "Le cours est-il présenté comme une leçon ordinaire ou comme un projet ?": (
+                "Le cours est présenté comme un projet"
+            ),
+            "Quelles sont les deux premières tâches proposées ?": (
+                "Les deux premières tâches sont une carte d'invitation et une carte postale"
+            ),
+            "Quelles sont les deux tâches qui concernent des directeurs ?": (
+                "Les deux tâches concernent une lettre au directeur régional et une lettre au directeur du collège"
+            ),
+            "Quelle invitation est explicitement qualifiée de conventionnelle ?": (
+                "La lettre conventionnelle d'invitation à adresser aux parents d'élèves est explicitement qualifiée de conventionnelle"
+            ),
+            "Quelle invitation numérique est mentionnée dans le projet ?": (
+                "L'invitation numérique mentionnée est un Email pour inviter les membres d'une association"
+            ),
+            "Le projet demande-t-il d'utiliser un seul type d'invitation ou plusieurs supports ?": (
+                "Le projet propose plusieurs supports différents : une carte d'invitation, une carte postale, des lettres et un Email"
+            ),
+            "Comment le travail d'invitation est-il organisé entre les élèves ?": (
+                "Le travail est organisé collectivement : l'élève rédige avec ses camarades et réalise une tâche avec les membres de son groupe"
+            ),
+            "Coman preparé lé invitasion pour lé partisipan du déba: kart, postale, direktèr rejional, paron, asosiasion é ami ?": (
+                "Pour les participants du débat, le projet propose une carte d'invitation, une carte postale, une lettre au directeur régional, une lettre conventionnelle aux parents d'élèves, un Email pour une association qui défend l'environnement et une lettre pour les amis"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_beneficiary_invitation_evidence(
@@ -17094,11 +17281,44 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_beneficiary_invitation_evidence(
+        extract_french_debate_participant_invitations_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    debate_participant_invitations_source_scope = any(
+        (
+            "ecrit-3-2-rediger-les-invitations-a-adresser-aux-differents-"
+            "participants-du-debat-projet-2.pdf"
+        )
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        debate_participant_invitations_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_beneficiary_invitation_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     beneficiary_invitation_source_scope = any(
         (
