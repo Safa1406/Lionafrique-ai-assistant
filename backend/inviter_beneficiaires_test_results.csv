@@ -1,0 +1,65 @@
+﻿number,category,endpoint,question,expected_status,actual_status,test_passed,duration_seconds,response,missing_groups,correct_source,sources,error
+1,Objectif général,/ask,Que doit-on apprendre à rédiger dans ce cours ?,success,success,oui,9.56,"D'après le document :
+- Le cours apprend à rédiger divers types de correspondances d'invitation, notamment des lettres pour inviter des bénéficiaires.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+2,Événement,/ask,À quel événement les personnes doivent-elles être invitées ?,success,success,oui,0.108,"D'après le document :
+- Les personnes doivent être invitées à assister au débat sur l'environnement.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+3,Personnes invitées,/ask,Quelles catégories de personnes sont citées comme personnes à inviter ?,success,success,oui,0.094,"D'après le document :
+- Le cours cite notamment les participants, les bénéficiaires et les parents parmi les personnes à inviter.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+4,Diversité correspondances,/ask,Que demande le sujet de rédiger pour inviter les différentes personnes ?,success,success,oui,0.209,"D'après le document :
+- Le sujet demande de rédiger divers types de correspondances d'invitations à adresser aux différentes personnes.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+5,Lettre parents,/ask,Quel type de correspondance peut être adressé aux parents d'élèves ?,success,success,oui,0.108,"D'après le document :
+- Une lettre peut être adressée aux parents d'élèves.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+6,SMS ami,/ask,Quel moyen de correspondance est proposé pour inviter un ami ?,success,success,oui,0.084,"D'après le document :
+- Un SMS est proposé pour inviter un ami.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+7,Mail cousin,/ask,Quel moyen de correspondance est proposé pour inviter un cousin ?,success,success,oui,0.077,"D'après le document :
+- Un mail est proposé pour inviter un cousin.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+8,Réseaux sociaux,/ask,Quel type de message peut être partagé sur les réseaux sociaux ?,success,success,oui,0.095,"D'après le document :
+- Un message d'invitation peut être partagé sur les réseaux sociaux.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+9,Lettre directeur,/ask,À qui peut être adressée une autre lettre d'invitation proposée dans le cours ?,success,success,oui,0.101,"D'après le document :
+- Une autre lettre d'invitation peut être adressée au directeur du collège.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+10,Choix correspondances,/ask,Combien de propositions de correspondances sont données dans le sujet ?,success,success,oui,0.08,"D'après le document :
+- Le sujet donne cinq propositions de correspondances.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+11,But compréhension,/ask,Que vont rédiger les élèves après avoir choisi parmi les propositions ?,success,success,oui,0.078,"D'après le document :
+- Les élèves vont rédiger divers types de correspondances d'invitation.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+12,Rappel types,/ask,Quel premier élément faut-il rappeler avant la production ?,success,success,oui,0.092,"D'après le document :
+- Il faut rappeler les différents types de correspondances à rédiger.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+13,Rappel structure,/ask,Que faut-il rappeler concernant la correspondance choisie ?,success,success,oui,0.082,"D'après le document :
+- Il faut rappeler la structure de la correspondance choisie.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+14,Rappel expressions,/ask,Quel élément linguistique faut-il rappeler avant de rédiger ?,success,success,oui,0.092,"D'après le document :
+- Il faut rappeler les expressions à utiliser.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+15,Rappel formules,/ask,Quel autre élément linguistique faut-il rappeler avec les expressions ?,success,success,oui,0.101,"D'après le document :
+- Il faut aussi rappeler les formules à utiliser.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+16,Production choix,/ask,Quel est le premier critère donné pour rédiger un document d'invitation ?,success,success,oui,0.077,"D'après le document :
+- Le premier critère est le choix d'une correspondance d'invitation, par exemple une lettre ou un SMS.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+17,Production structure,/ask,Que faut-il respecter après avoir choisi une correspondance d'invitation ?,success,success,oui,0.1,"D'après le document :
+- Il faut respecter la structure de ces correspondances.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+18,Production expressions,/ask,Quel type d'expressions faut-il employer dans le document d'invitation ?,success,success,oui,0.084,"D'après le document :
+- Il faut employer des expressions convenables.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+19,Production formules,/ask,Quel type de formules faut-il employer dans le document d'invitation ?,success,success,oui,0.1,"D'après le document :
+- Il faut employer des formules convenables.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+20,Grille amélioration,/ask,À quoi sert la grille de critères après la rédaction ?,success,success,oui,0.078,"D'après le document :
+- La grille sert à vérifier les critères puis à améliorer la correspondance.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+21,Critère choix,/ask,Quel critère de la grille vérifie le choix d'une correspondance ?,success,success,oui,0.082,"D'après le document :
+- Le critère est : « J'ai choisi une correspondance ».",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+22,Critère structure,/ask,Quel critère de la grille vérifie la structure de la correspondance ?,success,success,oui,0.087,"D'après le document :
+- Le critère est : « J'ai respecté la structure de cette correspondance ».",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+23,Critère expressions,/ask,Quel critère de la grille concerne les expressions ?,success,success,oui,0.071,"D'après le document :
+- Le critère est : « J'ai employé des expressions convenables ».",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+24,Critère formules,/ask,Quel critère de la grille concerne les formules ?,success,success,oui,0.103,"D'après le document :
+- Le critère est : « J'ai employé des formules convenables ».",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+25,Colonnes grille,/ask,Quelles réponses peut-on cocher dans la grille d'évaluation ?,success,success,oui,0.081,"D'après le document :
+- Dans la grille d'évaluation, on peut cocher « Oui » ou « Non ».",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+26,Évaluation finale,/ask,Quelles sont les trois rubriques de l'évaluation finale ?,success,success,oui,0.104,"D'après le document :
+- Les trois rubriques sont : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas ».",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+27,Adaptation support,/ask,Pourquoi faut-il choisir la structure de la correspondance avant de rédiger ?,success,success,oui,0.113,"D'après le document :
+- Le cours demande de rappeler puis de respecter la structure de la correspondance choisie.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+28,Erreur orthographique,/ask,Coman redijé pluzieur korrespondenk dinvitasion pour invité paron ami kouzin é direktèr o déba denvironeman ?,success,success,oui,0.08,"D'après le document :
+- Pour inviter au débat sur l'environnement, on peut rédiger une lettre pour les parents, un SMS pour un ami, un mail pour un cousin, un message sur les réseaux sociaux ou une lettre au directeur ; il faut respecter la structure choisie et employer des expressions convenables et des formules convenables.",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1,
+29,Résumé,/summarize,Résume le cours sur la rédaction de correspondances pour inviter des bénéficiaires.,success,success,oui,0.08,"Résumé du contenu :
+- Le cours apprend à rédiger divers types de correspondances d'invitation pour convier plusieurs personnes, notamment les participants, les bénéficiaires et les parents, à assister au débat sur l'environnement.
+- Cinq propositions sont données : une lettre à adresser aux parents d'élèves, un SMS à adresser à un ami, un mail pour inviter un cousin, un message à partager sur les réseaux sociaux et une lettre à adresser au directeur du collège.
+- Avant la production, il faut rappeler les différents types de correspondances à rédiger, la structure de la correspondance choisie, les expressions à utiliser et les formules à utiliser.
+- Pour rédiger un document d'invitation, on choisit une correspondance d'invitation, on respecte sa structure, puis on emploie des expressions convenables et des formules convenables.
+- La grille permet ensuite d'améliorer la correspondance. Elle vérifie quatre critères : « J'ai choisi une correspondance », « J'ai respecté la structure de cette correspondance », « J'ai employé des expressions convenables » et « J'ai employé des formules convenables ». Les réponses proposées sont « Oui » ou « Non ».
+- L'évaluation finale comporte trois rubriques : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas ».",[],oui,ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1 ; ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2,
+30,Refus correct,/ask,Comment calcule-t-on la résistance électrique d'un conducteur ?,insufficient_context,insufficient_context,oui,0.102,Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.,[],oui,,

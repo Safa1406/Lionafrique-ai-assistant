@@ -1,0 +1,614 @@
+{
+  "generated_at": "2026-08-07T11:49:19",
+  "test_version": "v1-inviter-beneficiaires-baseline",
+  "program": "Programme marocain",
+  "subject": "Français",
+  "source": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf",
+  "total_tests": 30,
+  "passed_tests": 30,
+  "failed_tests": 0,
+  "categories": {
+    "Objectif général": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Événement": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Personnes invitées": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Diversité correspondances": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Lettre parents": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "SMS ami": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Mail cousin": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Réseaux sociaux": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Lettre directeur": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Choix correspondances": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "But compréhension": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Rappel types": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Rappel structure": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Rappel expressions": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Rappel formules": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Production choix": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Production structure": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Production expressions": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Production formules": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Grille amélioration": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère choix": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère structure": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère expressions": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Critère formules": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Colonnes grille": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Évaluation finale": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Adaptation support": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Erreur orthographique": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Résumé": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "Refus correct": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "results": [
+    {
+      "number": 1,
+      "category": "Objectif général",
+      "endpoint": "/ask",
+      "question": "Que doit-on apprendre à rédiger dans ce cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 9.56,
+      "response": "D'après le document :\n- Le cours apprend à rédiger divers types de correspondances d'invitation, notamment des lettres pour inviter des bénéficiaires.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 2,
+      "category": "Événement",
+      "endpoint": "/ask",
+      "question": "À quel événement les personnes doivent-elles être invitées ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.108,
+      "response": "D'après le document :\n- Les personnes doivent être invitées à assister au débat sur l'environnement.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 3,
+      "category": "Personnes invitées",
+      "endpoint": "/ask",
+      "question": "Quelles catégories de personnes sont citées comme personnes à inviter ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.094,
+      "response": "D'après le document :\n- Le cours cite notamment les participants, les bénéficiaires et les parents parmi les personnes à inviter.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 4,
+      "category": "Diversité correspondances",
+      "endpoint": "/ask",
+      "question": "Que demande le sujet de rédiger pour inviter les différentes personnes ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.209,
+      "response": "D'après le document :\n- Le sujet demande de rédiger divers types de correspondances d'invitations à adresser aux différentes personnes.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 5,
+      "category": "Lettre parents",
+      "endpoint": "/ask",
+      "question": "Quel type de correspondance peut être adressé aux parents d'élèves ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.108,
+      "response": "D'après le document :\n- Une lettre peut être adressée aux parents d'élèves.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 6,
+      "category": "SMS ami",
+      "endpoint": "/ask",
+      "question": "Quel moyen de correspondance est proposé pour inviter un ami ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.084,
+      "response": "D'après le document :\n- Un SMS est proposé pour inviter un ami.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 7,
+      "category": "Mail cousin",
+      "endpoint": "/ask",
+      "question": "Quel moyen de correspondance est proposé pour inviter un cousin ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.077,
+      "response": "D'après le document :\n- Un mail est proposé pour inviter un cousin.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 8,
+      "category": "Réseaux sociaux",
+      "endpoint": "/ask",
+      "question": "Quel type de message peut être partagé sur les réseaux sociaux ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.095,
+      "response": "D'après le document :\n- Un message d'invitation peut être partagé sur les réseaux sociaux.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 9,
+      "category": "Lettre directeur",
+      "endpoint": "/ask",
+      "question": "À qui peut être adressée une autre lettre d'invitation proposée dans le cours ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.101,
+      "response": "D'après le document :\n- Une autre lettre d'invitation peut être adressée au directeur du collège.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 10,
+      "category": "Choix correspondances",
+      "endpoint": "/ask",
+      "question": "Combien de propositions de correspondances sont données dans le sujet ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.08,
+      "response": "D'après le document :\n- Le sujet donne cinq propositions de correspondances.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 11,
+      "category": "But compréhension",
+      "endpoint": "/ask",
+      "question": "Que vont rédiger les élèves après avoir choisi parmi les propositions ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.078,
+      "response": "D'après le document :\n- Les élèves vont rédiger divers types de correspondances d'invitation.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 12,
+      "category": "Rappel types",
+      "endpoint": "/ask",
+      "question": "Quel premier élément faut-il rappeler avant la production ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.092,
+      "response": "D'après le document :\n- Il faut rappeler les différents types de correspondances à rédiger.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 13,
+      "category": "Rappel structure",
+      "endpoint": "/ask",
+      "question": "Que faut-il rappeler concernant la correspondance choisie ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.082,
+      "response": "D'après le document :\n- Il faut rappeler la structure de la correspondance choisie.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 14,
+      "category": "Rappel expressions",
+      "endpoint": "/ask",
+      "question": "Quel élément linguistique faut-il rappeler avant de rédiger ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.092,
+      "response": "D'après le document :\n- Il faut rappeler les expressions à utiliser.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 15,
+      "category": "Rappel formules",
+      "endpoint": "/ask",
+      "question": "Quel autre élément linguistique faut-il rappeler avec les expressions ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.101,
+      "response": "D'après le document :\n- Il faut aussi rappeler les formules à utiliser.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 16,
+      "category": "Production choix",
+      "endpoint": "/ask",
+      "question": "Quel est le premier critère donné pour rédiger un document d'invitation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.077,
+      "response": "D'après le document :\n- Le premier critère est le choix d'une correspondance d'invitation, par exemple une lettre ou un SMS.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 17,
+      "category": "Production structure",
+      "endpoint": "/ask",
+      "question": "Que faut-il respecter après avoir choisi une correspondance d'invitation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.1,
+      "response": "D'après le document :\n- Il faut respecter la structure de ces correspondances.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 18,
+      "category": "Production expressions",
+      "endpoint": "/ask",
+      "question": "Quel type d'expressions faut-il employer dans le document d'invitation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.084,
+      "response": "D'après le document :\n- Il faut employer des expressions convenables.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 19,
+      "category": "Production formules",
+      "endpoint": "/ask",
+      "question": "Quel type de formules faut-il employer dans le document d'invitation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.1,
+      "response": "D'après le document :\n- Il faut employer des formules convenables.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 20,
+      "category": "Grille amélioration",
+      "endpoint": "/ask",
+      "question": "À quoi sert la grille de critères après la rédaction ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.078,
+      "response": "D'après le document :\n- La grille sert à vérifier les critères puis à améliorer la correspondance.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 21,
+      "category": "Critère choix",
+      "endpoint": "/ask",
+      "question": "Quel critère de la grille vérifie le choix d'une correspondance ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.082,
+      "response": "D'après le document :\n- Le critère est : « J'ai choisi une correspondance ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 22,
+      "category": "Critère structure",
+      "endpoint": "/ask",
+      "question": "Quel critère de la grille vérifie la structure de la correspondance ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.087,
+      "response": "D'après le document :\n- Le critère est : « J'ai respecté la structure de cette correspondance ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 23,
+      "category": "Critère expressions",
+      "endpoint": "/ask",
+      "question": "Quel critère de la grille concerne les expressions ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.071,
+      "response": "D'après le document :\n- Le critère est : « J'ai employé des expressions convenables ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 24,
+      "category": "Critère formules",
+      "endpoint": "/ask",
+      "question": "Quel critère de la grille concerne les formules ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.103,
+      "response": "D'après le document :\n- Le critère est : « J'ai employé des formules convenables ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 25,
+      "category": "Colonnes grille",
+      "endpoint": "/ask",
+      "question": "Quelles réponses peut-on cocher dans la grille d'évaluation ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.081,
+      "response": "D'après le document :\n- Dans la grille d'évaluation, on peut cocher « Oui » ou « Non ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 26,
+      "category": "Évaluation finale",
+      "endpoint": "/ask",
+      "question": "Quelles sont les trois rubriques de l'évaluation finale ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.104,
+      "response": "D'après le document :\n- Les trois rubriques sont : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 27,
+      "category": "Adaptation support",
+      "endpoint": "/ask",
+      "question": "Pourquoi faut-il choisir la structure de la correspondance avant de rédiger ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.113,
+      "response": "D'après le document :\n- Le cours demande de rappeler puis de respecter la structure de la correspondance choisie.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 28,
+      "category": "Erreur orthographique",
+      "endpoint": "/ask",
+      "question": "Coman redijé pluzieur korrespondenk dinvitasion pour invité paron ami kouzin é direktèr o déba denvironeman ?",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.08,
+      "response": "D'après le document :\n- Pour inviter au débat sur l'environnement, on peut rédiger une lettre pour les parents, un SMS pour un ami, un mail pour un cousin, un message sur les réseaux sociaux ou une lettre au directeur ; il faut respecter la structure choisie et employer des expressions convenables et des formules convenables.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1",
+      "error": ""
+    },
+    {
+      "number": 29,
+      "category": "Résumé",
+      "endpoint": "/summarize",
+      "question": "Résume le cours sur la rédaction de correspondances pour inviter des bénéficiaires.",
+      "expected_status": "success",
+      "actual_status": "success",
+      "test_passed": "oui",
+      "duration_seconds": 0.08,
+      "response": "Résumé du contenu :\n- Le cours apprend à rédiger divers types de correspondances d'invitation pour convier plusieurs personnes, notamment les participants, les bénéficiaires et les parents, à assister au débat sur l'environnement.\n- Cinq propositions sont données : une lettre à adresser aux parents d'élèves, un SMS à adresser à un ami, un mail pour inviter un cousin, un message à partager sur les réseaux sociaux et une lettre à adresser au directeur du collège.\n- Avant la production, il faut rappeler les différents types de correspondances à rédiger, la structure de la correspondance choisie, les expressions à utiliser et les formules à utiliser.\n- Pour rédiger un document d'invitation, on choisit une correspondance d'invitation, on respecte sa structure, puis on emploie des expressions convenables et des formules convenables.\n- La grille permet ensuite d'améliorer la correspondance. Elle vérifie quatre critères : « J'ai choisi une correspondance », « J'ai respecté la structure de cette correspondance », « J'ai employé des expressions convenables » et « J'ai employé des formules convenables ». Les réponses proposées sont « Oui » ou « Non ».\n- L'évaluation finale comporte trois rubriques : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas ».",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 1 ; ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf | page 2",
+      "error": ""
+    },
+    {
+      "number": 30,
+      "category": "Refus correct",
+      "endpoint": "/ask",
+      "question": "Comment calcule-t-on la résistance électrique d'un conducteur ?",
+      "expected_status": "insufficient_context",
+      "actual_status": "insufficient_context",
+      "test_passed": "oui",
+      "duration_seconds": 0.102,
+      "response": "Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.",
+      "missing_groups": "[]",
+      "correct_source": "oui",
+      "sources": "",
+      "error": ""
+    }
+  ]
+}

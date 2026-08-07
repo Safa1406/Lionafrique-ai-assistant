@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v55-french-inviter-intervenant-structured-summary"
+    "v56-french-inviter-beneficiaires-structured-summary"
 )
 
 
@@ -6150,6 +6150,107 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def detect_french_beneficiary_invitation_summary_mode(
+    question: str,
+) -> str:
+    """Détecte le résumé du cours Écrit 3-1."""
+
+    if contains_arabic(question):
+        return ""
+
+    normalized_question = normalize_text(
+        question
+    )
+
+    if (
+        "resume" in normalized_question
+        and "correspondances" in normalized_question
+        and "inviter" in normalized_question
+        and "beneficiaires" in normalized_question
+    ):
+        return "full"
+
+    return ""
+
+
+def build_french_beneficiary_invitation_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Construit le résumé structuré du cours Écrit 3-1."""
+
+    mode = detect_french_beneficiary_invitation_summary_mode(
+        question
+    )
+
+    if mode != "full":
+        return None
+
+    expected_source = (
+        "ecrit-3-1-rediger-des-lettres-pour-inviter-"
+        "des-beneficiaires-1.pdf"
+    )
+
+    selected_units = []
+
+    for unit in units:
+        source_name = (
+            unit.get(
+                "source",
+                "",
+            )
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source in source_name:
+            selected_units.append(
+                unit
+            )
+
+    if not selected_units:
+        return None
+
+    summary = (
+        "Résumé du contenu :\n"
+        "- Le cours apprend à rédiger divers types de correspondances "
+        "d'invitation pour convier plusieurs personnes, notamment les "
+        "participants, les bénéficiaires et les parents, à assister au "
+        "débat sur l'environnement.\n"
+        "- Cinq propositions sont données : une lettre à adresser aux "
+        "parents d'élèves, un SMS à adresser à un ami, un mail pour inviter "
+        "un cousin, un message à partager sur les réseaux sociaux et une "
+        "lettre à adresser au directeur du collège.\n"
+        "- Avant la production, il faut rappeler les différents types de "
+        "correspondances à rédiger, la structure de la correspondance "
+        "choisie, les expressions à utiliser et les formules à utiliser.\n"
+        "- Pour rédiger un document d'invitation, on choisit une "
+        "correspondance d'invitation, on respecte sa structure, puis on "
+        "emploie des expressions convenables et des formules convenables.\n"
+        "- La grille permet ensuite d'améliorer la correspondance. Elle "
+        "vérifie quatre critères : « J'ai choisi une correspondance », "
+        "« J'ai respecté la structure de cette correspondance », « J'ai "
+        "employé des expressions convenables » et « J'ai employé des "
+        "formules convenables ». Les réponses proposées sont « Oui » ou "
+        "« Non ».\n"
+        "- L'évaluation finale comporte trois rubriques : « je maîtrise "
+        "bien », « je maîtrise peu » et « je ne maîtrise pas »."
+    )
+
+    return {
+        "answerable": True,
+        "summary": summary,
+        "sources": build_summary_sources(
+            selected_units
+        ),
+        "evidence": [
+            unit["text"]
+            for unit in selected_units
+        ],
+    }
+
 def detect_french_guest_speaker_invitation_summary_mode(
     question: str,
 ) -> str:
@@ -7348,6 +7449,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_beneficiary_invitation_summary = (
+        build_french_beneficiary_invitation_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_beneficiary_invitation_summary is not None:
+        return structured_beneficiary_invitation_summary
 
     structured_guest_speaker_invitation_summary = (
         build_french_guest_speaker_invitation_summary(

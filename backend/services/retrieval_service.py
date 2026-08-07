@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v23-french-inviter-intervenant-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v24-french-inviter-beneficiaires-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -559,6 +559,39 @@ def retrieve_relevant_passages(
     )
 
 
+    asks_french_beneficiary_invitation_lesson = (
+        not question_is_arabic
+        and (
+            "ecrit-3-1-rediger-des-lettres-pour-inviter-des-beneficiaires-1.pdf"
+            in normalized_source_name
+            or any(
+                marker
+                in normalized_search_question
+                for marker in (
+                    "inviter des beneficiaires",
+                    "correspondances d invitation",
+                    "parents d eleves",
+                    "sms",
+                    "mail pour inviter un cousin",
+                    "reseaux sociaux",
+                    "directeur du college",
+                    "expressions convenables",
+                    "formules convenables",
+                )
+            )
+        )
+    )
+
+    # Le cours Écrit 3-1 tient sur deux pages. Avec un filtre de source
+    # exact, on conserve l'ensemble du petit document afin de couvrir
+    # les cinq supports d'invitation, les rappels, la production et la grille.
+    if asks_french_beneficiary_invitation_lesson:
+        number_of_results = max(
+            number_of_results,
+            12,
+        )
+
+
     asks_french_guest_speaker_invitation_lesson = (
         not question_is_arabic
         and (
@@ -1020,7 +1053,10 @@ def retrieve_relevant_passages(
             10,
         )
 
-    if asks_french_authorization_letter_lesson:
+    if (
+        asks_french_beneficiary_invitation_lesson
+        or asks_french_authorization_letter_lesson
+    ):
         candidate_count = max(
             20,
             number_of_results * 4,
@@ -1130,6 +1166,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_beneficiary_invitation_lesson
             and not asks_french_invitation_writing_lesson
             and not asks_french_guest_speaker_invitation_lesson
         ):
@@ -1148,6 +1185,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_beneficiary_invitation_lesson
             and not asks_french_invitation_writing_lesson
             and not asks_french_guest_speaker_invitation_lesson
             and not should_keep_without_lexical_overlap(

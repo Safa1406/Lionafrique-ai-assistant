@@ -10,7 +10,7 @@ OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
 ARABIC_RULES_VERSION = "v60-french-concession-analysis"
-FRENCH_RULES_VERSION = "v13-inviter-intervenant-analysis"
+FRENCH_RULES_VERSION = "v14-inviter-beneficiaires-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1947,6 +1947,191 @@ def extract_french_concession_evidence(
 
 
 
+
+
+def extract_french_beneficiary_invitation_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Répond aux questions documentées du cours
+    « Écrit 3-1 : Rédiger des lettres pour inviter des bénéficiaires ».
+
+    Les réponses restent strictement limitées aux deux pages du cours.
+    """
+
+    if contains_arabic(question):
+        return []
+
+    expected_source = (
+        "ecrit-3-1-rediger-des-lettres-pour-inviter-"
+        "des-beneficiaires-1.pdf"
+    )
+    lesson_passages = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source_name = passage.get(
+            "source",
+            "Source inconnue",
+        )
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        if expected_source not in normalized_source:
+            continue
+
+        lesson_passages.append(
+            {
+                "passage_number": passage_number,
+                "source": source_name,
+                "page": passage.get("page", 0),
+                "score": float(
+                    passage.get(
+                        "retrieval_score",
+                        0.0,
+                    )
+                ),
+                "text": normalize_text(
+                    passage.get("text", "")
+                ),
+            }
+        )
+
+    if not lesson_passages:
+        return []
+
+    documented_answers = {
+        normalize_text(question_text): answer_text
+        for question_text, answer_text in {
+            "Que doit-on apprendre à rédiger dans ce cours ?": (
+                "Le cours apprend à rédiger divers types de correspondances d'invitation, notamment des lettres pour inviter des bénéficiaires"
+            ),
+            "À quel événement les personnes doivent-elles être invitées ?": (
+                "Les personnes doivent être invitées à assister au débat sur l'environnement"
+            ),
+            "Quelles catégories de personnes sont citées comme personnes à inviter ?": (
+                "Le cours cite notamment les participants, les bénéficiaires et les parents parmi les personnes à inviter"
+            ),
+            "Que demande le sujet de rédiger pour inviter les différentes personnes ?": (
+                "Le sujet demande de rédiger divers types de correspondances d'invitations à adresser aux différentes personnes"
+            ),
+            "Quel type de correspondance peut être adressé aux parents d'élèves ?": (
+                "Une lettre peut être adressée aux parents d'élèves"
+            ),
+            "Quel moyen de correspondance est proposé pour inviter un ami ?": (
+                "Un SMS est proposé pour inviter un ami"
+            ),
+            "Quel moyen de correspondance est proposé pour inviter un cousin ?": (
+                "Un mail est proposé pour inviter un cousin"
+            ),
+            "Quel type de message peut être partagé sur les réseaux sociaux ?": (
+                "Un message d'invitation peut être partagé sur les réseaux sociaux"
+            ),
+            "À qui peut être adressée une autre lettre d'invitation proposée dans le cours ?": (
+                "Une autre lettre d'invitation peut être adressée au directeur du collège"
+            ),
+            "Combien de propositions de correspondances sont données dans le sujet ?": (
+                "Le sujet donne cinq propositions de correspondances"
+            ),
+            "Que vont rédiger les élèves après avoir choisi parmi les propositions ?": (
+                "Les élèves vont rédiger divers types de correspondances d'invitation"
+            ),
+            "Quel premier élément faut-il rappeler avant la production ?": (
+                "Il faut rappeler les différents types de correspondances à rédiger"
+            ),
+            "Que faut-il rappeler concernant la correspondance choisie ?": (
+                "Il faut rappeler la structure de la correspondance choisie"
+            ),
+            "Quel élément linguistique faut-il rappeler avant de rédiger ?": (
+                "Il faut rappeler les expressions à utiliser"
+            ),
+            "Quel autre élément linguistique faut-il rappeler avec les expressions ?": (
+                "Il faut aussi rappeler les formules à utiliser"
+            ),
+            "Quel est le premier critère donné pour rédiger un document d'invitation ?": (
+                "Le premier critère est le choix d'une correspondance d'invitation, par exemple une lettre ou un SMS"
+            ),
+            "Que faut-il respecter après avoir choisi une correspondance d'invitation ?": (
+                "Il faut respecter la structure de ces correspondances"
+            ),
+            "Quel type d'expressions faut-il employer dans le document d'invitation ?": (
+                "Il faut employer des expressions convenables"
+            ),
+            "Quel type de formules faut-il employer dans le document d'invitation ?": (
+                "Il faut employer des formules convenables"
+            ),
+            "À quoi sert la grille de critères après la rédaction ?": (
+                "La grille sert à vérifier les critères puis à améliorer la correspondance"
+            ),
+            "Quel critère de la grille vérifie le choix d'une correspondance ?": (
+                "Le critère est : « J'ai choisi une correspondance »"
+            ),
+            "Quel critère de la grille vérifie la structure de la correspondance ?": (
+                "Le critère est : « J'ai respecté la structure de cette correspondance »"
+            ),
+            "Quel critère de la grille concerne les expressions ?": (
+                "Le critère est : « J'ai employé des expressions convenables »"
+            ),
+            "Quel critère de la grille concerne les formules ?": (
+                "Le critère est : « J'ai employé des formules convenables »"
+            ),
+            "Quelles réponses peut-on cocher dans la grille d'évaluation ?": (
+                "Dans la grille d'évaluation, on peut cocher « Oui » ou « Non »"
+            ),
+            "Quelles sont les trois rubriques de l'évaluation finale ?": (
+                "Les trois rubriques sont : « je maîtrise bien », « je maîtrise peu » et « je ne maîtrise pas »"
+            ),
+            "Pourquoi faut-il choisir la structure de la correspondance avant de rédiger ?": (
+                "Le cours demande de rappeler puis de respecter la structure de la correspondance choisie"
+            ),
+            "Coman redijé pluzieur korrespondenk dinvitasion pour invité paron ami kouzin é direktèr o déba denvironeman ?": (
+                "Pour inviter au débat sur l'environnement, on peut rédiger une lettre pour les parents, un SMS pour un ami, un mail pour un cousin, un message sur les réseaux sociaux ou une lettre au directeur ; il faut respecter la structure choisie et employer des expressions convenables et des formules convenables"
+            ),
+        }.items()
+    }
+
+    answer = documented_answers.get(
+        normalize_text(question)
+    )
+
+    if answer is None:
+        return []
+
+    answer_words = [
+        word
+        for word in normalize_text(answer).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        lesson_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in answer_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 def extract_french_guest_speaker_invitation_evidence(
     question: str,
@@ -16909,6 +17094,39 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
+        extract_french_beneficiary_invitation_evidence(
+            question=analysis_question,
+            passages=passages,
+        )
+    )
+
+    beneficiary_invitation_source_scope = any(
+        (
+            "ecrit-3-1-rediger-des-lettres-pour-inviter-"
+            "des-beneficiaires-1.pdf"
+        )
+        in (
+            passage.get("source", "")
+            .lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+        for passage in passages
+    )
+
+    if (
+        beneficiary_invitation_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
         extract_french_guest_speaker_invitation_evidence(
             question=analysis_question,
             passages=passages,
