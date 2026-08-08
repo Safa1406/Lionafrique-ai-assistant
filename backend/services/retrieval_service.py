@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v27-french-batch-13-16-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v28-french-mega-17-65-full-source"
 
 
 INTENT_MARKERS = {
@@ -557,6 +557,21 @@ def retrieve_relevant_passages(
         if source
         else ""
     )
+
+
+
+    mega_french_17_65_sources = {'langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf', 'lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf', 'lecture-5-2-identifier-les-caracteristiques-d-un-personnage-principal-2.pdf', 'langue-3-2-utiliser-convenablement-le-vocabulaire-relatif-a-l-environnement-la-flore-et-la-faune-2.pdf', 'expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf', 'oral-5-1-negocier-le-projet-2.pdf', 'les-pronoms-relatifs-simples-qui-que-ou-dont.pdf', 'lecture-4-2-degager-des-informations-sur-le-rechauffement-climatique-2.pdf', 'expression-ecrite-sur-le-role-de-la-femme.pdf', 'les-temps-du-recit-l-imparfait-et-le-passe-simple-1.pdf', 'la-subordonnee-circonstancielle-de-cause.pdf', 'langue-1-2-autoriser-accepter-et-refuser-une-autorisation-2.pdf', 'lecture-1-1-identifier-les-caracteristiques-d-une-lettre-conventionnelle-partie-2-1.pdf', 'langue-2-1-inviter-accepter-et-decliner-une-invitation-1.pdf', 'oral-5-2-lire-et-resumer-les-evenements-d-une-nouvelle-2.pdf', 'langue-4-2-raisonner-a-partir-d-une-hypothese-2.pdf', 'le-discours-direct-et-le-discours-indirect-phrase-declarative.pdf', 'expression-ecrite-sur-le-maroc.pdf', 'lecture-5-1-degager-la-structure-narrative-en-cinq-etapes-2.pdf', 'langue-3-1-utiliser-convenablement-les-registres-de-langue-dans-differentes-correspondances-2.pdf', 'redaction-d-une-lettre-personnelle-1.pdf', 'lecture-2-2-identifier-les-caracteristiques-d-une-reponse-a-une-invitation-par-mail.pdf', 'lecture-1-1-identifier-les-caracteristiques-d-une-lettre-conventionnelle-partie-1.pdf', 'la-voix-passive.pdf', 'oral-2-organiser-une-exposition-photos-sur-le-rechauffement-climatique-2.pdf', 'lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf', 'negocier-le-projet-1.pdf', 'oral-1-3-realiser-un-forum-sur-l-environnement.pdf', 'la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf', 'oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf', 'expression-ecrite-sur-la-tolerance.pdf', 'langue-5-2-utiliser-l-expression-du-but-pour-fixer-un-objectif-a-propos-du-projet-2.pdf', 'lecture-2-3-reperer-et-classer-des-informations.pdf', 'les-pronoms-personnels-le-la-l-les-lui-leur.pdf', 'lecture-1-2-degager-l-interet-de-la-question-de-l-environnement.pdf', 'la-subordonnee-circonstancielle-de-but.pdf', 'oral-4-jouer-des-roles-a-propos-du-probleme-du-rechauffement-climatique-2.pdf', 'oral-1-2-presenter-un-compte-rendu-d-articles-sur-l-environnement.pdf', 'propositions-independante-principale-et-subordonnee.pdf', 'lecture-3-2-identifier-differents-genres-d-invitation-conventionnelle-2.pdf', 'la-subordonnee-circonstancielle-de-consequence.pdf', 'oral-3-2-preparer-un-questionnaire-a-adresser-a-l-intervenant-de-la-journee-debat-2.pdf', 'langue-1-1-utiliser-le-lexique-et-les-formules-de-la-correspondance-conventionnelle.pdf', 'langue-2-2-utiliser-des-formules-de-politesse-dans-une-correspondance-conventionnelle.pdf', 'modeles-de-lettre-de-reclamation.pdf', 'oral-1-1-discuter-des-modalites-d-organisation-du-debat.pdf', 'langue-5-1-justifier-un-choix-en-utilisant-l-expression-de-la-cause-2.pdf', 'lecture-2-1-identifier-les-caracteristiques-d-une-lettre-d-invitation.pdf', 'les-temps-du-passe-temps-du-recit-3.pdf'}
+
+    asks_french_mega_17_65_source = (
+        not question_is_arabic
+        and normalized_source_name in mega_french_17_65_sources
+    )
+
+    # Avec un filtre source exact, on conserve un large éventail de chunks.
+    # Cela permet aux 49 PDF de tailles différentes d'être traités par une
+    # seule logique générique au lieu d'ajouter une règle par cours.
+    if asks_french_mega_17_65_source:
+        number_of_results = max(number_of_results, 60)
 
 
     batch_13_16_source_names = {
@@ -1150,7 +1165,8 @@ def retrieve_relevant_passages(
         )
 
     if (
-        asks_french_batch_13_16_lesson
+        asks_french_mega_17_65_source
+        or asks_french_batch_13_16_lesson
         or asks_french_open_letter_lesson
         or asks_french_debate_participant_invitations_lesson
         or asks_french_beneficiary_invitation_lesson
@@ -1265,6 +1281,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_mega_17_65_source
             and not asks_french_batch_13_16_lesson
             and not asks_french_open_letter_lesson
             and not asks_french_debate_participant_invitations_lesson
@@ -1287,6 +1304,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_mega_17_65_source
             and not asks_french_batch_13_16_lesson
             and not asks_french_open_letter_lesson
             and not asks_french_debate_participant_invitations_lesson

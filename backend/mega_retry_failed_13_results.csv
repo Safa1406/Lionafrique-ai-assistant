@@ -1,0 +1,849 @@
+﻿lesson_number,source,test_number,category,question,expected_status,actual_status,passed,duration_seconds,missing_groups,source_ok,response,error
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « ne faut pas confondre » ?",success,success,oui,0.234,[],oui,"D'après le document :
+- Il ne faut pas confondre Islamique et Islamiste.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « confondre Islamique et Islamiste » ?",success,success,oui,0.256,[],oui,"D'après le document :
+- Il ne faut pas confondre Islamique et Islamiste.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « et Islamiste » ?",success,success,oui,0.172,[],oui,"D'après le document :
+- Il ne faut pas confondre Islamique et Islamiste.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,4,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « banlieues pauvres sont un » ?",success,success,oui,0.245,[],oui,"D'après le document :
+- Les ghettos, les banlieues pauvres, sont un terreau favorable à l’islamisme.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,5,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « Envahis par l’URSS en » ?",success,success,oui,0.216,[],oui,"D'après le document :
+- La révolution afghane Envahis par l’URSS en 1979, les Afghans se sont lancés dans une guérilla sanglante, une guerre sainte contre les impies.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,6,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « par l’URSS en 1979 » ?",success,success,oui,0.201,[],oui,"D'après le document :
+- La révolution afghane Envahis par l’URSS en 1979, les Afghans se sont lancés dans une guérilla sanglante, une guerre sainte contre les impies.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,7,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « en 1979 les Afghans » ?",success,success,oui,0.178,[],oui,"D'après le document :
+- La révolution afghane Envahis par l’URSS en 1979, les Afghans se sont lancés dans une guérilla sanglante, une guerre sainte contre les impies.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,8,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « les Afghans se sont » ?",success,success,oui,0.188,[],oui,"D'après le document :
+- La révolution afghane Envahis par l’URSS en 1979, les Afghans se sont lancés dans une guérilla sanglante, une guerre sainte contre les impies.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,9,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « sont lancés dans une » ?",success,success,oui,0.21,[],oui,"D'après le document :
+- La révolution afghane Envahis par l’URSS en 1979, les Afghans se sont lancés dans une guérilla sanglante, une guerre sainte contre les impies.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,10,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « L’explosion démographique dans les » ?",success,success,oui,0.268,[],oui,"D'après le document :
+- L’explosion démographique dans les pays en développement a provoqué une hausse importante du chômage des jeunes qui, sans espoir de réussir et de trouver une place dans la société, se tournent vers les extrémismes.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,11,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « les pays en développement » ?",success,success,oui,0.246,[],oui,"D'après le document :
+- L’explosion démographique dans les pays en développement a provoqué une hausse importante du chômage des jeunes qui, sans espoir de réussir et de trouver une place dans la société, se tournent vers les extrémismes.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,12,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « en développement a provoqué » ?",success,success,oui,0.237,[],oui,"D'après le document :
+- L’explosion démographique dans les pays en développement a provoqué une hausse importante du chômage des jeunes qui, sans espoir de réussir et de trouver une place dans la société, se tournent vers les extrémismes.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,13,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « a provoqué une » ?",success,success,oui,0.194,[],oui,"D'après le document :
+- L’explosion démographique dans les pays en développement a provoqué une hausse importante du chômage des jeunes qui, sans espoir de réussir et de trouver une place dans la société, se tournent vers les extrémismes.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,14,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « Ces afghans sont alors » ?",success,success,oui,0.237,[],oui,"D'après le document :
+- Ces afghans sont alors soutenus par les Etats-Unis qui cherchent à repousser le communisme à partir du Pakistan.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,15,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « sont alors soutenus par » ?",success,success,oui,0.199,[],oui,"D'après le document :
+- Ces afghans sont alors soutenus par les Etats-Unis qui cherchent à repousser le communisme à partir du Pakistan.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,16,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « alors soutenus par les » ?",success,success,oui,0.192,[],oui,"D'après le document :
+- Ces afghans sont alors soutenus par les Etats-Unis qui cherchent à repousser le communisme à partir du Pakistan.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,17,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « les Etats-Unis qui » ?",success,success,oui,0.165,[],oui,"D'après le document :
+- Ces afghans sont alors soutenus par les Etats-Unis qui cherchent à repousser le communisme à partir du Pakistan.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,18,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « son histoire la religion » ?",success,success,oui,0.188,[],oui,"D'après le document :
+- Au cours de son histoire la religion musulmane a connu des épisodes de grande tolérance et des épisodes de fanatisme et de violence comme la religion chrétienne.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,19,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la religion musulmane a » ?",success,success,oui,0.208,[],oui,"D'après le document :
+- Un Islamiste est un militant qui utilise la religion musulmane à des fins politiques.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,20,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « religion musulmane a connu » ?",success,success,oui,0.236,[],oui,"D'après le document :
+- Au cours de son histoire la religion musulmane a connu des épisodes de grande tolérance et des épisodes de fanatisme et de violence comme la religion chrétienne.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,21,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « a connu des épisodes » ?",success,success,oui,0.206,[],oui,"D'après le document :
+- Au cours de son histoire la religion musulmane a connu des épisodes de grande tolérance et des épisodes de fanatisme et de violence comme la religion chrétienne.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,22,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « des épisodes de grande » ?",success,success,oui,0.184,[],oui,"D'après le document :
+- Au cours de son histoire la religion musulmane a connu des épisodes de grande tolérance et des épisodes de fanatisme et de violence comme la religion chrétienne.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,23,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « hausse importante du chômage » ?",success,success,oui,0.215,[],oui,"D'après le document :
+- L’explosion démographique dans les pays en développement a provoqué une hausse importante du chômage des jeunes qui, sans espoir de réussir et de trouver une place dans la société, se tournent vers les extrémismes.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,24,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « du chômage des jeunes » ?",success,success,oui,0.208,[],oui,"D'après le document :
+- L’explosion démographique dans les pays en développement a provoqué une hausse importante du chômage des jeunes qui, sans espoir de réussir et de trouver une place dans la société, se tournent vers les extrémismes.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,25,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « des jeunes qui sans » ?",success,success,oui,0.222,[],oui,"D'après le document :
+- L’explosion démographique dans les pays en développement a provoqué une hausse importante du chômage des jeunes qui, sans espoir de réussir et de trouver une place dans la société, se tournent vers les extrémismes.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,26,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « sans espoir de réussir » ?",success,success,oui,0.21,[],oui,"D'après le document :
+- L’explosion démographique dans les pays en développement a provoqué une hausse importante du chômage des jeunes qui, sans espoir de réussir et de trouver une place dans la société, se tournent vers les extrémismes.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,27,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « cherchent à repousser le » ?",success,success,oui,0.203,[],oui,"D'après le document :
+- Ces afghans sont alors soutenus par les Etats-Unis qui cherchent à repousser le communisme à partir du Pakistan.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « sont lance dans une » et donne son information.",success,success,oui,0.2,[],oui,"D'après le document :
+- La révolution afghane Envahis par l’URSS en 1979, les Afghans se sont lancés dans une guérilla sanglante, une guerre sainte contre les impies.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,29,Résumé,Résume le document « expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf ».,success,success,oui,0.123,[],oui,"Résumé du contenu :
+- ne faut pas confondre.
+- par l’URSS en 1979.
+- les pays en développement.
+- alors soutenus par les.
+- a connu des épisodes.
+- cherchent à repousser le.",
+18,expression-ecrite-sur-le-fanatisme-religieux-au-maroc-musulman.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.114,[],oui,"D'après le document :
+- Son assise financière lui permet de payer des camps d’entraînements en Afghanistan ou au Soudan.",
+21,la-subordonnee-circonstancielle-de-but.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « La subordonnée de but » ?",success,success,oui,0.126,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de but appelée aussi » ?",success,success,oui,0.113,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « but appelée aussi finale » ?",success,success,oui,0.113,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,4,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « appelée aussi finale est » ?",success,success,oui,0.105,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,5,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « aussi finale est une » ?",success,success,oui,0.107,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,6,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la fonction de complément » ?",success,success,oui,0.133,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,7,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de complément circonstanciel de » ?",success,success,oui,0.094,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,8,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « complément circonstanciel de but » ?",success,success,oui,0.134,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,9,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de but du verbe » ?",success,success,oui,0.115,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,10,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « du verbe principal dont » ?",success,success,oui,0.116,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,11,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « elle dépend et avec » ?",success,success,oui,0.115,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,12,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « avec lequel elle établit » ?",success,success,oui,0.108,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,13,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « elle établit un rapport » ?",success,success,oui,0.1,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,14,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « un rapport logique » ?",success,success,oui,0.088,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,15,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « rapport logique » ?",success,success,oui,0.108,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,16,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Elle exprime l'intention le » ?",success,success,oui,0.128,[],oui,"D'après le document :
+- Elle exprime l'intention, le résultat, l'objectif visé ou au contraire évité par le fait de la principale.",
+21,la-subordonnee-circonstancielle-de-but.pdf,17,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « exprime l'intention le résultat » ?",success,success,oui,0.366,[],oui,"D'après le document :
+- Elle exprime l'intention, le résultat, l'objectif visé ou au contraire évité par le fait de la principale.",
+21,la-subordonnee-circonstancielle-de-but.pdf,18,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « le résultat l'objectif visé » ?",success,success,oui,0.121,[],oui,"D'après le document :
+- Elle exprime l'intention, le résultat, l'objectif visé ou au contraire évité par le fait de la principale.",
+21,la-subordonnee-circonstancielle-de-but.pdf,19,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « résultat l'objectif visé ou » ?",success,success,oui,0.118,[],oui,"D'après le document :
+- Elle exprime l'intention, le résultat, l'objectif visé ou au contraire évité par le fait de la principale.",
+21,la-subordonnee-circonstancielle-de-but.pdf,20,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « l'objectif visé ou au » ?",success,success,oui,0.108,[],oui,"D'après le document :
+- Elle exprime l'intention, le résultat, l'objectif visé ou au contraire évité par le fait de la principale.",
+21,la-subordonnee-circonstancielle-de-but.pdf,21,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Paul s'est caché pour » ?",success,success,oui,0.102,[],oui,"D'après le document :
+- Paul s'est caché pour qu'on le laisse en paix.",
+21,la-subordonnee-circonstancielle-de-but.pdf,22,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « s'est caché pour qu'on » ?",success,success,oui,0.112,[],oui,"D'après le document :
+- Paul s'est caché pour qu'on le laisse en paix.",
+21,la-subordonnee-circonstancielle-de-but.pdf,23,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « pour qu'on le laisse » ?",success,success,oui,0.138,[],oui,"D'après le document :
+- Paul s'est caché pour qu'on le laisse en paix.",
+21,la-subordonnee-circonstancielle-de-but.pdf,24,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « le laisse en paix » ?",success,success,oui,0.086,[],oui,"D'après le document :
+- Paul s'est caché pour qu'on le laisse en paix.",
+21,la-subordonnee-circonstancielle-de-but.pdf,25,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Paul s'est caché de » ?",success,success,oui,0.108,[],oui,"D'après le document :
+- Paul s'est caché de peur qu'on ne le voie.",
+21,la-subordonnee-circonstancielle-de-but.pdf,26,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « s'est caché de peur » ?",success,success,oui,0.12,[],oui,"D'après le document :
+- Paul s'est caché de peur qu'on ne le voie.",
+21,la-subordonnee-circonstancielle-de-but.pdf,27,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de peur qu'on ne » ?",success,success,oui,0.078,[],oui,"D'après le document :
+- Paul s'est caché de peur qu'on ne le voie.",
+21,la-subordonnee-circonstancielle-de-but.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « de but u verbe » et donne son information.",success,success,oui,0.112,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+21,la-subordonnee-circonstancielle-de-but.pdf,29,Résumé,Résume le document « la-subordonnee-circonstancielle-de-but.pdf ».,success,success,oui,0.093,[],oui,"Résumé du contenu :
+- La subordonnée de but.
+- la fonction de complément.
+- elle dépend et avec.
+- Elle exprime l'intention le.
+- Paul s'est caché pour.
+- de peur qu'on ne.",
+21,la-subordonnee-circonstancielle-de-but.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.102,[],oui,"D'après le document :
+- Définition La subordonnée de but, appelée aussi finale, est une proposition qui assume la fonction de complément circonstanciel de but du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « La subordonnée circonstancielle de » ?",success,success,oui,0.121,[],oui,"D'après le document :
+- La subordonnée circonstancielle de cause.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « subordonnée circonstancielle de cause » ?",success,success,oui,0.121,[],oui,"D'après le document :
+- La subordonnée circonstancielle de cause.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de cause appelée aussi » ?",success,success,oui,0.115,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,4,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « cause appelée aussi causale » ?",success,success,oui,0.082,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,5,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « appelée aussi causale est » ?",success,success,oui,0.089,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,6,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « assume la fonction de » ?",success,success,oui,0.102,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,7,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la fonction de complément » ?",success,success,oui,0.106,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,8,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de complément circonstanciel de » ?",success,success,oui,0.137,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,9,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « complément circonstanciel de cause » ?",success,success,oui,0.097,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,10,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de cause du verbe » ?",success,success,oui,0.123,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,11,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « dépend et avec lequel » ?",success,success,oui,0.115,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,12,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « avec lequel elle établit » ?",success,success,oui,0.115,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,13,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « elle établit un rapport » ?",success,success,oui,0.1,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,14,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « un rapport logique » ?",success,success,oui,0.114,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,15,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « rapport logique » ?",success,success,oui,0.098,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,16,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Elle indique l’origine la » ?",success,success,oui,0.086,[],oui,"D'après le document :
+- Elle indique l’origine, la raison, la cause du fait principal.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,17,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « indique l’origine la raison » ?",success,success,oui,0.105,[],oui,"D'après le document :
+- Elle indique l’origine, la raison, la cause du fait principal.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,18,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la raison la cause » ?",success,success,oui,0.103,[],oui,"D'après le document :
+- Elle indique l’origine, la raison, la cause du fait principal.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,19,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la cause du fait » ?",success,success,oui,0.111,[],oui,"D'après le document :
+- Elle indique l’origine, la raison, la cause du fait principal.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,20,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « du fait principal » ?",success,success,oui,0.095,[],oui,"D'après le document :
+- Elle indique l’origine, la raison, la cause du fait principal.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,21,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « L’élève à réussi à » ?",success,success,oui,0.105,[],oui,"D'après le document :
+- L’élève à réussi à l’examen parce qu’il a bien travaillé.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,22,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « à réussi à l’examen » ?",success,success,oui,0.12,[],oui,"D'après le document :
+- Indicatif Comme il a bien travaillé, il a réussi à l’examen.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,23,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « à l’examen parce qu’il » ?",success,success,oui,0.122,[],oui,"D'après le document :
+- L’élève à réussi à l’examen parce qu’il a bien travaillé.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,24,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « l’examen parce qu’il a » ?",success,success,oui,0.129,[],oui,"D'après le document :
+- L’élève à réussi à l’examen parce qu’il a bien travaillé.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,25,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « parce qu’il a bien » ?",success,success,oui,0.119,[],oui,"D'après le document :
+- L’élève à réussi à l’examen parce qu’il a bien travaillé.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,26,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « La proposition subordonnée parce » ?",success,success,oui,0.098,[],oui,"D'après le document :
+- Proposition principale Proposition subordonnée La proposition subordonnée «parce qu’il a bien travaillé» exprime la raison pour laquelle s’accomplit le fait énoncé dans la subordonnée principale.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,27,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « proposition subordonnée parce qu’il » ?",success,success,oui,0.161,[],oui,"D'après le document :
+- Proposition principale Proposition subordonnée La proposition subordonnée «parce qu’il a bien travaillé» exprime la raison pour laquelle s’accomplit le fait énoncé dans la subordonnée principale.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « complement circontanciel de cause » et donne son information.",success,success,oui,0.144,[],oui,"D'après le document :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,29,Résumé,Résume le document « la-subordonnee-circonstancielle-de-cause.pdf ».,success,success,oui,0.105,[],oui,"Résumé du contenu :
+- La subordonnée circonstancielle de.
+- assume la fonction de.
+- dépend et avec lequel.
+- Elle indique l’origine la.
+- L’élève à réussi à.
+- proposition subordonnée parce qu’il.",
+22,la-subordonnee-circonstancielle-de-cause.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.084,[],oui,"D'après les documents :
+- Définition La subordonnée circonstancielle de cause, appelée aussi causale, est une proposition qui assume la fonction de complément circonstanciel de cause du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.
+- Les subordonnées causales sont souvent utilisées dans les discours explicatif et argumentatif car elles servent à expliquer des faits, à justifier des prises de position, etc.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « La subordonnée de conséquence » ?",success,success,oui,0.135,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de conséquence consécutive est » ?",success,success,oui,0.141,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « conséquence consécutive est une » ?",success,success,oui,0.141,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,4,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « une proposition qui » ?",success,success,oui,0.134,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,5,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « est trop vieux pour » ?",success,success,oui,0.162,[],oui,"D'après le document :
+- ) Subjonctif Il est trop vieux pour qu’on lui demande de faire ce trajet à pied.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,6,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « pour qu’on lui » ?",success,success,oui,0.142,[],oui,"D'après le document :
+- ) Subjonctif Il est trop vieux pour qu’on lui demande de faire ce trajet à pied.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,7,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « qu’on lui » ?",success,success,oui,0.112,[],oui,"D'après le document :
+- ) Subjonctif Il est trop vieux pour qu’on lui demande de faire ce trajet à pied.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,8,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « assume la fonction de » ?",success,success,oui,0.144,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,9,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la fonction de complément » ?",success,success,oui,0.159,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,10,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de complément circonstanciel de » ?",success,success,oui,0.148,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,11,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « complément circonstanciel de conséquence » ?",success,success,oui,0.13,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,12,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de conséquence du » ?",success,success,oui,0.145,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,13,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « verbe principal dont elle » ?",success,success,oui,0.127,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,14,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « principal dont elle dépend » ?",success,success,oui,0.126,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,15,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « elle dépend et avec » ?",success,success,oui,0.113,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,16,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « avec lequel elle établit » ?",success,success,oui,0.167,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,17,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « De façon que de » ?",success,success,oui,0.126,[],oui,"D'après le document :
+- De façon que, de manière que, trop.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,18,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « de manière que trop » ?",success,success,oui,0.164,[],oui,"D'après le document :
+- De façon que, de manière que, trop.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,19,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « que trop pour que » ?",success,success,oui,0.124,[],oui,"D'après le document :
+- De façon que, de manière que, trop. . . . pour que, assez. . . . . . pour que (sujets différents. ) Subjonctif Il est trop vieux pour qu’on lui demande de faire ce trajet à pied. Assez. . . pour, trop. . . pour, de façon à (même sujet). Infinitif C’est un garçon de six ans. Il est trop petit pour participer à cette compétition.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,20,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « que assez pour que » ?",success,success,oui,0.15,[],oui,"D'après le document :
+- De façon que, de manière que, trop. . . . pour que, assez. . . . . . pour que (sujets différents. ) Subjonctif Il est trop vieux pour qu’on lui demande de faire ce trajet à pied. Assez. . . pour, trop. . . pour, de façon à (même sujet). Infinitif C’est un garçon de six ans. Il est trop petit pour participer à cette compétition.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,21,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « que sujets différents Subjonctif » ?",success,success,oui,0.142,[],oui,"D'après le document :
+- De façon que, de manière que, trop. . . . pour que, assez. . . . . . pour que (sujets différents. ) Subjonctif Il est trop vieux pour qu’on lui demande de faire ce trajet à pied. Assez. . . pour, trop. . . pour, de façon à (même sujet). Infinitif C’est un garçon de six ans. Il est trop petit pour participer à cette compétition.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,22,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Toujours placée après la » ?",success,success,oui,0.135,[],oui,"D'après le document :
+- Toujours placée après la principale, la subordonnée consécutive exprime le résultat produit par l'action de la principale (qui en est la cause).",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,23,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « placée après la principale » ?",success,success,oui,0.153,[],oui,"D'après le document :
+- Toujours placée après la principale, la subordonnée consécutive exprime le résultat produit par l'action de la principale (qui en est la cause).",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,24,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la principale la subordonnée » ?",success,success,oui,0.142,[],oui,"D'après le document :
+- Toujours placée après la principale, la subordonnée consécutive exprime le résultat produit par l'action de la principale (qui en est la cause).",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,25,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la subordonnée consécutive exprime » ?",success,success,oui,0.141,[],oui,"D'après le document :
+- Toujours placée après la principale, la subordonnée consécutive exprime le résultat produit par l'action de la principale (qui en est la cause).",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,26,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « Assez pour trop pour » ?",success,success,oui,0.128,[],oui,"D'après le document :
+- De façon que, de manière que, trop. . . . pour que, assez. . . . . . pour que (sujets différents. ) Subjonctif Il est trop vieux pour qu’on lui demande de faire ce trajet à pied. Assez. . . pour, trop. . . pour, de façon à (même sujet). Infinitif C’est un garçon de six ans. Il est trop petit pour participer à cette compétition.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,27,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « pour trop pour de » ?",success,success,oui,0.127,[],oui,"D'après le document :
+- De façon que, de manière que, trop. . . . pour que, assez. . . . . . pour que (sujets différents. ) Subjonctif Il est trop vieux pour qu’on lui demande de faire ce trajet à pied. Assez. . . pour, trop. . . pour, de façon à (même sujet). Infinitif C’est un garçon de six ans. Il est trop petit pour participer à cette compétition.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « la foncsion e complement » et donne son information.",success,success,oui,0.149,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,29,Résumé,Résume le document « la-subordonnee-circonstancielle-de-consequence.pdf ».,success,success,oui,0.1,[],oui,"Résumé du contenu :
+- La subordonnée de conséquence.
+- pour qu’on lui.
+- complément circonstanciel de conséquence.
+- avec lequel elle établit.
+- que sujets différents Subjonctif.
+- pour trop pour de.",
+23,la-subordonnee-circonstancielle-de-consequence.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.099,[],oui,"D'après le document :
+- Définition La subordonnée de conséquence (consécutive) est une proposition qui assume la fonction de complément circonstanciel de conséquence du verbe principal dont elle dépend et avec lequel elle établit un rapport logique.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « La subordonnée relative a » ?",success,success,oui,0.097,[],oui,"D'après le document :
+- La subordonnée relative à valeur d’adjectif ou de complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « subordonnée relative a comme » ?",success,success,oui,0.108,[],oui,"D'après le document :
+- La subordonnée relative a comme fonction principale de compléter le sens de son antécédent.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « comme fonction principale de » ?",success,success,oui,0.097,[],oui,"D'après le document :
+- La subordonnée relative a comme fonction principale de compléter le sens de son antécédent.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,4,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « fonction principale de compléter » ?",success,success,oui,0.082,[],oui,"D'après le document :
+- La subordonnée relative a comme fonction principale de compléter le sens de son antécédent.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,5,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de compléter le sens » ?",success,success,oui,0.099,[],oui,"D'après le document :
+- La subordonnée relative a comme fonction principale de compléter le sens de son antécédent.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,6,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la valeur d’un adjectif » ?",success,success,oui,0.077,[],oui,"D'après le document :
+- Elle a la valeur d’un adjectif qualificatif épithète ou d’un complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,7,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « valeur d’un adjectif qualificatif » ?",success,success,oui,0.109,[],oui,"D'après le document :
+- Elle a la valeur d’un adjectif qualificatif épithète ou d’un complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,8,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « d’un adjectif qualificatif épithète » ?",success,success,oui,0.103,[],oui,"D'après le document :
+- Elle a la valeur d’un adjectif qualificatif épithète ou d’un complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,9,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « adjectif qualificatif épithète ou » ?",success,success,oui,0.1,[],oui,"D'après le document :
+- Elle a la valeur d’un adjectif qualificatif épithète ou d’un complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,10,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « qualificatif épithète ou d’un » ?",success,success,oui,0.095,[],oui,"D'après le document :
+- Elle a la valeur d’un adjectif qualificatif épithète ou d’un complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,11,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Nous avons vendu la » ?",success,success,oui,0.086,[],oui,"D'après le document :
+- Nous avons vendu la maison qui appartenait à mon père.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,12,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « avons vendu la maison » ?",success,success,oui,0.108,[],oui,"D'après le document :
+- Nous avons vendu la maison qui appartenait à mon père.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,13,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la maison qui appartenait » ?",success,success,oui,0.104,[],oui,"D'après le document :
+- Nous avons vendu la maison qui appartenait à mon père.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,14,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « qui appartenait à mon » ?",success,success,oui,0.102,[],oui,"D'après le document :
+- Nous avons vendu la maison qui appartenait à mon père.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,15,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « à mon père » ?",success,success,oui,0.076,[],oui,"D'après le document :
+- Nous avons vendu la maison qui appartenait à mon père.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,16,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « La subordonnée relative qui » ?",success,success,oui,0.093,[],oui,"D'après le document :
+- La subordonnée relative qui appartenait à mon père peut être remplacée par:.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,17,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « subordonnée relative qui appartenait » ?",success,success,oui,0.108,[],oui,"D'après le document :
+- La subordonnée relative qui appartenait à mon père peut être remplacée par:.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,18,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « à mon père peut » ?",success,success,oui,0.073,[],oui,"D'après le document :
+- La subordonnée relative qui appartenait à mon père peut être remplacée par:.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,19,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « mon père peut être » ?",success,success,oui,0.096,[],oui,"D'après le document :
+- La subordonnée relative qui appartenait à mon père peut être remplacée par:.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,20,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « à valeur d’adjectif ou » ?",success,success,oui,0.094,[],oui,"D'après le document :
+- La subordonnée relative à valeur d’adjectif ou de complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,21,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de complément de nom » ?",success,success,oui,0.091,[],oui,"D'après le document :
+- La subordonnée relative à valeur d’adjectif ou de complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,22,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « d’adjectif ou de » ?",success,success,oui,0.083,[],oui,"D'après le document :
+- La subordonnée relative à valeur d’adjectif ou de complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,23,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « ou de complément » ?",success,success,oui,0.099,[],oui,"D'après le document :
+- La subordonnée relative à valeur d’adjectif ou de complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,24,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « La subordonnée relative » ?",success,success,oui,0.082,[],oui,"D'après le document :
+- La subordonnée relative à valeur d’adjectif ou de complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,25,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « subordonnée relative a » ?",success,success,oui,0.098,[],oui,"D'après le document :
+- La subordonnée relative à valeur d’adjectif ou de complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,26,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « relative a comme » ?",success,success,oui,0.076,[],oui,"D'après le document :
+- La subordonnée relative a comme fonction principale de compléter le sens de son antécédent.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,27,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « a comme fonction » ?",success,success,oui,0.107,[],oui,"D'après le document :
+- La subordonnée relative a comme fonction principale de compléter le sens de son antécédent.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « adjectif kalifictif epithete ou » et donne son information.",success,success,oui,0.092,[],oui,"D'après le document :
+- Elle a la valeur d’un adjectif qualificatif épithète ou d’un complément de nom.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,29,Résumé,Résume le document « la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf ».,success,success,oui,0.087,[],oui,"Résumé du contenu :
+- La subordonnée relative a.
+- la valeur d’un adjectif.
+- Nous avons vendu la.
+- La subordonnée relative qui.
+- de complément de nom.
+- a comme fonction.",
+24,la-subordonnee-relative-a-valeur-d-adjectif-ou-de-complement-de-nom.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.078,[],oui,"D'après le document :
+- La subordonnée relative a comme fonction principale de compléter le sens de son antécédent.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « son point de vue » ?",success,success,oui,0.185,[],oui,"D'après le document :
+- Débattre et justifier son point de vue Professeur:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,2,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « Avec mon groupe je » ?",success,success,oui,0.222,[],oui,"D'après le document :
+- Avec mon groupe, je prépare le sujet suivant:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,3,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « mon groupe je prépare » ?",success,success,oui,0.199,[],oui,"D'après le document :
+- Avec mon groupe, je prépare le sujet suivant:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,4,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « je prépare le sujet » ?",success,success,oui,0.181,[],oui,"D'après le document :
+- Avec mon groupe, je prépare le sujet suivant:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,5,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « le sujet suivant » ?",success,success,oui,0.178,[],oui,"D'après le document :
+- Avec mon groupe, je prépare le sujet suivant:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,6,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « sujet suivant » ?",success,success,oui,0.194,[],oui,"D'après le document :
+- Avec mon groupe, je prépare le sujet suivant:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,7,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « J'observe le document et » ?",success,success,oui,0.227,[],oui,"D'après le document :
+- J'observe le document et je coche ta bonne réponse:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,8,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « je coche ta bonne » ?",success,success,oui,0.184,[],oui,"D'après le document :
+- J'observe le document et je coche ta bonne réponse:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,9,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « ta bonne réponse » ?",success,success,oui,0.168,[],oui,"D'après le document :
+- J'observe le document et je coche ta bonne réponse:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,10,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « bonne réponse » ?",success,success,oui,0.178,[],oui,"D'après le document :
+- J'observe le document et je coche ta bonne réponse:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,11,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « expriment leurs points de » ?",success,success,oui,0.192,[],oui,"D'après le document :
+- expriment leurs points de vue en les justifiant décrivent leur école racontent une histoire 2.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,12,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « leurs points de vue » ?",success,success,oui,0.192,[],oui,"D'après le document :
+- expriment leurs points de vue en les justifiant décrivent leur école racontent une histoire 2.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,13,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « de vue en les » ?",success,success,oui,0.171,[],oui,"D'après le document :
+- expriment leurs points de vue en les justifiant décrivent leur école racontent une histoire 2.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,14,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « les justifiant » ?",success,success,oui,0.166,[],oui,"D'après le document :
+- expriment leurs points de vue en les justifiant décrivent leur école racontent une histoire 2.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,15,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « L'utilité d'une charte du » ?",success,success,oui,0.213,[],oui,"D'après le document :
+- L'utilité d'une charte du respect de l'environnement au collège.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,16,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « d'une charte du respect » ?",success,success,oui,0.224,[],oui,"D'après le document :
+- L'utilité d'une charte du respect de l'environnement au collège.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,17,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « du respect de l'environnement » ?",success,success,oui,0.254,[],oui,"D'après le document :
+- L'utilité d'une charte du respect de l'environnement au collège.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,18,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « de l'environnement au collège » ?",success,success,oui,0.203,[],oui,"D'après le document :
+- L'utilité d'une charte du respect de l'environnement au collège.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,19,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Débattre et justifier son » ?",success,success,oui,0.191,[],oui,"D'après le document :
+- Débattre et justifier son point de vue Professeur:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,20,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « et justifier son point » ?",success,success,oui,0.217,[],oui,"D'après le document :
+- Débattre et justifier son point de vue Professeur:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,21,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de vue Professeur » ?",success,success,oui,0.167,[],oui,"D'après le document :
+- Débattre et justifier son point de vue Professeur:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,22,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « Je relie par une » ?",success,success,oui,0.202,[],oui,"D'après le document :
+- Je relie par une flèche les éléments des deux colonnes suivantes (qui pense quoi?",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,23,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « une flèche les éléments » ?",success,success,oui,0.203,[],oui,"D'après le document :
+- Je relie par une flèche les éléments des deux colonnes suivantes (qui pense quoi?",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,24,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « les éléments des deux » ?",success,success,oui,0.191,[],oui,"D'après le document :
+- Je relie par une flèche les éléments des deux colonnes suivantes (qui pense quoi?",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,25,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « des deux colonnes suivantes » ?",success,success,oui,0.178,[],oui,"D'après le document :
+- Je relie par une flèche les éléments des deux colonnes suivantes (qui pense quoi?",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,26,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « deux colonnes suivantes qui » ?",success,success,oui,0.211,[],oui,"D'après le document :
+- Je relie par une flèche les éléments des deux colonnes suivantes (qui pense quoi?",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,27,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « qui s'impose est que » ?",success,success,oui,0.193,[],oui,"D'après le document :
+- La première constatation qui s'impose est que.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « ta bonne reponse » et donne son information.",success,success,oui,0.211,[],oui,"D'après le document :
+- J'observe le document et je coche ta bonne réponse:.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,29,Résumé,Résume le document « langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf ».,success,success,oui,0.13,[],oui,"Résumé du contenu :
+- son point de vue.
+- sujet suivant.
+- expriment leurs points de.
+- d'une charte du respect.
+- de vue Professeur.
+- qui s'impose est que.",
+32,langue-4-1-debattre-et-justifier-son-point-de-vue-2.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.14,[],oui,"D'après le document :
+- Avec mon groupe, je prépare le sujet suivant: L'utilité d'une charte du respect de l'environnement au collège.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Identifier les caractéristiques des » ?",success,success,oui,0.187,[],oui,"D'après le document :
+- Identifier les caractéristiques des différents genres d'invitations Professeur:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « les caractéristiques des différents » ?",success,success,oui,0.203,[],oui,"D'après le document :
+- Identifier les caractéristiques des différents genres d'invitations Professeur:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « des différents genres d'invitations » ?",success,success,oui,0.237,[],oui,"D'après le document :
+- Identifier les caractéristiques des différents genres d'invitations Professeur:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,4,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « différents genres d'invitations Professeur » ?",success,success,oui,0.199,[],oui,"D'après le document :
+- Identifier les caractéristiques des différents genres d'invitations Professeur:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,5,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « genres d'invitations Professeur » ?",success,success,oui,0.218,[],oui,"D'après le document :
+- Identifier les caractéristiques des différents genres d'invitations Professeur:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,6,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « Je trouve le genre » ?",success,success,oui,0.187,[],oui,"D'après le document :
+- Je trouve le genre de chaque document en reliant les éléments de la colonne A à ceux de la colonne B:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,7,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « le genre de chaque » ?",success,success,oui,0.182,[],oui,"D'après le document :
+- Je trouve le genre de chaque document en reliant les éléments de la colonne A à ceux de la colonne B:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,8,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « de chaque document en » ?",success,success,oui,0.181,[],oui,"D'après le document :
+- Je trouve le genre de chaque document en reliant les éléments de la colonne A à ceux de la colonne B:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,9,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « en reliant les éléments » ?",success,success,oui,0.183,[],oui,"D'après le document :
+- Je trouve le genre de chaque document en reliant les éléments de la colonne A à ceux de la colonne B:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,10,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « les éléments de la » ?",success,success,oui,0.146,[],oui,"D'après le document :
+- Je trouve le genre de chaque document en reliant les éléments de la colonne A à ceux de la colonne B:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,11,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « Je précise à qui » ?",success,success,oui,0.17,[],oui,"D'après le document :
+- Je précise à qui renvoie le pronom personnel «vous» dans les trois documents:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,12,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « qui renvoie le pronom » ?",success,success,oui,0.179,[],oui,"D'après le document :
+- Je précise à qui renvoie le pronom personnel «vous» dans les trois documents:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,13,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « le pronom personnel vous » ?",success,success,oui,0.148,[],oui,"D'après le document :
+- Je précise à qui renvoie le pronom personnel «vous» dans les trois documents:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,14,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « pronom personnel vous dans » ?",success,success,oui,0.185,[],oui,"D'après le document :
+- Je précise à qui renvoie le pronom personnel «vous» dans les trois documents:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,15,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « les trois » ?",success,success,oui,0.212,[],oui,"D'après le document :
+- Je précise à qui renvoie le pronom personnel «vous» dans les trois documents:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,16,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « Je souligne le document » ?",success,success,oui,0.186,[],oui,"D'après le document :
+- Je souligne le document adressé à titre personnel au destinataire.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,17,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « document adressé à titre » ?",success,success,oui,0.197,[],oui,"D'après le document :
+- Je souligne le document adressé à titre personnel au destinataire.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,18,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « à titre personnel au » ?",success,success,oui,0.192,[],oui,"D'après le document :
+- Je souligne le document adressé à titre personnel au destinataire.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,19,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « titre personnel au destinataire » ?",success,success,oui,0.202,[],oui,"D'après le document :
+- Je souligne le document adressé à titre personnel au destinataire.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,20,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « au destinataire » ?",success,success,oui,0.155,[],oui,"D'après le document :
+- Je souligne le document adressé à titre personnel au destinataire.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,21,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « document d'invitation Affiche carte » ?",success,success,oui,0.205,[],oui,"D'après le document :
+- ____________________ III- Mémorisation Un document d'invitation (Affiche, carte, lettre etc.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,22,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « d'invitation Affiche carte lettre » ?",success,success,oui,0.21,[],oui,"D'après le document :
+- ____________________ III- Mémorisation Un document d'invitation (Affiche, carte, lettre etc.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,23,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « Affiche carte lettre etc » ?",success,success,oui,0.199,[],oui,"D'après le document :
+- ____________________ III- Mémorisation Un document d'invitation (Affiche, carte, lettre etc.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,24,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « carte lettre etc doit » ?",success,success,oui,0.205,[],oui,"D'après le document :
+- La date Le lieu Le sujet Le nom de l'intervenant 4. Je précise à qui renvoie le pronom personnel «vous» dans les trois documents: Document 1: ____________________ Document 2: ____________________ Document 3: ____________________ III- Mémorisation Un document d'invitation (Affiche, carte, lettre etc. ) doit obligatoirement comporter des informations sur: la personne ou l'organisme organisateur, le genre de l'événement ou de l'activité organisée, la date (et même l'heure du début) des festivités, le lieu où se déroulera l'évènement. On peut également y insérer l'utilité de l'activité. Il faut également prévoir différentes versions (affiches, lettres conventionnelles, lettres personnelles, cartes d'invitation, emails, SMS, messages à partager sur les réseaux sociaux etc.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,25,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « lettre etc doit obligatoirement » ?",success,success,oui,0.177,[],oui,"D'après le document :
+- La date Le lieu Le sujet Le nom de l'intervenant 4. Je précise à qui renvoie le pronom personnel «vous» dans les trois documents: Document 1: ____________________ Document 2: ____________________ Document 3: ____________________ III- Mémorisation Un document d'invitation (Affiche, carte, lettre etc. ) doit obligatoirement comporter des informations sur: la personne ou l'organisme organisateur, le genre de l'événement ou de l'activité organisée, la date (et même l'heure du début) des festivités, le lieu où se déroulera l'évènement. On peut également y insérer l'utilité de l'activité. Il faut également prévoir différentes versions (affiches, lettres conventionnelles, lettres personnelles, cartes d'invitation, emails, SMS, messages à partager sur les réseaux sociaux etc.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,26,Information page 5,"Selon le document, quelle information est donnée dans le passage contenant « les raisons qui font » ?",success,success,oui,0.189,[],oui,"D'après le document :
+- Quelles sont les raisons qui font d'Ifrane «la capitale écologique» du Maroc V- Réinvestissement 1.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,27,Information page 5,"Selon le document, quelle information est donnée dans le passage contenant « qui font d'Ifrane la » ?",success,success,oui,0.168,[],oui,"D'après le document :
+- Quelles sont les raisons qui font d'Ifrane «la capitale écologique» du Maroc V- Réinvestissement 1.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « en reliant es elements » et donne son information.",success,success,oui,0.204,[],oui,"D'après le document :
+- Je trouve le genre de chaque document en reliant les éléments de la colonne A à ceux de la colonne B:.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,29,Résumé,Résume le document « lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf ».,success,success,oui,0.155,[],oui,"Résumé du contenu :
+- Identifier les caractéristiques des.
+- Je trouve le genre.
+- Je précise à qui.
+- Je souligne le document.
+- document d'invitation Affiche carte.
+- qui font d'Ifrane la.",
+43,lecture-3-1-identifier-les-caracteristiques-des-differents-genres-d-invitations-2.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.147,[],oui,"D'après le document :
+- On peut également y insérer l'utilité de l'activité.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,1,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « informer sur les pays » ?",success,success,oui,0.183,[],oui,"D'après le document :
+- informer sur les pays qui produisent la cigarette.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,2,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « les pays qui produisent » ?",success,success,oui,0.211,[],oui,"D'après le document :
+- informer sur les pays qui produisent la cigarette.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,3,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « qui produisent la cigarette » ?",success,success,oui,0.205,[],oui,"D'après le document :
+- informer sur les pays qui produisent la cigarette.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,4,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « la cigarette » ?",success,success,oui,0.163,[],oui,"D'après le document :
+- décrire les bienfaits de la cigarette.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,5,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « Une lettre ouverte consiste » ?",success,success,oui,0.213,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,6,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « lettre ouverte consiste à » ?",success,success,oui,0.187,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,7,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « ouverte consiste à écrire » ?",success,success,oui,0.251,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,8,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « à écrire un texte » ?",success,success,oui,0.188,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,9,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « qui respecte les formes » ?",success,success,oui,0.177,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,10,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « Je complète la lettre » ?",success,success,oui,0.204,[],oui,"D'après le document :
+- a- La formule d'appel b- Le nom du destinateur c- Explicitation du problème d- La date e- Demande de réagir f- L'objet g- Le destinataire h- L'annonce du problème V- Réinvestissement Je complète la lettre suivante en plaçant convenablement les énoncés ci-dessous - Votre compréhension, de votre reconnaissance - Gagnez leur confiance - Il n'est plus tolérable - Rachid, un adolescent - Aux parents d'Ados _______________________________ que vous traitiez vos enfants comme des gamins.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,11,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « la lettre suivante en » ?",success,success,oui,0.184,[],oui,"D'après le document :
+- a- La formule d'appel b- Le nom du destinateur c- Explicitation du problème d- La date e- Demande de réagir f- L'objet g- Le destinataire h- L'annonce du problème V- Réinvestissement Je complète la lettre suivante en plaçant convenablement les énoncés ci-dessous - Votre compréhension, de votre reconnaissance - Gagnez leur confiance - Il n'est plus tolérable - Rachid, un adolescent - Aux parents d'Ados _______________________________ que vous traitiez vos enfants comme des gamins.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,12,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « lettre suivante en plaçant » ?",success,success,oui,0.201,[],oui,"D'après le document :
+- a- La formule d'appel b- Le nom du destinateur c- Explicitation du problème d- La date e- Demande de réagir f- L'objet g- Le destinataire h- L'annonce du problème V- Réinvestissement Je complète la lettre suivante en plaçant convenablement les énoncés ci-dessous - Votre compréhension, de votre reconnaissance - Gagnez leur confiance - Il n'est plus tolérable - Rachid, un adolescent - Aux parents d'Ados _______________________________ que vous traitiez vos enfants comme des gamins.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,13,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « en plaçant convenablement les » ?",success,success,oui,0.225,[],oui,"D'après le document :
+- a- La formule d'appel b- Le nom du destinateur c- Explicitation du problème d- La date e- Demande de réagir f- L'objet g- Le destinataire h- L'annonce du problème V- Réinvestissement Je complète la lettre suivante en plaçant convenablement les énoncés ci-dessous - Votre compréhension, de votre reconnaissance - Gagnez leur confiance - Il n'est plus tolérable - Rachid, un adolescent - Aux parents d'Ados _______________________________ que vous traitiez vos enfants comme des gamins.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,14,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « plaçant convenablement les énoncés » ?",success,success,oui,0.229,[],oui,"D'après le document :
+- a- La formule d'appel b- Le nom du destinateur c- Explicitation du problème d- La date e- Demande de réagir f- L'objet g- Le destinataire h- L'annonce du problème V- Réinvestissement Je complète la lettre suivante en plaçant convenablement les énoncés ci-dessous - Votre compréhension, de votre reconnaissance - Gagnez leur confiance - Il n'est plus tolérable - Rachid, un adolescent - Aux parents d'Ados _______________________________ que vous traitiez vos enfants comme des gamins.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,15,Information page 5,"Selon le document, quelle information est donnée dans le passage contenant « C'est ce que vous » ?",success,success,oui,0.189,[],oui,"D'après le document :
+- C'est ce que vous avez de plus cher, non?",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,16,Information page 5,"Selon le document, quelle information est donnée dans le passage contenant « vous avez de plus » ?",success,success,oui,0.214,[],oui,"D'après le document :
+- C'est ce que vous avez de plus cher, non?",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,17,Information page 5,"Selon le document, quelle information est donnée dans le passage contenant « plus cher non » ?",success,success,oui,0.176,[],oui,"D'après le document :
+- C'est ce que vous avez de plus cher, non?",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,18,Information page 5,"Selon le document, quelle information est donnée dans le passage contenant « cher non » ?",success,success,oui,0.155,[],oui,"D'après le document :
+- C'est ce que vous avez de plus cher, non?",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,19,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Identifier les caractéristiques d'une » ?",success,success,oui,0.267,[],oui,"D'après le document :
+- Identifier les caractéristiques d'une lettre ouverte Professeur:.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,20,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « caractéristiques d'une lettre ouverte » ?",success,success,oui,0.236,[],oui,"D'après le document :
+- Identifier les caractéristiques d'une lettre ouverte Professeur:.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,21,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « d'une lettre ouverte Professeur » ?",success,success,oui,0.22,[],oui,"D'après le document :
+- Identifier les caractéristiques d'une lettre ouverte Professeur:.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,22,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « lettre ouverte Professeur » ?",success,success,oui,0.197,[],oui,"D'après le document :
+- Identifier les caractéristiques d'une lettre ouverte Professeur:.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,23,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « est destinée à être » ?",success,success,oui,0.205,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,24,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « être publiée dans un » ?",success,success,oui,0.221,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,25,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « un journal ou à » ?",success,success,oui,0.153,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,26,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « être lue par un » ?",success,success,oui,0.167,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,27,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « vous traitiez vos enfants » ?",success,success,oui,0.22,[],oui,"D'après le document :
+- a- La formule d'appel b- Le nom du destinateur c- Explicitation du problème d- La date e- Demande de réagir f- L'objet g- Le destinataire h- L'annonce du problème V- Réinvestissement Je complète la lettre suivante en plaçant convenablement les énoncés ci-dessous - Votre compréhension, de votre reconnaissance - Gagnez leur confiance - Il n'est plus tolérable - Rachid, un adolescent - Aux parents d'Ados _______________________________ que vous traitiez vos enfants comme des gamins.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « ki respecte les formes » et donne son information.",success,success,oui,0.19,[],oui,"D'après le document :
+- Les fabricants de la cigarette Les effets de la cigarette sur le fumeur Caractérisant de la cigarette Ce que l'on doit faire III- Mémorisation Une lettre ouverte consiste à écrire un texte qui respecte les formes de la lettre, mais qui est destinée à être publiée dans un journal ou à être lue par un ensemble de personnes.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,29,Résumé,Résume le document « lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf ».,success,success,oui,0.14,[],oui,"Résumé du contenu :
+- informer sur les pays.
+- lettre ouverte consiste à.
+- la lettre suivante en.
+- vous avez de plus.
+- d'une lettre ouverte Professeur.
+- vous traitiez vos enfants.",
+45,lecture-4-1-identifier-les-caracteristiques-d-une-lettre-ouverte-2.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.204,[],oui,"D'après le document :
+- Ce texte sert à défendre une idée, une cause ou à exprimer son opinion sur un sujet précis.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Les pronoms relatifs simples » ?",success,success,oui,0.35,[],oui,"D'après le document :
+- Les pronoms relatifs simples:.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « pronoms relatifs simples qui » ?",success,success,oui,0.107,[],oui,"D'après le document :
+- Les pronoms relatifs simples «qui, que, où, dont» servent à relier deux phrases pour éviter la répétition.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « relatifs simples qui que » ?",success,success,oui,0.122,[],oui,"D'après le document :
+- Les pronoms relatifs simples «qui, que, où, dont» se placent toujours à côté de l’antécédent.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,4,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « où dont servent à » ?",success,success,oui,0.137,[],oui,"D'après le document :
+- Les pronoms relatifs simples «qui, que, où, dont» servent à relier deux phrases pour éviter la répétition.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,5,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « dont servent à relier » ?",success,success,oui,0.142,[],oui,"D'après le document :
+- Les pronoms relatifs simples «qui, que, où, dont» servent à relier deux phrases pour éviter la répétition.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,6,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Ils remplacent un nom » ?",success,success,oui,0.117,[],oui,"D'après le document :
+- Ils remplacent un nom ou un pronom appelé "" antécédent "".",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,7,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « un nom ou un » ?",success,success,oui,0.117,[],oui,"D'après le document :
+- Ils remplacent un nom ou un pronom appelé "" antécédent "".",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,8,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « un pronom appelé antécédent » ?",success,success,oui,0.139,[],oui,"D'après le document :
+- Ils remplacent un nom ou un pronom appelé "" antécédent "".",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,9,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « pronom appelé antécédent » ?",success,success,oui,0.111,[],oui,"D'après le document :
+- Ils remplacent un nom ou un pronom appelé "" antécédent "".",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,10,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « appelé antécédent » ?",success,success,oui,0.115,[],oui,"D'après le document :
+- Ils remplacent un nom ou un pronom appelé "" antécédent "".",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,11,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Ils n’ont pas de » ?",success,success,oui,0.145,[],oui,"D'après le document :
+- Ils n’ont pas de sens mais seulement une fonction grammaticale:.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,12,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de sens mais seulement » ?",success,success,oui,0.118,[],oui,"D'après le document :
+- Ils n’ont pas de sens mais seulement une fonction grammaticale:.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,13,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « mais seulement une fonction » ?",success,success,oui,0.107,[],oui,"D'après le document :
+- Ils n’ont pas de sens mais seulement une fonction grammaticale:.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,14,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « une fonction grammaticale » ?",success,success,oui,0.147,[],oui,"D'après le document :
+- Ils n’ont pas de sens mais seulement une fonction grammaticale:.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,15,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « fonction grammaticale » ?",success,success,oui,0.13,[],oui,"D'après le document :
+- Ils n’ont pas de sens mais seulement une fonction grammaticale:.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,16,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « où remplace un complément » ?",success,success,oui,0.141,[],oui,"D'après le document :
+- "" où "" remplace un complément circonstanciel de lieu (ou de temps).",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,17,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « un complément circonstanciel de » ?",success,success,oui,0.114,[],oui,"D'après le document :
+- Le mot répété est un complément circonstanciel de lieu.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,18,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « complément circonstanciel de lieu » ?",success,success,oui,0.126,[],oui,"D'après le document :
+- Le mot répété est un complément circonstanciel de lieu.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,19,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de lieu ou de » ?",success,success,oui,0.112,[],oui,"D'après le document :
+- "" où "" remplace un complément circonstanciel de lieu (ou de temps).",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,20,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de temps » ?",success,success,oui,0.113,[],oui,"D'après le document :
+- "" où "" remplace un complément circonstanciel de lieu (ou de temps).",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,21,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « dont remplace un complément » ?",success,success,oui,0.136,[],oui,"D'après le document :
+- "" dont "" remplace un complément précédé de la préposition «de».",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,22,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « un complément précédé de » ?",success,success,oui,0.104,[],oui,"D'après le document :
+- "" dont "" remplace un complément précédé de la préposition «de».",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,23,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « complément précédé de la » ?",success,success,oui,0.118,[],oui,"D'après le document :
+- "" dont "" remplace un complément précédé de la préposition «de».",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,24,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la préposition de » ?",success,success,oui,0.124,[],oui,"D'après le document :
+- Le mot répété est un complément précédé de la préposition «de».",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,25,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Le mot répété est » ?",success,success,oui,0.093,[],oui,"D'après le document :
+- Le mot répété est un COD.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,26,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « mot répété est Sujet » ?",success,success,oui,0.109,[],oui,"D'après le document :
+- Le mot répété est Sujet de la deuxième phrase.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,27,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « est Sujet de la » ?",success,success,oui,0.116,[],oui,"D'après le document :
+- Le mot répété est Sujet de la deuxième phrase.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « pronom appel antecedent » et donne son information.",success,success,oui,0.123,[],oui,"D'après le document :
+- Ils remplacent un nom ou un pronom appelé "" antécédent "".",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,29,Résumé,Résume le document « les-pronoms-relatifs-simples-qui-que-ou-dont.pdf ».,success,success,oui,0.108,[],oui,"Résumé du contenu :
+- Les pronoms relatifs simples.
+- Ils remplacent un nom.
+- Ils n’ont pas de.
+- où remplace un complément.
+- dont remplace un complément.
+- est Sujet de la.",
+50,les-pronoms-relatifs-simples-qui-que-ou-dont.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.108,[],oui,"D'après les documents :
+- Les pronoms relatifs simples «qui, que, où, dont» servent à relier deux phrases pour éviter la répétition.
+- Ils n’ont pas de sens mais seulement une fonction grammaticale: "" qui "" remplace un sujet.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « Observez l’extrait du texte » ?",success,success,oui,0.416,[],oui,"D'après le document :
+- Les temps du passé Observez l’extrait du texte que nous avons vu ensemble dans l’exercice de lecture et de compréhension intitulé «j’emmène les enfants à la plage» Les enfants sont en vacances.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « nous avons vu ensemble » ?",success,success,oui,0.359,[],oui,"D'après le document :
+- Les temps du passé Observez l’extrait du texte que nous avons vu ensemble dans l’exercice de lecture et de compréhension intitulé «j’emmène les enfants à la plage» Les enfants sont en vacances.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « vu ensemble dans l’exercice » ?",success,success,oui,0.441,[],oui,"D'après le document :
+- Les temps du passé Observez l’extrait du texte que nous avons vu ensemble dans l’exercice de lecture et de compréhension intitulé «j’emmène les enfants à la plage» Les enfants sont en vacances.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,4,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « dans l’exercice de lecture » ?",success,success,oui,0.369,[],oui,"D'après le document :
+- Les temps du passé Observez l’extrait du texte que nous avons vu ensemble dans l’exercice de lecture et de compréhension intitulé «j’emmène les enfants à la plage» Les enfants sont en vacances.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,5,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « Pour raconter à l’oral » ?",success,success,oui,0.38,[],oui,"D'après le document :
+- Pour raconter à l’oral on utilise la passé composé, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,6,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « à l’oral on utilise » ?",success,success,oui,0.381,[],oui,"D'après le document :
+- Pour raconter à l’oral on utilise la passé composé, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,7,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « on utilise la passé » ?",success,success,oui,0.363,[],oui,"D'après le document :
+- Pour raconter à l’oral on utilise la passé composé, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,8,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « la passé composé l’imparfait » ?",success,success,oui,0.388,[],oui,"D'après le document :
+- Pour raconter à l’oral on utilise la passé composé, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,9,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « passé composé l’imparfait et » ?",success,success,oui,0.414,[],oui,"D'après le document :
+- Pour raconter à l’oral on utilise la passé composé, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,10,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « nous avons déjà vu » ?",success,success,oui,0.318,[],oui,"D'après le document :
+- nous avons déjà vu dans un cours précédent comment conjuguer les verbes du 1er groupe au présent de l’indicatif, au passé composé et au futur proche.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,11,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « avons déjà vu dans » ?",success,success,oui,0.339,[],oui,"D'après le document :
+- nous avons déjà vu dans un cours précédent comment conjuguer les verbes du 1er groupe au présent de l’indicatif, au passé composé et au futur proche.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,12,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « cours précédent comment conjuguer » ?",success,success,oui,0.464,[],oui,"D'après le document :
+- nous avons déjà vu dans un cours précédent comment conjuguer les verbes du 1er groupe au présent de l’indicatif, au passé composé et au futur proche.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,13,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « comment conjuguer les verbes » ?",success,success,oui,0.695,[],oui,"D'après le document :
+- Aujourd’hui nous allons voir comment conjuguer les verbes du 1er groupe au passé simple à l’imparfait et au plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,14,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « les verbes du 1er » ?",success,success,oui,0.356,[],oui,"D'après le document :
+- Aujourd’hui nous allons voir comment conjuguer les verbes du 1er groupe au passé simple à l’imparfait et au plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,15,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « J’avais dessiné tu avais » ?",success,success,oui,0.447,[],oui,"D'après le document :
+- Les verbes Plus que parfait Dessiner J’avais dessiné/ tu avais dessiné/ il avait dessiné/ elle avait dessiné/ nous avions dessiné/ vous aviez dessiné/ ils avaient dessiné/ elles avaient dessiné/ Entrer J’étais entré/ tu étais entré/ il était entré/ elle était entrée/ nous étions entrés/ vous étiez entrés/ ils étaient entrés/ elles étaient entrées/ Exercice:.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,16,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « tu avais dessiné il » ?",success,success,oui,0.415,[],oui,"D'après le document :
+- Les verbes Plus que parfait Dessiner J’avais dessiné/ tu avais dessiné/ il avait dessiné/ elle avait dessiné/ nous avions dessiné/ vous aviez dessiné/ ils avaient dessiné/ elles avaient dessiné/ Entrer J’étais entré/ tu étais entré/ il était entré/ elle était entrée/ nous étions entrés/ vous étiez entrés/ ils étaient entrés/ elles étaient entrées/ Exercice:.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,17,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « avais dessiné il avait » ?",success,success,oui,0.423,[],oui,"D'après le document :
+- Les verbes Plus que parfait Dessiner J’avais dessiné/ tu avais dessiné/ il avait dessiné/ elle avait dessiné/ nous avions dessiné/ vous aviez dessiné/ ils avaient dessiné/ elles avaient dessiné/ Entrer J’étais entré/ tu étais entré/ il était entré/ elle était entrée/ nous étions entrés/ vous étiez entrés/ ils étaient entrés/ elles étaient entrées/ Exercice:.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,18,Information page 4,"Selon le document, quelle information est donnée dans le passage contenant « il avait dessiné elle » ?",success,success,oui,0.413,[],oui,"D'après le document :
+- Les verbes Plus que parfait Dessiner J’avais dessiné/ tu avais dessiné/ il avait dessiné/ elle avait dessiné/ nous avions dessiné/ vous aviez dessiné/ ils avaient dessiné/ elles avaient dessiné/ Entrer J’étais entré/ tu étais entré/ il était entré/ elle était entrée/ nous étions entrés/ vous étiez entrés/ ils étaient entrés/ elles étaient entrées/ Exercice:.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,19,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « C’est samedi je décide » ?",success,success,oui,0.432,[],oui,"D'après le document :
+- C’est samedi, je décide de les emmener à la plage.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,20,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « je décide de les » ?",success,success,oui,0.361,[],oui,"D'après le document :
+- C’est samedi, je décide de les emmener à la plage.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,21,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « les emmener à la » ?",success,success,oui,0.393,[],oui,"D'après le document :
+- C’est samedi, je décide de les emmener à la plage.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,22,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « la plage » ?",success,success,oui,0.315,[],oui,"D'après le document :
+- La plage est pleine à craquer d’estivants;.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,23,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « Pour raconter à l’écrit » ?",success,success,oui,0.415,[],oui,"D'après le document :
+- Pour raconter à l’écrit on utilise le passé simple, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,24,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « à l’écrit on utilise » ?",success,success,oui,0.405,[],oui,"D'après le document :
+- Pour raconter à l’écrit on utilise le passé simple, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,25,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « on utilise le passé » ?",success,success,oui,0.425,[],oui,"D'après le document :
+- Pour raconter à l’écrit on utilise le passé simple, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,26,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « le passé simple l’imparfait » ?",success,success,oui,0.387,[],oui,"D'après le document :
+- Pour raconter à l’écrit on utilise le passé simple, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,27,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « passé simple l’imparfait et » ?",success,success,oui,0.384,[],oui,"D'après le document :
+- Pour raconter à l’écrit on utilise le passé simple, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « passe compose l’imparfet et » et donne son information.",success,success,oui,0.423,[],oui,"D'après le document :
+- Pour raconter à l’oral on utilise la passé composé, l’imparfait et le plus que parfait.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,29,Résumé,Résume le document « les-temps-du-passe-temps-du-recit-3.pdf ».,success,success,oui,0.227,[],oui,"Résumé du contenu :
+- Observez l’extrait du texte.
+- à l’oral on utilise.
+- avons déjà vu dans.
+- tu avais dessiné il.
+- les emmener à la.
+- passé simple l’imparfait et.",
+51,les-temps-du-passe-temps-du-recit-3.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,,non,90.018,[],oui,,timed out
+53,modeles-de-lettre-de-reclamation.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « LA LETTRE FORMELLE PROFESSIONNELLE » ?",success,success,oui,0.271,[],oui,"D'après le document :
+- D'après le document : - LA LETTRE FORMELLE PROFESSIONNELLE.",
+53,modeles-de-lettre-de-reclamation.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « LETTRE FORMELLE PROFESSIONNELLE COMMERCIALE » ?",success,success,oui,0.304,[],oui,"D'après le document :
+- D'après le document : - LETTRE FORMELLE PROFESSIONNELLE COMMERCIALE.",
+53,modeles-de-lettre-de-reclamation.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « FORMELLE PROFESSIONNELLE COMMERCIALE ADMINISTRATIVE » ?",success,success,oui,0.342,[],oui,"D'après le document :
+- D'après le document : - FORMELLE PROFESSIONNELLE COMMERCIALE ADMINISTRATIVE.",
+53,modeles-de-lettre-de-reclamation.pdf,4,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « PROFESSIONNELLE COMMERCIALE ADMINISTRATIVE LA » ?",success,success,oui,0.317,[],oui,"D'après le document :
+- D'après le document : - PROFESSIONNELLE COMMERCIALE ADMINISTRATIVE LA.",
+53,modeles-de-lettre-de-reclamation.pdf,5,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « COMMERCIALE ADMINISTRATIVE LA LETTRE » ?",success,success,oui,0.344,[],oui,"D'après le document :
+- D'après le document : - COMMERCIALE ADMINISTRATIVE LA LETTRE.",
+53,modeles-de-lettre-de-reclamation.pdf,6,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « Le courrier professionnel utilise » ?",success,success,oui,0.309,[],oui,"D'après le document :
+- D'après le document : - Le courrier professionnel utilise.",
+53,modeles-de-lettre-de-reclamation.pdf,7,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « courrier professionnel utilise classiquement » ?",success,success,oui,0.37,[],oui,"D'après le document :
+- D'après le document : - courrier professionnel utilise classiquement.",
+53,modeles-de-lettre-de-reclamation.pdf,8,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « utilise classiquement deux présentations » ?",success,success,oui,0.311,[],oui,"D'après le document :
+- D'après le document : - utilise classiquement deux présentations.",
+53,modeles-de-lettre-de-reclamation.pdf,9,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « classiquement deux présentations » ?",success,success,oui,0.301,[],oui,"D'après le document :
+- D'après le document : - classiquement deux présentations.",
+53,modeles-de-lettre-de-reclamation.pdf,10,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « Un courrier administratif ou » ?",success,success,oui,0.315,[],oui,"D'après le document :
+- D'après le document : - Un courrier administratif ou.",
+53,modeles-de-lettre-de-reclamation.pdf,11,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « courrier administratif ou commercial » ?",success,success,oui,0.378,[],oui,"D'après le document :
+- D'après le document : - courrier administratif ou commercial.",
+53,modeles-de-lettre-de-reclamation.pdf,12,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « ou commercial se termine » ?",success,success,oui,0.277,[],oui,"D'après le document :
+- D'après le document : - ou commercial se termine.",
+53,modeles-de-lettre-de-reclamation.pdf,13,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « se termine traditionnellement par » ?",success,success,oui,0.302,[],oui,"D'après le document :
+- D'après le document : - se termine traditionnellement par.",
+53,modeles-de-lettre-de-reclamation.pdf,14,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « termine traditionnellement par » ?",success,success,oui,0.324,[],oui,"D'après le document :
+- D'après le document : - termine traditionnellement par.",
+53,modeles-de-lettre-de-reclamation.pdf,15,Information page 8,"Selon le document, quelle information est donnée dans le passage contenant « gymnastique depuis je avec » ?",success,success,oui,0.381,[],oui,"D'après le document :
+- D'après le document : - gymnastique depuis je avec.",
+53,modeles-de-lettre-de-reclamation.pdf,16,Information page 9,"Selon le document, quelle information est donnée dans le passage contenant « Modèle de lettre de » ?",success,success,oui,0.308,[],oui,"D'après le document :
+- D'après le document : - Modèle de lettre de.",
+53,modeles-de-lettre-de-reclamation.pdf,17,Information page 9,"Selon le document, quelle information est donnée dans le passage contenant « de lettre de réclamation » ?",success,success,oui,0.277,[],oui,"D'après le document :
+- D'après le document : - de lettre de réclamation.",
+53,modeles-de-lettre-de-reclamation.pdf,18,Information page 9,"Selon le document, quelle information est donnée dans le passage contenant « de réclamation à un » ?",success,success,oui,0.259,[],oui,"D'après le document :
+- D'après le document : - de réclamation à un.",
+53,modeles-de-lettre-de-reclamation.pdf,19,Information page 9,"Selon le document, quelle information est donnée dans le passage contenant « un garagiste Pour » ?",success,success,oui,0.291,[],oui,"D'après le document :
+- D'après le document : - un garagiste Pour.",
+53,modeles-de-lettre-de-reclamation.pdf,20,Information page 10,"Selon le document, quelle information est donnée dans le passage contenant « Tue 22 Jul 1997 » ?",success,success,oui,0.32,[],oui,"D'après le document :
+- D'après le document : - Tue 22 Jul 1997.",
+53,modeles-de-lettre-de-reclamation.pdf,21,Information page 10,"Selon le document, quelle information est donnée dans le passage contenant « 22 Jul 1997 10 » ?",success,success,oui,0.32,[],oui,"D'après le document :
+- D'après le document : - 22 Jul 1997 10.",
+53,modeles-de-lettre-de-reclamation.pdf,22,Information page 10,"Selon le document, quelle information est donnée dans le passage contenant « Jul 1997 10 40 » ?",success,success,oui,0.283,[],oui,"D'après le document :
+- D'après le document : - Jul 1997 10 40.",
+53,modeles-de-lettre-de-reclamation.pdf,23,Information page 11,"Selon le document, quelle information est donnée dans le passage contenant « les indications portées sur » ?",success,success,oui,0.284,[],oui,"D'après le document :
+- D'après le document : - les indications portées sur.",
+53,modeles-de-lettre-de-reclamation.pdf,24,Information page 11,"Selon le document, quelle information est donnée dans le passage contenant « indications portées sur votre » ?",success,success,oui,0.294,[],oui,"D'après le document :
+- D'après le document : - indications portées sur votre.",
+53,modeles-de-lettre-de-reclamation.pdf,25,Information page 11,"Selon le document, quelle information est donnée dans le passage contenant « sur votre e-mail de » ?",success,success,oui,0.314,[],oui,"D'après le document :
+- D'après le document : - sur votre e-mail de.",
+53,modeles-de-lettre-de-reclamation.pdf,26,Information page 11,"Selon le document, quelle information est donnée dans le passage contenant « votre e-mail de confirmation » ?",success,success,oui,0.272,[],oui,"D'après le document :
+- D'après le document : - votre e-mail de confirmation.",
+53,modeles-de-lettre-de-reclamation.pdf,27,Information page 11,"Selon le document, quelle information est donnée dans le passage contenant « de confirmation de commande » ?",success,success,oui,0.242,[],oui,"D'après le document :
+- D'après le document : - de confirmation de commande.",
+53,modeles-de-lettre-de-reclamation.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « classikement dex presentations » et donne son information.",success,success,oui,0.321,[],oui,"D'après le document :
+- D'après le document : - classiquement deux présentations.",
+53,modeles-de-lettre-de-reclamation.pdf,29,Résumé,Résume le document « modeles-de-lettre-de-reclamation.pdf ».,success,success,oui,0.321,[],oui,"Résumé du contenu :
+- LA LETTRE FORMELLE PROFESSIONNELLE.
+- Le courrier professionnel utilise.
+- courrier administratif ou commercial.
+- Modèle de lettre de.
+- 22 Jul 1997 10.
+- de confirmation de commande.",
+53,modeles-de-lettre-de-reclamation.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.3,[],oui,"D'après les documents :
+- Modèle de lettre de réclamation à un garagiste - Pour même panne répétitive ou mauvais fonctionnement après réparation Nom, Prénom Adresse À (Lieu), le (Date) Monsieur, Le (date), je vous ai confié ma voiture (marque, type, immatriculation), afin que des réparations concernant.
+- ou: mon véhicule ne fonctionne toujours pas correctement.
+- ""), ""Objet de la lettre"" et ""Pièces jointes"" 4/ Lieu et Date (le lieu peut être omis, s'il est indiqué dans vos coordonnées) 5/ Formule d'appel (""Monsieur, "") 6/ Corps de la lettre 7/ Signature (nom et éventuellement fonction).",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,1,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « Je précise si cet » ?",success,success,oui,0.303,[],oui,"D'après le document :
+- Je précise si cet appareil répond aux normes écologiques.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,2,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « cet appareil répond aux » ?",success,success,oui,0.31,[],oui,"D'après le document :
+- Je précise si cet appareil répond aux normes écologiques.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,3,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « appareil répond aux normes » ?",success,success,oui,0.301,[],oui,"D'après le document :
+- Je précise si cet appareil répond aux normes écologiques.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,4,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « aux normes écologiques » ?",success,success,oui,0.301,[],oui,"D'après le document :
+- Je précise si cet appareil répond aux normes écologiques.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,5,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « normes écologiques » ?",success,success,oui,0.299,[],oui,"D'après le document :
+- Je précise si cet appareil répond aux normes écologiques.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,6,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « vous excusez de ne » ?",success,success,oui,0.292,[],oui,"D'après le document :
+- Vous vous excusez de ne choisir aucune offre.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,7,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « ne choisir aucune offre » ?",success,success,oui,0.291,[],oui,"D'après le document :
+- Vous vous excusez de ne choisir aucune offre.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,8,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « choisir aucune offre » ?",success,success,oui,0.299,[],oui,"D'après le document :
+- Vous vous excusez de ne choisir aucune offre.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,9,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « aucune offre » ?",success,success,oui,0.472,[],oui,"D'après le document :
+- Vous vous excusez de ne choisir aucune offre.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,10,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « J'explique comment cette étiquette » ?",success,success,oui,0.69,[],oui,"D'après le document :
+- J'explique comment cette étiquette peut lutter contre le réchauffement climatique.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,11,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « cette étiquette peut lutter » ?",success,success,oui,0.321,[],oui,"D'après le document :
+- J'explique comment cette étiquette peut lutter contre le réchauffement climatique.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,12,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « étiquette peut lutter contre » ?",success,success,oui,0.317,[],oui,"D'après le document :
+- J'explique comment cette étiquette peut lutter contre le réchauffement climatique.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,13,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « peut lutter contre le » ?",success,success,oui,0.318,[],oui,"D'après le document :
+- J'explique comment cette étiquette peut lutter contre le réchauffement climatique.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,14,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « lutter contre le réchauffement » ?",success,success,oui,0.326,[],oui,"D'après le document :
+- J'explique comment cette étiquette peut lutter contre le réchauffement climatique.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,15,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « un citoyen qui respecte » ?",success,success,oui,0.285,[],oui,"D'après le document :
+- IV- Mémorisation Pour être un citoyen qui respecte l'environnement, il faut:.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,16,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « respecte l'environnement il faut » ?",success,success,oui,0.357,[],oui,"D'après le document :
+- IV- Mémorisation Pour être un citoyen qui respecte l'environnement, il faut:.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,17,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « Je prépare avec mes » ?",success,success,oui,0.323,[],oui,"D'après le document :
+- Je prépare avec mes camarades et j'imagine à chaque fois des énoncés que je pourrais prononcer dans les situations décrites ci-dessous.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,18,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « avec mes camarades et » ?",success,success,oui,0.325,[],oui,"D'après le document :
+- Je prépare avec mes camarades et j'imagine à chaque fois des énoncés que je pourrais prononcer dans les situations décrites ci-dessous.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,19,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « mes camarades et j'imagine » ?",success,success,oui,0.353,[],oui,"D'après le document :
+- Je prépare avec mes camarades et j'imagine à chaque fois des énoncés que je pourrais prononcer dans les situations décrites ci-dessous.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,20,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « et j'imagine à chaque » ?",success,success,oui,0.359,[],oui,"D'après le document :
+- Je prépare avec mes camarades et j'imagine à chaque fois des énoncés que je pourrais prononcer dans les situations décrites ci-dessous.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,21,Information page 2,"Selon le document, quelle information est donnée dans le passage contenant « à chaque fois des » ?",success,success,oui,0.307,[],oui,"D'après le document :
+- Je prépare avec mes camarades et j'imagine à chaque fois des énoncés que je pourrais prononcer dans les situations décrites ci-dessous.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,22,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « Après avoir participé à » ?",success,success,oui,0.319,[],oui,"D'après le document :
+- V- Évaluation Après avoir participé à des dialogues, je peux dire si:.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,23,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « avoir participé à des » ?",success,success,oui,0.311,[],oui,"D'après le document :
+- V- Évaluation Après avoir participé à des dialogues, je peux dire si:.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,24,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « des dialogues je peux » ?",success,success,oui,0.34,[],oui,"D'après le document :
+- V- Évaluation Après avoir participé à des dialogues, je peux dire si:.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,25,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « je peux dire si » ?",success,success,oui,0.31,[],oui,"D'après le document :
+- V- Évaluation Après avoir participé à des dialogues, je peux dire si:.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,26,Information page 3,"Selon le document, quelle information est donnée dans le passage contenant « peux dire si » ?",success,success,oui,0.261,[],oui,"D'après le document :
+- V- Évaluation Après avoir participé à des dialogues, je peux dire si:.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,27,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « J'indique l'appareil où est » ?",success,success,oui,0.34,[],oui,"D'après le document :
+- J'indique l'appareil où est collée l 'étiquette.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « aucune offre » et donne son information.",success,success,oui,0.283,[],oui,"D'après le document :
+- Vous vous excusez de ne choisir aucune offre.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,29,Résumé,Résume le document « oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf ».,success,success,oui,0.251,[],oui,"Résumé du contenu :
+- Je précise si cet.
+- vous excusez de ne.
+- cette étiquette peut lutter.
+- respecte l'environnement il faut.
+- à chaque fois des.
+- J'indique l'appareil où est.",
+59,oral-3-1-employer-une-gestuelle-et-une-intonation-convenables-pour-montrer-l-interet-d-un-comportement-ecologique-2.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.224,[],oui,"D'après le document :
+- Je repère à partir du dialogue: Les personnages Le lieu La nature de l’image Son utilité Les différentes classes mentionnées 2.",
+64,propositions-independante-principale-et-subordonnee.pdf,1,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « La phrase simple ne » ?",success,success,oui,0.237,[],oui,"D'après le document :
+- La phrase simple ne contient qu’un seul verbe conjugué.",
+64,propositions-independante-principale-et-subordonnee.pdf,2,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « phrase simple ne contient » ?",success,success,oui,0.194,[],oui,"D'après le document :
+- La phrase simple ne contient qu’un seul verbe conjugué.",
+64,propositions-independante-principale-et-subordonnee.pdf,3,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « ne contient qu’un seul » ?",success,success,oui,0.203,[],oui,"D'après le document :
+- La phrase simple ne contient qu’un seul verbe conjugué.",
+64,propositions-independante-principale-et-subordonnee.pdf,4,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « contient qu’un seul verbe » ?",success,success,oui,0.186,[],oui,"D'après le document :
+- La phrase simple ne contient qu’un seul verbe conjugué.",
+64,propositions-independante-principale-et-subordonnee.pdf,5,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « qu’un seul verbe conjugué » ?",success,success,oui,0.203,[],oui,"D'après le document :
+- La phrase simple ne contient qu’un seul verbe conjugué.",
+64,propositions-independante-principale-et-subordonnee.pdf,6,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « proposition et aucune autre » ?",success,success,oui,0.196,[],oui,"D'après le document :
+- Elle ne dépend d’aucune autre proposition, et aucune autre proposition ne dépend d’elle.",
+64,propositions-independante-principale-et-subordonnee.pdf,7,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « et aucune autre proposition » ?",success,success,oui,0.198,[],oui,"D'après le document :
+- Elle ne dépend d’aucune autre proposition, et aucune autre proposition ne dépend d’elle.",
+64,propositions-independante-principale-et-subordonnee.pdf,8,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « aucune autre proposition ne » ?",success,success,oui,0.166,[],oui,"D'après le document :
+- Elle ne dépend d’aucune autre proposition, et aucune autre proposition ne dépend d’elle.",
+64,propositions-independante-principale-et-subordonnee.pdf,9,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « autre proposition ne dépend » ?",success,success,oui,0.216,[],oui,"D'après le document :
+- Elle ne dépend d’aucune autre proposition, et aucune autre proposition ne dépend d’elle.",
+64,propositions-independante-principale-et-subordonnee.pdf,10,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « ne dépend d’elle » ?",success,success,oui,0.217,[],oui,"D'après le document :
+- Elle ne dépend d’aucune autre proposition, et aucune autre proposition ne dépend d’elle.",
+64,propositions-independante-principale-et-subordonnee.pdf,11,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « La phrase complexe quant » ?",success,success,oui,0.238,[],oui,"D'après le document :
+- La phrase complexe, quant à elle, contient au moins deux verbes conjugués.",
+64,propositions-independante-principale-et-subordonnee.pdf,12,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « phrase complexe quant à » ?",success,success,oui,0.197,[],oui,"D'après le document :
+- La phrase complexe, quant à elle, contient au moins deux verbes conjugués.",
+64,propositions-independante-principale-et-subordonnee.pdf,13,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « complexe quant à elle » ?",success,success,oui,0.177,[],oui,"D'après le document :
+- La phrase complexe, quant à elle, contient au moins deux verbes conjugués.",
+64,propositions-independante-principale-et-subordonnee.pdf,14,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « elle contient au moins » ?",success,success,oui,0.189,[],oui,"D'après le document :
+- La phrase complexe, quant à elle, contient au moins deux verbes conjugués.",
+64,propositions-independante-principale-et-subordonnee.pdf,15,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « moins deux verbes » ?",success,success,oui,0.205,[],oui,"D'après le document :
+- La phrase complexe, quant à elle, contient au moins deux verbes conjugués.",
+64,propositions-independante-principale-et-subordonnee.pdf,16,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « de propositions indépendantes coordonnées » ?",success,success,oui,0.218,[],oui,"D'après le document :
+- de propositions indépendantes coordonnées (par une conjonction de coordination) ou juxtaposées (par une virgule ou par un point virgule):.",
+64,propositions-independante-principale-et-subordonnee.pdf,17,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « propositions indépendantes coordonnées par » ?",success,success,oui,0.196,[],oui,"D'après le document :
+- de propositions indépendantes coordonnées (par une conjonction de coordination) ou juxtaposées (par une virgule ou par un point virgule):.",
+64,propositions-independante-principale-et-subordonnee.pdf,18,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « une conjonction de » ?",success,success,oui,0.18,[],oui,"D'après le document :
+- de propositions indépendantes coordonnées (par une conjonction de coordination) ou juxtaposées (par une virgule ou par un point virgule):.",
+64,propositions-independante-principale-et-subordonnee.pdf,19,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « coordination ou juxtaposées par » ?",success,success,oui,0.221,[],oui,"D'après le document :
+- de propositions indépendantes coordonnées (par une conjonction de coordination) ou juxtaposées (par une virgule ou par un point virgule):.",
+64,propositions-independante-principale-et-subordonnee.pdf,20,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « ou juxtaposées par une » ?",success,success,oui,0.182,[],oui,"D'après le document :
+- de propositions indépendantes coordonnées (par une conjonction de coordination) ou juxtaposées (par une virgule ou par un point virgule):.",
+64,propositions-independante-principale-et-subordonnee.pdf,21,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « une virgule ou par » ?",success,success,oui,0.172,[],oui,"D'après le document :
+- de propositions indépendantes coordonnées (par une conjonction de coordination) ou juxtaposées (par une virgule ou par un point virgule):.",
+64,propositions-independante-principale-et-subordonnee.pdf,22,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « un point virgule » ?",success,success,oui,0.183,[],oui,"D'après le document :
+- de propositions indépendantes coordonnées (par une conjonction de coordination) ou juxtaposées (par une virgule ou par un point virgule):.",
+64,propositions-independante-principale-et-subordonnee.pdf,23,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « point virgule » ?",success,success,oui,0.206,[],oui,"D'après le document :
+- de propositions indépendantes coordonnées (par une conjonction de coordination) ou juxtaposées (par une virgule ou par un point virgule):.",
+64,propositions-independante-principale-et-subordonnee.pdf,24,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « ou d’une proposition principale » ?",success,success,oui,0.205,[],oui,"D'après le document :
+- ou d’une proposition principale et d’une proposition subordonnée.",
+64,propositions-independante-principale-et-subordonnee.pdf,25,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « d’une proposition principale et » ?",success,success,oui,0.205,[],oui,"D'après le document :
+- ou d’une proposition principale et d’une proposition subordonnée.",
+64,propositions-independante-principale-et-subordonnee.pdf,26,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « proposition principale et d’une » ?",success,success,oui,0.206,[],oui,"D'après le document :
+- ou d’une proposition principale et d’une proposition subordonnée.",
+64,propositions-independante-principale-et-subordonnee.pdf,27,Information page 1,"Selon le document, quelle information est donnée dans le passage contenant « et d’une proposition subordonnée » ?",success,success,oui,0.228,[],oui,"D'après le document :
+- ou d’une proposition principale et d’une proposition subordonnée.",
+64,propositions-independante-principale-et-subordonnee.pdf,28,Erreur orthographique,"Selon le document, retrouve malgré les fautes le passage contenant « autre proposiion ne depend » et donne son information.",success,success,oui,0.235,[],oui,"D'après le document :
+- Elle ne dépend d’aucune autre proposition, et aucune autre proposition ne dépend d’elle.",
+64,propositions-independante-principale-et-subordonnee.pdf,29,Résumé,Résume le document « propositions-independante-principale-et-subordonnee.pdf ».,success,success,oui,0.162,[],oui,"Résumé du contenu :
+- La phrase simple ne.
+- proposition et aucune autre.
+- La phrase complexe quant.
+- de propositions indépendantes coordonnées.
+- une virgule ou par.
+- et d’une proposition subordonnée.",
+64,propositions-independante-principale-et-subordonnee.pdf,30,Refus correct,Comment calcule-t-on la dérivée de la fonction x au carré ?,insufficient_context,success,non,0.157,[],oui,"D'après le document :
+- a- La proposition subordonnée est une phrase qui ne peut pas fonctionner toute seule.",
