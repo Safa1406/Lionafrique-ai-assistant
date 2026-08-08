@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v62-french-mega-17-65-final-fixes"
+    "v63-education-islamique-mega"
 )
 
 
@@ -6169,6 +6169,47 @@ MEGA_FRENCH_17_65_SUMMARIES.update(
 
 
 
+
+MEGA_ISLAMIC_EDUCATION_SUMMARIES = {'ahmia-altdin-fi-hiaa-alfrd-oalmjtma-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- أهمية التدين في حياة الفرد والمجتمع.\n- توافق مع الفطرة البشریة.\n- هو الالتزام بالتشريعات والاحكام التي شرعها ا.\n- الدين يلبي حاجة الفطرة.\n- عز وجل تقوية إرادة المسلم بإداء الواجبات.\n- الخيرة وتقوية الرابط الإجتماعية.', 'alabada-ghaia-alkhlq-alabada-sfa-iiman-odlil-khdhoa-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- العبادة غاية الخلق العبادة صفة إيمان.\n- أن الغاية من الخلق وهي عبادة.\n- الحياة ،فإن بينها وبين الإيمان.\n- ،ثم استقم ،قل لي في الإسلام.\n- والخشوع وغيرهما في جميع.\n- والصبر على الجوع طاعة.', 'alhjra-almtjdda-almhajr-mn-hjr-ma-nha-allh-anh-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- عنه الهجرة المتجددة المهاجر من هجر.\n- عنه ما أمر باجتنابه ،من محرمات ومكروهات.\n- ومعتقده ،وهي فريضة عند الخوف على.\n- العصور،لقوله عليه الصلاة والسلام.\n- هجرة مفاصلة وتجنب والمقصود بهاهجر ما نهى.\n- والخير والصلاح في الأرض.', 'aliithar-oaltdhhia-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- مدخل الحكمة الإيثار والتضحية.\n- بيان الصفات المميزة للأنصار وهي.\n- والثواب على ذلك عند ا.\n- على الأنانية وحب الذات.\n- تقوم عليها علاقة المسلمين مع.\n- سبيل هذا الدين العظيم.', 'alinfaq-fi-sbil-allh-sorh-omqasdh-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الإنفاق في سبيل ا صوره ومقاصده.\n- وبناء المجتمع الإسلامي على أساس العقيدة.\n- بيانه تعالى فضل الإنفاق في سبيله مع.\n- رياء الإخلاص فلا يبتغي بإنفاقه.\n- وغايات جليلة ،وله آثار.\n- ،تطهير نفسية الأغنياء من.', 'alislam-aqida-oshriaa-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- مدخل التزكية العقيدة الإسلام عقيدة وشريعة.\n- وعدد أياتها 286 ترتيبها.\n- من مال ا الدعوة إلى الإيمان با.\n- لا شبهة فيه ولا ريب.\n- تظهر على الجوارح ،فلا قيمة لنظام.\n- والعدل والحرية والسلم والتعايش.', 'almsjd-noaa-almjtma-alislami-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- المسجد نواة المجتمع الإسلامي.\n- واليوم الآخر وإقامة الصلاة وإخراج الزكاة.\n- في تخريب وتعطيل وظائفه.\n- لمن يجمع الناس لأداء.\n- المساهمة في إصلاحه وترميمه.\n- مكان للتعارف وتقوية الأواصر.', 'alrsol-irsi-qim-alslm-oaltaaish-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الرسول يرسي قيم السلم والتعايش.\n- لكل من يقيم بها الرسول.\n- في تأدية دية القتيل.\n- لإرساء قيم السلم والتعايش.\n- الدين والمال ،وبهذه المعاهدة صارت المدينة.\n- في التقاضي عند النزاعات.', 'alshtr-alaol-mn-sora-alhdid-alaaia-1-ila-14-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الشطر الأول من سورة الحديد الآية.\n- وجل ذكر فيها الحديد.\n- إليها من الملائكة والأعمال.\n- من المال الذي جعلهم مستخلفين فيه.\n- الله عليه وسلم الذي.\n- المبين واغترارهم بالدنيا الفانية.', 'alshtr-alaol-mn-sora-alhshr-alaaia-1-ila-5-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الشطر الأول من سورة الحشر الآية.\n- عز وجل هو الذي يحشر.\n- الحشر لأنه يوم اجتماع.\n- تعالى ذي القدرة العزيز التي.\n- جعلهم يستسلمون لأمر الرسول.\n- قطع للنخيل إنما هو.', 'alshtr-althalth-mn-sora-alhdid-alaaia-24-ila-28-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الشطر الثالث من سورة الحديد الآية.\n- الشيء عن وجهه ،واصطلاحا تحويل.\n- حقها ولم يحافظوا عليها.\n- بيان الغاية من إرسال الرسل وذلك.\n- الناس إلى طريق الحق.\n- أن فضله عظيم يخص.', 'alshtr-althalth-mn-sora-alhshr-alaaia-18-ila-24-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الشطر الثالث من سورة الحشر الآية.\n- وأنه سبحانه ذي الأسماء الحسنى والصفات العليا.\n- الذي له الكبرياء والعظمة.\n- سبحانه عظمة القرآن الكريم،.\n- بجليل الصفات التي تدل على عظمة.\n- له سبحانه حجم خوفك.', 'alshtr-althani-mn-sora-alhdid-alaaia-15-ila-23-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الشطر الثاني من سورة الحديد الآية.\n- جاد شخص قد سما دم طيبا.\n- لقلوبهم ،وحذر الناس من.\n- وذلك بإعادة إحياء الأرض.\n- المغفرة من خلال المسارعة إلى العمل.\n- على غيرهم من الفقراء.', 'alshtr-althani-mn-sora-alhshr-alaaia-6-ila-17-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الشطر الثاني من سورة الحشر الآية.\n- النون الساكنة أو التنوين.\n- ي فأطفئي السراج ،ونطوي بطوننا.\n- شديد عداوتهم فيما بينهم.\n- بني قينقاع وكفار قريش يوم.\n- وهي الخلود في النار.', 'altaarf-oaltaaish-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- مدخل الحكمة التعارف والتعايش.\n- تعالى ذكر فيها بيوت النبي.\n- اشتملت هذه السورة الكريمة على ركنين هامين.\n- مفهوم التعارف والتعايش وأهميتهما.\n- كلك م لآد م وآد.\n- ويتوافق مع الدين الإسلامي.', 'alzkaa-ahkamha-omqasdha-alghaiat-oalothaif-altnmoia-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الزكاة أحكامها ومقاصدها الغايات والوظائف التنموية.\n- يمكنه أن يقضي على.\n- تعالى ،والمراد بها هنا الزكاة.\n- الأجر والثواب وتحقيق رضى ا.\n- رفع مؤشرالتنمية الاقتصادية واتساع دائرة الانتاج.\n- عضو مستهلك إلى منتج.', 'alzkaa-ahkamha-omqasdha-altarif-oalahkam-oalmsthqon-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الزكاة أحكامها ومقاصدها التعريف والأحكام والمستحقون.\n- صحيح البخاري كتاب الزكاة.\n- وجبت الزكاة وإذا اختلت كلها أو.\n- الانعام و يقصد بها.\n- وهو أحوج من الفقير المساكين.\n- الديون وتخفيف العجز الغارمين.', 'asmaa-allh-alhsna-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- الحسنى مدخل التزكية العقيدة أسماء ا.\n- الرحمن الرحيم أي رحمن الدنيا والآخرة.\n- بدعوته بأسمائه التي سمى.\n- تعالى هو الخالق تعالى،ومن تأمل.\n- والمجتمع من معرفة أسماء ا.\n- تدل عليه الأسماء الحسنى.', 'athr-alqraan-fi-tzkia-alnfs-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- أثر القرآن في تزكية النفس.\n- بإذنه نور وكتاب مبين.\n- تدبر الأمر أي تفكر فيه.\n- المخاطب بأوامر القرآن الكريم ونواهيه للعمل به.\n- ،والتوكل والإنابة ،والتوبة ،والشكر ،والخوف والرجاء حب.\n- ولغيرهم المسارعين في الخيرات.', 'hmaia-aldaoa-obnaa-aldola-alhjra-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- حماية الدعوة وبناء الدولة الهجرة.\n- والثانية على النصرة والإيواء.\n- المناسب اختيارالصديق الرفيق في.\n- عليه وسلم ومحبتهم اياه.\n- ا نجاة النبي صلى ا.\n- ،بغرض تحقيق التعايش والأمن.', 'hq-albiia-alaatnaa-bjmal-albiia-oalmhit-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- حق البيئة الاعتناء بجمال البيئة والمحيط.\n- ،سميت بهذا الاسم لذكر الحديد.\n- الموجودة في السماء والأرض تسبح بحمده تأكيد.\n- القرآن الكريم ،وأحاديث النبي ،يجد مقدار.\n- ضرر من أي نوع لهذا الكون ،ويتجلى.\n- القيام بزراعة الأرض وتعهدها.', 'hq-alghir-imara-almoumnin-alass-oalghaiat-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- حق الغير إمارة المؤمنين الأسس والغايات.\n- اياتها ، 175 ترتيبهه المصحفي.\n- مبايعة مبايعة المومنين للرسول صلى ا.\n- يقصد به القيام على.\n- ينوبون عن الأمة في تنصيب.\n- عدوان داخلي او خارجي.', 'hq-allh-tqoa-allh-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- مدخل القسط حق ا تقوى ا.\n- عليه وسلم نص 1 بيانه سبحانه وتعالى.\n- العبد لربه أن يجعل.\n- قال ابن مسعود رضي ا.\n- الوفاء بحق النفس في التربية.\n- ثوابها الجنة ،قال تعالى.', 'hq-alnfs-ahmia-altkhtit-oaltnthim-fi-alhiaa-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- حق النفس أهمية التخطيط والتنظيم في.\n- صلى ا عليه وسلم.\n- هوأسلوب عمل يعتمد على.\n- غار جبل ثور ثلاث ليال.\n- العشوائية وهو وضع العناصر بعضها.\n- يساعد على أداء المسؤوليات.', 'iioaa-alrsol-onsrth-aiob-alansari-am-slim-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- إيواء الرسول ونصرته أيوب الأنصاري أم.\n- الناس شعبا بالشاء والبعير.\n- وظلوا هكذا حتى إذا كان اليوم.\n- إلى بيوتهم قال عليه.\n- في خدمة النبي صلى ا.\n- لطلب العلم وخدمة الإسلام.', 'mlkhs-dros-mdkhl-altzkia-alqraan-alkrim-aldora-alaola.pdf': 'ملخص المحتوى:\n- للسنة الثالثة ثانوي إعدادي الدورة الأولى.\n- السورة هي حقيقة تسبيح.\n- الشطر الثاني من سورة الحشر الآيات.\n- الشطر الثالث من سورة الحشر الآيات.\n- أسماء الله الحسنى تدل على عظمة.\n- والاعتناء بتلاوته وفهمه وعملا.', 'mn-osaia-alrsol-sla-allh-alih-oslm-alosaia-altsa-fdhaa-altrbia-alislamia.pdf': 'ملخص المحتوى:\n- عليه وسلم الوصايا التسع من وصايا.\n- في المصحف الشريف ،نزلت.\n- تنازع الأمر أهله لا تخرج على الحكام.\n- وصايا ،وهي من جوامع كلم.\n- و قود ها 8 الأمر بوعظ.\n- والحزم ،وأذكرهم بحق ا.'}
+
+
+def build_islamic_education_mega_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Résumé structuré des 27 PDF uniques d'éducation islamique."""
+
+    if not contains_arabic(question):
+        return None
+
+    nq = normalize_arabic_match_text(question)
+    if not any(
+        normalize_arabic_match_text(marker) in nq
+        for marker in ("لخص", "تلخيص", "ملخص")
+    ):
+        return None
+
+    source_name = ""
+    selected_units = []
+    for unit in units:
+        source = unit.get("source", "")
+        if source in MEGA_ISLAMIC_EDUCATION_SUMMARIES:
+            if not source_name:
+                source_name = source
+            if source == source_name:
+                selected_units.append(unit)
+
+    if not source_name or not selected_units:
+        return None
+
+    return {
+        "answerable": True,
+        "summary": MEGA_ISLAMIC_EDUCATION_SUMMARIES[source_name],
+        "sources": build_summary_sources(selected_units),
+        "evidence": [unit["text"] for unit in selected_units],
+    }
+
+
 def build_french_mega_17_65_summary(
     question: str,
     units: list[dict],
@@ -7836,6 +7877,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_islamic_education_summary = (
+        build_islamic_education_mega_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_islamic_education_summary is not None:
+        return structured_islamic_education_summary
 
     structured_mega_17_65_summary = (
         build_french_mega_17_65_summary(

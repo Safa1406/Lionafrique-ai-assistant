@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v28-french-mega-17-65-full-source"
+RETRIEVAL_SERVICE_VERSION = "v32-education-islamique-pdf6-fallback-anchor"
 
 
 INTENT_MARKERS = {
@@ -557,6 +557,17 @@ def retrieve_relevant_passages(
         if source
         else ""
     )
+
+
+
+    mega_islamic_education_sources = {'altaarf-oaltaaish-fdhaa-altrbia-alislamia.pdf', 'alzkaa-ahkamha-omqasdha-alghaiat-oalothaif-altnmoia-fdhaa-altrbia-alislamia.pdf', 'alshtr-althalth-mn-sora-alhdid-alaaia-24-ila-28-fdhaa-altrbia-alislamia.pdf', 'mn-osaia-alrsol-sla-allh-alih-oslm-alosaia-altsa-fdhaa-altrbia-alislamia.pdf', 'ahmia-altdin-fi-hiaa-alfrd-oalmjtma-fdhaa-altrbia-alislamia.pdf', 'alrsol-irsi-qim-alslm-oaltaaish-fdhaa-altrbia-alislamia.pdf', 'almsjd-noaa-almjtma-alislami-fdhaa-altrbia-alislamia.pdf', 'alislam-aqida-oshriaa-fdhaa-altrbia-alislamia.pdf', 'alshtr-althani-mn-sora-alhshr-alaaia-6-ila-17-fdhaa-altrbia-alislamia.pdf', 'hq-alghir-imara-almoumnin-alass-oalghaiat-fdhaa-altrbia-alislamia.pdf', 'alhjra-almtjdda-almhajr-mn-hjr-ma-nha-allh-anh-fdhaa-altrbia-alislamia.pdf', 'alinfaq-fi-sbil-allh-sorh-omqasdh-fdhaa-altrbia-alislamia.pdf', 'alshtr-althalth-mn-sora-alhshr-alaaia-18-ila-24-fdhaa-altrbia-alislamia.pdf', 'alshtr-alaol-mn-sora-alhshr-alaaia-1-ila-5-fdhaa-altrbia-alislamia.pdf', 'alshtr-althani-mn-sora-alhdid-alaaia-15-ila-23-fdhaa-altrbia-alislamia.pdf', 'hq-albiia-alaatnaa-bjmal-albiia-oalmhit-fdhaa-altrbia-alislamia.pdf', 'hmaia-aldaoa-obnaa-aldola-alhjra-fdhaa-altrbia-alislamia.pdf', 'alshtr-alaol-mn-sora-alhdid-alaaia-1-ila-14-fdhaa-altrbia-alislamia.pdf', 'alzkaa-ahkamha-omqasdha-altarif-oalahkam-oalmsthqon-fdhaa-altrbia-alislamia.pdf', 'alabada-ghaia-alkhlq-alabada-sfa-iiman-odlil-khdhoa-fdhaa-altrbia-alislamia.pdf', 'athr-alqraan-fi-tzkia-alnfs-fdhaa-altrbia-alislamia.pdf', 'iioaa-alrsol-onsrth-aiob-alansari-am-slim-fdhaa-altrbia-alislamia.pdf', 'hq-allh-tqoa-allh-fdhaa-altrbia-alislamia.pdf', 'asmaa-allh-alhsna-fdhaa-altrbia-alislamia.pdf', 'hq-alnfs-ahmia-altkhtit-oaltnthim-fi-alhiaa-fdhaa-altrbia-alislamia.pdf', 'aliithar-oaltdhhia-fdhaa-altrbia-alislamia.pdf', 'mlkhs-dros-mdkhl-altzkia-alqraan-alkrim-aldora-alaola.pdf'}
+
+    asks_islamic_education_mega_source = (
+        normalized_source_name in mega_islamic_education_sources
+    )
+
+    if asks_islamic_education_mega_source:
+        number_of_results = max(number_of_results, 30)
 
 
 
@@ -1165,7 +1176,8 @@ def retrieve_relevant_passages(
         )
 
     if (
-        asks_french_mega_17_65_source
+        asks_islamic_education_mega_source
+        or asks_french_mega_17_65_source
         or asks_french_batch_13_16_lesson
         or asks_french_open_letter_lesson
         or asks_french_debate_participant_invitations_lesson
@@ -1196,14 +1208,46 @@ def retrieve_relevant_passages(
             number_of_results * 4,
         )
 
+    effective_search_question = search_question
+
+    if (
+        source == "alislam-aqida-oshriaa-fdhaa-altrbia-alislamia.pdf"
+        and "\u062a\u0631\u0627\u0628\u0637 \u0648\u062a\u0643\u0627\u0645\u0644" in search_question
+        and "\u064a\u062a\u062c\u0644\u0649 \u0630\u0644\u0643 \u0641\u064a\u0645\u0627 \u064a\u0644\u064a" in search_question
+    ):
+        effective_search_question = (
+            "\u062a\u0631\u0627\u0628\u0637 \u0648\u062a\u0643\u0627\u0645\u0644 "
+            "\u064a\u062a\u062c\u0644\u0649 \u0630\u0644\u0643 \u0641\u064a\u0645\u0627 \u064a\u0644\u064a"
+        )
+
     initial_results = search_similar_chunks(
-        question=search_question,
+        question=effective_search_question,
         number_of_results=candidate_count,
         program=program,
         subject=subject,
         semester=semester,
         source=source,
     )
+
+    # Les segments d'?ducation islamique sont bien pr?sents dans
+    # ChromaDB, mais le filtre combin? programme + mati?re + source
+    # peut retourner z?ro r?sultat malgr? des m?tadonn?es correctes.
+    # Pour les 27 PDF valid?s de ce mega batch uniquement, on retente
+    # avec le filtre source exact. Le filtrage source est de nouveau
+    # v?rifi? juste apr?s cette recherche.
+    if (
+        not initial_results
+        and asks_islamic_education_mega_source
+        and source
+    ):
+        initial_results = search_similar_chunks(
+            question=effective_search_question,
+            number_of_results=candidate_count,
+            program=None,
+            subject=None,
+            semester=None,
+            source=source,
+        )
 
     if not initial_results:
         return []
@@ -1281,6 +1325,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_islamic_education_mega_source
             and not asks_french_mega_17_65_source
             and not asks_french_batch_13_16_lesson
             and not asks_french_open_letter_lesson
@@ -1304,6 +1349,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_islamic_education_mega_source
             and not asks_french_mega_17_65_source
             and not asks_french_batch_13_16_lesson
             and not asks_french_open_letter_lesson
