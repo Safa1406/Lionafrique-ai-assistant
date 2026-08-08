@@ -1,0 +1,562 @@
+[
+  {
+    "lesson_number": 1,
+    "unit": 1,
+    "source": "unit-1-hello-communication.pdf",
+    "pages": 4,
+    "characters": 1658,
+    "sha256": "8d1caa78d4d48dad08a967d81836781d7df6ebb71b5bfbb1172a8ee2107b3933"
+  },
+  {
+    "lesson_number": 2,
+    "unit": 1,
+    "source": "unit-1-hello-cultural-studies-2.pdf",
+    "pages": 2,
+    "characters": 532,
+    "sha256": "dec4232b00166e54322f7ee7e4acae44effbfde2ad97919c4b873b1ca9fd8fa7"
+  },
+  {
+    "lesson_number": 3,
+    "unit": 1,
+    "source": "unit-1-hello-grammar.pdf",
+    "pages": 4,
+    "characters": 2228,
+    "sha256": "d7e638e79fefc350ff6becced270bf760b275952eb3aa6f708649afb5691fe15"
+  },
+  {
+    "lesson_number": 4,
+    "unit": 1,
+    "source": "unit-1-hello-review-2.pdf",
+    "pages": 2,
+    "characters": 908,
+    "sha256": "0183c69699a606d70597ffd04704d12228185f61c0cf10f2824c3aa9c7d03f4d"
+  },
+  {
+    "lesson_number": 5,
+    "unit": 1,
+    "source": "unit-1-hello-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 1507,
+    "sha256": "c71574eca36800244a2586ad8ea11abe9af1fb65a5c021cabf59b45cf5592180"
+  },
+  {
+    "lesson_number": 6,
+    "unit": 1,
+    "source": "unit-1-hello-study-skills.pdf",
+    "pages": 4,
+    "characters": 1524,
+    "sha256": "a94de53884e04ce1d4faee5ff49d5c9f4f355de66b760ea58108a25611854f67"
+  },
+  {
+    "lesson_number": 7,
+    "unit": 10,
+    "source": "unit-10-hobbies-communication-2.pdf",
+    "pages": 4,
+    "characters": 1497,
+    "sha256": "b2a6dcb811b6515e0b46b8fcdfff354dd8ec0e3c147685142ed3b89d97d4fc00"
+  },
+  {
+    "lesson_number": 8,
+    "unit": 10,
+    "source": "unit-10-hobbies-grammar-2.pdf",
+    "pages": 4,
+    "characters": 2241,
+    "sha256": "1d1ba77ffd08cafa2eff0c27dfc1e6b27c397925a6f69483769774b0377a0d4c"
+  },
+  {
+    "lesson_number": 9,
+    "unit": 10,
+    "source": "unit-10-hobbies-review-2.pdf",
+    "pages": 2,
+    "characters": 982,
+    "sha256": "9ba12cae964cfd07dca06c0a2a3eb16d7d03af00667e19090cf8679ec934cc9a"
+  },
+  {
+    "lesson_number": 10,
+    "unit": 10,
+    "source": "unit-10-hobbies-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 1294,
+    "sha256": "f0865e96c34c1e43e881362c317ebbff7fc567d9269ad83ee86b7cbb1e49ed3b"
+  },
+  {
+    "lesson_number": 11,
+    "unit": 10,
+    "source": "unit-10-hobbies-study-skills-2.pdf",
+    "pages": 3,
+    "characters": 1700,
+    "sha256": "f7b88df708d00b094405b95934e4df4a0147ea66c8ed967e717d894bf06da5a7"
+  },
+  {
+    "lesson_number": 12,
+    "unit": 11,
+    "source": "unit-11-transport-communication-2.pdf",
+    "pages": 4,
+    "characters": 1767,
+    "sha256": "5171cf93c812069b59521715be9628e1c388279bf99fda5382087b53fef5241b"
+  },
+  {
+    "lesson_number": 13,
+    "unit": 11,
+    "source": "unit-11-transport-grammar-2.pdf",
+    "pages": 2,
+    "characters": 2456,
+    "sha256": "3df7f8f2e588a913f7205340d479ed7687bd5505199bbbf8bd3df69dd4f6a288"
+  },
+  {
+    "lesson_number": 14,
+    "unit": 11,
+    "source": "unit-11-transport-review-2.pdf",
+    "pages": 2,
+    "characters": 877,
+    "sha256": "654832decc6f78951d006f687c8c253f94a608492f016b2a275671c1248d6f41"
+  },
+  {
+    "lesson_number": 15,
+    "unit": 11,
+    "source": "unit-11-transport-skills-work-1.pdf",
+    "pages": 3,
+    "characters": 2447,
+    "sha256": "b0597dff991a3f2458ad2ffb05ad95afa05ccd3c8d4863f13526d4aa7ffc9de8"
+  },
+  {
+    "lesson_number": 16,
+    "unit": 11,
+    "source": "unit-11-transport-study-skills-2.pdf",
+    "pages": 3,
+    "characters": 900,
+    "sha256": "fb4add0c999d246a86bd67709e540720febe106144f3bca1eaa43285f5e1e3ce"
+  },
+  {
+    "lesson_number": 17,
+    "unit": 12,
+    "source": "unit-12-health-communication-1.pdf",
+    "pages": 4,
+    "characters": 1258,
+    "sha256": "ab832f50e43b286f0430f30c8548f932812b71488cd5ace4e39bb35bb05be76f"
+  },
+  {
+    "lesson_number": 18,
+    "unit": 12,
+    "source": "unit-12-health-grammar-2.pdf",
+    "pages": 3,
+    "characters": 966,
+    "sha256": "b352c33e2d50a6836cb6c0e8f4b1d4eb2d8eec2b09030bbd341e627764a91aa4"
+  },
+  {
+    "lesson_number": 19,
+    "unit": 12,
+    "source": "unit-12-health-review-2.pdf",
+    "pages": 2,
+    "characters": 1296,
+    "sha256": "8d1be6d9c626e1f97808de4b24822364c24a17d3e9a75598fc7a2bebea09a486"
+  },
+  {
+    "lesson_number": 20,
+    "unit": 12,
+    "source": "unit-12-health-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 3046,
+    "sha256": "d7443ca1714d69f15bd20711af40578ff415cc0baddfa60e7ce4a95a7b650b24"
+  },
+  {
+    "lesson_number": 21,
+    "unit": 12,
+    "source": "unit-12-health-study-skills-1.pdf",
+    "pages": 3,
+    "characters": 1430,
+    "sha256": "8be95339393a5afa8355067890f56a4a8f57436a2325d5e0e05530f33b6c030c"
+  },
+  {
+    "lesson_number": 22,
+    "unit": 13,
+    "source": "unit-13-celebrations-communication-2.pdf",
+    "pages": 4,
+    "characters": 1519,
+    "sha256": "aa4afbb4371c8ef687e5ce17f24b218658a4281d3dd08dde59128214e35f58ea"
+  },
+  {
+    "lesson_number": 23,
+    "unit": 13,
+    "source": "unit-13-celebrations-grammar-2.pdf",
+    "pages": 4,
+    "characters": 1990,
+    "sha256": "d1b1351e5bf2973f35abfd18b47b85cfd31185327157a9cad3efe2d22a1b726b"
+  },
+  {
+    "lesson_number": 24,
+    "unit": 13,
+    "source": "unit-13-celebrations-review-2.pdf",
+    "pages": 2,
+    "characters": 1327,
+    "sha256": "ad108ef4f420172b3dcc380e568790818ef0ddbab102ea9cee11366fecc60f7a"
+  },
+  {
+    "lesson_number": 25,
+    "unit": 13,
+    "source": "unit-13-celebrations-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 1935,
+    "sha256": "8bea035767b7bd06741b8d46dc6e7e0268b0c10b335bfd6543084ca25aee770d"
+  },
+  {
+    "lesson_number": 26,
+    "unit": 13,
+    "source": "unit-13-celebrations-study-skills-2.pdf",
+    "pages": 2,
+    "characters": 1711,
+    "sha256": "eb76eb1acdf4c894fb1ad9fc644cbf2da31648206ca4ff7404560a95104bcf6c"
+  },
+  {
+    "lesson_number": 27,
+    "unit": 14,
+    "source": "unit-14-holidays-travel-communication-2.pdf",
+    "pages": 4,
+    "characters": 1876,
+    "sha256": "1bdf1be05f3480d3999afa52880a376a6a8392ea464eedd6cd97427283a59fd1"
+  },
+  {
+    "lesson_number": 28,
+    "unit": 14,
+    "source": "unit-14-holidays-travel-grammar-2.pdf",
+    "pages": 4,
+    "characters": 2732,
+    "sha256": "f114162e24ecebbb0579316301ee5bb3922e13d02d1e2c09e6b51e0df6fb3b9e"
+  },
+  {
+    "lesson_number": 29,
+    "unit": 14,
+    "source": "unit-14-holidays-travel-review-2.pdf",
+    "pages": 2,
+    "characters": 1328,
+    "sha256": "c5ce010d12271a5a60bb57f9bfcdcf907bbda5b1f67501e8f28cab02a437539d"
+  },
+  {
+    "lesson_number": 30,
+    "unit": 14,
+    "source": "unit-14-holidays-travel-skills-work-1.pdf",
+    "pages": 3,
+    "characters": 2009,
+    "sha256": "f596fdb6df938bf1334e2970f1159c7ed796a45f79751cd0ab147ef37f2ee4f6"
+  },
+  {
+    "lesson_number": 31,
+    "unit": 2,
+    "source": "unit-2-school-communication-2.pdf",
+    "pages": 4,
+    "characters": 1894,
+    "sha256": "c8f354cdf565c322c6fb6360dd94c28f3759f910fef53062f9b878ef9f451b1b"
+  },
+  {
+    "lesson_number": 32,
+    "unit": 2,
+    "source": "unit-2-school-grammar-2.pdf",
+    "pages": 4,
+    "characters": 1791,
+    "sha256": "28e1f2890631104d72da0dfd4c316fca83050a2f8f32d2b990abdd38af1d796c"
+  },
+  {
+    "lesson_number": 33,
+    "unit": 2,
+    "source": "unit-2-school-review-2.pdf",
+    "pages": 2,
+    "characters": 856,
+    "sha256": "7965d39d3a5c0a7378c744a17096c3c5330afbfff3a1c481146b954f440b23c2"
+  },
+  {
+    "lesson_number": 34,
+    "unit": 2,
+    "source": "unit-2-school-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 1189,
+    "sha256": "0946bc3dabd16fab04c064f7e30072bcd013002b90d109558dd5b30b2d708f3e"
+  },
+  {
+    "lesson_number": 35,
+    "unit": 2,
+    "source": "unit-2-school-study-skills-2.pdf",
+    "pages": 2,
+    "characters": 1200,
+    "sha256": "a766cd5d3f8005b8baf83346530fc43f81830e29b6a1f6784c48e7389a1214c4"
+  },
+  {
+    "lesson_number": 36,
+    "unit": 3,
+    "source": "unit-3-family-communication-2.pdf",
+    "pages": 4,
+    "characters": 1393,
+    "sha256": "234ce3ba3800d480d9d316130486aae4051d0d73c26d7ebc315849d1469d34fe"
+  },
+  {
+    "lesson_number": 37,
+    "unit": 3,
+    "source": "unit-3-family-grammar-2.pdf",
+    "pages": 4,
+    "characters": 2246,
+    "sha256": "22583258c20e4a769ee57f85d93ce451c1e716406f6a4c83eccd67df77ffe7ea"
+  },
+  {
+    "lesson_number": 38,
+    "unit": 3,
+    "source": "unit-3-family-review-2.pdf",
+    "pages": 2,
+    "characters": 1120,
+    "sha256": "5c1a14bc3a804f31fd475cd1ac552d126f9ef8b93ace559e36016be9350aac0e"
+  },
+  {
+    "lesson_number": 39,
+    "unit": 3,
+    "source": "unit-3-family-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 1177,
+    "sha256": "dc90769aa1785f3229dfee1fbac33e015cf30f9e028e1807a852c83b471f96a0"
+  },
+  {
+    "lesson_number": 40,
+    "unit": 3,
+    "source": "unit-3-family-study-skills-2.pdf",
+    "pages": 3,
+    "characters": 1436,
+    "sha256": "2b2cd4875aad589a9e1c8abf34224c4a6abc9e3a0bda950687b8ee6fc1361805"
+  },
+  {
+    "lesson_number": 41,
+    "unit": 4,
+    "source": "unit-4-food-drink-communication-2.pdf",
+    "pages": 4,
+    "characters": 1853,
+    "sha256": "3888123ee88f3fbc2166f9e73fd4955d7b3d6266c6c22dbde2666a387dbbfa9e"
+  },
+  {
+    "lesson_number": 42,
+    "unit": 4,
+    "source": "unit-4-food-drink-grammar-2.pdf",
+    "pages": 4,
+    "characters": 2355,
+    "sha256": "5e9346a6d2cadac2d96c27b030aee8960cf13e33b1652861f653997d9171e5a2"
+  },
+  {
+    "lesson_number": 43,
+    "unit": 4,
+    "source": "unit-4-food-drink-review-2.pdf",
+    "pages": 2,
+    "characters": 1114,
+    "sha256": "5f0a4db113cffb03eeb579a213a5cd96a0774197b11f885abb0f19b9b5b3d9b4"
+  },
+  {
+    "lesson_number": 44,
+    "unit": 4,
+    "source": "unit-4-food-drink-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 2422,
+    "sha256": "719019f5e5a9019303ab9b4b35c2f72946bf430e49394f623696fd04c0a65b9a"
+  },
+  {
+    "lesson_number": 45,
+    "unit": 4,
+    "source": "unit-4-food-drink-study-skills-2.pdf",
+    "pages": 3,
+    "characters": 1049,
+    "sha256": "ddfb4c7ac6fd7682f303006aa448cb68b8d1ee31bddf4de3d9c1d07cc6324790"
+  },
+  {
+    "lesson_number": 46,
+    "unit": 5,
+    "source": "unit-5-house-communication-2.pdf",
+    "pages": 4,
+    "characters": 1625,
+    "sha256": "99cb7966cbab73ac090890d5bc7e21e8209dd52bdc8bcc9950991404fc6fe702"
+  },
+  {
+    "lesson_number": 47,
+    "unit": 5,
+    "source": "unit-5-house-grammar-2.pdf",
+    "pages": 2,
+    "characters": 1387,
+    "sha256": "f498a7316fc0fb5f6ec07189ed9215ed72ebd9a0a6ecf04dc1d5372f1c6809c2"
+  },
+  {
+    "lesson_number": 48,
+    "unit": 5,
+    "source": "unit-5-house-review-2.pdf",
+    "pages": 2,
+    "characters": 1451,
+    "sha256": "d78d0267f2e04a1c0861d4bbf7fff2ead076c4760e6c151cc63461f2de5f428f"
+  },
+  {
+    "lesson_number": 49,
+    "unit": 5,
+    "source": "unit-5-house-skills-work.pdf",
+    "pages": 3,
+    "characters": 2629,
+    "sha256": "1d1b2116a27b5999283a29279cd2025927dacca6a9e9c474f05278439e4195e9"
+  },
+  {
+    "lesson_number": 50,
+    "unit": 5,
+    "source": "unit-5-house-study-skills-2.pdf",
+    "pages": 3,
+    "characters": 1003,
+    "sha256": "f5c8abe8a6e4ff61b1feeccfa4069f5f8afc82581be9b40ccbd350cf9e115d88"
+  },
+  {
+    "lesson_number": 51,
+    "unit": 6,
+    "source": "unit-6-body-clothes-communication-2.pdf",
+    "pages": 4,
+    "characters": 2064,
+    "sha256": "e0216d075e2e6f48d7ac02152d7d6cf31230a9d56e87d5a19f7bec479f917077"
+  },
+  {
+    "lesson_number": 52,
+    "unit": 6,
+    "source": "unit-6-body-clothes-grammar-2.pdf",
+    "pages": 4,
+    "characters": 2347,
+    "sha256": "6c87f913b81a66ab1b6cbf01959f2df7e3baf6471797c921c4b439f3b9a8d638"
+  },
+  {
+    "lesson_number": 53,
+    "unit": 6,
+    "source": "unit-6-body-clothes-review-2.pdf",
+    "pages": 1,
+    "characters": 976,
+    "sha256": "0eaf0c810e8128e048d09b6cff5791161a54902c87d5f3fe3da58bb34a2b514a"
+  },
+  {
+    "lesson_number": 54,
+    "unit": 6,
+    "source": "unit-6-body-clothes-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 1254,
+    "sha256": "4913549f28c407c3e7812053f77a0598187bcb7527a8aa1bacf6a224f3873290"
+  },
+  {
+    "lesson_number": 55,
+    "unit": 6,
+    "source": "unit-6-body-clothes-study-skills-2.pdf",
+    "pages": 3,
+    "characters": 1115,
+    "sha256": "4d4336e0e01fb85886ddf2812fde8d945bf02c80674b41f8b72ac3d9beb3bfca"
+  },
+  {
+    "lesson_number": 56,
+    "unit": 7,
+    "source": "unit-7-entertainment-communication-2.pdf",
+    "pages": 4,
+    "characters": 1268,
+    "sha256": "de64db355953355d7f8ba24a1d55ef512ec5fcd369270c2780548458ccd9e262"
+  },
+  {
+    "lesson_number": 57,
+    "unit": 7,
+    "source": "unit-7-entertainment-grammar-2.pdf",
+    "pages": 4,
+    "characters": 2525,
+    "sha256": "be966b4f54f249697cd0952ba42731c3817f3771cd470943d67bc5296eb151e4"
+  },
+  {
+    "lesson_number": 58,
+    "unit": 7,
+    "source": "unit-7-entertainment-review-2.pdf",
+    "pages": 2,
+    "characters": 1275,
+    "sha256": "c5c8f39bb22944a6c4883d5964036aee359a45cba4594c9cf94c53be290dac58"
+  },
+  {
+    "lesson_number": 59,
+    "unit": 7,
+    "source": "unit-7-entertainment-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 1132,
+    "sha256": "350ee6b7cd8121554a4c8b0b39d35878da19f96c80fb15e7f61c2ee9e352d045"
+  },
+  {
+    "lesson_number": 60,
+    "unit": 7,
+    "source": "unit-7-entertainment-study-skills-2.pdf",
+    "pages": 3,
+    "characters": 1139,
+    "sha256": "5a3efa137473a8eb4ebd6c6fd36554a7b5df63b39e3f41bc60dd37e2294fa91a"
+  },
+  {
+    "lesson_number": 61,
+    "unit": 8,
+    "source": "unit-8-sport-communication-1.pdf",
+    "pages": 4,
+    "characters": 1852,
+    "sha256": "2aa7da330dedc93d84edb438f80d22fcef3d90bc10c06c556fb4c1bab0fdce2d"
+  },
+  {
+    "lesson_number": 62,
+    "unit": 8,
+    "source": "unit-8-sport-grammar-2.pdf",
+    "pages": 4,
+    "characters": 1747,
+    "sha256": "64a8cf5c2a765729735182d83c71c14a458c72b17e86c90583f2428fc33bca0c"
+  },
+  {
+    "lesson_number": 63,
+    "unit": 8,
+    "source": "unit-8-sport-review-2.pdf",
+    "pages": 2,
+    "characters": 1223,
+    "sha256": "35edac55a0c029f35a290d751f7b09c7f44dff61ae74ea896b8c3dfaeb67bd44"
+  },
+  {
+    "lesson_number": 64,
+    "unit": 8,
+    "source": "unit-8-sport-skills-work-2.pdf",
+    "pages": 3,
+    "characters": 3002,
+    "sha256": "0ec8e1a6fa8720d47984712396a6e8f5a197da30f2415913b3e6bde695529db7"
+  },
+  {
+    "lesson_number": 65,
+    "unit": 8,
+    "source": "unit-8-sport-study-skills-2.pdf",
+    "pages": 3,
+    "characters": 1290,
+    "sha256": "d0ef2589f64c1fe12e6dc2ca433ad48afd1de82d96c92bbfc9953e8ff7a59a9c"
+  },
+  {
+    "lesson_number": 66,
+    "unit": 9,
+    "source": "unit-9-environment-communication-1.pdf",
+    "pages": 4,
+    "characters": 1826,
+    "sha256": "4e4f15f695ffeb02eb62b19bc9d1d03cbcf3c5edec338588de0c1e43dc383861"
+  },
+  {
+    "lesson_number": 67,
+    "unit": 9,
+    "source": "unit-9-environment-grammar-2.pdf",
+    "pages": 4,
+    "characters": 3014,
+    "sha256": "f367e28035bb8ff1fa1fdb4ea53f9cb79cd618ee5cb352dafc2ad06bb7e14492"
+  },
+  {
+    "lesson_number": 68,
+    "unit": 9,
+    "source": "unit-9-environment-review-2.pdf",
+    "pages": 2,
+    "characters": 945,
+    "sha256": "3daffba2d7b8f2bf8934a4761c047f0780833e461aa926440c7a9bfd09d93fd7"
+  },
+  {
+    "lesson_number": 69,
+    "unit": 9,
+    "source": "unit-9-environment-skills-work-1.pdf",
+    "pages": 3,
+    "characters": 1614,
+    "sha256": "0af937cf27be2c9df4ac42a9a0bbd54f7b95ad23a18a5d79f16cdf079a0a50f7"
+  },
+  {
+    "lesson_number": 70,
+    "unit": 9,
+    "source": "unit-9-environment-study-skills-2.pdf",
+    "pages": 3,
+    "characters": 680,
+    "sha256": "0995d333470c5e47df7e219cd37329c357b4dca7f29f4efc8fd8198a5a69cfe1"
+  }
+]

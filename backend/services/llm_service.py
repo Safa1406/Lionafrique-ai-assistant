@@ -11,6 +11,7 @@ OLLAMA_MODEL = "qwen3:1.7b"
 
 ARABIC_RULES_VERSION = "v62-education-islamique-takamol-context-fix"
 FRENCH_RULES_VERSION = "v20-mega-17-65-refusal-guard"
+ENGLISH_RULES_VERSION = "v9-mega-70-short-word-typo-tolerance"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -17842,6 +17843,588 @@ def has_topic_overlap_with_passages(
     )
 
 
+
+def is_english_mega_source_name(
+    source: str,
+) -> bool:
+    """Recognises the 70 English lesson PDF names."""
+
+    source_name = (
+        source or ""
+    ).strip().lower()
+
+    return bool(
+        re.fullmatch(
+            r"unit-\d+-.+\.pdf",
+            source_name,
+        )
+    )
+
+
+def is_obviously_out_of_scope_for_english_documents(
+    question: str,
+) -> bool:
+    """Rejects questions clearly unrelated to the English lessons."""
+
+    normalized = normalize_text(
+        question
+    )
+
+    markers = (
+        "derivative",
+        "differentiate x squared",
+        "integral",
+        "integration",
+        "matrix",
+        "determinant",
+        "vector",
+        "pythagorean theorem",
+        "speed of light",
+        "chemical formula",
+        "methane",
+        "gas pressure",
+    )
+
+    return any(
+        marker in normalized
+        for marker in markers
+    )
+
+
+def _english_plain_match_text(
+    value: str,
+) -> str:
+    """
+    Normalisation for English document anchors.
+
+    Examples:
+    11p.m. -> 11 p m
+    am/'m  -> am m
+    I'm    -> i m
+    """
+
+    value = (
+        value or ""
+    ).lower()
+
+    value = (
+        value
+        .replace("\u2019", "'")
+        .replace("\u2018", "'")
+        .replace("\u201c", '"')
+        .replace("\u201d", '"')
+    )
+
+    # Split attached letters and numbers.
+    value = re.sub(
+        r"(?<=\d)(?=[a-z])",
+        " ",
+        value,
+    )
+
+    value = re.sub(
+        r"(?<=[a-z])(?=\d)",
+        " ",
+        value,
+    )
+
+    # Apostrophes are separators for matching.
+    value = value.replace(
+        "'",
+        " ",
+    )
+
+    value = re.sub(
+        r"[^a-z0-9]+",
+        " ",
+        value,
+    )
+
+    return re.sub(
+        r"\s+",
+        " ",
+        value,
+    ).strip()
+
+
+def extract_english_mega_anchor_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Deterministic English mega-batch extractor.
+
+    Strategy:
+    1. Extract the quoted anchor.
+    2. Search the normalised full passage directly.
+    3. Fall back to fuzzy sliding-window matching for spelling errors.
+    """
+
+    if contains_arabic(
+        question
+    ):
+        return []
+
+    quoted_match = re.search(
+        r'["\u201c\u00ab]([^"\u201d\u00bb]{3,180})["\u201d\u00bb]',
+        question,
+    )
+
+    if not quoted_match:
+        return []
+
+    raw_anchor = (
+        quoted_match.group(1)
+        .strip()
+    )
+
+    anchor = (
+        _english_plain_match_text(
+            raw_anchor
+        )
+    )
+
+    if not anchor:
+        return []
+
+    anchor_words = (
+        anchor.split()
+    )
+
+    best = None
+    best_score = 0.0
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source = passage.get(
+            "source",
+            "",
+        )
+
+        if not is_english_mega_source_name(
+            source
+        ):
+            continue
+
+        raw_text = (
+            passage.get(
+                "text",
+                "",
+            )
+            or ""
+        )
+
+        normalized_text = (
+            _english_plain_match_text(
+                raw_text
+            )
+        )
+
+        if not normalized_text:
+            continue
+
+        # Exact normalised anchor match.
+        if anchor in normalized_text:
+            score = 2.0
+
+        else:
+            passage_words = (
+                normalized_text.split()
+            )
+
+            if not passage_words:
+                continue
+
+            n = len(
+                anchor_words
+            )
+
+            score = 0.0
+
+            # Compare nearby token windows. This is tolerant to
+            # one misspelled word or a small OCR difference.
+            for window_size in {
+                max(1, n - 1),
+                n,
+                n + 1,
+            }:
+                if (
+                    window_size
+                    > len(passage_words)
+                ):
+                    continue
+
+                for i in range(
+                    len(passage_words)
+                    - window_size
+                    + 1
+                ):
+                    candidate = " ".join(
+                        passage_words[
+                            i:i + window_size
+                        ]
+                    )
+
+                    ratio = (
+                        difflib.SequenceMatcher(
+                            None,
+                            anchor,
+                            candidate,
+                        ).ratio()
+                    )
+
+                    if ratio > score:
+                        score = ratio
+
+            # Additional word-level fuzzy coverage.
+            fuzzy_hits = 0
+
+            for anchor_word in anchor_words:
+                matched = False
+
+                for passage_word in passage_words:
+                    if (
+                        anchor_word
+                        == passage_word
+                    ):
+                        matched = True
+                        break
+
+                    if (
+                        len(anchor_word) >= 3
+                        and len(passage_word) >= 3
+                    ):
+                        ratio = (
+                            difflib.SequenceMatcher(
+                                None,
+                                anchor_word,
+                                passage_word,
+                            ).ratio()
+                        )
+
+                        if ratio >= 0.80:
+                            matched = True
+                            break
+
+                if matched:
+                    fuzzy_hits += 1
+
+            coverage = (
+                fuzzy_hits
+                / max(
+                    len(anchor_words),
+                    1,
+                )
+            )
+
+            score = max(
+                score,
+                coverage,
+            )
+
+        if score > best_score:
+            best_score = score
+
+            best = (
+                passage_number,
+                passage,
+            )
+
+    if (
+        best is not None
+        and best_score >= 0.70
+    ):
+        passage_number, passage = best
+
+        best_text = (
+            passage.get(
+                "text",
+                "",
+            )
+            or ""
+        ).strip()
+
+        best_normalized = (
+            _english_plain_match_text(
+                best_text
+            )
+        )
+
+        best_words = (
+            best_normalized.split()
+        )
+
+        fuzzy_hits = 0
+
+        for anchor_word in anchor_words:
+            matched = False
+
+            for passage_word in best_words:
+                if anchor_word == passage_word:
+                    matched = True
+                    break
+
+                if (
+                    len(anchor_word) >= 3
+                    and len(passage_word) >= 3
+                    and difflib.SequenceMatcher(
+                        None,
+                        anchor_word,
+                        passage_word,
+                    ).ratio() >= 0.80
+                ):
+                    matched = True
+                    break
+
+            if matched:
+                fuzzy_hits += 1
+
+        best_coverage = (
+            fuzzy_hits
+            / max(
+                len(anchor_words),
+                1,
+            )
+        )
+
+        # A single passage is accepted only when it
+        # contains virtually the whole quoted anchor.
+        # Otherwise continue to the cross-passage fallback.
+        if (
+            best_text
+            and best_coverage >= 0.95
+        ):
+            return [
+                {
+                    "passage_number": passage_number,
+                    "quote": best_text,
+                    "source": passage.get(
+                        "source",
+                        "Source inconnue",
+                    ),
+                    "page": passage.get(
+                        "page",
+                        0,
+                    ),
+                }
+            ]
+
+    # --------------------------------------------------------
+    # Cross-passage fallback
+    #
+    # Some PDF text extraction joins an anchor from different
+    # chunks. Example:
+    #
+    #   "the verb be" -> one passage
+    #   "I am at"     -> another passage
+    #
+    # When the words are well covered across passages from the
+    # same English PDF, return the minimum useful set.
+    # --------------------------------------------------------
+
+    passage_matches = []
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        source = passage.get(
+            "source",
+            "",
+        )
+
+        if not is_english_mega_source_name(
+            source
+        ):
+            continue
+
+        text = (
+            passage.get(
+                "text",
+                "",
+            )
+            or ""
+        ).strip()
+
+        if not text:
+            continue
+
+        normalized_text = (
+            _english_plain_match_text(
+                text
+            )
+        )
+
+        passage_words = (
+            normalized_text.split()
+        )
+
+        matched_indexes = set()
+
+        for anchor_index, anchor_word in enumerate(
+            anchor_words
+        ):
+            for passage_word in passage_words:
+
+                if anchor_word == passage_word:
+                    matched_indexes.add(
+                        anchor_index
+                    )
+                    break
+
+                if (
+                    len(anchor_word) >= 3
+                    and len(passage_word) >= 3
+                    and difflib.SequenceMatcher(
+                        None,
+                        anchor_word,
+                        passage_word,
+                    ).ratio() >= 0.80
+                ):
+                    matched_indexes.add(
+                        anchor_index
+                    )
+                    break
+
+        if matched_indexes:
+            passage_matches.append(
+                {
+                    "passage_number": passage_number,
+                    "passage": passage,
+                    "matches": matched_indexes,
+                }
+            )
+
+    if not passage_matches:
+        return []
+
+    selected = []
+    covered = set()
+
+    remaining = list(
+        passage_matches
+    )
+
+    while remaining:
+        best_item = None
+        best_new = set()
+
+        for item in remaining:
+            new_matches = (
+                item["matches"]
+                - covered
+            )
+
+            if len(new_matches) > len(
+                best_new
+            ):
+                best_item = item
+                best_new = new_matches
+
+        if (
+            best_item is None
+            or not best_new
+        ):
+            break
+
+        selected.append(
+            best_item
+        )
+
+        covered.update(
+            best_new
+        )
+
+        remaining.remove(
+            best_item
+        )
+
+        if (
+            len(covered)
+            / max(
+                len(anchor_words),
+                1,
+            )
+            >= 0.90
+        ):
+            break
+
+    coverage = (
+        len(covered)
+        / max(
+            len(anchor_words),
+            1,
+        )
+    )
+
+    content_word_indexes = {
+        i
+        for i, word in enumerate(
+            anchor_words
+        )
+        if len(word) >= 4
+    }
+
+    content_covered = bool(
+        covered.intersection(
+            content_word_indexes
+        )
+    )
+
+    if (
+        coverage < 0.90
+        or not content_covered
+    ):
+        return []
+
+    selected.sort(
+        key=lambda item: (
+            item["passage"].get(
+                "page",
+                0,
+            ),
+            item["passage_number"],
+        )
+    )
+
+    evidence = []
+
+    for item in selected:
+        passage = item["passage"]
+
+        quote = (
+            passage.get(
+                "text",
+                "",
+            )
+            or ""
+        ).strip()
+
+        if not quote:
+            continue
+
+        evidence.append(
+            {
+                "passage_number": (
+                    item["passage_number"]
+                ),
+                "quote": quote,
+                "source": passage.get(
+                    "source",
+                    "Source inconnue",
+                ),
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+            }
+        )
+
+    return evidence
+
+
 def generate_answer(
     question: str,
     passages: list[dict],
@@ -17877,6 +18460,142 @@ def generate_answer(
             "sources": [],
             "evidence": [],
         }
+
+    # --------------------------------------------------------
+    # English mega batch: run before all legacy extractors.
+    # --------------------------------------------------------
+
+    english_mega_early_scope = any(
+        is_english_mega_source_name(
+            passage.get(
+                "source",
+                "",
+            )
+        )
+        for passage in passages
+    )
+
+    if english_mega_early_scope:
+
+        if is_obviously_out_of_scope_for_english_documents(
+            analysis_question
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        english_early_evidence = (
+            extract_english_mega_anchor_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
+
+        if english_early_evidence:
+            sources = []
+            direct_parts = []
+
+            for item in english_early_evidence:
+                quote = (
+                    item.get(
+                        "quote",
+                        "",
+                    )
+                    or ""
+                ).strip()
+
+                if (
+                    quote
+                    and quote not in direct_parts
+                ):
+                    direct_parts.append(
+                        quote
+                    )
+
+                passage_number = (
+                    item.get(
+                        "passage_number",
+                        0,
+                    )
+                )
+
+                relative_path = ""
+
+                if (
+                    isinstance(
+                        passage_number,
+                        int,
+                    )
+                    and 1
+                    <= passage_number
+                    <= len(passages)
+                ):
+                    relative_path = (
+                        passages[
+                            passage_number - 1
+                        ].get(
+                            "relative_path",
+                            "",
+                        )
+                    )
+
+                source = {
+                    "file": item.get(
+                        "source",
+                        "Source inconnue",
+                    ),
+                    "page": item.get(
+                        "page",
+                        0,
+                    ),
+                    "relative_path": (
+                        relative_path
+                    ),
+                }
+
+                if source not in sources:
+                    sources.append(
+                        source
+                    )
+
+            answer = " ".join(
+                direct_parts
+            ).strip()
+
+            if answer:
+                return {
+                    "answerable": True,
+                    "answer": answer,
+                    "sources": sources,
+                    "evidence": [
+                        item.get(
+                            "quote",
+                            "",
+                        )
+                        for item
+                        in english_early_evidence
+                        if item.get(
+                            "quote",
+                            "",
+                        )
+                    ],
+                }
+
+        # Quoted English document questions must never
+        # fall through to the expensive generic LLM path.
+        if re.search(
+            r'["“«][^"”»]{3,180}["”»]',
+            analysis_question,
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
 
     intent = detect_question_intent(
         analysis_question
@@ -19263,6 +19982,137 @@ def generate_answer(
             "evidence": [],
         }
 
+    english_mega_source_scope = any(
+        is_english_mega_source_name(
+            passage.get("source", "")
+        )
+        for passage in passages
+    )
+
+    if (
+        english_mega_source_scope
+        and is_obviously_out_of_scope_for_english_documents(
+            analysis_question
+        )
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if (
+        english_mega_source_scope
+        and not validated_evidence
+    ):
+        english_evidence = (
+            extract_english_mega_anchor_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
+
+        if english_evidence:
+            direct_parts = []
+            sources = []
+
+            for item in english_evidence:
+                quote = (
+                    item.get("quote", "")
+                    or ""
+                ).strip()
+
+                if (
+                    quote
+                    and quote not in direct_parts
+                ):
+                    direct_parts.append(
+                        quote
+                    )
+
+                passage_number = item.get(
+                    "passage_number",
+                    0,
+                )
+
+                relative_path = ""
+
+                if (
+                    isinstance(
+                        passage_number,
+                        int,
+                    )
+                    and 1
+                    <= passage_number
+                    <= len(passages)
+                ):
+                    passage = passages[
+                        passage_number - 1
+                    ]
+
+                    relative_path = (
+                        passage.get(
+                            "relative_path",
+                            "",
+                        )
+                    )
+
+                source = {
+                    "file": item.get(
+                        "source",
+                        "Source inconnue",
+                    ),
+                    "page": item.get(
+                        "page",
+                        0,
+                    ),
+                    "relative_path": (
+                        relative_path
+                    ),
+                }
+
+                if source not in sources:
+                    sources.append(
+                        source
+                    )
+
+            direct_answer = " ".join(
+                direct_parts
+            ).strip()
+
+            if direct_answer:
+                return {
+                    "answerable": True,
+                    "answer": direct_answer,
+                    "sources": sources,
+                    "evidence": [
+                        item.get(
+                            "quote",
+                            "",
+                        )
+                        for item
+                        in english_evidence
+                        if item.get(
+                            "quote",
+                            "",
+                        )
+                    ],
+                }
+
+        # A quoted document-anchor question should not
+        # fall through to the slow generic LLM path.
+        if re.search(
+            r'["??][^"??]{3,180}["??]',
+            analysis_question,
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
     if not validated_evidence:
         extraction = extract_evidence(
             question=analysis_question,
@@ -19343,10 +20193,38 @@ def generate_answer(
             validated_evidence[:2]
         )
 
-    answer = write_answer(
-        question=analysis_question,
-        evidence=validated_evidence,
-    )
+    if (
+        english_mega_source_scope
+        and validated_evidence
+    ):
+        direct_parts = []
+
+        for item in validated_evidence[:2]:
+            quote = (
+                item.get("quote", "")
+                or ""
+            ).strip()
+
+            if (
+                quote
+                and quote not in direct_parts
+            ):
+                direct_parts.append(
+                    quote
+                )
+
+        answer = " ".join(
+            direct_parts
+        ).strip()
+
+        if not answer:
+            answer = refusal_answer
+
+    else:
+        answer = write_answer(
+            question=analysis_question,
+            evidence=validated_evidence,
+        )
 
     if answer == refusal_answer:
         return {

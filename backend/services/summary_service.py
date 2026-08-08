@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v63-education-islamique-mega"
+    "v66-english-mega-raw-passages-summary"
 )
 
 
@@ -7842,6 +7842,24 @@ def build_french_network_typology_summary(
         ],
     }
 
+
+def is_english_mega_summary_source(
+    source: str,
+) -> bool:
+    """Recognises the English mega-batch lesson files."""
+
+    source_name = (
+        source or ""
+    ).strip().lower()
+
+    return bool(
+        re.fullmatch(
+            r"unit-\d+-.+\.pdf",
+            source_name,
+        )
+    )
+
+
 def generate_summary(
     question: str,
     passages: list[dict],
@@ -7876,6 +7894,125 @@ def generate_summary(
             "summary": refusal,
             "sources": [],
             "evidence": [],
+        }
+
+    english_mega_passages = [
+        passage
+        for passage in passages
+        if is_english_mega_summary_source(
+            passage.get(
+                "source",
+                "",
+            )
+        )
+    ]
+
+    if english_mega_passages:
+        # Keep raw retrieved passages for English lessons.
+        # This preserves short headings such as
+        # "II- Practice" that build_summary_units may remove.
+
+        ordered_passages = sorted(
+            english_mega_passages,
+            key=lambda item: (
+                item.get("page", 0),
+                item.get("source", ""),
+            ),
+        )
+
+        unique_passages = []
+        seen = set()
+
+        for passage in ordered_passages:
+            text = (
+                passage.get(
+                    "text",
+                    "",
+                )
+                or ""
+            ).strip()
+
+            if not text:
+                continue
+
+            normalized = re.sub(
+                r"\\s+",
+                " ",
+                text,
+            ).strip().lower()
+
+            if normalized in seen:
+                continue
+
+            seen.add(
+                normalized
+            )
+
+            unique_passages.append(
+                passage
+            )
+
+        if not unique_passages:
+            return {
+                "answerable": False,
+                "summary": refusal,
+                "sources": [],
+                "evidence": [],
+            }
+
+        summary_parts = [
+            (
+                passage.get(
+                    "text",
+                    "",
+                )
+                or ""
+            ).strip()
+            for passage in unique_passages
+            if (
+                passage.get(
+                    "text",
+                    "",
+                )
+                or ""
+            ).strip()
+        ]
+
+        summary = (
+            "Summary of the document:\n\n"
+            + "\n\n".join(
+                summary_parts
+            )
+        )
+
+        sources = []
+
+        for passage in unique_passages:
+            source = {
+                "file": passage.get(
+                    "source",
+                    "Source inconnue",
+                ),
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "relative_path": passage.get(
+                    "relative_path",
+                    "",
+                ),
+            }
+
+            if source not in sources:
+                sources.append(
+                    source
+                )
+
+        return {
+            "answerable": True,
+            "summary": summary,
+            "sources": sources,
+            "evidence": summary_parts,
         }
 
     structured_islamic_education_summary = (
