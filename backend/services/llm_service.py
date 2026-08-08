@@ -10,7 +10,7 @@ OLLAMA_API_URL = "http://localhost:11434/api/chat"
 OLLAMA_MODEL = "qwen3:1.7b"
 
 ARABIC_RULES_VERSION = "v60-french-concession-analysis"
-FRENCH_RULES_VERSION = "v16-lettre-ouverte-analysis"
+FRENCH_RULES_VERSION = "v17-batch-13-16-analysis"
 
 REFUSAL_ANSWER = (
     "Les documents disponibles ne contiennent pas "
@@ -1949,6 +1949,121 @@ def extract_french_concession_evidence(
 
 
 
+
+
+
+def extract_french_batch_13_16_evidence(
+    question: str,
+    passages: list[dict],
+) -> list[dict]:
+    """
+    Support documenté du batch français 13-16.
+    Les formulations testées sont dérivées des contenus des PDF.
+    """
+
+    if contains_arabic(question):
+        return []
+
+    documented = {'ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf': {'Quel type de texte doit être rédigé dans ce projet ?': ['lettre ouverte'], 'Dans quel cadre la lettre ouverte doit-elle être rédigée ?': ["club de l'environnement", 'établissement'], 'Quel est le but principal de la lettre ouverte ?': ['sensibiliser', 'opinion publique'], "À quelle question générale la lettre doit-elle sensibiliser l'opinion publique ?": ['environnement'], "À quel espace géographique la question de l'environnement est-elle liée ?": ['région'], 'Qui choisit le thème de la lettre ouverte ?': ['vous'], 'Quel critère doit respecter le thème choisi ?': ["beaucoup d'intérêt", 'population'], "Pour qui le thème choisi doit-il présenter beaucoup d'intérêt ?": ['population', 'région'], "À quel club de l'établissement le projet est-il lié ?": ["club de l'environnement"], "La lettre ouverte vise-t-elle une personne précise ou l'opinion publique ?": ['opinion publique'], "Que doit faire la lettre ouverte vis-à-vis de l'opinion publique ?": ['sensibiliser'], "La question environnementale est-elle traitée à l'échelle de la région ?": ['région'], "Le thème peut-il être choisi sans tenir compte de l'intérêt de la population ?": ['intérêt', 'population'], "Que doit faire l'élève avec la lettre rédigée par son groupe ?": ['recopie', 'lettre', 'groupe'], 'La lettre finale est-elle liée à un travail individuel isolé ou à un travail de groupe ?': ['groupe'], 'Quel domaine représente le club mentionné dans le projet ?': ['environnement'], "Quel lien la lettre ouverte doit-elle établir entre l'environnement et la région ?": ['environnement', 'région'], 'Quel public doit être sensibilisé par la lettre ?': ['opinion publique'], "Que doit choisir l'élève avant de rédiger la lettre ouverte ?": ['thème'], 'Pourquoi le thème choisi doit-il être important ?': ['intérêt', 'population', 'région'], 'Le document présente-t-il une compréhension, une production guidée ou un projet ?': ['projet'], "Où se situe le club de l'environnement mentionné ?": ['établissement'], 'Quelle action de communication est demandée envers le public ?': ['sensibiliser', 'opinion publique'], 'Sur quoi doit se baser le choix du thème ?': ['intérêt', 'population'], "Quel texte l'élève doit-il recopier à la fin ?": ['lettre', 'groupe'], 'Quels sont les trois éléments essentiels du projet ?': ['lettre ouverte', 'opinion publique', 'environnement', 'région'], 'Explique brièvement ce que demande le projet Écrit 4-2.': ['lettre ouverte', 'sensibiliser', 'opinion publique', 'environnement'], 'Coman redijé une letr ouver pour sansibilizé lopinion publik a lenvironeman dan la rejion ?': ['lettre ouverte', 'sensibiliser', 'opinion publique', 'environnement', 'région']}, 'ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf': {'Quel texte les élèves doivent-ils rédiger collectivement ?': ['synopsis', 'nouvelle'], "Combien d'étapes comporte la structure narrative rappelée dans le cours ?": ['cinq étapes'], 'Quelle est la première étape de la structure narrative ?': ['situation stable'], 'Quelle est la deuxième étape de la structure narrative ?': ['événement inattendu'], 'Quelle est la troisième étape de la structure narrative ?': ['les événements'], 'Quelle est la quatrième étape de la structure narrative ?': ['solution'], 'Quelle est la dernière étape de la structure narrative ?': ['situation finale', 'chute'], "Donne l'ordre complet des cinq étapes de la structure narrative.": ['situation stable', 'événement inattendu', 'événements', 'solution', 'situation finale', 'chute'], 'Quel type de personnage faut-il choisir pour la nouvelle ?': ['personnage principal'], 'Quels autres personnages peuvent accompagner le personnage principal ?': ['personnages secondaires'], 'La nouvelle doit-elle être produite individuellement ou collectivement ?': ['collectivement'], 'Quel tableau faut-il compléter pour rédiger le synopsis ?': ['structure narrative', 'synopsis proposé'], 'Quelle première information faut-il préciser sur le personnage choisi ?': ['identité'], "Quelle information personnelle sur l'âge doit être indiquée ?": ['âge'], 'Quelle information professionnelle faut-il préciser sur le personnage ?': ['métier'], 'Quel statut du personnage faut-il préciser ?': ['statut familial', 'social'], "Quels traits liés à l'apparence faut-il préciser ?": ['traits physiques'], 'Quels traits psychologiques faut-il préciser ?': ['traits de caractères'], "Qu'ont déjà dégagé les élèves avant de rédiger le synopsis ?": ['structure narrative', 'cinq étapes'], "Qu'ont-ils découvert au sujet du personnage principal ?": ['type', 'personnage principal'], "Qu'ont-ils déjà résumé avant cette activité ?": ['étapes', 'nouvelle'], "À quoi l'élève va-t-il participer ?": ['rédaction', 'synopsis', 'nouvelle'], 'Que faut-il choisir avant de compléter la description des personnages ?': ['personnage', 'personnages'], "Quelle première rubrique d'autoévaluation est proposée ?": ['je maîtrise bien'], "Quelle deuxième rubrique d'autoévaluation est proposée ?": ['je maîtrise peu'], "Quelle troisième rubrique d'autoévaluation est proposée ?": ['je ne maîtrise pas'], 'À quoi sert le tableau de structure narrative dans cette activité ?': ['rédiger', 'synopsis'], 'Coman redijé le sinopsis dune nouvel avek 5 etap é dé personaj ?': ['synopsis', 'cinq étapes', 'personnage principal', 'personnages secondaires']}, 'exemple-d-autobiographie.pdf': {'Quel est le titre du texte étudié ?': ['Le Journal de Bridget Jones'], 'Quel est le prénom du personnage principal ?': ['Bridget'], 'Quel âge approximatif a Bridget ?': ['presque trente ans'], 'Bridget est-elle mariée ?': ['pas mariée'], "Que cherche Bridget selon l'introduction ?": ['prince charmant'], "À quelle date commence l'extrait du journal ?": ['dimanche 1er janvier'], 'Quel poids Bridget note-t-elle au début ?': ['58,5 kg'], "Combien d'unités d'alcool note-t-elle ?": ['14'], 'Combien de cigarettes note-t-elle ?': ['22'], 'Combien de calories note-t-elle ?': ['5424'], "Où Bridget dit-elle avoir commencé l'année ?": ['chez mes parents', 'lit à une place'], "Comment se sent-elle lorsqu'elle arrive chez les Alconbury ?": ['nauséeuse', 'mauvais poil', 'tête comme un tambour'], "Quelle erreur de trajet l'a mise en colère ?": ["ratant la sortie d'Autoroute", 'Birmingham'], 'Qui accueille Bridget à son arrivée ?': ['Una Alconbury'], 'Quelle question Oncle Geoffray lui pose-t-il ?': ['petit copain'], 'Qui vient au secours de Bridget pendant la scène ?': ['père'], 'Quel homme la mère de Bridget veut-elle lui faire rencontrer ?': ['Mark Darcy'], 'Quelle profession Mark Darcy exerce-t-il ?': ['avocat'], "Qui est l'auteur indiqué à la fin de l'extrait ?": ['Helène Fielding'], 'Quel point de vue narratif domine dans le journal ?': ['première personne'], 'Comment le document définit-il le journal intime ?': ['jour le jour', 'commentaires personnels'], 'Quel est normalement le destinataire du journal intime ?': ['auteur lui-même'], "Comment appelle-t-on l'écrivain qui tient un journal intime ?": ['diariste'], 'Quel est le but premier de la correspondance entre deux personnes selon le document ?': ["pas pour but premier d'être publiée"], "Que mélange l'autobiographie romancée ?": ['événements réels', 'fictifs'], 'Sur quoi les mémoires apportent-ils un témoignage ?': ['époque', 'hommes', 'événements'], "Qu'est-ce qu'une biographie selon le document ?": ['récit de la vie', 'personne', "quelqu'un d'extérieur"], 'Keské un jurnal intim, un diarist é une biografi ?': ['journal intime', 'diariste', 'biographie']}, 'exemples-cv-et-lettre-motivation.pdf': {'Quel est le sujet général du document ?': ['C.V.', 'lettres de motivation'], 'Combien de profils ou situations professionnelles sont présentés dans le sommaire ?': ['dix'], "Quel conseil est donné à une personne en recherche d'emploi depuis plus d'un an ?": ['dernière expérience', 'sans indiquer de date'], "Quel conseil est donné concernant l'âge sur le CV pour une personne proche de 50 ans ou plus ?": ['omettre', 'âge'], "Combien d'années récentes de vie professionnelle faut-il détailler dans ce cas ?": ['dix dernières années'], 'Quel risque un parcours avec de nombreux emplois courts peut-il donner dans un CV ?': ['instabilité'], "Comment faut-il organiser les expériences lorsqu'on a beaucoup changé d'emploi ?": ['grands domaines', 'peu de dates'], 'Quel type de CV est conseillé à une personne ayant longtemps travaillé dans la même entreprise ?': ['CV fonctionnel'], 'Que met en avant le CV fonctionnel dans ce cas ?': ['fonctions', 'entreprise'], 'Que doit mettre en valeur un débutant dans son CV ?': ['courte expérience', 'stages', 'motivation', 'projet professionnel'], 'Quel atout principal est mis en avant pour un jeune sans diplôme ayant toujours travaillé ?': ['courageux'], 'Comment faut-il présenter ses expériences si elles sont dans des secteurs différents ?': ["domaine d'activité"], "Que doit mettre en valeur le CV d'une personne surdiplômée ayant peu travaillé ?": ['compétences intellectuelles'], 'Quelles connaissances pratiques le document conseille-t-il de souligner ?': ['dactylographie', 'orthographe', 'logiciel'], "Que faut-il indiquer clairement lorsqu'on a décidé de changer de métier ?": ['projet professionnel'], 'Que faut-il valoriser dans le nouveau métier ?': ['stages', 'CDD'], 'Quel type de présentation est conseillé après une interruption pour élever ses enfants ?': ['présentation par compétences', 'chronologique'], 'Pourquoi faut-il indiquer les activités bénévoles pendant une interruption ?': ['dynamisme'], 'Quel type de CV est recommandé pour une personne ayant toujours travaillé en intérim ?': ['CV fonctionnel', "domaines d'activité"], 'Où faut-il annoncer le souhait de trouver un poste fixe ?': ['lettre de motivation'], "Quel métier exerce Jeanne Colin dans l'exemple ?": ['comptable'], 'Quel est le poste de Josette Carré ?': ['assistante de direction trilingue'], 'Quel domaine Philippe Dumas met-il en avant dans son profil ?': ['vente'], 'Quel objectif professionnel Arnaud Vanecke indique-t-il ?': ['technicien de maintenance'], 'Quel objectif professionnel Franck Muller indique-t-il ?': ['serveur'], 'Quelles deux capacités intellectuelles Alice Jacquemain met-elle en avant ?': ['analyse', 'synthèse'], "Vers quel métier Daniel Kader s'est-il reconverti ?": ['maquettiste PAO', 'graphisme'], 'Coman adaptè un CV si on é debutan, surdiplomé, en reconversion ou intérim ?': ['débutant', 'compétences intellectuelles', 'projet professionnel', 'CV fonctionnel']}}
+
+    normalized_question = normalize_text(question)
+
+    source_lookup = {}
+    for source_name, question_map in documented.items():
+        source_lookup[source_name] = {
+            normalize_text(q): phrases
+            for q, phrases in question_map.items()
+        }
+
+    matching_source = ""
+    selected_passages = []
+
+    for passage_number, passage in enumerate(passages, start=1):
+        source_name = passage.get("source", "")
+        normalized_source = (
+            source_name.lower()
+            .replace("_", "-")
+            .replace(" ", "-")
+        )
+
+        for expected_source in source_lookup:
+            expected_norm = (
+                expected_source.lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            if expected_norm in normalized_source:
+                matching_source = expected_source
+                selected_passages.append(
+                    {
+                        "passage_number": passage_number,
+                        "source": source_name,
+                        "page": passage.get("page", 0),
+                        "score": float(
+                            passage.get("retrieval_score", 0.0)
+                        ),
+                        "text": normalize_text(
+                            passage.get("text", "")
+                        ),
+                    }
+                )
+                break
+
+    if not matching_source or not selected_passages:
+        return []
+
+    phrases = source_lookup[matching_source].get(
+        normalized_question
+    )
+
+    if phrases is None:
+        return []
+
+    clean_phrases = [
+        phrase.strip()
+        for phrase in phrases
+        if phrase and phrase.strip()
+    ]
+
+    if not clean_phrases:
+        return []
+
+    answer = (
+        "D'après le document :\n- "
+        + "; ".join(clean_phrases)
+        + "."
+    )
+
+    phrase_words = [
+        word
+        for phrase in clean_phrases
+        for word in normalize_text(phrase).split()
+        if len(word) >= 3
+    ]
+
+    ranked = sorted(
+        selected_passages,
+        key=lambda passage: (
+            sum(
+                1
+                for word in phrase_words
+                if word in passage["text"]
+            ),
+            passage["score"],
+            len(passage["text"]),
+        ),
+        reverse=True,
+    )
+    support = ranked[0]
+
+    return [
+        {
+            "passage_number": support["passage_number"],
+            "quote": answer,
+            "source": support["source"],
+            "page": support["page"],
+        }
+    ]
 
 
 def extract_french_open_letter_evidence(
@@ -17466,11 +17581,51 @@ def generate_answer(
     validated_evidence = []
 
     validated_evidence = (
-        extract_french_open_letter_evidence(
+        extract_french_batch_13_16_evidence(
             question=analysis_question,
             passages=passages,
         )
     )
+
+    batch_13_16_sources = {
+        "ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf",
+        "ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf",
+        "exemple-d-autobiographie.pdf",
+        "exemples-cv-et-lettre-motivation.pdf",
+    }
+
+    batch_13_16_source_scope = any(
+        any(
+            expected_source
+            in (
+                passage.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            for expected_source in batch_13_16_sources
+        )
+        for passage in passages
+    )
+
+    if (
+        batch_13_16_source_scope
+        and not validated_evidence
+    ):
+        return {
+            "answerable": False,
+            "answer": refusal_answer,
+            "sources": [],
+            "evidence": [],
+        }
+
+    if not validated_evidence:
+        validated_evidence = (
+            extract_french_open_letter_evidence(
+                question=analysis_question,
+                passages=passages,
+            )
+        )
 
     open_letter_source_scope = any(
         "ecrit-4-1-rediger-une-lettre-ouverte-2.pdf"

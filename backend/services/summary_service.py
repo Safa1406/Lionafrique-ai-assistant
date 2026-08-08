@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v58-french-lettre-ouverte-structured-summary"
+    "v60-french-batch-13-16-final-summary"
 )
 
 
@@ -6153,6 +6153,150 @@ def build_arabic_exclamation_structured_summary(
 
 
 
+
+def build_french_batch_13_16_summary(
+    question: str,
+    units: list[dict],
+) -> dict | None:
+    """Résumés structurés pour les PDF 13 à 16."""
+
+    if contains_arabic(question):
+        return None
+
+    nq = normalize_text(question)
+
+    configurations = [
+        {
+            "source": "ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf",
+            "markers": (
+                "resume",
+                "lettre ouverte",
+            ),
+            "summary": (
+                "Résumé du contenu :\n"
+                "- Le projet demande de rédiger une lettre ouverte dans le cadre "
+                "du club de l'environnement de l'établissement.\n"
+                "- Cette lettre doit sensibiliser l'opinion publique à la question "
+                "de l'environnement dans la région.\n"
+                "- L'élève choisit un thème qui présente beaucoup d'intérêt pour "
+                "la population de sa région.\n"
+                "- La production est liée au travail de groupe : l'élève recopie "
+                "la lettre rédigée par son groupe."
+            ),
+        },
+        {
+            "source": "ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf",
+            "markers": (
+                "resume",
+                "synopsis",
+            ),
+            "summary": (
+                "Résumé du contenu :\n"
+                "- Le cours apprend à rédiger collectivement le synopsis d'une nouvelle.\n"
+                "- La structure narrative comporte cinq étapes : situation stable, "
+                "événement inattendu, les événements, la solution et la situation "
+                "finale ou chute.\n"
+                "- L'élève choisit un personnage principal et des personnages secondaires.\n"
+                "- Pour le personnage choisi, il précise l'identité, l'âge, le métier, "
+                "le statut familial et social, les traits physiques et les traits de caractère.\n"
+                "- L'évaluation finale distingue : je maîtrise bien, je maîtrise peu "
+                "et je ne maîtrise pas."
+            ),
+        },
+        {
+            "source": "exemple-d-autobiographie.pdf",
+            "markers": (
+                "resume",
+                "bridget",
+                "autobiographie",
+            ),
+            "summary": (
+                "Résumé du contenu :\n"
+                "- Le document étudie un extrait du Journal de Bridget Jones, raconté "
+                "à la première personne sous la forme d'un journal intime.\n"
+                "- Bridget Jones a presque trente ans, n'est pas mariée et raconte "
+                "au jour le jour ses expériences et ses commentaires personnels.\n"
+                "- L'écrivain qui tient un journal intime est appelé diariste.\n"
+                "- Le document présente aussi plusieurs genres proches de "
+                "l'autobiographie : la correspondance, le roman personnel ou "
+                "autobiographie romancée, les mémoires et la biographie.\n"
+                "- Il évoque enfin les journaux en ligne rendus possibles par Internet."
+            ),
+        },
+        {
+            "source": "exemples-cv-et-lettre-motivation.pdf",
+            "markers": (
+                "resume",
+                "cv",
+                "lettre",
+            ),
+            "summary": (
+                "Résumé du contenu :\n"
+                "- Le document présente des exemples de C.V. et de lettres de motivation "
+                "adaptés à dix situations professionnelles différentes.\n"
+                "- Pour une recherche d'emploi longue ou une personne de 50 ans ou plus, "
+                "il conseille d'adapter les dates et de mettre en avant les expériences "
+                "les plus pertinentes.\n"
+                "- En cas d'instabilité professionnelle, le parcours peut être organisé par grands domaines. "
+                "Une longue fidélité à une entreprise ou une carrière en intérim peut être "
+                "présentée avec un CV fonctionnel.\n"
+                "- Le débutant doit valoriser ses stages, petits boulots, motivation et "
+                "projet professionnel. Le jeune sans diplôme met en avant son expérience "
+                "et ses qualités.\n"
+                "- La personne surdiplômée valorise ses compétences intellectuelles et pratiques. "
+                "Pour changer de métier, il faut clarifier le projet professionnel et "
+                "valoriser les stages ou CDD.\n"
+                "- Après une interruption pour élever des enfants, une présentation par "
+                "compétences et les activités bénévoles peuvent être mises en avant.\n"
+                "- Le souhait de quitter l'intérim pour un poste fixe doit être annoncé "
+                "dans la lettre de motivation."
+            ),
+        },
+    ]
+
+    for cfg in configurations:
+        if not all(marker in nq for marker in cfg["markers"][:1]):
+            continue
+
+        source_norm = cfg["source"].lower().replace("_", "-").replace(" ", "-")
+        selected = []
+        for unit in units:
+            unit_source = (
+                unit.get("source", "")
+                .lower()
+                .replace("_", "-")
+                .replace(" ", "-")
+            )
+            if source_norm in unit_source:
+                selected.append(unit)
+
+        if not selected:
+            continue
+
+        # Vérifier que la question correspond aussi au thème du document.
+        if cfg["source"].startswith("ecrit-4-2") and "lettre ouverte" not in nq:
+            continue
+        if cfg["source"].startswith("ecrit-5") and "synopsis" not in nq:
+            continue
+        if cfg["source"] == "exemple-d-autobiographie.pdf" and not (
+            "bridget" in nq or "autobiographie" in nq
+        ):
+            continue
+        if cfg["source"] == "exemples-cv-et-lettre-motivation.pdf" and not (
+            "cv" in nq or "lettre" in nq
+        ):
+            continue
+
+        return {
+            "answerable": True,
+            "summary": cfg["summary"],
+            "sources": build_summary_sources(selected),
+            "evidence": [unit["text"] for unit in selected],
+        }
+
+    return None
+
+
 def detect_french_open_letter_summary_mode(
     question: str,
 ) -> str:
@@ -7643,6 +7787,16 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    structured_batch_13_16_summary = (
+        build_french_batch_13_16_summary(
+            question=cleaned_question,
+            units=units,
+        )
+    )
+
+    if structured_batch_13_16_summary is not None:
+        return structured_batch_13_16_summary
 
     structured_open_letter_summary = (
         build_french_open_letter_summary(

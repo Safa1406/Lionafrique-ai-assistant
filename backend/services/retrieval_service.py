@@ -15,7 +15,7 @@ from services.vector_store_service import (
 DEFAULT_MAX_ALLOWED_DISTANCE = 0.64
 RELAXED_MAX_ALLOWED_DISTANCE = 0.90
 
-RETRIEVAL_SERVICE_VERSION = "v26-french-lettre-ouverte-full-coverage"
+RETRIEVAL_SERVICE_VERSION = "v27-french-batch-13-16-full-coverage"
 
 
 INTENT_MARKERS = {
@@ -557,6 +557,40 @@ def retrieve_relevant_passages(
         if source
         else ""
     )
+
+
+    batch_13_16_source_names = {
+        "ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf",
+        "ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf",
+        "exemple-d-autobiographie.pdf",
+        "exemples-cv-et-lettre-motivation.pdf",
+    }
+
+    asks_french_batch_13_16_lesson = (
+        not question_is_arabic
+        and any(
+            source_name in normalized_source_name
+            for source_name in batch_13_16_source_names
+        )
+    )
+
+    # Ces documents vont d'une page à 31 pages.
+    # Avec un filtre de source exact, on élargit volontairement
+    # le nombre de résultats pour éviter que des sections éloignées
+    # du document soient éliminées trop tôt.
+    if asks_french_batch_13_16_lesson:
+        if (
+            "exemples-cv-et-lettre-motivation.pdf"
+            in normalized_source_name
+        ):
+            number_of_results = max(number_of_results, 60)
+        elif (
+            "exemple-d-autobiographie.pdf"
+            in normalized_source_name
+        ):
+            number_of_results = max(number_of_results, 20)
+        else:
+            number_of_results = max(number_of_results, 12)
 
 
     asks_french_open_letter_lesson = (
@@ -1116,7 +1150,8 @@ def retrieve_relevant_passages(
         )
 
     if (
-        asks_french_open_letter_lesson
+        asks_french_batch_13_16_lesson
+        or asks_french_open_letter_lesson
         or asks_french_debate_participant_invitations_lesson
         or asks_french_beneficiary_invitation_lesson
         or asks_french_authorization_letter_lesson
@@ -1230,6 +1265,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_batch_13_16_lesson
             and not asks_french_open_letter_lesson
             and not asks_french_debate_participant_invitations_lesson
             and not asks_french_beneficiary_invitation_lesson
@@ -1251,6 +1287,7 @@ def retrieve_relevant_passages(
             and not asks_kalim_allah_lesson
             and not asks_school_of_life_lesson
             and not asks_french_authorization_letter_lesson
+            and not asks_french_batch_13_16_lesson
             and not asks_french_open_letter_lesson
             and not asks_french_debate_participant_invitations_lesson
             and not asks_french_beneficiary_invitation_lesson

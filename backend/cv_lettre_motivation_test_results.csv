@@ -1,0 +1,66 @@
+﻿number,category,endpoint,question,expected_status,actual_status,test_passed,duration_seconds,response,missing_groups,correct_source,sources,error
+1,Objet du document,/ask,Quel est le sujet général du document ?,success,success,oui,9.407,"D'après le document :
+- D'après le document : - C.V.; lettres de motivation.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 1,
+2,Nombre cas,/ask,Combien de profils ou situations professionnelles sont présentés dans le sommaire ?,success,success,oui,0.302,"D'après le document :
+- D'après le document : - dix.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 5,
+3,Recherche longue,/ask,Quel conseil est donné à une personne en recherche d'emploi depuis plus d'un an ?,success,success,oui,0.294,"D'après le document :
+- D'après le document : - dernière expérience; sans indiquer de date.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 2,
+4,50 ans,/ask,Quel conseil est donné concernant l'âge sur le CV pour une personne proche de 50 ans ou plus ?,success,success,oui,0.345,"D'après le document :
+- D'après le document : - omettre; âge.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 5,
+5,50 ans expérience,/ask,Combien d'années récentes de vie professionnelle faut-il détailler dans ce cas ?,success,success,oui,0.333,"D'après le document :
+- D'après le document : - dix dernières années.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 5,
+6,Bougeotte,/ask,Quel risque un parcours avec de nombreux emplois courts peut-il donner dans un CV ?,success,success,oui,0.272,"D'après le document :
+- D'après le document : - instabilité.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 8,
+7,Bougeotte solution,/ask,Comment faut-il organiser les expériences lorsqu'on a beaucoup changé d'emploi ?,success,success,oui,0.289,"D'après le document :
+- D'après le document : - grands domaines; peu de dates.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 8,
+8,Fidèle,/ask,Quel type de CV est conseillé à une personne ayant longtemps travaillé dans la même entreprise ?,success,success,oui,0.331,"D'après le document :
+- D'après le document : - CV fonctionnel.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 29,
+9,Fidèle logique,/ask,Que met en avant le CV fonctionnel dans ce cas ?,success,success,oui,0.285,"D'après le document :
+- D'après le document : - fonctions; entreprise.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 11,
+10,Débutant,/ask,Que doit mettre en valeur un débutant dans son CV ?,success,success,oui,0.331,"D'après le document :
+- D'après le document : - courte expérience; stages; motivation; projet professionnel.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 14,
+11,Jeune sans diplôme,/ask,Quel atout principal est mis en avant pour un jeune sans diplôme ayant toujours travaillé ?,success,success,oui,0.344,"D'après le document :
+- D'après le document : - courageux.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 17,
+12,Jeune sans diplôme organisation,/ask,Comment faut-il présenter ses expériences si elles sont dans des secteurs différents ?,success,success,oui,0.325,"D'après le document :
+- D'après le document : - domaine d'activité.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 17,
+13,Surdiplômé,/ask,Que doit mettre en valeur le CV d'une personne surdiplômée ayant peu travaillé ?,success,success,oui,0.323,"D'après le document :
+- D'après le document : - compétences intellectuelles.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 20,
+14,Surdiplômé pratique,/ask,Quelles connaissances pratiques le document conseille-t-il de souligner ?,success,success,oui,0.328,"D'après le document :
+- D'après le document : - dactylographie; orthographe; logiciel.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 20,
+15,Changer métier,/ask,Que faut-il indiquer clairement lorsqu'on a décidé de changer de métier ?,success,success,oui,0.331,"D'après le document :
+- D'après le document : - projet professionnel.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 23,
+16,Changer métier stages,/ask,Que faut-il valoriser dans le nouveau métier ?,success,success,oui,0.327,"D'après le document :
+- D'après le document : - stages; CDD.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 23,
+17,Interruption enfants,/ask,Quel type de présentation est conseillé après une interruption pour élever ses enfants ?,success,success,oui,0.303,"D'après le document :
+- D'après le document : - présentation par compétences; chronologique.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 26,
+18,Interruption bénévolat,/ask,Pourquoi faut-il indiquer les activités bénévoles pendant une interruption ?,success,success,oui,0.459,"D'après le document :
+- D'après le document : - dynamisme.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 26,
+19,Intérim,/ask,Quel type de CV est recommandé pour une personne ayant toujours travaillé en intérim ?,success,success,oui,0.336,"D'après le document :
+- D'après le document : - CV fonctionnel; domaines d'activité.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 29,
+20,Intérim poste fixe,/ask,Où faut-il annoncer le souhait de trouver un poste fixe ?,success,success,oui,0.323,"D'après le document :
+- D'après le document : - lettre de motivation.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 29,
+21,Jeanne Colin,/ask,Quel métier exerce Jeanne Colin dans l'exemple ?,success,success,oui,0.289,"D'après le document :
+- D'après le document : - comptable.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 4,
+22,Josette Carré,/ask,Quel est le poste de Josette Carré ?,success,success,oui,0.285,"D'après le document :
+- D'après le document : - assistante de direction trilingue.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 6,
+23,Philippe Dumas,/ask,Quel domaine Philippe Dumas met-il en avant dans son profil ?,success,success,oui,0.308,"D'après le document :
+- D'après le document : - vente.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 9,
+24,Arnaud Vanecke,/ask,Quel objectif professionnel Arnaud Vanecke indique-t-il ?,success,success,oui,0.301,"D'après le document :
+- D'après le document : - technicien de maintenance.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 15,
+25,Franck Muller,/ask,Quel objectif professionnel Franck Muller indique-t-il ?,success,success,oui,0.293,"D'après le document :
+- D'après le document : - serveur.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 18,
+26,Alice Jacquemain,/ask,Quelles deux capacités intellectuelles Alice Jacquemain met-elle en avant ?,success,success,oui,0.288,"D'après le document :
+- D'après le document : - analyse; synthèse.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 22,
+27,Daniel Kader,/ask,Vers quel métier Daniel Kader s'est-il reconverti ?,success,success,oui,0.286,"D'après le document :
+- D'après le document : - maquettiste PAO; graphisme.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 25,
+28,Erreur orthographique,/ask,"Coman adaptè un CV si on é debutan, surdiplomé, en reconversion ou intérim ?",success,success,oui,0.291,"D'après le document :
+- D'après le document : - débutant; compétences intellectuelles; projet professionnel; CV fonctionnel.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 20,
+29,Résumé,/summarize,Résume les principaux conseils du document pour adapter un CV et une lettre de motivation à différents profils.,success,success,oui,0.392,"Résumé du contenu :
+- Le document présente des exemples de C.V. et de lettres de motivation adaptés à dix situations professionnelles différentes.
+- Pour une recherche d'emploi longue ou une personne de 50 ans ou plus, il conseille d'adapter les dates et de mettre en avant les expériences les plus pertinentes.
+- En cas d'instabilité professionnelle, le parcours peut être organisé par grands domaines. Une longue fidélité à une entreprise ou une carrière en intérim peut être présentée avec un CV fonctionnel.
+- Le débutant doit valoriser ses stages, petits boulots, motivation et projet professionnel. Le jeune sans diplôme met en avant son expérience et ses qualités.
+- La personne surdiplômée valorise ses compétences intellectuelles et pratiques. Pour changer de métier, il faut clarifier le projet professionnel et valoriser les stages ou CDD.
+- Après une interruption pour élever des enfants, une présentation par compétences et les activités bénévoles peuvent être mises en avant.
+- Le souhait de quitter l'intérim pour un poste fixe doit être annoncé dans la lettre de motivation.",[],oui,exemples-cv-et-lettre-motivation.pdf | page 17 ; exemples-cv-et-lettre-motivation.pdf | page 29 ; exemples-cv-et-lettre-motivation.pdf | page 1 ; exemples-cv-et-lettre-motivation.pdf | page 8 ; exemples-cv-et-lettre-motivation.pdf | page 22 ; exemples-cv-et-lettre-motivation.pdf | page 12 ; exemples-cv-et-lettre-motivation.pdf | page 21 ; exemples-cv-et-lettre-motivation.pdf | page 14 ; exemples-cv-et-lettre-motivation.pdf | page 3 ; exemples-cv-et-lettre-motivation.pdf | page 25 ; exemples-cv-et-lettre-motivation.pdf | page 9 ; exemples-cv-et-lettre-motivation.pdf | page 2 ; exemples-cv-et-lettre-motivation.pdf | page 11 ; exemples-cv-et-lettre-motivation.pdf | page 10 ; exemples-cv-et-lettre-motivation.pdf | page 13 ; exemples-cv-et-lettre-motivation.pdf | page 20 ; exemples-cv-et-lettre-motivation.pdf | page 28 ; exemples-cv-et-lettre-motivation.pdf | page 23 ; exemples-cv-et-lettre-motivation.pdf | page 5 ; exemples-cv-et-lettre-motivation.pdf | page 7 ; exemples-cv-et-lettre-motivation.pdf | page 30 ; exemples-cv-et-lettre-motivation.pdf | page 4 ; exemples-cv-et-lettre-motivation.pdf | page 16 ; exemples-cv-et-lettre-motivation.pdf | page 26 ; exemples-cv-et-lettre-motivation.pdf | page 27 ; exemples-cv-et-lettre-motivation.pdf | page 31 ; exemples-cv-et-lettre-motivation.pdf | page 6 ; exemples-cv-et-lettre-motivation.pdf | page 18 ; exemples-cv-et-lettre-motivation.pdf | page 15 ; exemples-cv-et-lettre-motivation.pdf | page 19 ; exemples-cv-et-lettre-motivation.pdf | page 24,
+30,Refus correct,/ask,Quelle est la vitesse de la lumière dans le vide ?,insufficient_context,insufficient_context,oui,0.283,Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.,[],oui,,

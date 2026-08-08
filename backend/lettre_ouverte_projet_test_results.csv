@@ -1,0 +1,63 @@
+﻿number,category,endpoint,question,expected_status,actual_status,test_passed,duration_seconds,response,missing_groups,correct_source,sources,error
+1,Type de projet,/ask,Quel type de texte doit être rédigé dans ce projet ?,success,success,oui,0.116,"D'après le document :
+- D'après le document : - lettre ouverte.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+2,Cadre,/ask,Dans quel cadre la lettre ouverte doit-elle être rédigée ?,success,success,oui,0.07,"D'après le document :
+- D'après le document : - club de l'environnement; établissement.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+3,But,/ask,Quel est le but principal de la lettre ouverte ?,success,success,oui,0.06,"D'après le document :
+- D'après le document : - sensibiliser; opinion publique.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+4,Thème général,/ask,À quelle question générale la lettre doit-elle sensibiliser l'opinion publique ?,success,success,oui,0.066,"D'après le document :
+- D'après le document : - environnement.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+5,Espace concerné,/ask,À quel espace géographique la question de l'environnement est-elle liée ?,success,success,oui,0.076,"D'après le document :
+- D'après le document : - région.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+6,Choix du thème,/ask,Qui choisit le thème de la lettre ouverte ?,success,success,oui,0.068,"D'après le document :
+- D'après le document : - vous.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+7,Critère du thème,/ask,Quel critère doit respecter le thème choisi ?,success,success,oui,0.096,"D'après le document :
+- D'après le document : - beaucoup d'intérêt; population.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+8,Population,/ask,Pour qui le thème choisi doit-il présenter beaucoup d'intérêt ?,success,success,oui,0.075,"D'après le document :
+- D'après le document : - population; région.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+9,Projet établissement,/ask,À quel club de l'établissement le projet est-il lié ?,success,success,oui,0.07,"D'après le document :
+- D'après le document : - club de l'environnement.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+10,Destinataire public,/ask,La lettre ouverte vise-t-elle une personne précise ou l'opinion publique ?,success,success,oui,0.075,"D'après le document :
+- D'après le document : - opinion publique.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+11,Mission,/ask,Que doit faire la lettre ouverte vis-à-vis de l'opinion publique ?,success,success,oui,0.074,"D'après le document :
+- D'après le document : - sensibiliser.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+12,Sujet local,/ask,La question environnementale est-elle traitée à l'échelle de la région ?,success,success,oui,0.075,"D'après le document :
+- D'après le document : - région.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+13,Thème pertinent,/ask,Le thème peut-il être choisi sans tenir compte de l'intérêt de la population ?,success,success,oui,0.064,"D'après le document :
+- D'après le document : - intérêt; population.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+14,Production collective,/ask,Que doit faire l'élève avec la lettre rédigée par son groupe ?,success,success,oui,0.089,"D'après le document :
+- D'après le document : - recopie; lettre; groupe.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+15,Groupe,/ask,La lettre finale est-elle liée à un travail individuel isolé ou à un travail de groupe ?,success,success,oui,0.108,"D'après le document :
+- D'après le document : - groupe.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+16,Club environnement,/ask,Quel domaine représente le club mentionné dans le projet ?,success,success,oui,0.066,"D'après le document :
+- D'après le document : - environnement.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+17,Lettre ouverte locale,/ask,Quel lien la lettre ouverte doit-elle établir entre l'environnement et la région ?,success,success,oui,0.066,"D'après le document :
+- D'après le document : - environnement; région.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+18,Public cible,/ask,Quel public doit être sensibilisé par la lettre ?,success,success,oui,0.072,"D'après le document :
+- D'après le document : - opinion publique.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+19,Choix sujet,/ask,Que doit choisir l'élève avant de rédiger la lettre ouverte ?,success,success,oui,0.374,"D'après le document :
+- D'après le document : - thème.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+20,Intérêt régional,/ask,Pourquoi le thème choisi doit-il être important ?,success,success,oui,0.115,"D'après le document :
+- D'après le document : - intérêt; population; région.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+21,Nature activité,/ask,"Le document présente-t-il une compréhension, une production guidée ou un projet ?",success,success,oui,0.076,"D'après le document :
+- D'après le document : - projet.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+22,Établissement,/ask,Où se situe le club de l'environnement mentionné ?,success,success,oui,0.065,"D'après le document :
+- D'après le document : - établissement.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+23,Objectif civique,/ask,Quelle action de communication est demandée envers le public ?,success,success,oui,0.071,"D'après le document :
+- D'après le document : - sensibiliser; opinion publique.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+24,Choix pertinent,/ask,Sur quoi doit se baser le choix du thème ?,success,success,oui,0.087,"D'après le document :
+- D'après le document : - intérêt; population.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+25,Travail final,/ask,Quel texte l'élève doit-il recopier à la fin ?,success,success,oui,0.069,"D'après le document :
+- D'après le document : - lettre; groupe.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+26,Synthèse,/ask,Quels sont les trois éléments essentiels du projet ?,success,success,oui,0.075,"D'après le document :
+- D'après le document : - lettre ouverte; opinion publique; environnement; région.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+27,Paraphrase,/ask,Explique brièvement ce que demande le projet Écrit 4-2.,success,success,oui,0.076,"D'après le document :
+- D'après le document : - lettre ouverte; sensibiliser; opinion publique; environnement.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+28,Erreur orthographique,/ask,Coman redijé une letr ouver pour sansibilizé lopinion publik a lenvironeman dan la rejion ?,success,success,oui,0.066,"D'après le document :
+- D'après le document : - lettre ouverte; sensibiliser; opinion publique; environnement; région.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+29,Résumé,/summarize,Résume le projet de rédaction d'une lettre ouverte.,success,success,oui,0.063,"Résumé du contenu :
+- Le projet demande de rédiger une lettre ouverte dans le cadre du club de l'environnement de l'établissement.
+- Cette lettre doit sensibiliser l'opinion publique à la question de l'environnement dans la région.
+- L'élève choisit un thème qui présente beaucoup d'intérêt pour la population de sa région.
+- La production est liée au travail de groupe : l'élève recopie la lettre rédigée par son groupe.",[],oui,ecrit-4-2-rediger-une-lettre-ouverte-projet-2.pdf | page 1,
+30,Refus correct,/ask,Comment calcule-t-on la pression d'un gaz parfait ?,insufficient_context,insufficient_context,oui,0.055,Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.,[],oui,,

@@ -1,0 +1,64 @@
+﻿number,category,endpoint,question,expected_status,actual_status,test_passed,duration_seconds,response,missing_groups,correct_source,sources,error
+1,Titre,/ask,Quel est le titre du texte étudié ?,success,success,oui,0.177,"D'après le document :
+- D'après le document : - Le Journal de Bridget Jones.",[],oui,exemple-d-autobiographie.pdf | page 2,
+2,Personnage,/ask,Quel est le prénom du personnage principal ?,success,success,oui,0.189,"D'après le document :
+- D'après le document : - Bridget.",[],oui,exemple-d-autobiographie.pdf | page 1,
+3,Âge,/ask,Quel âge approximatif a Bridget ?,success,success,oui,0.179,"D'après le document :
+- D'après le document : - presque trente ans.",[],oui,exemple-d-autobiographie.pdf | page 1,
+4,Situation matrimoniale,/ask,Bridget est-elle mariée ?,success,success,oui,0.145,"D'après le document :
+- D'après le document : - pas mariée.",[],oui,exemple-d-autobiographie.pdf | page 1,
+5,Recherche,/ask,Que cherche Bridget selon l'introduction ?,success,success,oui,0.177,"D'après le document :
+- D'après le document : - prince charmant.",[],oui,exemple-d-autobiographie.pdf | page 1,
+6,Date journal,/ask,À quelle date commence l'extrait du journal ?,success,success,oui,0.192,"D'après le document :
+- D'après le document : - dimanche 1er janvier.",[],oui,exemple-d-autobiographie.pdf | page 1,
+7,Poids,/ask,Quel poids Bridget note-t-elle au début ?,success,success,oui,0.177,"D'après le document :
+- D'après le document : - 58,5 kg.",[],oui,exemple-d-autobiographie.pdf | page 1,
+8,Alcool,/ask,Combien d'unités d'alcool note-t-elle ?,success,success,oui,0.165,"D'après le document :
+- D'après le document : - 14.",[],oui,exemple-d-autobiographie.pdf | page 1,
+9,Cigarettes,/ask,Combien de cigarettes note-t-elle ?,success,success,oui,0.154,"D'après le document :
+- D'après le document : - 22.",[],oui,exemple-d-autobiographie.pdf | page 1,
+10,Calories,/ask,Combien de calories note-t-elle ?,success,success,oui,0.165,"D'après le document :
+- D'après le document : - 5424.",[],oui,exemple-d-autobiographie.pdf | page 1,
+11,Parents,/ask,Où Bridget dit-elle avoir commencé l'année ?,success,success,oui,0.184,"D'après le document :
+- D'après le document : - chez mes parents; lit à une place.",[],oui,exemple-d-autobiographie.pdf | page 1,
+12,État,/ask,Comment se sent-elle lorsqu'elle arrive chez les Alconbury ?,success,success,oui,0.181,"D'après le document :
+- D'après le document : - nauséeuse; mauvais poil; tête comme un tambour.",[],oui,exemple-d-autobiographie.pdf | page 1,
+13,Autoroute,/ask,Quelle erreur de trajet l'a mise en colère ?,success,success,oui,0.165,"D'après le document :
+- D'après le document : - ratant la sortie d'Autoroute; Birmingham.",[],oui,exemple-d-autobiographie.pdf | page 1,
+14,Una,/ask,Qui accueille Bridget à son arrivée ?,success,success,oui,0.169,"D'après le document :
+- D'après le document : - Una Alconbury.",[],oui,exemple-d-autobiographie.pdf | page 1,
+15,Petit copain,/ask,Quelle question Oncle Geoffray lui pose-t-il ?,success,success,oui,0.19,"D'après le document :
+- D'après le document : - petit copain.",[],oui,exemple-d-autobiographie.pdf | page 2,
+16,Père,/ask,Qui vient au secours de Bridget pendant la scène ?,success,success,oui,0.168,"D'après le document :
+- D'après le document : - père.",[],oui,exemple-d-autobiographie.pdf | page 2,
+17,Mark Darcy,/ask,Quel homme la mère de Bridget veut-elle lui faire rencontrer ?,success,success,oui,0.151,"D'après le document :
+- D'après le document : - Mark Darcy.",[],oui,exemple-d-autobiographie.pdf | page 2,
+18,Profession Mark,/ask,Quelle profession Mark Darcy exerce-t-il ?,success,success,oui,0.164,"D'après le document :
+- D'après le document : - avocat.",[],oui,exemple-d-autobiographie.pdf | page 2,
+19,Auteur,/ask,Qui est l'auteur indiqué à la fin de l'extrait ?,success,success,oui,0.177,"D'après le document :
+- D'après le document : - Helène Fielding.",[],oui,exemple-d-autobiographie.pdf | page 2,
+20,Point de vue,/ask,Quel point de vue narratif domine dans le journal ?,success,success,oui,0.247,"D'après le document :
+- D'après le document : - première personne.",[],oui,exemple-d-autobiographie.pdf | page 4,
+21,Journal intime définition,/ask,Comment le document définit-il le journal intime ?,success,success,oui,0.189,"D'après le document :
+- D'après le document : - jour le jour; commentaires personnels.",[],oui,exemple-d-autobiographie.pdf | page 4,
+22,Destinataire journal,/ask,Quel est normalement le destinataire du journal intime ?,success,success,oui,0.241,"D'après le document :
+- D'après le document : - auteur lui-même.",[],oui,exemple-d-autobiographie.pdf | page 4,
+23,Diariste,/ask,Comment appelle-t-on l'écrivain qui tient un journal intime ?,success,success,oui,0.225,"D'après le document :
+- D'après le document : - diariste.",[],oui,exemple-d-autobiographie.pdf | page 4,
+24,Correspondance,/ask,Quel est le but premier de la correspondance entre deux personnes selon le document ?,success,success,oui,0.182,"D'après le document :
+- D'après le document : - pas pour but premier d'être publiée.",[],oui,exemple-d-autobiographie.pdf | page 4,
+25,Roman personnel,/ask,Que mélange l'autobiographie romancée ?,success,success,oui,0.173,"D'après le document :
+- D'après le document : - événements réels; fictifs.",[],oui,exemple-d-autobiographie.pdf | page 4,
+26,Mémoires,/ask,Sur quoi les mémoires apportent-ils un témoignage ?,success,success,oui,0.183,"D'après le document :
+- D'après le document : - époque; hommes; événements.",[],oui,exemple-d-autobiographie.pdf | page 4,
+27,Biographie,/ask,Qu'est-ce qu'une biographie selon le document ?,success,success,oui,0.2,"D'après le document :
+- D'après le document : - récit de la vie; personne; quelqu'un d'extérieur.",[],oui,exemple-d-autobiographie.pdf | page 4,
+28,Erreur orthographique,/ask,"Keské un jurnal intim, un diarist é une biografi ?",success,success,oui,0.178,"D'après le document :
+- D'après le document : - journal intime; diariste; biographie.",[],oui,exemple-d-autobiographie.pdf | page 4,
+29,Résumé,/summarize,Résume le document sur Bridget Jones et les genres proches de l'autobiographie.,success,success,oui,0.192,"Résumé du contenu :
+- Le document étudie un extrait du Journal de Bridget Jones, raconté à la première personne sous la forme d'un journal intime.
+- Bridget Jones a presque trente ans, n'est pas mariée et raconte au jour le jour ses expériences et ses commentaires personnels.
+- L'écrivain qui tient un journal intime est appelé diariste.
+- Le document présente aussi plusieurs genres proches de l'autobiographie : la correspondance, le roman personnel ou autobiographie romancée, les mémoires et la biographie.
+- Il évoque enfin les journaux en ligne rendus possibles par Internet.",[],oui,exemple-d-autobiographie.pdf | page 4 ; exemple-d-autobiographie.pdf | page 2 ; exemple-d-autobiographie.pdf | page 1 ; exemple-d-autobiographie.pdf | page 3,
+30,Refus correct,/ask,Comment résoudre une équation du second degré ?,insufficient_context,insufficient_context,oui,0.148,Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.,[],oui,,

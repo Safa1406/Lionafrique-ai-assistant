@@ -1,0 +1,64 @@
+﻿number,category,endpoint,question,expected_status,actual_status,test_passed,duration_seconds,response,missing_groups,correct_source,sources,error
+1,Objectif,/ask,Quel texte les élèves doivent-ils rédiger collectivement ?,success,success,oui,0.112,"D'après le document :
+- D'après le document : - synopsis; nouvelle.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+2,Structure,/ask,Combien d'étapes comporte la structure narrative rappelée dans le cours ?,success,success,oui,0.084,"D'après le document :
+- D'après le document : - cinq étapes.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+3,Étape 1,/ask,Quelle est la première étape de la structure narrative ?,success,success,oui,0.08,"D'après le document :
+- D'après le document : - situation stable.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+4,Étape 2,/ask,Quelle est la deuxième étape de la structure narrative ?,success,success,oui,0.089,"D'après le document :
+- D'après le document : - événement inattendu.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+5,Étape 3,/ask,Quelle est la troisième étape de la structure narrative ?,success,success,oui,0.086,"D'après le document :
+- D'après le document : - les événements.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+6,Étape 4,/ask,Quelle est la quatrième étape de la structure narrative ?,success,success,oui,0.094,"D'après le document :
+- D'après le document : - solution.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+7,Étape 5,/ask,Quelle est la dernière étape de la structure narrative ?,success,success,oui,0.079,"D'après le document :
+- D'après le document : - situation finale; chute.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+8,Ordre narratif,/ask,Donne l'ordre complet des cinq étapes de la structure narrative.,success,success,oui,0.101,"D'après le document :
+- D'après le document : - situation stable; événement inattendu; événements; solution; situation finale; chute.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+9,Personnage principal,/ask,Quel type de personnage faut-il choisir pour la nouvelle ?,success,success,oui,0.108,"D'après le document :
+- D'après le document : - personnage principal.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+10,Personnages secondaires,/ask,Quels autres personnages peuvent accompagner le personnage principal ?,success,success,oui,0.075,"D'après le document :
+- D'après le document : - personnages secondaires.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+11,Production collective,/ask,La nouvelle doit-elle être produite individuellement ou collectivement ?,success,success,oui,0.091,"D'après le document :
+- D'après le document : - collectivement.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+12,Tableau,/ask,Quel tableau faut-il compléter pour rédiger le synopsis ?,success,success,oui,0.083,"D'après le document :
+- D'après le document : - structure narrative; synopsis proposé.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+13,Identité,/ask,Quelle première information faut-il préciser sur le personnage choisi ?,success,success,oui,0.078,"D'après le document :
+- D'après le document : - identité.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+14,Âge,/ask,Quelle information personnelle sur l'âge doit être indiquée ?,success,success,oui,0.091,"D'après le document :
+- D'après le document : - âge.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+15,Métier,/ask,Quelle information professionnelle faut-il préciser sur le personnage ?,success,success,oui,0.099,"D'après le document :
+- D'après le document : - métier.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+16,Statut,/ask,Quel statut du personnage faut-il préciser ?,success,success,oui,0.082,"D'après le document :
+- D'après le document : - statut familial; social.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+17,Traits physiques,/ask,Quels traits liés à l'apparence faut-il préciser ?,success,success,oui,0.091,"D'après le document :
+- D'après le document : - traits physiques.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+18,Caractère,/ask,Quels traits psychologiques faut-il préciser ?,success,success,oui,0.081,"D'après le document :
+- D'après le document : - traits de caractères.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+19,Préparation,/ask,Qu'ont déjà dégagé les élèves avant de rédiger le synopsis ?,success,success,oui,0.098,"D'après le document :
+- D'après le document : - structure narrative; cinq étapes.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+20,Personnage découvert,/ask,Qu'ont-ils découvert au sujet du personnage principal ?,success,success,oui,0.082,"D'après le document :
+- D'après le document : - type; personnage principal.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+21,Résumé préalable,/ask,Qu'ont-ils déjà résumé avant cette activité ?,success,success,oui,0.076,"D'après le document :
+- D'après le document : - étapes; nouvelle.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+22,Participation,/ask,À quoi l'élève va-t-il participer ?,success,success,oui,0.088,"D'après le document :
+- D'après le document : - rédaction; synopsis; nouvelle.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+23,Choix personnages,/ask,Que faut-il choisir avant de compléter la description des personnages ?,success,success,oui,0.074,"D'après le document :
+- D'après le document : - personnage; personnages.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+24,Évaluation 1,/ask,Quelle première rubrique d'autoévaluation est proposée ?,success,success,oui,0.072,"D'après le document :
+- D'après le document : - je maîtrise bien.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+25,Évaluation 2,/ask,Quelle deuxième rubrique d'autoévaluation est proposée ?,success,success,oui,0.073,"D'après le document :
+- D'après le document : - je maîtrise peu.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+26,Évaluation 3,/ask,Quelle troisième rubrique d'autoévaluation est proposée ?,success,success,oui,0.08,"D'après le document :
+- D'après le document : - je ne maîtrise pas.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+27,Synopsis définition pratique,/ask,À quoi sert le tableau de structure narrative dans cette activité ?,success,success,oui,0.068,"D'après le document :
+- D'après le document : - rédiger; synopsis.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+28,Erreur orthographique,/ask,Coman redijé le sinopsis dune nouvel avek 5 etap é dé personaj ?,success,success,oui,0.072,"D'après le document :
+- D'après le document : - synopsis; cinq étapes; personnage principal; personnages secondaires.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1,
+29,Résumé,/summarize,Résume le cours sur la rédaction du synopsis d'une nouvelle.,success,success,oui,0.102,"Résumé du contenu :
+- Le cours apprend à rédiger collectivement le synopsis d'une nouvelle.
+- La structure narrative comporte cinq étapes : situation stable, événement inattendu, les événements, la solution et la situation finale ou chute.
+- L'élève choisit un personnage principal et des personnages secondaires.
+- Pour le personnage choisi, il précise l'identité, l'âge, le métier, le statut familial et social, les traits physiques et les traits de caractère.
+- L'évaluation finale distingue : je maîtrise bien, je maîtrise peu et je ne maîtrise pas.",[],oui,ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 1 ; ecrit-5-rediger-le-synopsis-d-une-nouvelle-1.pdf | page 2,
+30,Refus correct,/ask,Quelle est la formule chimique du méthane ?,insufficient_context,insufficient_context,oui,0.089,Les documents disponibles ne contiennent pas une réponse suffisamment précise à cette question.,[],oui,,
