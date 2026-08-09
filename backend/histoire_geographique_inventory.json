@@ -1,0 +1,326 @@
+[
+  {
+    "lesson_number": 1,
+    "source": "alathad-alaorbi-bin-alandmaj-oalmnafsa.pdf",
+    "sha256": "8fef2a4cfec159a722d7cdcae5a50d59748c74af0791dd51b70df04e84a8c2f3",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 2,
+    "source": "alathad-alaorbi-imkaniath-omkanth-alaqtsadia-fi-alaalm.pdf",
+    "sha256": "ea34b47dac8ffbf10324799c758ed7cfbb0a67829a4f376cc0f2db6b4dd0007b",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 3,
+    "source": "aldhght-alastamari-ala-almghrb.pdf",
+    "sha256": "3b6981e093635dfedbea7e7fe665b1bafa27e11727615b839b7b67b7b8901cab",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 4,
+    "source": "alhfath-ala-almoard-altbiaia.pdf",
+    "sha256": "d734dc372e82b49cbda2d94f1e1229c8a6ef1d0e1768c91ad827d3a14e6b52ea",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 5,
+    "source": "alhfath-ala-altrath-ottoirh.pdf",
+    "sha256": "84156e3fca4a3f23793056fb4f8be371905e486c83c282101f36c0ecdf2cf74d",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 6,
+    "source": "alhrb-alaalmia-alaola-alasbab-oalntaij.pdf",
+    "sha256": "f6c1d3d1badef0b6f0d0867ef92d18a9b966e96bebb31d1ef0a7a1bd76511fd5",
+    "pages": 3,
+    "pages_with_text": 2,
+    "empty_pages": "3",
+    "tests": 30
+  },
+  {
+    "lesson_number": 7,
+    "source": "alhrb-alaalmia-althania-alasbab-oalntaij-11.pdf",
+    "sha256": "b4d4ff46d6b61193fc6a390feb57a645fa1838f5ca297e243c7cec4d0938374a",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 8,
+    "source": "aliaban-qoa-tknolojia.pdf",
+    "sha256": "f84533212eac6b32ccaf02c4439db96468023353ad1ea2bee870dfbb21c4aa5b",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 9,
+    "source": "alimbrialia-olida-alrasmalia.pdf",
+    "sha256": "1c2c2c1d0e27cb4a87f3845e51e6accc5d294abdc1621cb0ed7e26f9f1ca7dba",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 10,
+    "source": "almghrb-alarbi-anasr-alohda-oaltnoa.pdf",
+    "sha256": "d7a575160ec58bcd609a472dcf0738bb685384cf63002193b8158af747bf8c36",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 11,
+    "source": "almghrb-alarbi-bin-altkaml-oalthdiat.pdf",
+    "sha256": "cc77c4c147733275387c7623a4e49678f3405b25d8275d6b1492a67a669dcaaa",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 12,
+    "source": "almghrb-alkfah-mn-ajl-alastqlal-oitmam-alohda-altrabia.pdf",
+    "sha256": "a6f55b85e5a2fd252c8cd00797a1ecd153f8aca8e40f4ec5f028088f580f05b3",
+    "pages": 3,
+    "pages_with_text": 3,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 13,
+    "source": "almghrb-oalslm-alaalmi.pdf",
+    "sha256": "2d0581613ea979a44cb8f288ba0a31d1594df0a2b14544f9b290d6f0b673ffba",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 14,
+    "source": "almghrb-ohoar-aladian.pdf",
+    "sha256": "aff33a88cdc4cf54b97420ab14deefc36aab7e2c02152450613e68fdf62d82e8",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 15,
+    "source": "almrahl-alkbra-lbnaa-aldola-almghrbia-alhditha.pdf",
+    "sha256": "9ee529a267883afb59abc18d0844b81f0229381c0ded04019c4c951b991c30b4",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 16,
+    "source": "almsharka-hq-ooajb-nntkhb-mmthlina-fi-mjls-almoussa.pdf",
+    "sha256": "b428078e0ecaf1c82d36c9f081b7d141501cbd42074b90a80cdabd7dc05322e1",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 17,
+    "source": "alolaiat-almthda-alamrikia-qoa-aalmia.pdf",
+    "sha256": "9d4b4e825941817758527aaeb68e51dc42b3eb8b453f6e99e90e0bf1a6d33a2e",
+    "pages": 3,
+    "pages_with_text": 3,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 18,
+    "source": "alqdhia-alflstinia-oalsraa-alarbi-alisraiili-15.pdf",
+    "sha256": "dbd23c97ae62f6dff9d189bb5ad58b5fb4b59f9c506c88c996f4fd6ab4db36b8",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 19,
+    "source": "altdrb-ala-maalja-thahra-aqtsadia-baatmad-alnhj-aljghrafi.pdf",
+    "sha256": "fbb0a911d3435196c52970f764a85774a8310678e465f02d69e624764dc1b090",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 20,
+    "source": "anhiar-alimbratoria-alathmania-oaltdkhl-alastamari-fi-almshrq-alarbi.pdf",
+    "sha256": "aeb6fb4212393f5c3e9c0fb8c532ec8481e65248907fc41fdbfecd54620df9ab",
+    "pages": 3,
+    "pages_with_text": 3,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 21,
+    "source": "aqtrah-bramj-ialamia-ttokha-alnhodh-bqim-almoatna.pdf",
+    "sha256": "a3973c2a9f4dfdb4cb7e01c6cf648f14e751fba68ee61dbbcd647c6823ed25ae",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 22,
+    "source": "athad-almghrb-alarbi-khiar-astratiji-lltktl-aliqlimi.pdf",
+    "sha256": "6c70a1b1f16afa3fd86caa757c1a8946976506a645d73853fb7880f9610d624c",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 23,
+    "source": "azdhar-alrasmalia-alaorbia-khlal-alqrn-19m.pdf",
+    "sha256": "59977aa438507e79ae83c9a7796fba461cb26950820172954087d9a5cabc5a41",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 24,
+    "source": "azma-1929-alasbab-oalmthahr-oalntaij.pdf",
+    "sha256": "b2a6be4ee1edce8191e2b8b64b2d9d296c3845ffd7766ef7a4f2a2a0c19eb543",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 25,
+    "source": "ila-ain-alja-fi-hala-khrq-hq-mn-hqoqi-aldstoria-ao-hqoq-ghiri.pdf",
+    "sha256": "682c38c81072fdaafd31ba23fc5b4f772555dea7eca80c09e63a5d67546d514b",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 26,
+    "source": "kif-naalj-mshkla-ajtmaaia-antlaqa-mn-amthla-mhlia.pdf",
+    "sha256": "816d9d8682890d32d9cdb46b9db021fe3b3e16ef4c73bb306b1dd15678920010",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 27,
+    "source": "maiqat-altktlat-aljhoia-mqarna-bin-alathad-alaorbi-oalmghrb-alarbi.pdf",
+    "sha256": "aabd6e537e9a79d0c48b43142776d87d153b5ff234f6fa21c48fad63f2312a5c",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 28,
+    "source": "mlf-hol-almqaoma-almghrbia.pdf",
+    "sha256": "49545e89d6a7773c68afe50c1914157783870155385b46da948fa734636ea00c",
+    "pages": 3,
+    "pages_with_text": 3,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 29,
+    "source": "mlf-hol-moussa-mhmd-alkhams-lltdhamn.pdf",
+    "sha256": "42070e13635c1c7d34d2323f0a3e0aa8d054feb48c4ef0d6c5cb1a5969b29fc0",
+    "pages": 3,
+    "pages_with_text": 3,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 30,
+    "source": "msouolia-aldol-oalafrad-oaljmaaat-fi-hl-almshakl-alajtmaaia-omsouolitna-nhn.pdf",
+    "sha256": "def2422670e4142492a0db451b07d4c0652613165e965580869bebce9cd6f0ac",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 31,
+    "source": "msr-nmothj-tnmoi-arbi.pdf",
+    "sha256": "fd149a5634feb65ec1542aa5582b3b8cf857cce6b473e003a6a04169d2ba7226",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 32,
+    "source": "nhn-oalaalm-ntqasm-alkra-alardhia.pdf",
+    "sha256": "572db7bb81a070a7f127f91fa5bb04616a1b1e46988e770a154fe441701606df",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 33,
+    "source": "nijiria-bin-alghna-altbiai-oaldhaf-altnmoi.pdf",
+    "sha256": "0b56d1fdfbad9499f834d9614e009e1361c35786313cf857d87697b243eed806",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 34,
+    "source": "rosia-orhanat-althol.pdf",
+    "sha256": "b92c30c41ab95552f190d70b0bebf8e13272b13260d629232338d7026650be05",
+    "pages": 3,
+    "pages_with_text": 3,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 35,
+    "source": "thahra-alanthma-aldiktatoria-drasa-hala-alnazia.pdf",
+    "sha256": "37e3f551552a19c07c7d1979c8d45f72c5fcc986fd6fe11d7e62d5c6d8832cc2",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  },
+  {
+    "lesson_number": 36,
+    "source": "tkhliq-alhiaa-alaama-almfhom-oalaaliat-aqtrah-khta-lmharba-alrshoa.pdf",
+    "sha256": "e8091e93b3c2b6716b42d0a3ae5e5294061be1f5bf1ff21b5a45f73dd79ab1f5",
+    "pages": 2,
+    "pages_with_text": 2,
+    "empty_pages": "",
+    "tests": 30
+  }
+]

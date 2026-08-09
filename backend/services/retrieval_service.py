@@ -560,6 +560,25 @@ def retrieve_relevant_passages(
 
 
 
+
+    # Histoire-Geographie:
+    # when a precise PDF source is requested for a general
+    # summary, retrieve a broad set of chunks from the same
+    # document instead of summarising only the most similar page.
+    asks_histoire_geographie_full_summary = (
+        bool(source)
+        and intent == "summary"
+        and (subject or "").strip().casefold()
+        == "Histoire-G\u00e9ographie".casefold()
+    )
+
+    if asks_histoire_geographie_full_summary:
+        number_of_results = max(
+            number_of_results,
+            60,
+        )
+
+
     mega_islamic_education_sources = {'altaarf-oaltaaish-fdhaa-altrbia-alislamia.pdf', 'alzkaa-ahkamha-omqasdha-alghaiat-oalothaif-altnmoia-fdhaa-altrbia-alislamia.pdf', 'alshtr-althalth-mn-sora-alhdid-alaaia-24-ila-28-fdhaa-altrbia-alislamia.pdf', 'mn-osaia-alrsol-sla-allh-alih-oslm-alosaia-altsa-fdhaa-altrbia-alislamia.pdf', 'ahmia-altdin-fi-hiaa-alfrd-oalmjtma-fdhaa-altrbia-alislamia.pdf', 'alrsol-irsi-qim-alslm-oaltaaish-fdhaa-altrbia-alislamia.pdf', 'almsjd-noaa-almjtma-alislami-fdhaa-altrbia-alislamia.pdf', 'alislam-aqida-oshriaa-fdhaa-altrbia-alislamia.pdf', 'alshtr-althani-mn-sora-alhshr-alaaia-6-ila-17-fdhaa-altrbia-alislamia.pdf', 'hq-alghir-imara-almoumnin-alass-oalghaiat-fdhaa-altrbia-alislamia.pdf', 'alhjra-almtjdda-almhajr-mn-hjr-ma-nha-allh-anh-fdhaa-altrbia-alislamia.pdf', 'alinfaq-fi-sbil-allh-sorh-omqasdh-fdhaa-altrbia-alislamia.pdf', 'alshtr-althalth-mn-sora-alhshr-alaaia-18-ila-24-fdhaa-altrbia-alislamia.pdf', 'alshtr-alaol-mn-sora-alhshr-alaaia-1-ila-5-fdhaa-altrbia-alislamia.pdf', 'alshtr-althani-mn-sora-alhdid-alaaia-15-ila-23-fdhaa-altrbia-alislamia.pdf', 'hq-albiia-alaatnaa-bjmal-albiia-oalmhit-fdhaa-altrbia-alislamia.pdf', 'hmaia-aldaoa-obnaa-aldola-alhjra-fdhaa-altrbia-alislamia.pdf', 'alshtr-alaol-mn-sora-alhdid-alaaia-1-ila-14-fdhaa-altrbia-alislamia.pdf', 'alzkaa-ahkamha-omqasdha-altarif-oalahkam-oalmsthqon-fdhaa-altrbia-alislamia.pdf', 'alabada-ghaia-alkhlq-alabada-sfa-iiman-odlil-khdhoa-fdhaa-altrbia-alislamia.pdf', 'athr-alqraan-fi-tzkia-alnfs-fdhaa-altrbia-alislamia.pdf', 'iioaa-alrsol-onsrth-aiob-alansari-am-slim-fdhaa-altrbia-alislamia.pdf', 'hq-allh-tqoa-allh-fdhaa-altrbia-alislamia.pdf', 'asmaa-allh-alhsna-fdhaa-altrbia-alislamia.pdf', 'hq-alnfs-ahmia-altkhtit-oaltnthim-fi-alhiaa-fdhaa-altrbia-alislamia.pdf', 'aliithar-oaltdhhia-fdhaa-altrbia-alislamia.pdf', 'mlkhs-dros-mdkhl-altzkia-alqraan-alkrim-aldora-alaola.pdf'}
 
     asks_islamic_education_mega_source = (
@@ -1176,7 +1195,8 @@ def retrieve_relevant_passages(
         )
 
     if (
-        asks_islamic_education_mega_source
+        asks_histoire_geographie_full_summary
+        or asks_islamic_education_mega_source
         or asks_french_mega_17_65_source
         or asks_french_batch_13_16_lesson
         or asks_french_open_letter_lesson
@@ -1268,6 +1288,45 @@ def retrieve_relevant_passages(
         if not initial_results:
             return []
 
+    # Histoire-Geographie full-document summary:
+    # when a precise PDF is selected, keep every retrieved chunk
+    # from that source before semantic/lexical pruning.
+    if asks_histoire_geographie_full_summary:
+        unique_results = []
+        seen = set()
+
+        for passage in initial_results:
+            key = (
+                passage.get("chunk_id")
+                or (
+                    passage.get("source", ""),
+                    passage.get("page"),
+                    passage.get("text", ""),
+                )
+            )
+
+            if key in seen:
+                continue
+
+            seen.add(key)
+            unique_results.append(
+                passage
+            )
+
+        unique_results.sort(
+            key=lambda passage: (
+                passage.get("page") or 0,
+                str(
+                    passage.get(
+                        "chunk_id",
+                        "",
+                    )
+                ),
+            )
+        )
+
+        return unique_results
+
     topic_keywords = extract_topic_keywords(
         search_question
     )
@@ -1327,6 +1386,7 @@ def retrieve_relevant_passages(
             and not asks_french_authorization_letter_lesson
             and not asks_islamic_education_mega_source
             and not asks_french_mega_17_65_source
+            and not asks_histoire_geographie_full_summary
             and not asks_french_batch_13_16_lesson
             and not asks_french_open_letter_lesson
             and not asks_french_debate_participant_invitations_lesson
@@ -1351,6 +1411,7 @@ def retrieve_relevant_passages(
             and not asks_french_authorization_letter_lesson
             and not asks_islamic_education_mega_source
             and not asks_french_mega_17_65_source
+            and not asks_histoire_geographie_full_summary
             and not asks_french_batch_13_16_lesson
             and not asks_french_open_letter_lesson
             and not asks_french_debate_participant_invitations_lesson

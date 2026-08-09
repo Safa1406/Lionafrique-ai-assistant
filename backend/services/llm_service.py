@@ -18425,6 +18425,383 @@ def extract_english_mega_anchor_evidence(
     return evidence
 
 
+
+HISTOIRE_GEOGRAPHIE_LLM_SOURCES = {
+    'alathad-alaorbi-bin-alandmaj-oalmnafsa.pdf',
+    'alathad-alaorbi-imkaniath-omkanth-alaqtsadia-fi-alaalm.pdf',
+    'aldhght-alastamari-ala-almghrb.pdf',
+    'alhfath-ala-almoard-altbiaia.pdf',
+    'alhfath-ala-altrath-ottoirh.pdf',
+    'alhrb-alaalmia-alaola-alasbab-oalntaij.pdf',
+    'alhrb-alaalmia-althania-alasbab-oalntaij-11.pdf',
+    'aliaban-qoa-tknolojia.pdf',
+    'alimbrialia-olida-alrasmalia.pdf',
+    'almghrb-alarbi-anasr-alohda-oaltnoa.pdf',
+    'almghrb-alarbi-bin-altkaml-oalthdiat.pdf',
+    'almghrb-alkfah-mn-ajl-alastqlal-oitmam-alohda-altrabia.pdf',
+    'almghrb-oalslm-alaalmi.pdf',
+    'almghrb-ohoar-aladian.pdf',
+    'almrahl-alkbra-lbnaa-aldola-almghrbia-alhditha.pdf',
+    'almsharka-hq-ooajb-nntkhb-mmthlina-fi-mjls-almoussa.pdf',
+    'alolaiat-almthda-alamrikia-qoa-aalmia.pdf',
+    'alqdhia-alflstinia-oalsraa-alarbi-alisraiili-15.pdf',
+    'altdrb-ala-maalja-thahra-aqtsadia-baatmad-alnhj-aljghrafi.pdf',
+    'anhiar-alimbratoria-alathmania-oaltdkhl-alastamari-fi-almshrq-alarbi.pdf',
+    'aqtrah-bramj-ialamia-ttokha-alnhodh-bqim-almoatna.pdf',
+    'athad-almghrb-alarbi-khiar-astratiji-lltktl-aliqlimi.pdf',
+    'azdhar-alrasmalia-alaorbia-khlal-alqrn-19m.pdf',
+    'azma-1929-alasbab-oalmthahr-oalntaij.pdf',
+    'ila-ain-alja-fi-hala-khrq-hq-mn-hqoqi-aldstoria-ao-hqoq-ghiri.pdf',
+    'kif-naalj-mshkla-ajtmaaia-antlaqa-mn-amthla-mhlia.pdf',
+    'maiqat-altktlat-aljhoia-mqarna-bin-alathad-alaorbi-oalmghrb-alarbi.pdf',
+    'mlf-hol-almqaoma-almghrbia.pdf',
+    'mlf-hol-moussa-mhmd-alkhams-lltdhamn.pdf',
+    'msouolia-aldol-oalafrad-oaljmaaat-fi-hl-almshakl-alajtmaaia-omsouolitna-nhn.pdf',
+    'msr-nmothj-tnmoi-arbi.pdf',
+    'nhn-oalaalm-ntqasm-alkra-alardhia.pdf',
+    'nijiria-bin-alghna-altbiai-oaldhaf-altnmoi.pdf',
+    'rosia-orhanat-althol.pdf',
+    'thahra-alanthma-aldiktatoria-drasa-hala-alnazia.pdf',
+    'tkhliq-alhiaa-alaama-almfhom-oalaaliat-aqtrah-khta-lmharba-alrshoa.pdf'
+}
+
+
+def normalize_histoire_quote_match_text(
+    value: str,
+) -> str:
+    value = normalize_arabic_match_text(
+        value or ""
+    )
+
+    # Arabic PDF extraction frequently changes:
+    # "19 ?" <-> "?19"
+    # "1990 ?" <-> "?1990"
+    value = re.sub(
+        r"(?<=[\u0621-\u064a])(?=\d)",
+        " ",
+        value,
+    )
+
+    value = re.sub(
+        r"(?<=\d)(?=[\u0621-\u064a])",
+        " ",
+        value,
+    )
+
+    # Ignore punctuation for evidence matching.
+    value = re.sub(
+        r"[^\w]+",
+        " ",
+        value,
+    )
+
+    value = re.sub(
+        r"\s+",
+        " ",
+        value,
+    ).strip()
+
+    return value
+
+
+def extract_histoire_geographie_quoted_answer(
+    question: str,
+    passages: list[dict],
+):
+    """
+    Deterministic extraction for quoted
+    Histoire-Geographie document questions.
+
+    It avoids the generic LLM path when the
+    requested phrase is already present in the PDF.
+    """
+
+    history_passages = [
+        (
+            passage_number,
+            passage,
+        )
+        for passage_number, passage
+        in enumerate(
+            passages,
+            start=1,
+        )
+        if passage.get(
+            "source",
+            "",
+        )
+        in HISTOIRE_GEOGRAPHIE_LLM_SOURCES
+    ]
+
+    if not history_passages:
+        return None
+
+    # Prefer guillemets first.
+    # ASCII quotes may legitimately appear inside ? ... ?.
+    quoted_match = re.search(
+        r"\u00ab([^\u00bb]{3,320})\u00bb",
+        question or "",
+    )
+
+    if not quoted_match:
+        quoted_match = re.search(
+            r'["\u201c]([^"\u201d]{3,320})["\u201d]',
+            question or "",
+        )
+
+    if not quoted_match:
+        return None
+
+    anchor = (
+        quoted_match
+        .group(1)
+        .strip()
+    )
+
+    normalized_anchor = (
+        normalize_text(
+            anchor
+        )
+    )
+
+    if not normalized_anchor:
+        return None
+
+    anchor_words = [
+        word
+        for word in (
+            normalize_histoire_quote_match_text(
+                anchor
+            )
+            .split()
+        )
+        if word
+    ]
+
+    best = None
+
+    for passage_number, passage in (
+        history_passages
+    ):
+
+        text = (
+            passage.get(
+                "text",
+                "",
+            )
+            or ""
+        ).strip()
+
+        if not text:
+            continue
+
+        normalized_text_value = (
+            normalize_text(
+                text
+            )
+        )
+
+        normalized_match_text = (
+            normalize_histoire_quote_match_text(
+                text
+            )
+        )
+
+        exact_match = (
+            normalized_anchor
+            in normalized_text_value
+        )
+
+        text_words = set(
+            normalized_match_text.split()
+        )
+
+        matched_words = 0
+
+        for anchor_word in anchor_words:
+
+            if anchor_word in text_words:
+                matched_words += 1
+                continue
+
+            if len(anchor_word) < 3:
+                continue
+
+            fuzzy_match = any(
+                abs(
+                    len(anchor_word)
+                    - len(text_word)
+                )
+                <= 1
+                and difflib.SequenceMatcher(
+                    None,
+                    anchor_word,
+                    text_word,
+                ).ratio()
+                >= 0.82
+                for text_word in text_words
+                if len(text_word) >= 3
+            )
+
+            if fuzzy_match:
+                matched_words += 1
+
+        coverage = (
+            matched_words
+            / max(
+                1,
+                len(anchor_words),
+            )
+        )
+
+        retrieval_score = float(
+            passage.get(
+                "retrieval_score",
+                0.0,
+            )
+            or 0.0
+        )
+
+        score = (
+            (100.0 if exact_match else 0.0)
+            + coverage * 10.0
+            + retrieval_score
+        )
+
+        candidate = {
+            "score": score,
+            "exact": exact_match,
+            "coverage": coverage,
+            "passage_number": passage_number,
+            "passage": passage,
+            "text": text,
+        }
+
+        if (
+            best is None
+            or candidate["score"]
+            > best["score"]
+        ):
+            best = candidate
+
+    if best is None:
+        return {
+            "answerable": False,
+            "answer": get_refusal_answer(
+                question
+            ),
+            "sources": [],
+            "evidence": [],
+        }
+
+    if (
+        not best["exact"]
+        and best["coverage"] < 0.72
+    ):
+        return {
+            "answerable": False,
+            "answer": get_refusal_answer(
+                question
+            ),
+            "sources": [],
+            "evidence": [],
+        }
+
+    passage = best["passage"]
+    text = best["text"]
+
+    source = {
+        "file": passage.get(
+            "source",
+            "Source inconnue",
+        ),
+        "page": passage.get(
+            "page",
+            0,
+        ),
+        "relative_path": passage.get(
+            "relative_path",
+            "",
+        ),
+    }
+
+    verified_answer = (
+        "\u062d\u0633\u0628 "
+        "\u0627\u0644\u0648\u062b\u064a\u0642\u0629:\n"
+        + anchor
+        + "\n"
+        + text
+    )
+
+    return {
+        "answerable": True,
+        "answer": verified_answer,
+        "sources": [
+            source
+        ],
+        "evidence": [
+            text
+        ],
+    }
+
+
+
+def is_obviously_out_of_scope_for_histoire_geographie(
+    question: str,
+) -> bool:
+    """
+    Reject clearly unrelated mathematics/science questions
+    before document-answer generation.
+    """
+
+    q = (
+        question
+        or ""
+    ).casefold()
+
+    q = re.sub(
+        r"\s+",
+        " ",
+        q,
+    ).strip()
+
+    math_signals = (
+        "\u0645\u0634\u062a\u0642",
+        "\u0644\u0648\u063a\u0627\u0631\u064a\u062a\u0645",
+        "\u0645\u0639\u0627\u062f\u0644\u0629",
+        "\u0627\u0644\u062f\u0631\u062c\u0629 "
+        "\u0627\u0644\u062b\u0627\u0646\u064a\u0629",
+        "\u062f\u0627\u0644\u0629 "
+        "\u0623\u0633\u064a\u0629",
+        "\u062f\u0627\u0644\u0629 "
+        "\u0627\u0633\u064a\u0629",
+    )
+
+    signal_count = sum(
+        1
+        for signal in math_signals
+        if signal in q
+    )
+
+    if signal_count >= 1:
+        return True
+
+    latin_math_signals = (
+        "derivative",
+        "equation",
+        "quadratic",
+        "exponential function",
+        "integral",
+        "logarithm",
+    )
+
+    return any(
+        signal in q
+        for signal in latin_math_signals
+    )
+
+
+
 def generate_answer(
     question: str,
     passages: list[dict],
@@ -18460,6 +18837,44 @@ def generate_answer(
             "sources": [],
             "evidence": [],
         }
+
+    # --------------------------------------------------------
+    # --------------------------------------------------------
+    # Histoire-Geographie:
+    # deterministic early handling before all legacy extractors.
+    # --------------------------------------------------------
+
+    histoire_source_scope = any(
+        passage.get(
+            "source",
+            "",
+        )
+        in HISTOIRE_GEOGRAPHIE_LLM_SOURCES
+        for passage in passages
+    )
+
+    if histoire_source_scope:
+
+        if is_obviously_out_of_scope_for_histoire_geographie(
+            cleaned_question
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        histoire_quoted_result = (
+            extract_histoire_geographie_quoted_answer(
+                question=cleaned_question,
+                passages=passages,
+            )
+        )
+
+        if histoire_quoted_result is not None:
+            return histoire_quoted_result
+
 
     # --------------------------------------------------------
     # English mega batch: run before all legacy extractors.

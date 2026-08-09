@@ -1354,7 +1354,7 @@ def build_summary_response(
 
 
 SUMMARY_SERVICE_VERSION = (
-    "v66-english-mega-raw-passages-summary"
+    "v68-histoire-summary-contract-fix"
 )
 
 
@@ -7843,6 +7843,56 @@ def build_french_network_typology_summary(
     }
 
 
+
+HISTOIRE_GEOGRAPHIE_MEGA_SOURCES = {
+    'alathad-alaorbi-bin-alandmaj-oalmnafsa.pdf',
+    'alathad-alaorbi-imkaniath-omkanth-alaqtsadia-fi-alaalm.pdf',
+    'aldhght-alastamari-ala-almghrb.pdf',
+    'alhfath-ala-almoard-altbiaia.pdf',
+    'alhfath-ala-altrath-ottoirh.pdf',
+    'alhrb-alaalmia-alaola-alasbab-oalntaij.pdf',
+    'alhrb-alaalmia-althania-alasbab-oalntaij-11.pdf',
+    'aliaban-qoa-tknolojia.pdf',
+    'alimbrialia-olida-alrasmalia.pdf',
+    'almghrb-alarbi-anasr-alohda-oaltnoa.pdf',
+    'almghrb-alarbi-bin-altkaml-oalthdiat.pdf',
+    'almghrb-alkfah-mn-ajl-alastqlal-oitmam-alohda-altrabia.pdf',
+    'almghrb-oalslm-alaalmi.pdf',
+    'almghrb-ohoar-aladian.pdf',
+    'almrahl-alkbra-lbnaa-aldola-almghrbia-alhditha.pdf',
+    'almsharka-hq-ooajb-nntkhb-mmthlina-fi-mjls-almoussa.pdf',
+    'alolaiat-almthda-alamrikia-qoa-aalmia.pdf',
+    'alqdhia-alflstinia-oalsraa-alarbi-alisraiili-15.pdf',
+    'altdrb-ala-maalja-thahra-aqtsadia-baatmad-alnhj-aljghrafi.pdf',
+    'anhiar-alimbratoria-alathmania-oaltdkhl-alastamari-fi-almshrq-alarbi.pdf',
+    'aqtrah-bramj-ialamia-ttokha-alnhodh-bqim-almoatna.pdf',
+    'athad-almghrb-alarbi-khiar-astratiji-lltktl-aliqlimi.pdf',
+    'azdhar-alrasmalia-alaorbia-khlal-alqrn-19m.pdf',
+    'azma-1929-alasbab-oalmthahr-oalntaij.pdf',
+    'ila-ain-alja-fi-hala-khrq-hq-mn-hqoqi-aldstoria-ao-hqoq-ghiri.pdf',
+    'kif-naalj-mshkla-ajtmaaia-antlaqa-mn-amthla-mhlia.pdf',
+    'maiqat-altktlat-aljhoia-mqarna-bin-alathad-alaorbi-oalmghrb-alarbi.pdf',
+    'mlf-hol-almqaoma-almghrbia.pdf',
+    'mlf-hol-moussa-mhmd-alkhams-lltdhamn.pdf',
+    'msouolia-aldol-oalafrad-oaljmaaat-fi-hl-almshakl-alajtmaaia-omsouolitna-nhn.pdf',
+    'msr-nmothj-tnmoi-arbi.pdf',
+    'nhn-oalaalm-ntqasm-alkra-alardhia.pdf',
+    'nijiria-bin-alghna-altbiai-oaldhaf-altnmoi.pdf',
+    'rosia-orhanat-althol.pdf',
+    'thahra-alanthma-aldiktatoria-drasa-hala-alnazia.pdf',
+    'tkhliq-alhiaa-alaama-almfhom-oalaaliat-aqtrah-khta-lmharba-alrshoa.pdf'
+}
+
+
+def is_histoire_geographie_summary_source(
+    source: str,
+) -> bool:
+    return (
+        (source or "").strip()
+        in HISTOIRE_GEOGRAPHIE_MEGA_SOURCES
+    )
+
+
 def is_english_mega_summary_source(
     source: str,
 ) -> bool:
@@ -7883,6 +7933,131 @@ def generate_summary(
             "sources": [],
             "evidence": [],
         }
+
+    # ========================================================
+    # Histoire-Geographie full-document extractive summary
+    # ========================================================
+
+    histoire_geographie_passages = [
+        passage
+        for passage in passages
+        if is_histoire_geographie_summary_source(
+            passage.get(
+                "source",
+                "",
+            )
+        )
+    ]
+
+    if histoire_geographie_passages:
+
+        source_name = (
+            histoire_geographie_passages[0].get(
+                "source",
+                "",
+            )
+        )
+
+        histoire_geographie_passages = [
+            passage
+            for passage
+            in histoire_geographie_passages
+            if passage.get(
+                "source",
+                "",
+            )
+            == source_name
+        ]
+
+        ordered_passages = sorted(
+            histoire_geographie_passages,
+            key=lambda passage: (
+                passage.get(
+                    "page",
+                    0,
+                )
+                or 0,
+                str(
+                    passage.get(
+                        "chunk_id",
+                        "",
+                    )
+                ),
+            ),
+        )
+
+        unique_lines = []
+        seen_lines = set()
+
+        for passage in ordered_passages:
+
+            text = (
+                passage.get(
+                    "text",
+                    "",
+                )
+                or ""
+            )
+
+            for raw_line in text.splitlines():
+
+                line = normalize_spaces(
+                    raw_line
+                )
+
+                if not line:
+                    continue
+
+                key = (
+                    line
+                    .casefold()
+                    .strip()
+                )
+
+                if key in seen_lines:
+                    continue
+
+                seen_lines.add(
+                    key
+                )
+
+                unique_lines.append(
+                    line
+                )
+
+        if not unique_lines:
+            return {
+                "answerable": False,
+                "summary": refusal,
+                "sources": [],
+                "evidence": [],
+            }
+
+        summary = (
+            "\u0645\u0644\u062e\u0635 "
+            "\u0627\u0644\u0645\u062d\u062a\u0648\u0649:\n\n"
+            + "\n".join(
+                f"- {line}"
+                for line in unique_lines
+            )
+        )
+
+        return {
+            "answerable": True,
+            "summary": summary,
+            "sources": build_summary_sources(
+                ordered_passages
+            ),
+            "evidence": [
+                passage.get(
+                    "text",
+                    "",
+                )
+                for passage
+                in ordered_passages
+            ],
+        }
+
 
     units = build_summary_units(
         passages
