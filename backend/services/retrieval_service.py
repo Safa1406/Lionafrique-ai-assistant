@@ -1327,6 +1327,261 @@ def retrieve_relevant_passages(
 
         return unique_results
 
+    # ========================================================
+    # MATH FULL-DOCUMENT SUMMARY RETRIEVAL
+    # ========================================================
+    #
+    # A lesson summary must cover the complete selected PDF,
+    # not only the five most semantically similar chunks.
+    #
+    # This branch is intentionally limited to:
+    # - Programme marocain
+    # - Mathematiques
+    # - summary intent
+    # - an explicitly selected source
+    #
+    # Normal questions continue through the existing ranking path.
+    # ========================================================
+
+    math_full_summary_scope = (
+        intent == "summary"
+        and bool(source)
+        and normalize_text(
+            program or ""
+        )
+        == normalize_text(
+            "Programme marocain"
+        )
+        and normalize_text(
+            subject or ""
+        )
+        == normalize_text(
+            "Math\u00e9matiques"
+        )
+    )
+
+    if math_full_summary_scope:
+
+        full_math_results = (
+            search_similar_chunks(
+                question=search_question,
+                number_of_results=120,
+                program=program,
+                subject=subject,
+                semester=semester,
+                source=source,
+            )
+        )
+
+        if full_math_results:
+
+            cleaned_source = (
+                source.strip()
+            )
+
+            full_math_results = [
+                passage
+                for passage
+                in full_math_results
+                if passage.get(
+                    "source",
+                    "",
+                )
+                == cleaned_source
+            ]
+
+            unique_results = []
+            seen_chunks = set()
+
+            for passage in full_math_results:
+
+                chunk_key = (
+                    passage.get(
+                        "chunk_id",
+                        "",
+                    )
+                    or (
+                        passage.get(
+                            "source",
+                            "",
+                        ),
+                        passage.get(
+                            "page",
+                            0,
+                        ),
+                        passage.get(
+                            "chunk_number",
+                            0,
+                        ),
+                        passage.get(
+                            "text",
+                            "",
+                        ),
+                    )
+                )
+
+                if chunk_key in seen_chunks:
+                    continue
+
+                seen_chunks.add(
+                    chunk_key
+                )
+
+                unique_results.append(
+                    passage
+                )
+
+            unique_results.sort(
+                key=lambda passage: (
+                    passage.get(
+                        "page",
+                        0,
+                    )
+                    or 0,
+                    passage.get(
+                        "chunk_number",
+                        0,
+                    )
+                    or 0,
+                    str(
+                        passage.get(
+                            "chunk_id",
+                            "",
+                        )
+                    ),
+                )
+            )
+
+            if unique_results:
+                return unique_results
+
+
+    # ========================================================
+    # MATH QUOTED FULL-SOURCE RETRIEVAL
+    # ========================================================
+    #
+    # For a quoted Math request tied to one selected PDF,
+    # expose every chunk from that source to the deterministic
+    # extractor. This protects partial quotes, typos, accent
+    # changes and missing spaces from semantic top-N misses.
+    # ========================================================
+
+    math_quoted_question = bool(
+        re.search(
+            r'["\u201c\u00ab]'
+            r'.{3,300}?'
+            r'["\u201d\u00bb]',
+            search_question or "",
+            flags=re.DOTALL,
+        )
+    )
+
+    math_quoted_source_scope = (
+        math_quoted_question
+        and bool(source)
+        and normalize_text(
+            program or ""
+        )
+        == normalize_text(
+            "Programme marocain"
+        )
+        and normalize_text(
+            subject or ""
+        )
+        == normalize_text(
+            "Math\u00e9matiques"
+        )
+    )
+
+    if math_quoted_source_scope:
+
+        full_math_results = (
+            search_similar_chunks(
+                question=search_question,
+                number_of_results=120,
+                program=program,
+                subject=subject,
+                semester=semester,
+                source=source,
+            )
+        )
+
+        if full_math_results:
+
+            expected_source = (
+                source.strip()
+            )
+
+            unique_results = []
+            seen_chunks = set()
+
+            for passage in full_math_results:
+
+                if (
+                    passage.get(
+                        "source",
+                        "",
+                    )
+                    != expected_source
+                ):
+                    continue
+
+                chunk_key = (
+                    passage.get(
+                        "chunk_id",
+                        "",
+                    )
+                    or (
+                        passage.get(
+                            "source",
+                            "",
+                        ),
+                        passage.get(
+                            "page",
+                            0,
+                        ),
+                        passage.get(
+                            "chunk_number",
+                            0,
+                        ),
+                        passage.get(
+                            "text",
+                            "",
+                        ),
+                    )
+                )
+
+                if chunk_key in seen_chunks:
+                    continue
+
+                seen_chunks.add(
+                    chunk_key
+                )
+
+                unique_results.append(
+                    passage
+                )
+
+            if unique_results:
+
+                unique_results.sort(
+                    key=lambda passage: (
+                        passage.get(
+                            "page",
+                            0,
+                        )
+                        or 0,
+                        passage.get(
+                            "chunk_number",
+                            0,
+                        )
+                        or 0,
+                    )
+                )
+
+                return unique_results
+
+
     topic_keywords = extract_topic_keywords(
         search_question
     )

@@ -8059,6 +8059,165 @@ def generate_summary(
         }
 
 
+    # ========================================================
+    # MATH FULL-DOCUMENT EXTRACTIVE SUMMARY
+    # ========================================================
+    #
+    # Math PDFs frequently contain formulas as images, while their
+    # textual definitions, properties and exercises are preserved
+    # by PDF extraction. For a source-scoped lesson summary we keep
+    # the complete verified textual content instead of selecting
+    # only semantically prominent headings.
+    # ========================================================
+
+    math_passages = [
+        passage
+        for passage in passages
+        if normalize_text(
+            passage.get(
+                "program",
+                "",
+            )
+        )
+        == normalize_text(
+            "Programme marocain"
+        )
+        and normalize_text(
+            passage.get(
+                "subject",
+                "",
+            )
+        )
+        == normalize_text(
+            "Math\u00e9matiques"
+        )
+    ]
+
+    if math_passages:
+
+        source_name = (
+            math_passages[0].get(
+                "source",
+                "",
+            )
+        )
+
+        math_passages = [
+            passage
+            for passage
+            in math_passages
+            if passage.get(
+                "source",
+                "",
+            )
+            == source_name
+        ]
+
+        ordered_passages = sorted(
+            math_passages,
+            key=lambda passage: (
+                passage.get(
+                    "page",
+                    0,
+                )
+                or 0,
+                passage.get(
+                    "chunk_number",
+                    0,
+                )
+                or 0,
+                str(
+                    passage.get(
+                        "chunk_id",
+                        "",
+                    )
+                ),
+            ),
+        )
+
+        unique_lines = []
+        seen_lines = set()
+
+        for passage in ordered_passages:
+
+            text = (
+                passage.get(
+                    "text",
+                    "",
+                )
+                or ""
+            )
+
+            for raw_line in (
+                text.splitlines()
+            ):
+
+                line = normalize_spaces(
+                    raw_line
+                )
+
+                if not line:
+                    continue
+
+                key = normalize_text(
+                    line
+                )
+
+                if (
+                    not key
+                    or key in seen_lines
+                ):
+                    continue
+
+                seen_lines.add(
+                    key
+                )
+
+                unique_lines.append(
+                    line
+                )
+
+        if not unique_lines:
+
+            return {
+                "answerable": False,
+                "summary": refusal,
+                "sources": [],
+                "evidence": [],
+            }
+
+        summary = (
+            "R\u00e9sum\u00e9 du contenu :\n\n"
+            + "\n".join(
+                "- " + line
+                for line
+                in unique_lines
+            )
+        )
+
+        return {
+            "answerable": True,
+            "summary": summary,
+            "sources": (
+                build_summary_sources(
+                    ordered_passages
+                )
+            ),
+            "evidence": [
+                passage.get(
+                    "text",
+                    "",
+                )
+                for passage
+                in ordered_passages
+                if passage.get(
+                    "text",
+                    "",
+                )
+            ],
+        }
+
+
     units = build_summary_units(
         passages
     )

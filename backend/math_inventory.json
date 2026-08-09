@@ -1,0 +1,155 @@
+[
+  {
+    "index": 1,
+    "source": "seance-1-developpement-et-factorisation.pdf",
+    "semester": "S1",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 5,
+    "sha256": "783a758bac159cd3169e7a0dad7e306b8cf7e592823137f6fc559c104524290d"
+  },
+  {
+    "index": 2,
+    "source": "seance-2-puissances-1.pdf",
+    "semester": "S1",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 8,
+    "sha256": "c63a6d8fba54f7fa5b4031245e81a976d68d5b0ee0baac3f3bb73d0d4761183d"
+  },
+  {
+    "index": 3,
+    "source": "seance-3-racines-carrees-1.pdf",
+    "semester": "S1",
+    "pages": 6,
+    "text_pages": 6,
+    "strong_candidates": 13,
+    "sha256": "9401a67d99c92b4c37761cd27dfff771dd11627f9cb42d9c29c54ca36cd66294"
+  },
+  {
+    "index": 4,
+    "source": "seance-4-theoreme-de-thales.pdf",
+    "semester": "S1",
+    "pages": 6,
+    "text_pages": 5,
+    "strong_candidates": 27,
+    "sha256": "528b04c3430cfa4ac7411ac6fbf0f506bfd8d8391ea46ddd90ff5339c0c7239f"
+  },
+  {
+    "index": 5,
+    "source": "seance-5-theoreme-de-pythagore-1.pdf",
+    "semester": "S1",
+    "pages": 4,
+    "text_pages": 4,
+    "strong_candidates": 11,
+    "sha256": "5fadf80d386f484b7f2cb30cebbc2370f1f82392d3f9388c030e5058513ed6d9"
+  },
+  {
+    "index": 6,
+    "source": "seance-6-ordre-et-operations.pdf",
+    "semester": "S1",
+    "pages": 6,
+    "text_pages": 6,
+    "strong_candidates": 3,
+    "sha256": "c8cacad43c74151cab64dffac1d6e70db553617c42712d7b25b7f742e60d92e3"
+  },
+  {
+    "index": 7,
+    "source": "seance-7-triangle-rectangle-et-trigonometrie.pdf",
+    "semester": "S1",
+    "pages": 4,
+    "text_pages": 4,
+    "strong_candidates": 6,
+    "sha256": "51bfbe73971833ad3d9cb4e4276e25446d93cec8303447340390a92ae8dc0ef0"
+  },
+  {
+    "index": 8,
+    "source": "seance-8-angles-inscrits-et-angles-au-centre-1.pdf",
+    "semester": "S1",
+    "pages": 6,
+    "text_pages": 6,
+    "strong_candidates": 21,
+    "sha256": "f9aba6297330903875055cc3885185e411a7a2c6636d086023b9085e518ce953"
+  },
+  {
+    "index": 9,
+    "source": "seance-9-triangles-isometriques-et-triangles-semblables-1.pdf",
+    "semester": "S1",
+    "pages": 7,
+    "text_pages": 7,
+    "strong_candidates": 16,
+    "sha256": "12e7294ea96346cc5368517b6dd173210e7c1b718cecc4cf12a803b6d95f12b9"
+  },
+  {
+    "index": 10,
+    "source": "seance-10-equations-et-inequations-1.pdf",
+    "semester": "S2",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 35,
+    "sha256": "192b1bd31c157afb84334151b29d4da5ccfa56c86251aea5f4f8c699deea0f04"
+  },
+  {
+    "index": 11,
+    "source": "seance-11-vecteurs-et-translation-1.pdf",
+    "semester": "S2",
+    "pages": 8,
+    "text_pages": 8,
+    "strong_candidates": 19,
+    "sha256": "c59cadbcd826c8329c2240083728e7ba48872c76d96ff4a7bf1fe5bfa5fa4d44"
+  },
+  {
+    "index": 12,
+    "source": "seance-12-repere-dans-le-plan-1.pdf",
+    "semester": "S2",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 22,
+    "sha256": "ef922f0088ef99b375de5bbfaa8071f7385fd8ebd80296be47a8d10b13d35d57"
+  },
+  {
+    "index": 13,
+    "source": "seance-13-equation-d-une-droite-1.pdf",
+    "semester": "S2",
+    "pages": 4,
+    "text_pages": 4,
+    "strong_candidates": 14,
+    "sha256": "db413ec8ce92a2e1887c8611e28919e9f4664dc24402f6bcd76cc793175fc279"
+  },
+  {
+    "index": 14,
+    "source": "seance-14-fonction-lineaire-et-fonction-affine-1.pdf",
+    "semester": "S2",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 23,
+    "sha256": "7dab3791d60aa224c81a69f8778065732ae49546f7dd6a11a8055615c2629eb0"
+  },
+  {
+    "index": 15,
+    "source": "seance-15-systemes-de-2-equations-a-2-inconnues-1.pdf",
+    "semester": "S2",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 34,
+    "sha256": "f928377c8cf16943b2c5885c153fdc09a1f2dfb5fc04263f2d835636ba59156d"
+  },
+  {
+    "index": 16,
+    "source": "seance-16-geometrie-dans-l-espace-1.pdf",
+    "semester": "S2",
+    "pages": 9,
+    "text_pages": 9,
+    "strong_candidates": 27,
+    "sha256": "d616fea35c5209c89254d3a6863dce1cef3969fb6b0110b9a69b323568f4afa4"
+  },
+  {
+    "index": 17,
+    "source": "seance-17-statistiques-2.pdf",
+    "semester": "S2",
+    "pages": 8,
+    "text_pages": 8,
+    "strong_candidates": 52,
+    "sha256": "20c11baf509162eba508b234923883248fad1e89a0bf8133b66a84ad3355ce9b"
+  }
+]

@@ -18802,6 +18802,660 @@ def is_obviously_out_of_scope_for_histoire_geographie(
 
 
 
+
+def normalize_math_quote_match_text(
+    value: str,
+) -> str:
+    """
+    Normalisation robuste pour les extraits
+    de mathematiques:
+    - casse
+    - accents
+    - ponctuation
+    - variantes de symboles
+    - espaces
+    """
+
+    import unicodedata
+
+    value = (
+        value
+        or ""
+    )
+
+    value = unicodedata.normalize(
+        "NFKD",
+        value.casefold(),
+    )
+
+    value = "".join(
+        char
+        for char in value
+        if not unicodedata.combining(
+            char
+        )
+    )
+
+    replacements = {
+        "\u2019": "'",
+        "\u2018": "'",
+        "\u02bc": "'",
+        "\u00d7": "*",
+        "\u00f7": "/",
+        "\u2212": "-",
+        "\u2013": "-",
+        "\u2014": "-",
+        "\u00b2": "^2",
+        "\u00b3": "^3",
+        "\u2264": "<=",
+        "\u2265": ">=",
+        "\u2260": "!=",
+    }
+
+    for old, new in replacements.items():
+        value = value.replace(
+            old,
+            new,
+        )
+
+    value = re.sub(
+        r"[^a-z0-9+\-*/=<>!^%]+",
+        " ",
+        value,
+    )
+
+    value = re.sub(
+        r"\s+",
+        " ",
+        value,
+    )
+
+    return value.strip()
+
+
+def is_programme_marocain_math_passage(
+    passage: dict,
+) -> bool:
+
+    program = (
+        passage.get(
+            "program",
+            "",
+        )
+        or ""
+    )
+
+    subject = (
+        passage.get(
+            "subject",
+            "",
+        )
+        or ""
+    )
+
+    program = (
+        normalize_math_quote_match_text(
+            program
+        )
+    )
+
+    subject = (
+        normalize_math_quote_match_text(
+            subject
+        )
+    )
+
+    return (
+        program
+        == "programme marocain"
+        and subject
+        == "mathematiques"
+    )
+
+
+def is_obviously_out_of_scope_for_math_documents(
+    question: str,
+) -> bool:
+    """
+    Refuse les questions clairement historiques,
+    geographiques ou sans rapport avec le cours
+    de mathematiques selectionne.
+    """
+
+    q = (
+        normalize_math_quote_match_text(
+            question
+        )
+    )
+
+    strong_signals = (
+        "premiere guerre mondiale",
+        "seconde guerre mondiale",
+        "guerre mondiale",
+        "traite de versailles",
+        "revolution francaise",
+        "colonisation",
+        "protectorat",
+        "independance du maroc",
+        "guerre froide",
+        "empire ottoman",
+    )
+
+    return any(
+        signal in q
+        for signal in strong_signals
+    )
+
+
+def extract_math_question_anchor(
+    question: str,
+):
+    """
+    Extract text between French/English quotation marks.
+    """
+
+    match = re.search(
+        r'[\u00ab"?]'
+        r'(.+?)'
+        r'[\u00bb"?]',
+        question or "",
+        flags=re.DOTALL,
+    )
+
+    if not match:
+        return None
+
+    anchor = (
+        match.group(1)
+        .strip()
+    )
+
+    if len(anchor) < 4:
+        return None
+
+    return anchor
+
+
+def math_fuzzy_token_coverage(
+    anchor_value: str,
+    candidate_value: str,
+) -> float:
+    """
+    Token matching tolerant to one-character typos.
+    """
+
+    import difflib
+
+    anchor_tokens = [
+        token
+        for token in (
+            normalize_math_quote_match_text(
+                anchor_value
+            ).split()
+        )
+        if token
+    ]
+
+    candidate_tokens = [
+        token
+        for token in (
+            normalize_math_quote_match_text(
+                candidate_value
+            ).split()
+        )
+        if token
+    ]
+
+    if not anchor_tokens:
+        return 0.0
+
+    candidate_set = set(
+        candidate_tokens
+    )
+
+    matched = 0
+
+    for anchor_token in anchor_tokens:
+
+        if anchor_token in candidate_set:
+            matched += 1
+            continue
+
+        if len(anchor_token) < 4:
+            continue
+
+        fuzzy = any(
+            abs(
+                len(anchor_token)
+                - len(candidate_token)
+            )
+            <= 1
+            and difflib.SequenceMatcher(
+                None,
+                anchor_token,
+                candidate_token,
+            ).ratio()
+            >= 0.82
+            for candidate_token
+            in candidate_tokens
+            if len(candidate_token) >= 4
+        )
+
+        if fuzzy:
+            matched += 1
+
+    return (
+        matched
+        / max(
+            1,
+            len(anchor_tokens),
+        )
+    )
+
+
+def extract_math_quoted_answer(
+    question: str,
+    passages: list[dict],
+):
+    """
+    Deterministic extraction for Moroccan Math PDFs.
+
+    It handles:
+    - exact quotations
+    - partial quotations
+    - spelling mistakes
+    - accents/punctuation differences
+
+    No LLM call is needed.
+    """
+
+    import difflib
+
+    anchor = (
+        extract_math_question_anchor(
+            question
+        )
+    )
+
+    # A normal math question without quoted evidence
+    # is not handled here.
+    if anchor is None:
+        return None
+
+    normalized_anchor = (
+        normalize_math_quote_match_text(
+            anchor
+        )
+    )
+
+    compact_anchor = (
+        normalized_anchor
+        .replace(
+            " ",
+            "",
+        )
+    )
+
+    normalized_question = (
+        normalize_math_quote_match_text(
+            question
+        )
+    )
+
+    spelling_tolerance_request = (
+        "malgre la faute"
+        in normalized_question
+    )
+
+    anchor_token_count = len(
+        normalized_anchor.split()
+    )
+
+    partial_completion_request = (
+        "passage complet correspondant"
+        in normalized_question
+    )
+
+    if not normalized_anchor:
+        return {
+            "answerable": False,
+            "answer": get_refusal_answer(
+                question
+            ),
+            "sources": [],
+            "evidence": [],
+        }
+
+    best = None
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+
+        if not (
+            is_programme_marocain_math_passage(
+                passage
+            )
+        ):
+            continue
+
+        text = (
+            passage.get(
+                "text",
+                "",
+            )
+            or ""
+        ).strip()
+
+        if not text:
+            continue
+
+        raw_lines = [
+            re.sub(
+                r"\s+",
+                " ",
+                line,
+            ).strip()
+            for line in text.splitlines()
+            if line.strip()
+        ]
+
+        units = []
+
+        # Individual extracted PDF lines.
+        units.extend(
+            raw_lines
+        )
+
+        # Adjacent lines protect against PDF line wrapping.
+        for index in range(
+            len(raw_lines) - 1
+        ):
+            units.append(
+                raw_lines[index]
+                + " "
+                + raw_lines[index + 1]
+            )
+
+        for index in range(
+            len(raw_lines) - 2
+        ):
+            units.append(
+                raw_lines[index]
+                + " "
+                + raw_lines[index + 1]
+                + " "
+                + raw_lines[index + 2]
+            )
+
+        seen_units = set()
+
+        for unit in units:
+
+            normalized_unit = (
+                normalize_math_quote_match_text(
+                    unit
+                )
+            )
+
+            if (
+                not normalized_unit
+                or normalized_unit
+                in seen_units
+            ):
+                continue
+
+            seen_units.add(
+                normalized_unit
+            )
+
+            compact_unit = (
+                normalized_unit
+                .replace(
+                    " ",
+                    "",
+                )
+            )
+
+            exact = (
+                normalized_anchor
+                == normalized_unit
+            )
+
+            compact_exact = (
+                bool(compact_anchor)
+                and compact_anchor
+                == compact_unit
+            )
+
+            contained = (
+                normalized_anchor
+                in normalized_unit
+            )
+
+            compact_contained = (
+                bool(compact_anchor)
+                and compact_anchor
+                in compact_unit
+            )
+
+            reverse_contained = (
+                normalized_unit
+                in normalized_anchor
+                and len(
+                    normalized_unit
+                )
+                >= 20
+            )
+
+            ratio = (
+                difflib.SequenceMatcher(
+                    None,
+                    normalized_anchor,
+                    normalized_unit,
+                ).ratio()
+            )
+
+            coverage = (
+                math_fuzzy_token_coverage(
+                    anchor,
+                    unit,
+                )
+            )
+
+            retrieval_score = float(
+                passage.get(
+                    "retrieval_score",
+                    0.0,
+                )
+                or 0.0
+            )
+
+            score = (
+                (120.0 if exact else 0.0)
+                + (
+                    118.0
+                    if compact_exact
+                    else 0.0
+                )
+                + (
+                    105.0
+                    if contained
+                    else 0.0
+                )
+                + (
+                    100.0
+                    if compact_contained
+                    else 0.0
+                )
+                + (
+                    70.0
+                    if reverse_contained
+                    else 0.0
+                )
+                + ratio * 30.0
+                + coverage * 25.0
+                + retrieval_score
+            )
+
+            is_single_line = (
+                unit in raw_lines
+            )
+
+            partial_rank = (
+                (
+                    1
+                    if (
+                        contained
+                        and is_single_line
+                    )
+                    else 0
+                ),
+                (
+                    len(
+                        normalized_unit
+                    )
+                    if (
+                        contained
+                        and is_single_line
+                    )
+                    else 0
+                ),
+                score,
+            )
+
+            candidate = {
+                "score": score,
+                "exact": exact,
+                "compact_exact": (
+                    compact_exact
+                ),
+                "contained": contained,
+                "compact_contained": (
+                    compact_contained
+                ),
+                "reverse_contained": (
+                    reverse_contained
+                ),
+                "ratio": ratio,
+                "coverage": coverage,
+                "passage_number": (
+                    passage_number
+                ),
+                "passage": passage,
+                "unit": unit,
+                "is_single_line": (
+                    is_single_line
+                ),
+                "partial_rank": (
+                    partial_rank
+                ),
+            }
+
+            if best is None:
+                best = candidate
+
+            elif partial_completion_request:
+
+                if (
+                    candidate[
+                        "partial_rank"
+                    ]
+                    > best[
+                        "partial_rank"
+                    ]
+                ):
+                    best = candidate
+
+            elif (
+                candidate["score"]
+                > best["score"]
+            ):
+                best = candidate
+
+    if best is None:
+        return {
+            "answerable": False,
+            "answer": get_refusal_answer(
+                question
+            ),
+            "sources": [],
+            "evidence": [],
+        }
+
+    accepted = (
+        best["exact"]
+        or best.get(
+            "compact_exact",
+            False,
+        )
+        or best["contained"]
+        or best.get(
+            "compact_contained",
+            False,
+        )
+        or (
+            best["ratio"] >= 0.84
+            and best["coverage"] >= 0.72
+        )
+        or (
+            best["coverage"] >= 0.88
+            and best["ratio"] >= 0.66
+        )
+        or (
+            spelling_tolerance_request
+            and anchor_token_count >= 5
+            and best["coverage"] >= 0.95
+        )
+    )
+
+    if not accepted:
+        return {
+            "answerable": False,
+            "answer": get_refusal_answer(
+                question
+            ),
+            "sources": [],
+            "evidence": [],
+        }
+
+    passage = (
+        best["passage"]
+    )
+
+    verified_text = (
+        best["unit"]
+        .strip()
+    )
+
+    source = {
+        "file": passage.get(
+            "source",
+            "Source inconnue",
+        ),
+        "page": passage.get(
+            "page",
+            0,
+        ),
+        "relative_path": passage.get(
+            "relative_path",
+            "",
+        ),
+    }
+
+    return {
+        "answerable": True,
+        "answer": verified_text,
+        "sources": [
+            source
+        ],
+        "evidence": [
+            verified_text
+        ],
+    }
+
+
 def generate_answer(
     question: str,
     passages: list[dict],
@@ -18839,6 +19493,42 @@ def generate_answer(
         }
 
     # --------------------------------------------------------
+    # --------------------------------------------------------
+    # --------------------------------------------------------
+    # Programme marocain - Mathematiques:
+    # deterministic evidence handling before legacy extractors.
+    # --------------------------------------------------------
+
+    math_source_scope = any(
+        is_programme_marocain_math_passage(
+            passage
+        )
+        for passage in passages
+    )
+
+    if math_source_scope:
+
+        if is_obviously_out_of_scope_for_math_documents(
+            cleaned_question
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        math_quoted_result = (
+            extract_math_quoted_answer(
+                question=cleaned_question,
+                passages=passages,
+            )
+        )
+
+        if math_quoted_result is not None:
+            return math_quoted_result
+
+
     # --------------------------------------------------------
     # Histoire-Geographie:
     # deterministic early handling before all legacy extractors.
