@@ -8098,6 +8098,9 @@ def generate_summary(
             normalize_text(
                 "Physique-Chimie"
             ),
+            normalize_text(
+                "Physique-Chimie arabe"
+            ),
         }
     ]
 

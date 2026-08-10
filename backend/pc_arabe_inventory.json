@@ -1,0 +1,114 @@
+[
+  {
+    "index": 1,
+    "source": "aksda-alflzat-fi-alhoaa-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": false,
+    "chunks": 3,
+    "strong_candidates": 19
+  },
+  {
+    "index": 2,
+    "source": "almhalil-alhmdhia-oalmhalil-alqaadia-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": false,
+    "chunks": 7,
+    "strong_candidates": 47
+  },
+  {
+    "index": 3,
+    "source": "almoad-oalkhrbaa-althrat-oalaionat-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": false,
+    "chunks": 6,
+    "strong_candidates": 20
+  },
+  {
+    "index": 4,
+    "source": "amthla-lbadh-almoad-almstamla-fi-hiatna-aliomia-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": false,
+    "chunks": 4,
+    "strong_candidates": 16
+  },
+  {
+    "index": 5,
+    "source": "khtora-badh-almoad-almstamla-fi-hiatna-aliomia-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": false,
+    "chunks": 4,
+    "strong_candidates": 27
+  },
+  {
+    "index": 6,
+    "source": "roaiz-alkshf-an-badh-alaionat-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": false,
+    "chunks": 5,
+    "strong_candidates": 16
+  },
+  {
+    "index": 7,
+    "source": "tfaal-badh-almoad-aladhoia-ma-thnaii-aoksjin-alhoaa-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": false,
+    "chunks": 3,
+    "strong_candidates": 21
+  },
+  {
+    "index": 8,
+    "source": "alhrka-oalskon-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 11,
+    "strong_candidates": 99
+  },
+  {
+    "index": 9,
+    "source": "almqaoma-alkhrbaiia-qanon-aom-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 3,
+    "strong_candidates": 27
+  },
+  {
+    "index": 10,
+    "source": "alozn-oalktla-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 6,
+    "strong_candidates": 46
+  },
+  {
+    "index": 11,
+    "source": "alqdra-alkhrbaiia-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 7,
+    "strong_candidates": 65
+  },
+  {
+    "index": 12,
+    "source": "altaqa-alkhrbaiia-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 7,
+    "strong_candidates": 44
+  },
+  {
+    "index": 13,
+    "source": "altathirat-almikanikia-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 5,
+    "strong_candidates": 43
+  },
+  {
+    "index": 14,
+    "source": "toazn-jsm-slb-khadha-lqotin-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 5,
+    "strong_candidates": 36
+  }
+]

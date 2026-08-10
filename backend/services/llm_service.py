@@ -20248,9 +20248,14 @@ def is_programme_marocain_physique_chimie_passage(
                 "",
             )
         )
-        == normalize_text(
-            "Physique-Chimie"
-        )
+        in {
+            normalize_text(
+                "Physique-Chimie"
+            ),
+            normalize_text(
+                "Physique-Chimie arabe"
+            ),
+        }
     )
 
 
@@ -20267,6 +20272,19 @@ def is_obviously_out_of_scope_for_physique_chimie(
     )
 
     signals = (
+        # PC Arabic out-of-scope cues
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629",
+
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629 "
+        "\u0627\u0644\u0627\u0648\u0644\u0649",
+
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629 "
+        "\u0627\u0644\u062b\u0627\u0646\u064a\u0629",
+
+        "\u0627\u0644\u062a\u0627\u0631\u064a\u062e",
         "premiere guerre mondiale",
         "seconde guerre mondiale",
         "guerre mondiale",
@@ -20278,6 +20296,37 @@ def is_obviously_out_of_scope_for_physique_chimie(
         "guerre froide",
         "histoire",
     )
+
+    # Robust Arabic PC out-of-scope normalization
+    arabic_q = (
+        _normalize_math_arabe_ocr_match(
+            question or ""
+        )
+    )
+
+    arabic_signals = (
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629",
+
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629 "
+        "\u0627\u0644\u0627\u0648\u0644\u0649",
+
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629 "
+        "\u0627\u0644\u062b\u0627\u0646\u064a\u0629",
+
+        "\u0627\u0644\u062a\u0627\u0631\u064a\u062e",
+    )
+
+    if any(
+        _normalize_math_arabe_ocr_match(
+            signal
+        )
+        in arabic_q
+        for signal in arabic_signals
+    ):
+        return True
 
     return any(
         signal in q
@@ -20313,9 +20362,26 @@ def extract_physique_chimie_quoted_answer(
             passage
         )
 
-        adapted[
-            "subject"
-        ] = "Math\u00e9matiques"
+        # PC Arabic matcher routing
+        if (
+            normalize_text(
+                passage.get(
+                    "subject",
+                    "",
+                )
+            )
+            == normalize_text(
+                "Physique-Chimie arabe"
+            )
+        ):
+            adapted[
+                "subject"
+            ] = "Math\u00e9matiques arabe"
+
+        else:
+            adapted[
+                "subject"
+            ] = "Math\u00e9matiques"
 
         adapted_passages.append(
             adapted

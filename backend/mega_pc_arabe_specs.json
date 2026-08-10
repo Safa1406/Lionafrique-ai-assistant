@@ -1,0 +1,5582 @@
+{
+  "program": "Programme marocain",
+  "subject": "Physique-Chimie arabe",
+  "pdf_count": 14,
+  "tests_per_pdf": 30,
+  "total_tests": 420,
+  "documents": [
+    {
+      "index": 1,
+      "source": "aksda-alflzat-fi-alhoaa-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «تؼشض انحذ ذ نهصذأ ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تؼشض انحذ ذ نهصذأ ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ستهضو ر د انحذ ذ ان بء غبص ح بئ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ستهضو ر د انحذ ذ ان بء غبص ح بئ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «انصذأ يبدح يسبي خ ي فزح نه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "انصذأ يبدح يسبي خ ي فزح نه"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «نهحذ ذ أ كتست يمب يخ ػبن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نهحذ ذ أ كتست يمب يخ ػبن"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «غجمخ سل مخ داك خ ي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غجمخ سل مخ داك خ ي"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «بل، يض الد انؼشق، أد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بل، يض الد انؼشق، أد"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «احتشاق يسح ق انحذ ذ احتشاق يسح ق ان حبط احتشاق يسح ق انض ك احتشاق يسح ق».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "احتشاق يسح ق انحذ ذ احتشاق يسح ق ان حبط احتشاق يسح ق انض ك احتشاق يسح ق"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «أغهت انفهضاد تحتشق ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أغهت انفهضاد تحتشق ف"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «، ز االحتشالبد ػجبسح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، ز االحتشالبد ػجبسح"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «تؼشض انحذ ذ نهصذأ ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تؼشض انحذ ذ نهصذأ ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «د انحذ ذ ان بء غبص».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ستهضو ر د انحذ ذ ان بء غبص ح بئ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «يبدح يسبي خ ي فزح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "انصذأ يبدح يسبي خ ي فزح نه"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ذ أ كتست يمب يخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نهحذ ذ أ كتست يمب يخ ػبن"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «غجمخ سل مخ داك خ ي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غجمخ سل مخ داك خ ي"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «بل، يض الد انؼشق، أد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بل، يض الد انؼشق، أد"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تؼشض انحذ ذ نهذأ ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تؼشض انحذ ذ نهصذأ ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ستضو ر د انحذ ذ ان بء غبص ح بئ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ستهضو ر د انحذ ذ ان بء غبص ح بئ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «انذأ يبدح يسبي خ ي فزح نه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "انصذأ يبدح يسبي خ ي فزح نه"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «نهحذ ذ أ كتست يمب يخ ػبن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نهحذ ذ أ كتست يمب يخ ػبن"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «غجمخ سل مخ داك خ ي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غجمخ سل مخ داك خ ي"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «بل، يض الد انشق، أد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بل، يض الد انؼشق، أد"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تؼشض انحذ ذ نهصذأ ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تؼشض انحذ ذ نهصذأ ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ستهضو ر د انحذ ذ ان بء غبص ح بئ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ستهضو ر د انحذ ذ ان بء غبص ح بئ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «انصذأ يبدح يسبي خ ي فزح نه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "انصذأ يبدح يسبي خ ي فزح نه"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «نهحذ ذ أ كتست يمب يخ ػبن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نهحذ ذ أ كتست يمب يخ ػبن"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «غجمخ سل مخ داك خ ي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غجمخ سل مخ داك خ ي"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «بل يض الد انؼشق أد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بل، يض الد انؼشق، أد"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «احتشاق يسح ق انحذ ذ احتشاق يسح ق ان حبط احتشاق يسح ق انض ك احتشاق يسح ق».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "احتشاق يسح ق انحذ ذ احتشاق يسح ق ان حبط احتشاق يسح ق انض ك احتشاق يسح ق"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تؼشض انحذ ذ نهصذأ ف"
+            ],
+            [
+              "غجمخ سل مخ داك خ ي"
+            ],
+            [
+              "، ز االحتشالبد ػجبسح"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "source": "almhalil-alhmdhia-oalmhalil-alqaadia-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ورق مشرب (مبلل) بمادة كيميائية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ورق مشرب (مبلل) بمادة كيميائية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «هذه المحاليل مع pH».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هذه المحاليل مع pH"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «تسمى المحاليل ذات 7 = pH».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تسمى المحاليل ذات 7 = pH"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «و نضيفها إلى الكأس A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و نضيفها إلى الكأس A"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «كيف تتغير حمضية المحلول».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كيف تتغير حمضية المحلول"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «دور عملية التخفيف: تهدف عملية التخفيف إلى جعل المحلول أقل حمضية أو أقل قاعدية بإضافة ال».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "دور عملية التخفيف: تهدف عملية التخفيف إلى جعل المحلول أقل حمضية أو أقل قاعدية بإضافة ال"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «يساوي عدد األيونات OHOH».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يساوي عدد األيونات OHOH"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «تفاديا لتطاير قطرات الحمض.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تفاديا لتطاير قطرات الحمض."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «و الكيمياء ثانوية معاذ بن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ورق مشرب (مبلل) بمادة كيميائية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ورق مشرب (مبلل) بمادة كيميائية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «هذه المحاليل مع pH».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هذه المحاليل مع pH"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «تسمى المحاليل ذات 7 = pH».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تسمى المحاليل ذات 7 = pH"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «و نضيفها إلى الكأس A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و نضيفها إلى الكأس A"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «كيف تتغير حمضية المحلول».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كيف تتغير حمضية المحلول"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ورق مشرب (مبلل) بمادة كيميئية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ورق مشرب (مبلل) بمادة كيميائية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «هذه المحليل مع pH».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هذه المحاليل مع pH"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تسمى المحليل ذات 7 = pH».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تسمى المحاليل ذات 7 = pH"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «و نضيها إلى الكأس A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و نضيفها إلى الكأس A"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «كيف تتغير حمضية الملول».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كيف تتغير حمضية المحلول"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ورق مشرب مبلل بمادة كيميائية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ورق مشرب (مبلل) بمادة كيميائية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «هذه المحاليل مع pH».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هذه المحاليل مع pH"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تسمى المحاليل ذات 7 = pH».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تسمى المحاليل ذات 7 = pH"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «و نضيفها إلى الكأس A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و نضيفها إلى الكأس A"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «كيف تتغير حمضية المحلول».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كيف تتغير حمضية المحلول"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «دور عملية التخفيف تهدف عملية التخفيف إلى جعل المحلول أقل حمضية أو أقل قاعدية بإضافة ال».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "دور عملية التخفيف: تهدف عملية التخفيف إلى جعل المحلول أقل حمضية أو أقل قاعدية بإضافة ال"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ],
+            [
+              "و نضيفها إلى الكأس A"
+            ],
+            [
+              "تفاديا لتطاير قطرات الحمض."
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "source": "almoad-oalkhrbaa-althrat-oalaionat-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «I) ا زى شة ثبالحزىبن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "I) ا زى شة ثبالحزىبن"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ضطشح اوزضجذ و شثبء أ رى شثذ ثبالحزىبن.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ضطشح اوزضجذ و شثبء أ رى شثذ ثبالحزىبن."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «خ شح بد و شثبئ١خ خز فخ رزغبرة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خ شح بد و شثبئ١خ خز فخ رزغبرة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «رز صظ ا زسح، رزغ غ ف١ ب رمش٠جب بدح ا زسح، لطش».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رز صظ ا زسح، رزغ غ ف١ ب رمش٠جب بدح ا زسح، لطش"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «س ز حذح و ١خ ا ى شثبء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "س ز حذح و ١خ ا ى شثبء"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «: ) ا زؼبدي ا ى شثبئ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              ": ) ا زؼبدي ا ى شثبئ"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «، فب ا شح خ ا ى شثبئ١خ زسح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، فب ا شح خ ا ى شثبئ١خ زسح"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ػ ذ ب رفمذ أ رىزضت ا زسح إ ىزش».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ػ ذ ب رفمذ أ رىزضت ا زسح إ ىزش"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ؼذد ا زساد، ٠شبس ا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ؼذد ا زساد، ٠شبس ا"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «I) ا زى شة ثبالحزىبن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "I) ا زى شة ثبالحزىبن"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «اوزضجذ و شثبء أ رى».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ضطشح اوزضجذ و شثبء أ رى شثذ ثبالحزىبن."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «شح بد و شثبئ١خ خز».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خ شح بد و شثبئ١خ خز فخ رزغبرة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ا زسح، رزغ غ ف١ ب رمش٠جب بدح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رز صظ ا زسح، رزغ غ ف١ ب رمش٠جب بدح ا زسح، لطش"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ز حذح و ١خ ا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "س ز حذح و ١خ ا ى شثبء"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «) ا زؼبدي ا ى».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              ": ) ا زؼبدي ا ى شثبئ"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «I) ا زى شة ثبالزىبن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "I) ا زى شة ثبالحزىبن"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ضطشح اوزضجذ و شثبء أ رى شثذ ثبالزىبن.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ضطشح اوزضجذ و شثبء أ رى شثذ ثبالحزىبن."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «خ شح بد و شثبئ١خ خز فخ رزغرة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خ شح بد و شثبئ١خ خز فخ رزغبرة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «رز صظ ا زسح، رزغ غ ف١ ب رمش٠جب بدح ا زسح، لطش».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رز صظ ا زسح، رزغ غ ف١ ب رمش٠جب بدح ا زسح، لطش"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «س ز حذح و ١خ ا ى شثبء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "س ز حذح و ١خ ا ى شثبء"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «: ) ا زؼدي ا ى شثبئ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              ": ) ا زؼبدي ا ى شثبئ"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «I ا زى شة ثبالحزىبن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "I) ا زى شة ثبالحزىبن"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ضطشح اوزضجذ و شثبء أ رى شثذ ثبالحزىبن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ضطشح اوزضجذ و شثبء أ رى شثذ ثبالحزىبن."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «خ شح بد و شثبئ١خ خز فخ رزغبرة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خ شح بد و شثبئ١خ خز فخ رزغبرة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «رز صظ ا زسح رزغ غ ف١ ب رمش٠جب بدح ا زسح لطش».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رز صظ ا زسح، رزغ غ ف١ ب رمش٠جب بدح ا زسح، لطش"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «س ز حذح و ١خ ا ى شثبء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "س ز حذح و ١خ ا ى شثبء"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ا زؼبدي ا ى شثبئ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              ": ) ا زؼبدي ا ى شثبئ"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «فب ا شح خ ا ى شثبئ١خ زسح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، فب ا شح خ ا ى شثبئ١خ زسح"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "I) ا زى شة ثبالحزىبن"
+            ],
+            [
+              "س ز حذح و ١خ ا ى شثبء"
+            ],
+            [
+              "ؼذد ا زساد، ٠شبس ا"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "source": "amthla-lbadh-almoad-almstamla-fi-hiatna-aliomia-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «ا شغم ز ضا كث شا ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا شغم ز ضا كث شا ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ؼتثش انضخاج انثالعت ك انفهضاخ انكاسط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ؼتثش انضخاج انثالعت ك انفهضاخ انكاسط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «تتى ص اػح أخغاو ن ا ظائف يسذدج اػت ادا ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتى ص اػح أخغاو ن ا ظائف يسذدج اػت ادا ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الئ ح ن ظائف ا شش ط اعتؼ ان ا.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الئ ح ن ظائف ا شش ط اعتؼ ان ا."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «انخاص ح ان غ ط غ ح:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "انخاص ح ان غ ط غ ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «الزع أ ان غ ط ظ دزب انقاس سج انفهض ح ان ص».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الزع أ ان غ ط ظ دزب انقاس سج انفهض ح ان ص"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «اد انثالعت ك ح يا ه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اد انثالعت ك ح يا ه"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «اد انثالعت ك ح انغاتقح ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اد انثالعت ك ح انغاتقح ف"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «فهض آخش، يادج تالعت ك ح اخش».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "فهض آخش، يادج تالعت ك ح اخش"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «شغم ز ضا كث شا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا شغم ز ضا كث شا ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ؼتثش انضخاج انثالعت ك انفهضاخ انكاسط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ؼتثش انضخاج انثالعت ك انفهضاخ انكاسط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «اػح أخغاو ن ا ظائف يسذدج اػت».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتى ص اػح أخغاو ن ا ظائف يسذدج اػت ادا ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ن ظائف ا شش ط اعتؼ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الئ ح ن ظائف ا شش ط اعتؼ ان ا."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ح ان غ ط غ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "انخاص ح ان غ ط غ ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ان غ ط ظ دزب انقاس سج انفهض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الزع أ ان غ ط ظ دزب انقاس سج انفهض ح ان ص"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ا شغم ز ضا كث شا ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا شغم ز ضا كث شا ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ؼتثش انضخاج انثلعت ك انفهضاخ انكاسط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ؼتثش انضخاج انثالعت ك انفهضاخ انكاسط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تتى ص اػح أخاو ن ا ظائف يسذدج اػت ادا ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتى ص اػح أخغاو ن ا ظائف يسذدج اػت ادا ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الئ ح ن ظائف ا شش ط اعتؼ ان ا.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الئ ح ن ظائف ا شش ط اعتؼ ان ا."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «اناص ح ان غ ط غ ح:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "انخاص ح ان غ ط غ ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الزع أ ان غ ط ظ دزب اناس سج انفهض ح ان ص».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الزع أ ان غ ط ظ دزب انقاس سج انفهض ح ان ص"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ا شغم ز ضا كث شا ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا شغم ز ضا كث شا ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ؼتثش انضخاج انثالعت ك انفهضاخ انكاسط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ؼتثش انضخاج انثالعت ك انفهضاخ انكاسط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تتى ص اػح أخغاو ن ا ظائف يسذدج اػت ادا ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتى ص اػح أخغاو ن ا ظائف يسذدج اػت ادا ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الئ ح ن ظائف ا شش ط اعتؼ ان ا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الئ ح ن ظائف ا شش ط اعتؼ ان ا."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «انخاص ح ان غ ط غ ح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "انخاص ح ان غ ط غ ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الزع أ ان غ ط ظ دزب انقاس سج انفهض ح ان ص».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الزع أ ان غ ط ظ دزب انقاس سج انفهض ح ان ص"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «اد انثالعت ك ح يا ه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اد انثالعت ك ح يا ه"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا شغم ز ضا كث شا ف"
+            ],
+            [
+              "انخاص ح ان غ ط غ ح:"
+            ],
+            [
+              "فهض آخش، يادج تالعت ك ح اخش"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "source": "khtora-badh-almoad-almstamla-fi-hiatna-aliomia-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «خط رح ان فب بد ػه انصسخ انج ئخ:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خط رح ان فب بد ػه انصسخ انج ئخ:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «رزسزة ان فب بد انسبيخ انسبئهخ إن انفزشبح ان بئ خ انجبغ خ رسذ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رزسزة ان فب بد انسبيخ انسبئهخ إن انفزشبح ان بئ خ انجبغ خ رسذ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «رظ ز أيزاض يخزهفخ بخ خ ػ رزاكى ان فب بد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رظ ز أيزاض يخزهفخ بخ خ ػ رزاكى ان فب بد"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «ظغ ان فب بد داخم ان سز ػجبد انخبصخ ث ب ان سبػذح ػه انفزس األ ن ن ب:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ظغ ان فب بد داخم ان سز ػجبد انخبصخ ث ب ان سبػذح ػه انفزس األ ن ن ب:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «رق خ إ زبج انس بد انؼع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رق خ إ زبج انس بد انؼع"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ائ خ داخم أز اض كج زح، ز ث سزخهص غبس».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ائ خ داخم أز اض كج زح، ز ث سزخهص غبس"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «سب ػ ه خ اسززخبع ان فب بد ي ذ انؼصز انجز ش، ز ث كب ذ ت ي اد يؼذ خ نزس ه ب إن أد اد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "سب ػ ه خ اسززخبع ان فب بد ي ذ انؼصز انجز ش، ز ث كب ذ ت ي اد يؼذ خ نزس ه ب إن أد اد"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ان بدح قبثهخ إلػبدح انزص غ، عغ انصب غ ػه ان ز ج انشؼبر انؼبن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ان بدح قبثهخ إلػبدح انزص غ، عغ انصب غ ػه ان ز ج انشؼبر انؼبن"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ػ ه خ انزشك م انق نجخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ػ ه خ انزشك م انق نجخ"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «رح ان فب بد ػه انصسخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خط رح ان فب بد ػه انصسخ انج ئخ:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «فب بد انسبيخ انسبئهخ إن انفزشبح ان بئ خ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رزسزة ان فب بد انسبيخ انسبئهخ إن انفزشبح ان بئ خ انجبغ خ رسذ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «أيزاض يخزهفخ بخ خ ػ رزاكى ان».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رظ ز أيزاض يخزهفخ بخ خ ػ رزاكى ان فب بد"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «بد داخم ان سز ػجبد انخبصخ ث ب ان سبػذح ػه انفزس».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ظغ ان فب بد داخم ان سز ػجبد انخبصخ ث ب ان سبػذح ػه انفزس األ ن ن ب:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «خ إ زبج انس بد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رق خ إ زبج انس بد انؼع"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «داخم أز اض كج زح، ز ث».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ائ خ داخم أز اض كج زح، ز ث سزخهص غبس"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «خط رح ان فب بد ػه انسخ انج ئخ:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خط رح ان فب بد ػه انصسخ انج ئخ:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «رزسزة ان فب بد انسبيخ انسئهخ إن انفزشبح ان بئ خ انجبغ خ رسذ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رزسزة ان فب بد انسبيخ انسبئهخ إن انفزشبح ان بئ خ انجبغ خ رسذ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «رظ ز أيزاض يخزفخ بخ خ ػ رزاكى ان فب بد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رظ ز أيزاض يخزهفخ بخ خ ػ رزاكى ان فب بد"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ظغ ان فب بد داخم ان سز ػجبد انخصخ ث ب ان سبػذح ػه انفزس األ ن ن ب:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ظغ ان فب بد داخم ان سز ػجبد انخبصخ ث ب ان سبػذح ػه انفزس األ ن ن ب:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «رق خ إ زبج انس بد انؼع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رق خ إ زبج انس بد انؼع"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ائ خ داخم أز اض كج زح، ز ث سزهص غبس».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ائ خ داخم أز اض كج زح، ز ث سزخهص غبس"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «خط رح ان فب بد ػه انصسخ انج ئخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خط رح ان فب بد ػه انصسخ انج ئخ:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «رزسزة ان فب بد انسبيخ انسبئهخ إن انفزشبح ان بئ خ انجبغ خ رسذ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رزسزة ان فب بد انسبيخ انسبئهخ إن انفزشبح ان بئ خ انجبغ خ رسذ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «رظ ز أيزاض يخزهفخ بخ خ ػ رزاكى ان فب بد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رظ ز أيزاض يخزهفخ بخ خ ػ رزاكى ان فب بد"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ظغ ان فب بد داخم ان سز ػجبد انخبصخ ث ب ان سبػذح ػه انفزس األ ن ن ب».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ظغ ان فب بد داخم ان سز ػجبد انخبصخ ث ب ان سبػذح ػه انفزس األ ن ن ب:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «رق خ إ زبج انس بد انؼع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رق خ إ زبج انس بد انؼع"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ائ خ داخم أز اض كج زح ز ث سزخهص غبس».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ائ خ داخم أز اض كج زح، ز ث سزخهص غبس"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «سب ػ ه خ اسززخبع ان فب بد ي ذ انؼصز انجز ش ز ث كب ذ ت ي اد يؼذ خ نزس ه ب إن أد اد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "سب ػ ه خ اسززخبع ان فب بد ي ذ انؼصز انجز ش، ز ث كب ذ ت ي اد يؼذ خ نزس ه ب إن أد اد"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خط رح ان فب بد ػه انصسخ انج ئخ:"
+            ],
+            [
+              "رق خ إ زبج انس بد انؼع"
+            ],
+            [
+              "ػ ه خ انزشك م انق نجخ"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "source": "roaiz-alkshf-an-badh-alaionat-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «تعض األ و اخ انفهض ح:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تعض األ و اخ انفهض ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «اخرثاس ذحروي عهى ان حان م انران ح:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اخرثاس ذحروي عهى ان حان م انران ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «األ ثوب األول، الحظ ذكو ساعة أصسق ذل عهى وخود أ و اخ ان حاط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "األ ثوب األول، الحظ ذكو ساعة أصسق ذل عهى وخود أ و اخ ان حاط"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «، وص غره انك Fe(OH)2».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، وص غره انك Fe(OH)2"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «الحظ ذكو ساعة أت ض ذل عهى وخود أ و اخ األنوي وو Al3+».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحظ ذكو ساعة أت ض ذل عهى وخود أ و اخ األنوي وو Al3+"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «، وص غره انك Al(OH)3».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، وص غره انك Al(OH)3"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «هزا انشاعة انزي ذل عهى وخود أ و اخ انض ك Zn2+».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هزا انشاعة انزي ذل عهى وخود أ و اخ انض ك Zn2+"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «، ثى عشضه ألشعح انش ظ.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، ثى عشضه ألشعح انش ظ."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ه ذسوكغ ذ ان حاط II».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ه ذسوكغ ذ ان حاط II"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «تعض األ و اخ انفهض ح:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تعض األ و اخ انفهض ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ذحروي عهى ان حان م».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اخرثاس ذحروي عهى ان حان م انران ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «األول، الحظ ذكو ساعة أصسق ذل عهى وخود أ و».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "األ ثوب األول، الحظ ذكو ساعة أصسق ذل عهى وخود أ و اخ ان حاط"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «، وص غره انك Fe(OH)2».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، وص غره انك Fe(OH)2"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ساعة أت ض ذل عهى وخود أ و اخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحظ ذكو ساعة أت ض ذل عهى وخود أ و اخ األنوي وو Al3+"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «، وص غره انك Al(OH)3».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، وص غره انك Al(OH)3"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تعض األ و اخ انهض ح:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تعض األ و اخ انفهض ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «اخراس ذحروي عهى ان حان م انران ح:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اخرثاس ذحروي عهى ان حان م انران ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «األ ثوب اأول، الحظ ذكو ساعة أصسق ذل عهى وخود أ و اخ ان حاط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "األ ثوب األول، الحظ ذكو ساعة أصسق ذل عهى وخود أ و اخ ان حاط"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «، وص غره انك Fe(OH)2».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، وص غره انك Fe(OH)2"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الحظ ذكو ساعة أت ض ذل عهى وخود أ و اخ األوي وو Al3+».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحظ ذكو ساعة أت ض ذل عهى وخود أ و اخ األنوي وو Al3+"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «، وص غره انك Al(OH)3».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، وص غره انك Al(OH)3"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تعض األ و اخ انفهض ح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تعض األ و اخ انفهض ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «اخرثاس ذحروي عهى ان حان م انران ح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اخرثاس ذحروي عهى ان حان م انران ح:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «األ ثوب األول الحظ ذكو ساعة أصسق ذل عهى وخود أ و اخ ان حاط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "األ ثوب األول، الحظ ذكو ساعة أصسق ذل عهى وخود أ و اخ ان حاط"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «وص غره انك Fe OH 2».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، وص غره انك Fe(OH)2"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الحظ ذكو ساعة أت ض ذل عهى وخود أ و اخ األنوي وو Al3+».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحظ ذكو ساعة أت ض ذل عهى وخود أ و اخ األنوي وو Al3+"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «وص غره انك Al OH 3».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، وص غره انك Al(OH)3"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «هزا انشاعة انزي ذل عهى وخود أ و اخ انض ك Zn2+».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هزا انشاعة انزي ذل عهى وخود أ و اخ انض ك Zn2+"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تعض األ و اخ انفهض ح:"
+            ],
+            [
+              "الحظ ذكو ساعة أت ض ذل عهى وخود أ و اخ األنوي وو Al3+"
+            ],
+            [
+              "ه ذسوكغ ذ ان حاط II"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "source": "tfaal-badh-almoad-aladhoia-ma-thnaii-aoksjin-alhoaa-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «رفبػالد ثؼط ان اد انؼع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رفبػالد ثؼط ان اد انؼع"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «غش ك ركبثف ثخبس ان بء ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غش ك ركبثف ثخبس ان بء ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «اال ج ة، ي ب ذل ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اال ج ة، ي ب ذل ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «احزشاق انمطؼخ انجالسز ك خ ثخبس ان بء ث بئ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "احزشاق انمطؼخ انجالسز ك خ ثخبس ان بء ث بئ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ا االحزشاق غ ش كبيم.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا االحزشاق غ ش كبيم."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «خ ثمبثه ز ب نالحزشاق ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خ ثمبثه ز ب نالحزشاق ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «: غبص لبرم نال سب، زح ػ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              ": غبص لبرم نال سب، زح ػ"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «أ مم انذو أ مم كش بد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أ مم انذو أ مم كش بد"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «بخى سئخ اال سب، زح ػ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بخى سئخ اال سب، زح ػ"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «رفبػالد ثؼط ان اد انؼع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رفبػالد ثؼط ان اد انؼع"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ك ركبثف ثخبس ان بء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غش ك ركبثف ثخبس ان بء ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ج ة، ي ب ذل».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اال ج ة، ي ب ذل ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «انجالسز ك خ ثخبس ان بء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "احزشاق انمطؼخ انجالسز ك خ ثخبس ان بء ث بئ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ا االحزشاق غ ش كبيم.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا االحزشاق غ ش كبيم."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «خ ثمبثه ز ب نالحزشاق ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خ ثمبثه ز ب نالحزشاق ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «رفبالد ثؼط ان اد انؼع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رفبػالد ثؼط ان اد انؼع"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «غش ك ركثف ثخبس ان بء ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غش ك ركبثف ثخبس ان بء ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «اال ج ة، ي ب ذل ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اال ج ة، ي ب ذل ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «احزشاق انمطؼخ انجلسز ك خ ثخبس ان بء ث بئ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "احزشاق انمطؼخ انجالسز ك خ ثخبس ان بء ث بئ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ا االحشاق غ ش كبيم.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا االحزشاق غ ش كبيم."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «خ ثمبثه ز ب نالحشاق ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خ ثمبثه ز ب نالحزشاق ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «رفبػالد ثؼط ان اد انؼع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رفبػالد ثؼط ان اد انؼع"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «غش ك ركبثف ثخبس ان بء ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غش ك ركبثف ثخبس ان بء ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «اال ج ة ي ب ذل ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "اال ج ة، ي ب ذل ػه"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «احزشاق انمطؼخ انجالسز ك خ ثخبس ان بء ث بئ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "احزشاق انمطؼخ انجالسز ك خ ثخبس ان بء ث بئ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ا االحزشاق غ ش كبيم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا االحزشاق غ ش كبيم."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «خ ثمبثه ز ب نالحزشاق ف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خ ثمبثه ز ب نالحزشاق ف"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «غبص لبرم نال سب زح ػ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              ": غبص لبرم نال سب، زح ػ"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "رفبػالد ثؼط ان اد انؼع"
+            ],
+            [
+              "ا االحزشاق غ ش كبيم."
+            ],
+            [
+              "بخى سئخ اال سب، زح ػ"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "source": "alhrka-oalskon-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «ندحرج لعبة ثبت فوقها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ندحرج لعبة ثبت فوقها"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «المرجعي، هناك عدة أنواع من المسارات من بينها:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المرجعي، هناك عدة أنواع من المسارات من بينها:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «بما أن مسار كل من النقطتين A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بما أن مسار كل من النقطتين A"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «وران) بالنسبة ألجسام التالية؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وران) بالنسبة ألجسام التالية؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «السرعة المتوسطة، وحدتها العالمية هيm/s».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "السرعة المتوسطة، وحدتها العالمية هيm/s"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «حدد طبيعة حركة الدراج؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "حدد طبيعة حركة الدراج؟"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «حدد المسافة التي قطعا المتحرك ما بين t1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "حدد المسافة التي قطعا المتحرك ما بين t1"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «تتعلق مسافة التوقف بعدة عوامل أهمها: سرعة العربة -».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتعلق مسافة التوقف بعدة عوامل أهمها: سرعة العربة -"
+            ]
+          ],
+          "expected_page": 5
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «هل ستصطدم السيارة بالحاجز أو ال؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هل ستصطدم السيارة بالحاجز أو ال؟"
+            ]
+          ],
+          "expected_page": 5
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ندحرج لعبة ثبت فوقها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ندحرج لعبة ثبت فوقها"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «هناك عدة أنواع من المسارات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المرجعي، هناك عدة أنواع من المسارات من بينها:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «أن مسار كل من النقطتين».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بما أن مسار كل من النقطتين A"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «وران) بالنسبة ألجسام التالية؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وران) بالنسبة ألجسام التالية؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «السرعة المتوسطة، وحدتها العالمية هيm/s».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "السرعة المتوسطة، وحدتها العالمية هيm/s"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «حدد طبيعة حركة الدراج؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "حدد طبيعة حركة الدراج؟"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ندرج لعبة ثبت فوقها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ندحرج لعبة ثبت فوقها"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «المرجعي، هناك عدة أنواع من المسرات من بينها:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المرجعي، هناك عدة أنواع من المسارات من بينها:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «بما أن مسار كل من النقتين A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بما أن مسار كل من النقطتين A"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «وران) بالسبة ألجسام التالية؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وران) بالنسبة ألجسام التالية؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «السرعة المتسطة، وحدتها العالمية هيm/s».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "السرعة المتوسطة، وحدتها العالمية هيm/s"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «حدد طبيعة حركة الداج؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "حدد طبيعة حركة الدراج؟"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ندحرج لعبة ثبت فوقها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ندحرج لعبة ثبت فوقها"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «المرجعي هناك عدة أنواع من المسارات من بينها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المرجعي، هناك عدة أنواع من المسارات من بينها:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «بما أن مسار كل من النقطتين A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بما أن مسار كل من النقطتين A"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «وران بالنسبة ألجسام التالية؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وران) بالنسبة ألجسام التالية؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «السرعة المتوسطة وحدتها العالمية هيm/s».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "السرعة المتوسطة، وحدتها العالمية هيm/s"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «حدد طبيعة حركة الدراج؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "حدد طبيعة حركة الدراج؟"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «حدد المسافة التي قطعا المتحرك ما بين t1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "حدد المسافة التي قطعا المتحرك ما بين t1"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ندحرج لعبة ثبت فوقها"
+            ],
+            [
+              "السرعة المتوسطة، وحدتها العالمية هيm/s"
+            ],
+            [
+              "هل ستصطدم السيارة بالحاجز أو ال؟"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "source": "almqaoma-alkhrbaiia-qanon-aom-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «املقاومة الكهربائية - قانون أوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "املقاومة الكهربائية - قانون أوم"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «وحدتها العالمية هي األوم Ω».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وحدتها العالمية هي األوم Ω"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ننجز التركيب المبين في الشكل جانبه، باستعمال مولد ذي توتر مستمر».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ننجز التركيب المبين في الشكل جانبه، باستعمال مولد ذي توتر مستمر"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «ثل منحنى تغير التوتر U».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ثل منحنى تغير التوتر U"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «الموصل األومي يتناسب مع شدة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الموصل األومي يتناسب مع شدة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «مميزة موصل أومي مستقيم يمر من أصل المعلم.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مميزة موصل أومي مستقيم يمر من أصل المعلم."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «: شدة التيار المار عبر الموصل األومي وحدته».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              ": شدة التيار المار عبر الموصل األومي وحدته"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «و التوتر بين مربطيه هو U=3V».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و التوتر بين مربطيه هو U=3V"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ما قيمة شدة التيار المار فيه عندما يكون التوتر بين مربطيه هو 5V».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ما قيمة شدة التيار المار فيه عندما يكون التوتر بين مربطيه هو 5V"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «املقاومة الكهربائية - قانون أوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "املقاومة الكهربائية - قانون أوم"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «وحدتها العالمية هي األوم Ω».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وحدتها العالمية هي األوم Ω"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «المبين في الشكل جانبه، باستعمال مولد ذي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ننجز التركيب المبين في الشكل جانبه، باستعمال مولد ذي توتر مستمر"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ثل منحنى تغير التوتر U».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ثل منحنى تغير التوتر U"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الموصل األومي يتناسب مع شدة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الموصل األومي يتناسب مع شدة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «موصل أومي مستقيم يمر من».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مميزة موصل أومي مستقيم يمر من أصل المعلم."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «املقاومة الكهرائية - قانون أوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "املقاومة الكهربائية - قانون أوم"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «وحدتها العامية هي األوم Ω».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وحدتها العالمية هي األوم Ω"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ننجز التركيب المبين في الشكل جانبه، باستمال مولد ذي توتر مستمر».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ننجز التركيب المبين في الشكل جانبه، باستعمال مولد ذي توتر مستمر"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ثل منحنى تغير التتر U».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ثل منحنى تغير التوتر U"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «المصل األومي يتناسب مع شدة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الموصل األومي يتناسب مع شدة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «مميزة موصل أومي مستيم يمر من أصل المعلم.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مميزة موصل أومي مستقيم يمر من أصل المعلم."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «املقاومة الكهربائية - قانون أوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "املقاومة الكهربائية - قانون أوم"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «وحدتها العالمية هي األوم Ω».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وحدتها العالمية هي األوم Ω"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ننجز التركيب المبين في الشكل جانبه باستعمال مولد ذي توتر مستمر».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ننجز التركيب المبين في الشكل جانبه، باستعمال مولد ذي توتر مستمر"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ثل منحنى تغير التوتر U».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ثل منحنى تغير التوتر U"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الموصل األومي يتناسب مع شدة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الموصل األومي يتناسب مع شدة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «مميزة موصل أومي مستقيم يمر من أصل المعلم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مميزة موصل أومي مستقيم يمر من أصل المعلم."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «شدة التيار المار عبر الموصل األومي وحدته».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              ": شدة التيار المار عبر الموصل األومي وحدته"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "املقاومة الكهربائية - قانون أوم"
+            ],
+            [
+              "الموصل األومي يتناسب مع شدة"
+            ],
+            [
+              "ما قيمة شدة التيار المار فيه عندما يكون التوتر بين مربطيه هو 5V"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "source": "alozn-oalktla-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «- ما القوة التي تؤدي إلى سقوط الكرية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- ما القوة التي تؤدي إلى سقوط الكرية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «القيمة التي يشير إليها الدينامومتر هي شدة وزن الجسم و حدتها هي النيوتن N».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "القيمة التي يشير إليها الدينامومتر هي شدة وزن الجسم و حدتها هي النيوتن N"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الخط الرأسي المار من G».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الخط الرأسي المار من G"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «و ما العالقة بين الشدة و وزن الجسم وكتلته».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و ما العالقة بين الشدة و وزن الجسم وكتلته"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «العالمي هي) Kg / N (».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "العالمي هي) Kg / N ("
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «هو مقدار فيزيائي يعبر عن قيمة وزن الجسم أي تأثير األرض عليه حيت يرتبط وزن جسم بكتلته:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هو مقدار فيزيائي يعبر عن قيمة وزن الجسم أي تأثير األرض عليه حيت يرتبط وزن جسم بكتلته:"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «مع تغير الموقع على سطح األرض؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مع تغير الموقع على سطح األرض؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «من شدة وزنه على األرض.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من شدة وزنه على األرض."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «و الكيمياء ثانوية معاذ بن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ما القوة التي تؤدي إلى».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- ما القوة التي تؤدي إلى سقوط الكرية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «يشير إليها الدينامومتر هي شدة وزن الجسم و حدتها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "القيمة التي يشير إليها الدينامومتر هي شدة وزن الجسم و حدتها هي النيوتن N"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الخط الرأسي المار من G».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الخط الرأسي المار من G"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ما العالقة بين الشدة و وزن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و ما العالقة بين الشدة و وزن الجسم وكتلته"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «العالمي هي) Kg / N (».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "العالمي هي) Kg / N ("
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «- ما القوة التي تؤدي إلى سقوط الكية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- ما القوة التي تؤدي إلى سقوط الكرية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «القيمة التي يشير إليها الدينمومتر هي شدة وزن الجسم و حدتها هي النيوتن N».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "القيمة التي يشير إليها الدينامومتر هي شدة وزن الجسم و حدتها هي النيوتن N"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الخط الرسي المار من G».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الخط الرأسي المار من G"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «و ما العلقة بين الشدة و وزن الجسم وكتلته».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و ما العالقة بين الشدة و وزن الجسم وكتلته"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «العلمي هي) Kg / N (».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "العالمي هي) Kg / N ("
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- ما القوة التي تؤدي إلى سقوط الكرية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- ما القوة التي تؤدي إلى سقوط الكرية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «القيمة التي يشير إليها الدينامومتر هي شدة وزن الجسم و حدتها هي النيوتن N».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "القيمة التي يشير إليها الدينامومتر هي شدة وزن الجسم و حدتها هي النيوتن N"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الخط الرأسي المار من G».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الخط الرأسي المار من G"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «و ما العالقة بين الشدة و وزن الجسم وكتلته».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و ما العالقة بين الشدة و وزن الجسم وكتلته"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «العالمي هي Kg / N».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "العالمي هي) Kg / N ("
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «هو مقدار فيزيائي يعبر عن قيمة وزن الجسم أي تأثير األرض عليه حيت يرتبط وزن جسم بكتلته».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هو مقدار فيزيائي يعبر عن قيمة وزن الجسم أي تأثير األرض عليه حيت يرتبط وزن جسم بكتلته:"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ],
+            [
+              "و ما العالقة بين الشدة و وزن الجسم وكتلته"
+            ],
+            [
+              "من شدة وزنه على األرض."
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "source": "alqdra-alkhrbaiia-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «نشغل مصباحين مختلفين 1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نشغل مصباحين مختلفين 1"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «يعبر عن القدرة الكهربائية في النظام العالمي للوحدات بالواط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يعبر عن القدرة الكهربائية في النظام العالمي للوحدات بالواط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «المصباح ثم نعيد التجربة بإستعمال مصباح أخر 6V)».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المصباح ثم نعيد التجربة بإستعمال مصباح أخر 6V)"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «تبقى صالحة في التيار المتناوب الجيبي بالنسبة ألجهزة التسخين (مصا، بيح، مكواة، أفرانكهربائية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تبقى صالحة في التيار المتناوب الجيبي بالنسبة ألجهزة التسخين (مصا، بيح، مكواة، أفرانكهربائية."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «لدينا حسب قانون أوم: R×I = U».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لدينا حسب قانون أوم: R×I = U"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «وهو التوتر الذي يشتغل به الجهاز بصفة عادية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وهو التوتر الذي يشتغل به الجهاز بصفة عادية."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «في تركيب منزلي (V 220».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "في تركيب منزلي (V 220"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «أحسب القدرة الكهربائية PL».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أحسب القدرة الكهربائية PL"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «هل يضيء المصباح بصفة عادية؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هل يضيء المصباح بصفة عادية؟"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «نشغل مصباحين مختلفين 1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نشغل مصباحين مختلفين 1"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «عن القدرة الكهربائية في النظام العالمي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يعبر عن القدرة الكهربائية في النظام العالمي للوحدات بالواط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ثم نعيد التجربة بإستعمال مصباح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المصباح ثم نعيد التجربة بإستعمال مصباح أخر 6V)"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «في التيار المتناوب الجيبي بالنسبة ألجهزة التسخين (مصا،».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تبقى صالحة في التيار المتناوب الجيبي بالنسبة ألجهزة التسخين (مصا، بيح، مكواة، أفرانكهربائية."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «حسب قانون أوم: R×I =».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لدينا حسب قانون أوم: R×I = U"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «التوتر الذي يشتغل به الجهاز».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وهو التوتر الذي يشتغل به الجهاز بصفة عادية."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «نشغل مصبحين مختلفين 1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نشغل مصباحين مختلفين 1"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «يعبر عن القدرة الكهرائية في النظام العالمي للوحدات بالواط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يعبر عن القدرة الكهربائية في النظام العالمي للوحدات بالواط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «المصباح ثم نعيد التجربة بإستمال مصباح أخر 6V)».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المصباح ثم نعيد التجربة بإستعمال مصباح أخر 6V)"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تبقى صالحة في التيار المتناوب الجيبي بالنسبة ألجهزة التسخين (مصا، بيح، مكواة، أفرانكربائية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تبقى صالحة في التيار المتناوب الجيبي بالنسبة ألجهزة التسخين (مصا، بيح، مكواة، أفرانكهربائية."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «لدنا حسب قانون أوم: R×I = U».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لدينا حسب قانون أوم: R×I = U"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «وهو التتر الذي يشتغل به الجهاز بصفة عادية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وهو التوتر الذي يشتغل به الجهاز بصفة عادية."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «نشغل مصباحين مختلفين 1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نشغل مصباحين مختلفين 1"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «يعبر عن القدرة الكهربائية في النظام العالمي للوحدات بالواط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يعبر عن القدرة الكهربائية في النظام العالمي للوحدات بالواط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «المصباح ثم نعيد التجربة بإستعمال مصباح أخر 6V».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المصباح ثم نعيد التجربة بإستعمال مصباح أخر 6V)"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تبقى صالحة في التيار المتناوب الجيبي بالنسبة ألجهزة التسخين مصا بيح مكواة أفرانكهربائية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تبقى صالحة في التيار المتناوب الجيبي بالنسبة ألجهزة التسخين (مصا، بيح، مكواة، أفرانكهربائية."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «لدينا حسب قانون أوم R×I = U».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لدينا حسب قانون أوم: R×I = U"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «وهو التوتر الذي يشتغل به الجهاز بصفة عادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وهو التوتر الذي يشتغل به الجهاز بصفة عادية."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «في تركيب منزلي V 220».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "في تركيب منزلي (V 220"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نشغل مصباحين مختلفين 1"
+            ],
+            [
+              "لدينا حسب قانون أوم: R×I = U"
+            ],
+            [
+              "هل يضيء المصباح بصفة عادية؟"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "source": "altaqa-alkhrbaiia-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «من مضاعفات الجول الكيلوجول KJ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من مضاعفات الجول الكيلوجول KJ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «1 - القدرة الكهربائية المستهلكة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "1 - القدرة الكهربائية المستهلكة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «2 - أحسب القدرة الكهربائية المستهلكة من طرف جهاز التسخين؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2 - أحسب القدرة الكهربائية المستهلكة من طرف جهاز التسخين؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «في تركيب منزلي نشغل».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "في تركيب منزلي نشغل"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «الطاقة الكهربائية المستهلكة في التركيب خالل اليوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة الكهربائية المستهلكة في التركيب خالل اليوم"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «يتوفر العداد على قرص حيث كل دورة لقرص العداد يقابلها استهالك معين للطاقة يكون مسجال على الفتة العداد تسمى ثابتة العداد يرمز».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يتوفر العداد على قرص حيث كل دورة لقرص العداد يقابلها استهالك معين للطاقة يكون مسجال على الفتة العداد تسمى ثابتة العداد يرمز"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «1 – أحسب الطاقة الكهربائية المستهلكة خالل دقيقة؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "1 – أحسب الطاقة الكهربائية المستهلكة خالل دقيقة؟"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ثمن استهالك الكهرباء في التركيب المنزلي خالل شهر واحد:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ثمن استهالك الكهرباء في التركيب المنزلي خالل شهر واحد:"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «و الكيمياء ثانوية معاذ بن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «من مضاعفات الجول الكيلوجول KJ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من مضاعفات الجول الكيلوجول KJ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «1 - القدرة الكهربائية المستهلكة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "1 - القدرة الكهربائية المستهلكة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «أحسب القدرة الكهربائية المستهلكة من طرف جهاز التسخين».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2 - أحسب القدرة الكهربائية المستهلكة من طرف جهاز التسخين؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «في تركيب منزلي نشغل».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "في تركيب منزلي نشغل"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الكهربائية المستهلكة في التركيب خالل».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة الكهربائية المستهلكة في التركيب خالل اليوم"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «من مضاعفات الجول الكيوجول KJ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من مضاعفات الجول الكيلوجول KJ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «1 - القدرة الكهرائية المستهلكة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "1 - القدرة الكهربائية المستهلكة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «2 - أحسب القدرة الكهرائية المستهلكة من طرف جهاز التسخين؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2 - أحسب القدرة الكهربائية المستهلكة من طرف جهاز التسخين؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «في تريب منزلي نشغل».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "في تركيب منزلي نشغل"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الطاقة الكهرائية المستهلكة في التركيب خالل اليوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة الكهربائية المستهلكة في التركيب خالل اليوم"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «من مضاعفات الجول الكيلوجول KJ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من مضاعفات الجول الكيلوجول KJ"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «1 - القدرة الكهربائية المستهلكة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "1 - القدرة الكهربائية المستهلكة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «2 - أحسب القدرة الكهربائية المستهلكة من طرف جهاز التسخين؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2 - أحسب القدرة الكهربائية المستهلكة من طرف جهاز التسخين؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «في تركيب منزلي نشغل».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "في تركيب منزلي نشغل"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الطاقة الكهربائية المستهلكة في التركيب خالل اليوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة الكهربائية المستهلكة في التركيب خالل اليوم"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «يتوفر العداد على قرص حيث كل دورة لقرص العداد يقابلها استهالك معين للطاقة يكون مسجال على الفتة العداد تسمى ثابتة العداد يرمز».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يتوفر العداد على قرص حيث كل دورة لقرص العداد يقابلها استهالك معين للطاقة يكون مسجال على الفتة العداد تسمى ثابتة العداد يرمز"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ],
+            [
+              "في تركيب منزلي نشغل"
+            ],
+            [
+              "ثمن استهالك الكهرباء في التركيب المنزلي خالل شهر واحد:"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "source": "altathirat-almikanikia-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الحظ الصور صفحة 79».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحظ الصور صفحة 79"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «تأثير اليد على القارورة اليد القارورة تشويه شكل القارورة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تأثير اليد على القارورة اليد القارورة تشويه شكل القارورة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «للتأثير الميكانيكي المطبق على جسم ما مفعوالن:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "للتأثير الميكانيكي المطبق على جسم ما مفعوالن:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «): تأثير الطاولة على الكتاب».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "): تأثير الطاولة على الكتاب"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «، يسمى هذا التأثير الميكانيكي تأثير تماس مموضع.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، يسمى هذا التأثير الميكانيكي تأثير تماس مموضع."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ينجذب المسمار نحو المغنطيس دون أن يحصل بينهما تماس.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ينجذب المسمار نحو المغنطيس دون أن يحصل بينهما تماس."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «تحدث عندما يكون الجسم المؤثر و الجسم المؤثر عليه متماسان، و تكون موزعة أو مموضعة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تحدث عندما يكون الجسم المؤثر و الجسم المؤثر عليه متماسان، و تكون موزعة أو مموضعة."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «جرد تأثيرات التماس المطبقة على المجموعة المدروسة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "جرد تأثيرات التماس المطبقة على المجموعة المدروسة."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «صنف هذه التأثيرات إلى مموضعة وموزعة؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "صنف هذه التأثيرات إلى مموضعة وموزعة؟"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الحظ الصور صفحة 79».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحظ الصور صفحة 79"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «اليد على القارورة اليد القارورة تشويه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تأثير اليد على القارورة اليد القارورة تشويه شكل القارورة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الميكانيكي المطبق على جسم ما».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "للتأثير الميكانيكي المطبق على جسم ما مفعوالن:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «): تأثير الطاولة على الكتاب».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "): تأثير الطاولة على الكتاب"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «يسمى هذا التأثير الميكانيكي تأثير».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، يسمى هذا التأثير الميكانيكي تأثير تماس مموضع."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «المسمار نحو المغنطيس دون أن يحصل».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ينجذب المسمار نحو المغنطيس دون أن يحصل بينهما تماس."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الحظ الور صفحة 79».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحظ الصور صفحة 79"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تأثير اليد على القاورة اليد القارورة تشويه شكل القارورة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تأثير اليد على القارورة اليد القارورة تشويه شكل القارورة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «للتأثير الميكنيكي المطبق على جسم ما مفعوالن:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "للتأثير الميكانيكي المطبق على جسم ما مفعوالن:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «): تأثير الطولة على الكتاب».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "): تأثير الطاولة على الكتاب"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «، يسمى هذا التأثير الميكنيكي تأثير تماس مموضع.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، يسمى هذا التأثير الميكانيكي تأثير تماس مموضع."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ينجذب المسمار نحو المغطيس دون أن يحصل بينهما تماس.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ينجذب المسمار نحو المغنطيس دون أن يحصل بينهما تماس."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الحظ الصور صفحة 79».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحظ الصور صفحة 79"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تأثير اليد على القارورة اليد القارورة تشويه شكل القارورة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تأثير اليد على القارورة اليد القارورة تشويه شكل القارورة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «للتأثير الميكانيكي المطبق على جسم ما مفعوالن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "للتأثير الميكانيكي المطبق على جسم ما مفعوالن:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تأثير الطاولة على الكتاب».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "): تأثير الطاولة على الكتاب"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «يسمى هذا التأثير الميكانيكي تأثير تماس مموضع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، يسمى هذا التأثير الميكانيكي تأثير تماس مموضع."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ينجذب المسمار نحو المغنطيس دون أن يحصل بينهما تماس».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ينجذب المسمار نحو المغنطيس دون أن يحصل بينهما تماس."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تحدث عندما يكون الجسم المؤثر و الجسم المؤثر عليه متماسان و تكون موزعة أو مموضعة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تحدث عندما يكون الجسم المؤثر و الجسم المؤثر عليه متماسان، و تكون موزعة أو مموضعة."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحظ الصور صفحة 79"
+            ],
+            [
+              "، يسمى هذا التأثير الميكانيكي تأثير تماس مموضع."
+            ],
+            [
+              "صنف هذه التأثيرات إلى مموضعة وموزعة؟"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "source": "toazn-jsm-slb-khadha-lqotin-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ب- حدد مميزات القوى المطبقة على الجسم (S)».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب- حدد مميزات القوى المطبقة على الجسم (S)"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «مطبقة من طرف الدينامومتر D1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مطبقة من طرف الدينامومتر D1"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «المستقيم المار من A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المستقيم المار من A"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «لتحقيق شرط التوازن يجب أن يكون للقوتين:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لتحقيق شرط التوازن يجب أن يكون للقوتين:"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «متعاكسان ويعبر عن هذا الشرط رياضيا بالعالقة المتجهية التالية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "متعاكسان ويعبر عن هذا الشرط رياضيا بالعالقة المتجهية التالية"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «تأثير األرض على الجسم (S)».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تأثير األرض على الجسم (S)"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «خط التأثير (االتجاه): المستقيم الرأسي المار A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خط التأثير (االتجاه): المستقيم الرأسي المار A"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «نقطة تأثيرها هي مركز ثقل المائع المزاح.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "نقطة تأثيرها هي مركز ثقل المائع المزاح."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «و الكيمياء ثانوية معاذ بن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «حدد مميزات القوى المطبقة على».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب- حدد مميزات القوى المطبقة على الجسم (S)",
+              "حدد مميزات القوى المطبقة على الجسم (S)"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «مطبقة من طرف الدينامومتر D1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مطبقة من طرف الدينامومتر D1"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «المستقيم المار من A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المستقيم المار من A"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «شرط التوازن يجب أن يكون».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لتحقيق شرط التوازن يجب أن يكون للقوتين:"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ويعبر عن هذا الشرط رياضيا بالعالقة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "متعاكسان ويعبر عن هذا الشرط رياضيا بالعالقة المتجهية التالية"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ب- حدد مميزات القوى المبقة على الجسم (S)».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب- حدد مميزات القوى المطبقة على الجسم (S)"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «مطبقة من طرف الدينمومتر D1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مطبقة من طرف الدينامومتر D1"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «المسقيم المار من A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المستقيم المار من A"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «لتحقيق شرط التازن يجب أن يكون للقوتين:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لتحقيق شرط التوازن يجب أن يكون للقوتين:"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «متعاسان ويعبر عن هذا الشرط رياضيا بالعالقة المتجهية التالية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "متعاكسان ويعبر عن هذا الشرط رياضيا بالعالقة المتجهية التالية"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ب- حدد مميزات القوى المطبقة على الجسم S».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب- حدد مميزات القوى المطبقة على الجسم (S)"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «مطبقة من طرف الدينامومتر D1».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مطبقة من طرف الدينامومتر D1"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «المستقيم المار من A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المستقيم المار من A"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «لتحقيق شرط التوازن يجب أن يكون للقوتين».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لتحقيق شرط التوازن يجب أن يكون للقوتين:"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «متعاكسان ويعبر عن هذا الشرط رياضيا بالعالقة المتجهية التالية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "متعاكسان ويعبر عن هذا الشرط رياضيا بالعالقة المتجهية التالية"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تأثير األرض على الجسم S».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تأثير األرض على الجسم (S)"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الفيزياء و الكيمياء ثانوية معاذ بن جبل اإلعدادية"
+            ],
+            [
+              "لتحقيق شرط التوازن يجب أن يكون للقوتين:"
+            ],
+            [
+              "نقطة تأثيرها هي مركز ثقل المائع المزاح."
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    }
+  ]
+}
