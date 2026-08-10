@@ -451,6 +451,201 @@ def delete_existing_chunks(
     )
 
 
+
+def load_ocr_sidecar_pages(
+    pdf_path: Path,
+    original_pages: list[dict],
+) -> list[dict]:
+    """
+    Charge le fichier OCR associ? ? un PDF scann?.
+
+    Convention:
+        lesson.pdf
+        lesson.ocr.txt
+
+    Le fichier OCR contient des s?parateurs:
+        === PAGE 1 ===
+        ...
+        === PAGE 2 ===
+        ...
+
+    Les m?tadonn?es des pages extraites du PDF sont
+    conserv?es quand elles existent.
+    """
+
+    sidecar_path = (
+        pdf_path.with_suffix(
+            ".ocr.txt"
+        )
+    )
+
+    if not sidecar_path.exists():
+        return original_pages
+
+    try:
+        content = (
+            sidecar_path.read_text(
+                encoding="utf-8"
+            )
+        )
+    except Exception as exc:
+        print(
+            f"[OCR] Impossible de lire "
+            f"{sidecar_path.name}: {exc}"
+        )
+        return original_pages
+
+    page_pattern = re.compile(
+        r"(?m)^===\s*PAGE\s+(\d+)\s*===\s*$"
+    )
+
+    matches = list(
+        page_pattern.finditer(
+            content
+        )
+    )
+
+    if not matches:
+        print(
+            f"[OCR] Aucun marqueur PAGE "
+            f"dans {sidecar_path.name}"
+        )
+        return original_pages
+
+    ocr_by_page = {}
+
+    for index, match in enumerate(
+        matches
+    ):
+        page_number = int(
+            match.group(1)
+        )
+
+        start = match.end()
+
+        if index + 1 < len(matches):
+            end = matches[
+                index + 1
+            ].start()
+        else:
+            end = len(content)
+
+        text = (
+            content[
+                start:end
+            ]
+            .strip()
+        )
+
+        ocr_by_page[
+            page_number
+        ] = text
+
+    if not ocr_by_page:
+        return original_pages
+
+    rebuilt_pages = []
+
+    # Preserve the exact page structure expected by
+    # split_pages_into_chunks whenever extract_pdf_pages()
+    # already returned page dictionaries.
+    if original_pages:
+
+        for index, original_page in enumerate(
+            original_pages,
+            start=1,
+        ):
+            page = dict(
+                original_page
+            )
+
+            page_number = (
+                page.get(
+                    "page",
+                    None,
+                )
+                or page.get(
+                    "page_number",
+                    None,
+                )
+                or index
+            )
+
+            try:
+                page_number = int(
+                    page_number
+                )
+            except Exception:
+                page_number = index
+
+            ocr_text = (
+                ocr_by_page.get(
+                    page_number,
+                    ""
+                )
+                or ""
+            ).strip()
+
+            if ocr_text:
+                page["text"] = (
+                    ocr_text
+                )
+                page["has_text"] = True
+
+            rebuilt_pages.append(
+                page
+            )
+
+    else:
+
+        # Defensive fallback in case the PDF extractor
+        # returns no page objects at all.
+        for page_number in sorted(
+            ocr_by_page
+        ):
+            text = (
+                ocr_by_page[
+                    page_number
+                ]
+                or ""
+            ).strip()
+
+            rebuilt_pages.append(
+                {
+                    "page": page_number,
+                    "page_number": (
+                        page_number
+                    ),
+                    "text": text,
+                    "has_text": bool(
+                        text
+                    ),
+                }
+            )
+
+    pages_with_text = sum(
+        1
+        for page in rebuilt_pages
+        if (
+            page.get(
+                "text",
+                ""
+            )
+            or ""
+        ).strip()
+    )
+
+    if pages_with_text:
+        print(
+            f"[OCR] {pdf_path.name}: "
+            f"{pages_with_text} page(s) "
+            f"charg?e(s) depuis "
+            f"{sidecar_path.name}"
+        )
+
+    return rebuilt_pages
+
+
 def prepare_document_chunks(
     pdf_path: Path,
     file_hash: str,
@@ -477,6 +672,25 @@ def prepare_document_chunks(
     pages = extract_pdf_pages(
         pdf_path
     )
+
+    native_pages_with_text = sum(
+        1
+        for page in pages
+        if page.get(
+            "has_text",
+            False,
+        )
+    )
+
+    # --------------------------------------------------------
+    # OCR fallback for scanned PDFs.
+    # Native text always has priority.
+    # --------------------------------------------------------
+    if native_pages_with_text == 0:
+        pages = load_ocr_sidecar_pages(
+            pdf_path=pdf_path,
+            original_pages=pages,
+        )
 
     pages_with_text = sum(
         1

@@ -19456,6 +19456,768 @@ def extract_math_quoted_answer(
     }
 
 
+
+# ============================================================
+# MATH ARABE PASSAGE SUPPORT
+# ============================================================
+
+_original_is_programme_marocain_math_passage = (
+    is_programme_marocain_math_passage
+)
+
+
+def is_programme_marocain_math_passage(
+    passage: dict,
+) -> bool:
+
+    if (
+        _original_is_programme_marocain_math_passage(
+            passage
+        )
+    ):
+        return True
+
+    return (
+        normalize_text(
+            passage.get(
+                "program",
+                "",
+            )
+        )
+        == normalize_text(
+            "Programme marocain"
+        )
+        and normalize_text(
+            passage.get(
+                "subject",
+                "",
+            )
+        )
+        == normalize_text(
+            "Math\u00e9matiques arabe"
+        )
+    )
+
+
+
+# ============================================================
+# MATH ARABE OCR QUOTED MATCHER
+# ============================================================
+#
+# Arabic OCR contains bidi controls, punctuation artefacts,
+# backslashes, underscores and small spelling corruption.
+# Handle quoted Arabic Math anchors deterministically before
+# falling back to the original Math matcher.
+# ============================================================
+
+_original_extract_math_quoted_answer_for_arabe = (
+    extract_math_quoted_answer
+)
+
+
+def _normalize_math_arabe_ocr_match(
+    value: str,
+) -> str:
+
+    import unicodedata
+
+    value = unicodedata.normalize(
+        "NFKC",
+        value or "",
+    ).casefold()
+
+    # Bidi / zero-width OCR controls.
+    value = re.sub(
+        r"[\u200e\u200f\u202a-\u202e"
+        r"\u2066-\u2069\ufeff]",
+        "",
+        value,
+    )
+
+    # Arabic diacritics.
+    value = re.sub(
+        r"[\u064b-\u065f\u0670"
+        r"\u06d6-\u06ed]",
+        "",
+        value,
+    )
+
+    replacements = {
+        "\u0623": "\u0627",
+        "\u0625": "\u0627",
+        "\u0622": "\u0627",
+        "\u0671": "\u0627",
+        "\u0649": "\u064a",
+        "\u0624": "\u0648",
+        "\u0626": "\u064a",
+        "\u0640": "",
+        "\u00d7": "*",
+        "\u00f7": "/",
+        "\u2212": "-",
+        "\u2013": "-",
+        "\u2014": "-",
+        "\u00b2": "^2",
+        "\u00b3": "^3",
+    }
+
+    for old, new in replacements.items():
+        value = value.replace(
+            old,
+            new,
+        )
+
+    # OCR / Markdown artefacts.
+    value = re.sub(
+        r"[\\_|]+",
+        " ",
+        value,
+    )
+
+    # Punctuation is irrelevant for anchor matching.
+    value = re.sub(
+        r"[\u060c\u061b\u061f"
+        r",.;:()\[\]{}]+",
+        " ",
+        value,
+    )
+
+    value = re.sub(
+        r"\s+",
+        " ",
+        value,
+    )
+
+    return value.strip()
+
+
+def _math_arabe_fuzzy_token_coverage(
+    anchor: str,
+    candidate: str,
+) -> float:
+
+    anchor_tokens = (
+        _normalize_math_arabe_ocr_match(
+            anchor
+        ).split()
+    )
+
+    candidate_tokens = (
+        _normalize_math_arabe_ocr_match(
+            candidate
+        ).split()
+    )
+
+    if not anchor_tokens:
+        return 0.0
+
+    if not candidate_tokens:
+        return 0.0
+
+    matched = 0
+
+    for anchor_token in anchor_tokens:
+
+        best_ratio = 0.0
+
+        for candidate_token in candidate_tokens:
+
+            if (
+                anchor_token
+                == candidate_token
+            ):
+                best_ratio = 1.0
+                break
+
+            ratio = (
+                difflib.SequenceMatcher(
+                    None,
+                    anchor_token,
+                    candidate_token,
+                ).ratio()
+            )
+
+            if ratio > best_ratio:
+                best_ratio = ratio
+
+        # Short mathematical tokens should remain strict.
+        if len(anchor_token) <= 2:
+            accepted = (
+                best_ratio >= 1.0
+            )
+
+        elif len(anchor_token) <= 4:
+            accepted = (
+                best_ratio >= 0.75
+            )
+
+        else:
+            accepted = (
+                best_ratio >= 0.70
+            )
+
+        if accepted:
+            matched += 1
+
+    return (
+        matched
+        / len(anchor_tokens)
+    )
+
+
+def _extract_math_arabe_quoted_answer(
+    question: str,
+    passages: list[dict],
+):
+
+    # OCR may itself contain quote characters such as
+    # the Arabic/French closing guillemet inside the anchor.
+    # Therefore use the FIRST opening quote and the LAST
+    # closing quote in the question instead of stopping at
+    # the first closing guillemet.
+    raw_question = (
+        question
+        or ""
+    )
+
+    opening_positions = [
+        position
+        for position in (
+            raw_question.find('"'),
+            raw_question.find("\u201c"),
+            raw_question.find("\u00ab"),
+        )
+        if position >= 0
+    ]
+
+    if not opening_positions:
+        return None
+
+    opening_position = min(
+        opening_positions
+    )
+
+    closing_positions = [
+        raw_question.rfind('"'),
+        raw_question.rfind("\u201d"),
+        raw_question.rfind("\u00bb"),
+    ]
+
+    closing_positions = [
+        position
+        for position
+        in closing_positions
+        if position > opening_position
+    ]
+
+    if not closing_positions:
+        return None
+
+    closing_position = max(
+        closing_positions
+    )
+
+    anchor = (
+        raw_question[
+            opening_position + 1:
+            closing_position
+        ]
+        .strip()
+    )
+
+    if not anchor:
+        return None
+
+    arabic_math_passages = [
+        passage
+        for passage in passages
+        if normalize_text(
+            passage.get(
+                "program",
+                "",
+            )
+        )
+        == normalize_text(
+            "Programme marocain"
+        )
+        and normalize_text(
+            passage.get(
+                "subject",
+                "",
+            )
+        )
+        == normalize_text(
+            "Math\u00e9matiques arabe"
+        )
+    ]
+
+    if not arabic_math_passages:
+        return None
+
+    normalized_anchor = (
+        _normalize_math_arabe_ocr_match(
+            anchor
+        )
+    )
+
+    if not normalized_anchor:
+        return None
+
+    compact_anchor = (
+        normalized_anchor
+        .replace(
+            " ",
+            "",
+        )
+    )
+
+    normalized_question_for_intent = (
+        _normalize_math_arabe_ocr_match(
+            question
+        )
+    )
+
+    partial_completion_request = (
+        "\u0627\u0644\u0645\u0642\u0637\u0639 "
+        "\u0627\u0644\u0643\u0627\u0645\u0644"
+        in normalized_question_for_intent
+    )
+
+    best = None
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+
+        if passage not in arabic_math_passages:
+            continue
+
+        text = (
+            passage.get(
+                "text",
+                "",
+            )
+            or ""
+        )
+
+        lines = [
+            re.sub(
+                r"\s+",
+                " ",
+                line,
+            ).strip()
+            for line in text.splitlines()
+            if line.strip()
+        ]
+
+        candidates = []
+
+        for index, line in enumerate(
+            lines
+        ):
+
+            candidates.append(
+                line
+            )
+
+            if index + 1 < len(lines):
+                candidates.append(
+                    line
+                    + " "
+                    + lines[index + 1]
+                )
+
+            if index + 2 < len(lines):
+                candidates.append(
+                    line
+                    + " "
+                    + lines[index + 1]
+                    + " "
+                    + lines[index + 2]
+                )
+
+        seen = set()
+
+        for candidate in candidates:
+
+            normalized_candidate = (
+                _normalize_math_arabe_ocr_match(
+                    candidate
+                )
+            )
+
+            if not normalized_candidate:
+                continue
+
+            if normalized_candidate in seen:
+                continue
+
+            seen.add(
+                normalized_candidate
+            )
+
+            candidate_tokens = (
+                normalized_candidate
+                .split()
+            )
+
+            # Prevent nonsense matches such as answer == "3".
+            if (
+                len(candidate_tokens) < 2
+                or len(
+                    normalized_candidate
+                ) < 8
+            ):
+                continue
+
+            compact_candidate = (
+                normalized_candidate
+                .replace(
+                    " ",
+                    "",
+                )
+            )
+
+            exact = (
+                normalized_anchor
+                == normalized_candidate
+            )
+
+            compact_exact = (
+                compact_anchor
+                == compact_candidate
+            )
+
+            contained = (
+                normalized_anchor
+                in normalized_candidate
+            )
+
+            compact_contained = (
+                bool(compact_anchor)
+                and compact_anchor
+                in compact_candidate
+            )
+
+            char_ratio = (
+                difflib.SequenceMatcher(
+                    None,
+                    normalized_anchor,
+                    normalized_candidate,
+                ).ratio()
+            )
+
+            token_coverage = (
+                _math_arabe_fuzzy_token_coverage(
+                    anchor,
+                    candidate,
+                )
+            )
+
+            strong_match = (
+                exact
+                or compact_exact
+                or contained
+                or compact_contained
+                or token_coverage >= 0.80
+                or (
+                    token_coverage >= 0.65
+                    and char_ratio >= 0.72
+                )
+            )
+
+            if not strong_match:
+                continue
+
+            # Prefer a complete line containing the anchor.
+            # Among equally strong candidates, prefer the
+            # shortest complete candidate rather than a huge
+            # multi-line OCR window.
+            extra_length = max(
+                0,
+                len(
+                    normalized_candidate
+                )
+                - len(
+                    normalized_anchor
+                ),
+            )
+
+            completion_bonus = 0.0
+            completion_penalty = 0.0
+            trailing_extension = 0
+
+            if partial_completion_request:
+
+                # ------------------------------------------------
+                # A complete-passage request must prefer text that
+                # CONTINUES AFTER the quoted anchor.
+                #
+                # A prefix before the anchor is not sufficient.
+                # Example:
+                #
+                #   "system + anchor"           -> incomplete
+                #   "system + anchor + result"  -> complete
+                # ------------------------------------------------
+
+                anchor_position = (
+                    normalized_candidate.find(
+                        normalized_anchor
+                    )
+                )
+
+                if anchor_position >= 0:
+
+                    anchor_end = (
+                        anchor_position
+                        + len(
+                            normalized_anchor
+                        )
+                    )
+
+                    trailing_extension = len(
+                        normalized_candidate[
+                            anchor_end:
+                        ].strip()
+                    )
+
+                elif (
+                    compact_anchor
+                    and compact_anchor
+                    in compact_candidate
+                ):
+
+                    compact_position = (
+                        compact_candidate.find(
+                            compact_anchor
+                        )
+                    )
+
+                    compact_end = (
+                        compact_position
+                        + len(
+                            compact_anchor
+                        )
+                    )
+
+                    trailing_extension = len(
+                        compact_candidate[
+                            compact_end:
+                        ].strip()
+                    )
+
+                # Returning exactly the partial anchor, or only
+                # adding a prefix before it, is not completion.
+                if trailing_extension <= 0:
+
+                    completion_penalty = 1800.0
+
+                # Prefer a short direct continuation.
+                elif trailing_extension <= 40:
+
+                    completion_bonus = 3000.0
+
+                elif trailing_extension <= 80:
+
+                    completion_bonus = 2200.0
+
+                elif trailing_extension <= 160:
+
+                    completion_bonus = 1100.0
+
+                else:
+
+                    completion_bonus = 150.0
+
+            score = (
+                (1000.0 if exact else 0.0)
+                + (
+                    980.0
+                    if compact_exact
+                    else 0.0
+                )
+                + (
+                    900.0
+                    if contained
+                    else 0.0
+                )
+                + (
+                    880.0
+                    if compact_contained
+                    else 0.0
+                )
+                + token_coverage * 300.0
+                + char_ratio * 150.0
+                + completion_bonus
+                - completion_penalty
+                - extra_length * 0.10
+            )
+
+            candidate_result = {
+                "score": score,
+                "text": candidate,
+                "passage_number": (
+                    passage_number
+                ),
+                "passage": passage,
+                "token_coverage": (
+                    token_coverage
+                ),
+                "char_ratio": (
+                    char_ratio
+                ),
+            }
+
+            if (
+                best is None
+                or candidate_result[
+                    "score"
+                ]
+                > best[
+                    "score"
+                ]
+            ):
+                best = (
+                    candidate_result
+                )
+
+    if best is None:
+        return None
+
+    passage = best[
+        "passage"
+    ]
+
+    selected_text = (
+        best[
+            "text"
+        ].strip()
+    )
+
+    if not selected_text:
+        return None
+
+    return {
+        "answerable": True,
+        "answer": (
+            "\u062d\u0633\u0628 "
+            "\u0627\u0644\u0648\u062b\u064a\u0642\u0629:\n- "
+            + selected_text
+        ),
+        "sources": [
+            {
+                "file": passage.get(
+                    "source",
+                    "Source inconnue",
+                ),
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "relative_path": (
+                    passage.get(
+                        "relative_path",
+                        "",
+                    )
+                ),
+            }
+        ],
+        "evidence": [
+            selected_text
+        ],
+    }
+
+
+def extract_math_quoted_answer(
+    question: str,
+    passages: list[dict],
+):
+
+    # Arabic Math gets its OCR-aware deterministic matcher first.
+    arabic_result = (
+        _extract_math_arabe_quoted_answer(
+            question=question,
+            passages=passages,
+        )
+    )
+
+    if arabic_result is not None:
+        return arabic_result
+
+    # Preserve the original validated Math behaviour.
+    return (
+        _original_extract_math_quoted_answer_for_arabe(
+            question=question,
+            passages=passages,
+        )
+    )
+
+
+
+# ============================================================
+# MATH ARABE OUT-OF-SCOPE SUPPORT
+# ============================================================
+
+_original_is_obviously_out_of_scope_for_math_documents = (
+    is_obviously_out_of_scope_for_math_documents
+)
+
+
+def is_obviously_out_of_scope_for_math_documents(
+    question: str,
+) -> bool:
+
+    if (
+        _original_is_obviously_out_of_scope_for_math_documents(
+            question
+        )
+    ):
+        return True
+
+    normalized = normalize_text(
+        question or ""
+    )
+
+    # Clear Arabic history / geography requests that must not
+    # be answered from a Mathematics lesson merely because a
+    # semantically nearby chunk exists.
+    arabic_out_of_scope_cues = [
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629",
+
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629 "
+        "\u0627\u0644\u0627\u0648\u0644\u0649",
+
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629 "
+        "\u0627\u0644\u062b\u0627\u0646\u064a\u0629",
+
+        "\u0627\u0644\u0627\u0633\u062a\u0639\u0645\u0627\u0631",
+
+        "\u0627\u0644\u062b\u0648\u0631\u0629",
+
+        "\u0627\u0644\u062a\u0627\u0631\u064a\u062e",
+
+        "\u0627\u0644\u0645\u0639\u0627\u0647\u062f\u0629",
+
+        "\u0627\u0644\u062f\u0648\u0644\u0629 "
+        "\u0627\u0644\u0639\u062b\u0645\u0627\u0646\u064a\u0629",
+
+        "\u0627\u0644\u0627\u062d\u062a\u0644\u0627\u0644",
+
+        "\u0627\u0644\u0645\u0639\u0631\u0643\u0629",
+    ]
+
+    return any(
+        normalize_text(
+            cue
+        )
+        in normalized
+        for cue in arabic_out_of_scope_cues
+    )
+
+
 def generate_answer(
     question: str,
     passages: list[dict],

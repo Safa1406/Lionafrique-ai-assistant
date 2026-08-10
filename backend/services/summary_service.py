@@ -8088,9 +8088,14 @@ def generate_summary(
                 "",
             )
         )
-        == normalize_text(
-            "Math\u00e9matiques"
-        )
+        in {
+            normalize_text(
+                "Math\u00e9matiques"
+            ),
+            normalize_text(
+                "Math\u00e9matiques arabe"
+            ),
+        }
     ]
 
     if math_passages:

@@ -1,0 +1,138 @@
+[
+  {
+    "index": 1,
+    "source": "aljthor-almrbaa-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": true,
+    "chunks": 8,
+    "strong_candidates": 35
+  },
+  {
+    "index": 2,
+    "source": "almthlth-alqaim-alzaoia-oalhsab-almthlthi-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": true,
+    "chunks": 10,
+    "strong_candidates": 67
+  },
+  {
+    "index": 3,
+    "source": "almthlthat-almtqaisa-oalmthlthat-almtshabha-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": true,
+    "chunks": 11,
+    "strong_candidates": 69
+  },
+  {
+    "index": 4,
+    "source": "alnshr-oaltamil-oalmttabqat-alhama-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": true,
+    "chunks": 13,
+    "strong_candidates": 42
+  },
+  {
+    "index": 5,
+    "source": "alqoa-aldrs-1-1.pdf",
+    "semester": "S1",
+    "ocr": true,
+    "chunks": 7,
+    "strong_candidates": 30
+  },
+  {
+    "index": 6,
+    "source": "altrtib-oalamliat-aldrs-1-1.pdf",
+    "semester": "S1",
+    "ocr": true,
+    "chunks": 8,
+    "strong_candidates": 71
+  },
+  {
+    "index": 7,
+    "source": "alzoaia-almrkzia-oalzoaia-almhitia-fi-daira-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": true,
+    "chunks": 3,
+    "strong_candidates": 29
+  },
+  {
+    "index": 8,
+    "source": "mbrhna-fitaghors-aldrs-1-1.pdf",
+    "semester": "S1",
+    "ocr": false,
+    "chunks": 3,
+    "strong_candidates": 19
+  },
+  {
+    "index": 9,
+    "source": "mbrhna-talis-aldrs-1.pdf",
+    "semester": "S1",
+    "ocr": true,
+    "chunks": 4,
+    "strong_candidates": 6
+  },
+  {
+    "index": 10,
+    "source": "aldala-alkhtia-oaldala-altaalfia-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 6,
+    "strong_candidates": 49
+  },
+  {
+    "index": 11,
+    "source": "alhndsa-alfdhaiia-hsab-alhjom-oalmsahat-oaltkbir-oaltsghir-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": true,
+    "chunks": 5,
+    "strong_candidates": 56
+  },
+  {
+    "index": 12,
+    "source": "alihsaa-aldrs-1-2.pdf",
+    "semester": "S2",
+    "ocr": true,
+    "chunks": 17,
+    "strong_candidates": 117
+  },
+  {
+    "index": 13,
+    "source": "almaadlat-oalmtrajhat-mn-aldrja-alaola-bmjhol-oahd-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 12,
+    "strong_candidates": 81
+  },
+  {
+    "index": 14,
+    "source": "almalm-fi-almstoa-ihdathita-nqta-ihdathita-mtjha-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 6,
+    "strong_candidates": 23
+  },
+  {
+    "index": 15,
+    "source": "almtjhat-oalizaha-aldrs-1-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 6,
+    "strong_candidates": 30
+  },
+  {
+    "index": 16,
+    "source": "maadla-mstqim-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 5,
+    "strong_candidates": 39
+  },
+  {
+    "index": 17,
+    "source": "nthma-maadltin-mn-aldrja-alaola-bmjholin-aldrs-1.pdf",
+    "semester": "S2",
+    "ocr": false,
+    "chunks": 6,
+    "strong_candidates": 39
+  }
+]

@@ -1355,9 +1355,14 @@ def retrieve_relevant_passages(
         and normalize_text(
             subject or ""
         )
-        == normalize_text(
-            "Math\u00e9matiques"
-        )
+        in {
+            normalize_text(
+                "Math\u00e9matiques"
+            ),
+            normalize_text(
+                "Math\u00e9matiques arabe"
+            ),
+        }
     )
 
     if math_full_summary_scope:
@@ -1488,9 +1493,14 @@ def retrieve_relevant_passages(
         and normalize_text(
             subject or ""
         )
-        == normalize_text(
-            "Math\u00e9matiques"
-        )
+        in {
+            normalize_text(
+                "Math\u00e9matiques"
+            ),
+            normalize_text(
+                "Math\u00e9matiques arabe"
+            ),
+        }
     )
 
     if math_quoted_source_scope:
