@@ -1368,6 +1368,9 @@ def retrieve_relevant_passages(
             normalize_text(
                 "Physique-Chimie arabe"
             ),
+        normalize_text(
+            "SVT arabe"
+        ),
         }
     )
 

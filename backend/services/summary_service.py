@@ -8101,6 +8101,9 @@ def generate_summary(
             normalize_text(
                 "Physique-Chimie arabe"
             ),
+        normalize_text(
+            "SVT arabe"
+        ),
         }
     ]
 

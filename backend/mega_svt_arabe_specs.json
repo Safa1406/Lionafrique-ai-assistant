@@ -1,0 +1,4785 @@
+{
+  "program": "Programme marocain",
+  "subject": "SVT arabe",
+  "pdf_count": 12,
+  "tests_per_pdf": 30,
+  "total_tests": 360,
+  "documents": [
+    {
+      "index": 1,
+      "source": "aldm-oaldoran-aldmoi-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": true,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «يتطلب نشاط مختلف خلايا الأنسجة التزود المستمر بمواد القيت و الأوكسجين انطلاقا من الدم » كما تطرح فيه الفضلات و بذلكيلعب».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يتطلب نشاط مختلف خلايا الأنسجة التزود المستمر بمواد القيت و الأوكسجين انطلاقا من الدم » كما تطرح فيه الفضلات و بذلكيلعب"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «00 ]1+ مع )يمكن التمييز بين مكونين أساسيين 5596 من البلازما و 4596 من الخلايا الدموية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "00 ]1+ مع )يمكن التمييز بين مكونين أساسيين 5596 من البلازما و 4596 من الخلايا الدموية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «1 - التبادلات على مستوىالأسناخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "1 - التبادلات على مستوىالأسناخ"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «- أيونات هيدروكاربونات ذائبة في البلازما.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- أيونات هيدروكاربونات ذائبة في البلازما."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «فيما ينقل الباقي مذابا في البلازما الذي يلعب دور الوسيط بين الكريات الحمراء و الخلايا.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "فيما ينقل الباقي مذابا في البلازما الذي يلعب دور الوسيط بين الكريات الحمراء و الخلايا."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «”د نفاذية هذا الجدار للماء و الموادالمذابة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "”د نفاذية هذا الجدار للماء و الموادالمذابة"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «- أذينة يمنى oreillette droite صميم أذيني je م 5١».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- أذينة يمنى oreillette droite صميم أذيني je م 5١"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «- إنغلاق الصميمات الأذينية-بطينية بداية تقلص عضلةA.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- إنغلاق الصميمات الأذينية-بطينية بداية تقلص عضلةA."
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «- الشعيرات الدموية : réseau sanguin عروق دقيقة توجد في الأعضاء وتتم على مستواها التبادلاتالخلوية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- الشعيرات الدموية : réseau sanguin عروق دقيقة توجد في الأعضاء وتتم على مستواها التبادلاتالخلوية"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «خلايا الأنسجة التزود المستمر بمواد القيت و الأوكسجين انطلاقا من الدم » كما تطرح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يتطلب نشاط مختلف خلايا الأنسجة التزود المستمر بمواد القيت و الأوكسجين انطلاقا من الدم » كما تطرح فيه الفضلات و بذلكيلعب"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «)يمكن التمييز بين مكونين أساسيين 5596 من البلازما و 4596».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "00 ]1+ مع )يمكن التمييز بين مكونين أساسيين 5596 من البلازما و 4596 من الخلايا الدموية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «1 - التبادلات على مستوىالأسناخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "1 - التبادلات على مستوىالأسناخ"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «- أيونات هيدروكاربونات ذائبة في البلازما.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- أيونات هيدروكاربونات ذائبة في البلازما."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الباقي مذابا في البلازما الذي يلعب دور الوسيط بين الكريات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "فيما ينقل الباقي مذابا في البلازما الذي يلعب دور الوسيط بين الكريات الحمراء و الخلايا."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «نفاذية هذا الجدار للماء و».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "”د نفاذية هذا الجدار للماء و الموادالمذابة"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «يتطلب نشاط مختلف خلايا الأنسجة التزود المستمر بمواد القيت و الأوسجين انطلاقا من الدم » كما تطرح فيه الفضلات و بذلكيلعب».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يتطلب نشاط مختلف خلايا الأنسجة التزود المستمر بمواد القيت و الأوكسجين انطلاقا من الدم » كما تطرح فيه الفضلات و بذلكيلعب"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «00 ]1+ مع )يمكن التمييز بين مكونين أساسيين 5596 من البلزما و 4596 من الخلايا الدموية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "00 ]1+ مع )يمكن التمييز بين مكونين أساسيين 5596 من البلازما و 4596 من الخلايا الدموية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «1 - التبادلات على مستوىاأسناخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "1 - التبادلات على مستوىالأسناخ"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «- أيونات هيدروكربونات ذائبة في البلازما.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- أيونات هيدروكاربونات ذائبة في البلازما."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «فيما ينقل الباقي مذابا في البلزما الذي يلعب دور الوسيط بين الكريات الحمراء و الخلايا.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "فيما ينقل الباقي مذابا في البلازما الذي يلعب دور الوسيط بين الكريات الحمراء و الخلايا."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «”د نفاذية هذا الجدار للماء و الموادلمذابة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "”د نفاذية هذا الجدار للماء و الموادالمذابة"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «يتطلب نشاط مختلف خلايا الأنسجة التزود المستمر بمواد القيت و الأوكسجين انطلاقا من الدم » كما تطرح فيه الفضلات و بذلكيلعب».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يتطلب نشاط مختلف خلايا الأنسجة التزود المستمر بمواد القيت و الأوكسجين انطلاقا من الدم » كما تطرح فيه الفضلات و بذلكيلعب"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «00 ]1+ مع يمكن التمييز بين مكونين أساسيين 5596 من البلازما و 4596 من الخلايا الدموية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "00 ]1+ مع )يمكن التمييز بين مكونين أساسيين 5596 من البلازما و 4596 من الخلايا الدموية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «1 - التبادلات على مستوىالأسناخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "1 - التبادلات على مستوىالأسناخ"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- أيونات هيدروكاربونات ذائبة في البلازما».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- أيونات هيدروكاربونات ذائبة في البلازما."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «فيما ينقل الباقي مذابا في البلازما الذي يلعب دور الوسيط بين الكريات الحمراء و الخلايا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "فيما ينقل الباقي مذابا في البلازما الذي يلعب دور الوسيط بين الكريات الحمراء و الخلايا."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «”د نفاذية هذا الجدار للماء و الموادالمذابة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "”د نفاذية هذا الجدار للماء و الموادالمذابة"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- أذينة يمنى oreillette droite صميم أذيني je م 5١».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- أذينة يمنى oreillette droite صميم أذيني je م 5١"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "يتطلب نشاط مختلف خلايا الأنسجة التزود المستمر بمواد القيت و الأوكسجين انطلاقا من الدم » كما تطرح فيه الفضلات و بذلكيلعب"
+            ],
+            [
+              "فيما ينقل الباقي مذابا في البلازما الذي يلعب دور الوسيط بين الكريات الحمراء و الخلايا."
+            ],
+            [
+              "- الشعيرات الدموية : réseau sanguin عروق دقيقة توجد في الأعضاء وتتم على مستواها التبادلاتالخلوية"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "source": "alhdhm-oalamtsas-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": true,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «- يتناول الإنسان أغذية متنوعة من أصل نباتي و من أصلحيواني.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- يتناول الإنسان أغذية متنوعة من أصل نباتي و من أصلحيواني."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «* ملاحظة : عند مضغ قطعة خبز لبضع دقائق نحس بمذاق حلو مختلف عن المذاق cs VI مما يدلعلى».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "* ملاحظة : عند مضغ قطعة خبز لبضع دقائق نحس بمذاق حلو مختلف عن المذاق cs VI مما يدلعلى"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ب- فرضية: ربما تحول النشا إلى مالتوز و كليكوز بعد اختلاطهباللعاب.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب- فرضية: ربما تحول النشا إلى مالتوز و كليكوز بعد اختلاطهباللعاب."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «سكر ثنائي يدعى:مالتوز.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "سكر ثنائي يدعى:مالتوز."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «2-2 على مستوى المعيالدقيق.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2-2 على مستوى المعيالدقيق."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «عديد البيبتيد + SPE ta ig all أحماض أمينية +البروتياز2.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عديد البيبتيد + SPE ta ig all أحماض أمينية +البروتياز2."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «ملحوظة: لا تخضع الأغذية التالية:(الماءء الأملاح المعدنية و الفيتامينات)للهضم.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة: لا تخضع الأغذية التالية:(الماءء الأملاح المعدنية و الفيتامينات)للهضم."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «© بعد تعرض al gall العضوية لعملية الهضم تصبح موادا قيتية .».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "© بعد تعرض al gall العضوية لعملية الهضم تصبح موادا قيتية ."
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «بيبتداز كليكوز Galleal | | أحماضٍدهنية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بيبتداز كليكوز Galleal | | أحماضٍدهنية"
+            ]
+          ],
+          "expected_page": 5
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الإنسان أغذية متنوعة من أصل نباتي و».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- يتناول الإنسان أغذية متنوعة من أصل نباتي و من أصلحيواني."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «عند مضغ قطعة خبز لبضع دقائق نحس بمذاق حلو مختلف عن المذاق».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "* ملاحظة : عند مضغ قطعة خبز لبضع دقائق نحس بمذاق حلو مختلف عن المذاق cs VI مما يدلعلى"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ربما تحول النشا إلى مالتوز و كليكوز».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب- فرضية: ربما تحول النشا إلى مالتوز و كليكوز بعد اختلاطهباللعاب."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «سكر ثنائي يدعى:مالتوز.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "سكر ثنائي يدعى:مالتوز."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «2-2 على مستوى المعيالدقيق.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2-2 على مستوى المعيالدقيق."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «+ SPE ta ig all أحماض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عديد البيبتيد + SPE ta ig all أحماض أمينية +البروتياز2."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «- يتناول الإنسان أغذية متنوعة من أصل نباتي و من أصلحواني.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- يتناول الإنسان أغذية متنوعة من أصل نباتي و من أصلحيواني."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «* ملاظة : عند مضغ قطعة خبز لبضع دقائق نحس بمذاق حلو مختلف عن المذاق cs VI مما يدلعلى».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "* ملاحظة : عند مضغ قطعة خبز لبضع دقائق نحس بمذاق حلو مختلف عن المذاق cs VI مما يدلعلى"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ب- فرضية: ربما تحول النشا إلى مالتوز و كليكوز بعد اختلاطهاللعاب.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب- فرضية: ربما تحول النشا إلى مالتوز و كليكوز بعد اختلاطهباللعاب."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «سكر ثنائي يدعى:مالوز.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "سكر ثنائي يدعى:مالتوز."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «2-2 على مستوى المعيلدقيق.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2-2 على مستوى المعيالدقيق."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «عديد البيبتيد + SPE ta ig all أحماض أمينية +البرتياز2.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عديد البيبتيد + SPE ta ig all أحماض أمينية +البروتياز2."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- يتناول الإنسان أغذية متنوعة من أصل نباتي و من أصلحيواني».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- يتناول الإنسان أغذية متنوعة من أصل نباتي و من أصلحيواني."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «* ملاحظة عند مضغ قطعة خبز لبضع دقائق نحس بمذاق حلو مختلف عن المذاق cs VI مما يدلعلى».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "* ملاحظة : عند مضغ قطعة خبز لبضع دقائق نحس بمذاق حلو مختلف عن المذاق cs VI مما يدلعلى"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ب- فرضية ربما تحول النشا إلى مالتوز و كليكوز بعد اختلاطهباللعاب».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب- فرضية: ربما تحول النشا إلى مالتوز و كليكوز بعد اختلاطهباللعاب."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «سكر ثنائي يدعى مالتوز».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "سكر ثنائي يدعى:مالتوز."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «2-2 على مستوى المعيالدقيق».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2-2 على مستوى المعيالدقيق."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «عديد البيبتيد + SPE ta ig all أحماض أمينية +البروتياز2».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عديد البيبتيد + SPE ta ig all أحماض أمينية +البروتياز2."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ملحوظة لا تخضع الأغذية التالية الماءء الأملاح المعدنية و الفيتامينات للهضم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة: لا تخضع الأغذية التالية:(الماءء الأملاح المعدنية و الفيتامينات)للهضم."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- يتناول الإنسان أغذية متنوعة من أصل نباتي و من أصلحيواني."
+            ],
+            [
+              "2-2 على مستوى المعيالدقيق."
+            ],
+            [
+              "بيبتداز كليكوز Galleal | | أحماضٍدهنية"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "source": "alibraz-alboli-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": true,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «من ماذا يتشكل الجهازالبولي؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من ماذا يتشكل الجهازالبولي؟"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ملحوظة: البولة و الحممض البولي مادتان سامتان.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة: البولة و الحممض البولي مادتان سامتان."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «أ- تجربة: نحقن في وريد الذراع مادة معتمة للأشعة السينية؛».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أ- تجربة: نحقن في وريد الذراع مادة معتمة للأشعة السينية؛"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «عدة مواد ( بولة+حمض بولي+كرياتنين+ماء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عدة مواد ( بولة+حمض بولي+كرياتنين+ماء"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «غير القيتية )» كما يتم التخلص من فائض ١50».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غير القيتية )» كما يتم التخلص من فائض ١50"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «كثيفة من العروق الدموية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كثيفة من العروق الدموية."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «تيسر هذه المساحة الهامة (10:7 ) تخلصالدم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تيسر هذه المساحة الهامة (10:7 ) تخلصالدم"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «إعادة الامتصاص الأنيبيبي ي: ( على مستوى الأنبوب الملتو) الذي يعيد إلى pall بعض مكونات البول الأولي.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "إعادة الامتصاص الأنيبيبي ي: ( على مستوى الأنبوب الملتو) الذي يعيد إلى pall بعض مكونات البول الأولي."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «والتخلص من الفضلات الناتجة عن نشاطالخلايا.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "والتخلص من الفضلات الناتجة عن نشاطالخلايا."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «من ماذا يتشكل الجهازالبولي؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من ماذا يتشكل الجهازالبولي؟"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «البولة و الحممض البولي مادتان».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة: البولة و الحممض البولي مادتان سامتان."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «نحقن في وريد الذراع مادة معتمة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أ- تجربة: نحقن في وريد الذراع مادة معتمة للأشعة السينية؛"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «عدة مواد ( بولة+حمض بولي+كرياتنين+ماء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عدة مواد ( بولة+حمض بولي+كرياتنين+ماء"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «القيتية )» كما يتم التخلص من».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غير القيتية )» كما يتم التخلص من فائض ١50"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «كثيفة من العروق الدموية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كثيفة من العروق الدموية."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «من ماذا يتشكل الجهازلبولي؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من ماذا يتشكل الجهازالبولي؟"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ملحظة: البولة و الحممض البولي مادتان سامتان.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة: البولة و الحممض البولي مادتان سامتان."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «أ- تجربة: نحقن في وريد الذراع مادة معتمة للأشعة السنية؛».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أ- تجربة: نحقن في وريد الذراع مادة معتمة للأشعة السينية؛"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «عدة مواد ( بولة+حمض بولي+كريانين+ماء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عدة مواد ( بولة+حمض بولي+كرياتنين+ماء"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «غير القتية )» كما يتم التخلص من فائض ١50».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غير القيتية )» كما يتم التخلص من فائض ١50"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «كثيفة من العروق الدوية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كثيفة من العروق الدموية."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «من ماذا يتشكل الجهازالبولي؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من ماذا يتشكل الجهازالبولي؟"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ملحوظة البولة و الحممض البولي مادتان سامتان».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة: البولة و الحممض البولي مادتان سامتان."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «أ- تجربة نحقن في وريد الذراع مادة معتمة للأشعة السينية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أ- تجربة: نحقن في وريد الذراع مادة معتمة للأشعة السينية؛"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «عدة مواد بولة+حمض بولي+كرياتنين+ماء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عدة مواد ( بولة+حمض بولي+كرياتنين+ماء"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «غير القيتية » كما يتم التخلص من فائض ١50».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "غير القيتية )» كما يتم التخلص من فائض ١50"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «كثيفة من العروق الدموية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كثيفة من العروق الدموية."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تيسر هذه المساحة الهامة 10 7 تخلصالدم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تيسر هذه المساحة الهامة (10:7 ) تخلصالدم"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من ماذا يتشكل الجهازالبولي؟"
+            ],
+            [
+              "غير القيتية )» كما يتم التخلص من فائض ١50"
+            ],
+            [
+              "والتخلص من الفضلات الناتجة عن نشاطالخلايا."
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "source": "altnfs-and-alinsan-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «ش ائ األ و ع١ غاو ػه ن ؽ١اج.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ش ائ األ و ع١ غاو ػه ن ؽ١اج."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ا ؼكق اإلظ ا أل اؾ ا هئ ٠ح ا ت١600».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا ؼكق اإلظ ا أل اؾ ا هئ ٠ح ا ت١600"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «، فرؽظ ذثاقالخ غاو٠ح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، فرؽظ ذثاقالخ غاو٠ح"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «و ا الؼع طؼ ق ا اء ا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و ا الؼع طؼ ق ا اء ا"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «أه، ؼ١س ٠ر ذثاقي ا غاواخ تا رشانO2».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أه، ؼ١س ٠ر ذثاقي ا غاواخ تا رشانO2"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ا ١ى ذ١ أؼاق أ و ١ك ا ىهت.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا ١ى ذ١ أؼاق أ و ١ك ا ىهت."
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «*ا ر م١ػ ػك ا هع ت ا طح ماغ اص ا رمو١ه ت فك ظك ي ا ر م١ؽاخ.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "*ا ر م١ػ ػك ا هع ت ا طح ماغ اص ا رمو١ه ت فك ظك ي ا ر م١ؽاخ."
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «، أؼاق أو ١ك ا ىهت».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، أؼاق أو ١ك ا ىهت"
+            ]
+          ],
+          "expected_page": 5
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ػك ا ىوا ظ طا ػ ك األشفاص ا م٠ ٠ؼا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ػك ا ىوا ظ طا ػ ك األشفاص ا م٠ ٠ؼا"
+            ]
+          ],
+          "expected_page": 5
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ائ األ و ع١ غاو ػه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ش ائ األ و ع١ غاو ػه ن ؽ١اج."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «اإلظ ا أل اؾ ا هئ ٠ح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا ؼكق اإلظ ا أل اؾ ا هئ ٠ح ا ت١600"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «، فرؽظ ذثاقالخ غاو٠ح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، فرؽظ ذثاقالخ غاو٠ح"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ا الؼع طؼ ق ا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و ا الؼع طؼ ق ا اء ا"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ؼ١س ٠ر ذثاقي ا غاواخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أه، ؼ١س ٠ر ذثاقي ا غاواخ تا رشانO2"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «١ى ذ١ أؼاق أ و ١ك».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا ١ى ذ١ أؼاق أ و ١ك ا ىهت."
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ش ائ األ و ع١ غاو ػه ن ؽ١اج.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ش ائ األ و ع١ غاو ػه ن ؽ١اج."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ا ؼكق اإلظ ا أل اؾ ا هئ ٠ح ا ت١600».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا ؼكق اإلظ ا أل اؾ ا هئ ٠ح ا ت١600"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «، فرؽظ ذثاالخ غاو٠ح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، فرؽظ ذثاقالخ غاو٠ح"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «و ا الؼع طؼ ق ا اء ا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و ا الؼع طؼ ق ا اء ا"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «أه، ؼ١س ٠ر ذثقي ا غاواخ تا رشانO2».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أه، ؼ١س ٠ر ذثاقي ا غاواخ تا رشانO2"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ا ١ى ذ١ أؼاق أ و ١ك ا ىهت.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا ١ى ذ١ أؼاق أ و ١ك ا ىهت."
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ش ائ األ و ع١ غاو ػه ن ؽ١اج».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ش ائ األ و ع١ غاو ػه ن ؽ١اج."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ا ؼكق اإلظ ا أل اؾ ا هئ ٠ح ا ت١600».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا ؼكق اإلظ ا أل اؾ ا هئ ٠ح ا ت١600"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «فرؽظ ذثاقالخ غاو٠ح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "، فرؽظ ذثاقالخ غاو٠ح"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «و ا الؼع طؼ ق ا اء ا».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "و ا الؼع طؼ ق ا اء ا"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «أه ؼ١س ٠ر ذثاقي ا غاواخ تا رشانO2».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أه، ؼ١س ٠ر ذثاقي ا غاواخ تا رشانO2"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ا ١ى ذ١ أؼاق أ و ١ك ا ىهت».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ا ١ى ذ١ أؼاق أ و ١ك ا ىهت."
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «*ا ر م١ػ ػك ا هع ت ا طح ماغ اص ا رمو١ه ت فك ظك ي ا ر م١ؽاخ».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "*ا ر م١ػ ػك ا هع ت ا طح ماغ اص ا رمو١ه ت فك ظك ي ا ر م١ؽاخ."
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ش ائ األ و ع١ غاو ػه ن ؽ١اج."
+            ],
+            [
+              "أه، ؼ١س ٠ر ذثاقي ا غاواخ تا رشانO2"
+            ],
+            [
+              "ػك ا ىوا ظ طا ػ ك األشفاص ا م٠ ٠ؼا"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "source": "altrbia-alghthaiia-aldrs-1.pdf",
+      "semester": "S1",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «سبب الإصابة بداء الحفر هو نقص في الفيتامين C.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "سبب الإصابة بداء الحفر هو نقص في الفيتامين C."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «أذكر سببه وسبل الوقاية منه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أذكر سببه وسبل الوقاية منه"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «تتلخص في تناول أغذية تحتوي على الفيتامين C.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتلخص في تناول أغذية تحتوي على الفيتامين C."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «وسبل الوقاية منه هو تناول أغذية تحتوي على الفيتامين A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وسبل الوقاية منه هو تناول أغذية تحتوي على الفيتامين A"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «الطاقة المحررة من السكريات هي Kj 5219».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة المحررة من السكريات هي Kj 5219"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «الطاقة المحررة من الغذاء المتناول ال تعتبر كافية بالنسبة للمراهق».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة المحررة من الغذاء المتناول ال تعتبر كافية بالنسبة للمراهق"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «من السكريات وعلى األكثر 183g».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من السكريات وعلى األكثر 183g"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «متوازنة ال إفراط وال تفريط حتى نضمن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "متوازنة ال إفراط وال تفريط حتى نضمن"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «تتغير حسب عدة عوامل كالسن والجنس.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتغير حسب عدة عوامل كالسن والجنس."
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الإصابة بداءالحفر».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "سبب الإصابة بداء الحفر هو نقص في الفيتامين C."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «أذكر سببه وسبل الوقاية منه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أذكر سببه وسبل الوقاية منه"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «في تناول أغذية تحتوي على».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتلخص في تناول أغذية تحتوي على الفيتامين C."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «منه هو تناول أغذية تحتوي على».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وسبل الوقاية منه هو تناول أغذية تحتوي على الفيتامين A"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «المحررة من السكريات هي Kj».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة المحررة من السكريات هي Kj 5219"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «من الغذاء المتناول ال تعتبر كافية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة المحررة من الغذاء المتناول ال تعتبر كافية بالنسبة للمراهق"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «حدد سبب الإابة بهذا المرض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "حدد سبب الإصابة بهذا المرض"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «أذكر سببه وسبل الواية منه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أذكر سببه وسبل الوقاية منه"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تتلخص في تناول أغذية تحتوي على الفيامين C.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتلخص في تناول أغذية تحتوي على الفيتامين C."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «وسبل الوقاية منه هو تناول أغذية تحتوي على الفيامين A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وسبل الوقاية منه هو تناول أغذية تحتوي على الفيتامين A"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الطاقة المحررة من السكيات هي Kj 5219».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة المحررة من السكريات هي Kj 5219"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الطاقة المحررة من الغذاء المتاول ال تعتبر كافية بالنسبة للمراهق».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة المحررة من الغذاء المتناول ال تعتبر كافية بالنسبة للمراهق"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «سبب الإصابة بداء الحفر هو نقص في الفيتامين C».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "سبب الإصابة بداء الحفر هو نقص في الفيتامين C."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «أذكر سببه وسبل الوقاية منه».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أذكر سببه وسبل الوقاية منه"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تتلخص في تناول أغذية تحتوي على الفيتامين C».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتلخص في تناول أغذية تحتوي على الفيتامين C."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «وسبل الوقاية منه هو تناول أغذية تحتوي على الفيتامين A».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "وسبل الوقاية منه هو تناول أغذية تحتوي على الفيتامين A"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الطاقة المحررة من السكريات هي Kj 5219».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة المحررة من السكريات هي Kj 5219"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الطاقة المحررة من الغذاء المتناول ال تعتبر كافية بالنسبة للمراهق».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الطاقة المحررة من الغذاء المتناول ال تعتبر كافية بالنسبة للمراهق"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «من السكريات وعلى األكثر 183g».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "من السكريات وعلى األكثر 183g"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "حدد سبب الإصابة بهذا المرض"
+            ],
+            [
+              "الطاقة المحررة من السكريات هي Kj 5219"
+            ],
+            [
+              "تتغير حسب عدة عوامل كالسن والجنس."
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "source": "adhtrabat-aljhaz-almnaai-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": true,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «تذكير: يعمل الجهاز المناعتي على إبطال مفعول المولد المضاد بواسطة الاستجابة المناعتية إلا أنه فيبعض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تذكير: يعمل الجهاز المناعتي على إبطال مفعول المولد المضاد بواسطة الاستجابة المناعتية إلا أنه فيبعض"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «- لتحديد المؤرج المسؤول عن أرجية معينة» يلجأ الطبيب المختص إلى اختبارات جلدية تتمثل في حقن كمياتضئيلة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- لتحديد المؤرج المسؤول عن أرجية معينة» يلجأ الطبيب المختص إلى اختبارات جلدية تتمثل في حقن كمياتضئيلة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «أو عن طريق إزالة التحسيس بواسطة حقن الأشخاص الأرجيين بكميات قليلة من المؤرجالمسؤول.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أو عن طريق إزالة التحسيس بواسطة حقن الأشخاص الأرجيين بكميات قليلة من المؤرجالمسؤول."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «أ تعريف داء السيدا,».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أ تعريف داء السيدا,"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «- يمثل المبيان جانبه تطور عدد الكريات اللمفاوية100».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- يمثل المبيان جانبه تطور عدد الكريات اللمفاوية100"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «على الجهاز المناعتي مستعينا في ذلك بمعارفك حول 2 VIH|غ0».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "على الجهاز المناعتي مستعينا في ذلك بمعارفك حول 2 VIH|غ0"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «©- تسبب حمة 77111 في تدمير الكريات اللمفاوية Ty التي تعتبر ركيزة أساسية في الاستجابة المناعتيةAge gill».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "©- تسبب حمة 77111 في تدمير الكريات اللمفاوية Ty التي تعتبر ركيزة أساسية في الاستجابة المناعتيةAge gill"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «* طرق العدوى بحمة 77111:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "* طرق العدوى بحمة 77111:"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «استعمال الأدوات الحادة المعقمة أو ذات الاستعمالالوحيد.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "استعمال الأدوات الحادة المعقمة أو ذات الاستعمالالوحيد."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الجهاز المناعتي على إبطال مفعول المولد المضاد بواسطة الاستجابة المناعتية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تذكير: يعمل الجهاز المناعتي على إبطال مفعول المولد المضاد بواسطة الاستجابة المناعتية إلا أنه فيبعض"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «المسؤول عن أرجية معينة» يلجأ الطبيب المختص إلى اختبارات جلدية تتمثل».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- لتحديد المؤرج المسؤول عن أرجية معينة» يلجأ الطبيب المختص إلى اختبارات جلدية تتمثل في حقن كمياتضئيلة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «طريق إزالة التحسيس بواسطة حقن الأشخاص الأرجيين بكميات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أو عن طريق إزالة التحسيس بواسطة حقن الأشخاص الأرجيين بكميات قليلة من المؤرجالمسؤول."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «أ تعريف داء السيدا,».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أ تعريف داء السيدا,"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «يمثل المبيان جانبه تطور عدد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- يمثل المبيان جانبه تطور عدد الكريات اللمفاوية100"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «المناعتي مستعينا في ذلك بمعارفك حول».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "على الجهاز المناعتي مستعينا في ذلك بمعارفك حول 2 VIH|غ0"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تذكير: يعمل الجهاز المناعتي على إبطال مفعول المولد المضاد بواسطة الاسجابة المناعتية إلا أنه فيبعض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تذكير: يعمل الجهاز المناعتي على إبطال مفعول المولد المضاد بواسطة الاستجابة المناعتية إلا أنه فيبعض"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «- لتحديد المؤرج المسؤول عن أرجية معينة» يلجأ الطبيب المختص إلى اختبارات جلدية تتمثل في حقن كمياتئيلة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- لتحديد المؤرج المسؤول عن أرجية معينة» يلجأ الطبيب المختص إلى اختبارات جلدية تتمثل في حقن كمياتضئيلة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «أو عن طريق إزالة التحسيس بواسطة حقن الأشخاص الأرجيين بكميات قليلة من المؤرجلمسؤول.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أو عن طريق إزالة التحسيس بواسطة حقن الأشخاص الأرجيين بكميات قليلة من المؤرجالمسؤول."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «أ تعريف داء السدا,».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أ تعريف داء السيدا,"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «- يمثل المبيان جانبه تطور عدد الكريات اللماوية100».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- يمثل المبيان جانبه تطور عدد الكريات اللمفاوية100"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «على الجهاز المنعتي مستعينا في ذلك بمعارفك حول 2 VIH|غ0».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "على الجهاز المناعتي مستعينا في ذلك بمعارفك حول 2 VIH|غ0"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تذكير يعمل الجهاز المناعتي على إبطال مفعول المولد المضاد بواسطة الاستجابة المناعتية إلا أنه فيبعض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تذكير: يعمل الجهاز المناعتي على إبطال مفعول المولد المضاد بواسطة الاستجابة المناعتية إلا أنه فيبعض"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- لتحديد المؤرج المسؤول عن أرجية معينة» يلجأ الطبيب المختص إلى اختبارات جلدية تتمثل في حقن كمياتضئيلة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- لتحديد المؤرج المسؤول عن أرجية معينة» يلجأ الطبيب المختص إلى اختبارات جلدية تتمثل في حقن كمياتضئيلة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «أو عن طريق إزالة التحسيس بواسطة حقن الأشخاص الأرجيين بكميات قليلة من المؤرجالمسؤول».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أو عن طريق إزالة التحسيس بواسطة حقن الأشخاص الأرجيين بكميات قليلة من المؤرجالمسؤول."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «أ تعريف داء السيدا,».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "أ تعريف داء السيدا,"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- يمثل المبيان جانبه تطور عدد الكريات اللمفاوية100».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- يمثل المبيان جانبه تطور عدد الكريات اللمفاوية100"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «على الجهاز المناعتي مستعينا في ذلك بمعارفك حول 2 VIH|غ0».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "على الجهاز المناعتي مستعينا في ذلك بمعارفك حول 2 VIH|غ0"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «©- تسبب حمة 77111 في تدمير الكريات اللمفاوية Ty التي تعتبر ركيزة أساسية في الاستجابة المناعتيةAge gill».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "©- تسبب حمة 77111 في تدمير الكريات اللمفاوية Ty التي تعتبر ركيزة أساسية في الاستجابة المناعتيةAge gill"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تذكير: يعمل الجهاز المناعتي على إبطال مفعول المولد المضاد بواسطة الاستجابة المناعتية إلا أنه فيبعض"
+            ],
+            [
+              "- يمثل المبيان جانبه تطور عدد الكريات اللمفاوية100"
+            ],
+            [
+              "استعمال الأدوات الحادة المعقمة أو ذات الاستعمالالوحيد."
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "source": "aljhaz-aladhli-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": true,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الثالثة ثانوي إعدادي إعدادية الحسن الثانيالعطاوية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الثالثة ثانوي إعدادي إعدادية الحسن الثانيالعطاوية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «الوثائق 1 - 2 -3 ص 68 00رابط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الوثائق 1 - 2 -3 ص 68 00رابط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «لها بطن مغزلي الشكل - لها بطن مسطح وهي نوعان:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لها بطن مغزلي الشكل - لها بطن مسطح وهي نوعان:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «3 - دور العضلات و المفاصل في انجاز الحركة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "3 - دور العضلات و المفاصل في انجاز الحركة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ه عند تطبيق إهاجة كهربائية وحيدة و فعالة مباشرة على العضلة أو على العصب الذي يعصبها » يتم الحصول على تسجيلعضلي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ه عند تطبيق إهاجة كهربائية وحيدة و فعالة مباشرة على العضلة أو على العصب الذي يعصبها » يتم الحصول على تسجيلعضلي"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «ه تكون diy ye العضلة محدودة عندما يؤدي التمديد القوي للعضلة إلى إتلاف مكوناتها.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ه تكون diy ye العضلة محدودة عندما يؤدي التمديد القوي للعضلة إلى إتلاف مكوناتها."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «تثبت العضلات على العظام بواسطة الأوتار».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تثبت العضلات على العظام بواسطة الأوتار"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «تتكون العضلة من خيوط دقيقة تدعى الألياف العضلية ¢ و تبين الملاحظة المجهرية أنها خلايا عملاقة يصل طولها إلىBac».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تتكون العضلة من خيوط دقيقة تدعى الألياف العضلية ¢ و تبين الملاحظة المجهرية أنها خلايا عملاقة يصل طولها إلىBac"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «تستعمل هذه الطاقة في التقلص العضلي و تساهم في الحفاض على حرارة الجسم.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تستعمل هذه الطاقة في التقلص العضلي و تساهم في الحفاض على حرارة الجسم."
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الثالثة ثانوي إعدادي إعدادية الحسن الثانيالعطاوية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الثالثة ثانوي إعدادي إعدادية الحسن الثانيالعطاوية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «العظام فيما بينها بواسطة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ترتبط العظام فيما بينها بواسطة رابطات العظام"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «مغزلي الشكل - لها بطن مسطح».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لها بطن مغزلي الشكل - لها بطن مسطح وهي نوعان:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «- دور العضلات و المفاصل في».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "3 - دور العضلات و المفاصل في انجاز الحركة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «إهاجة كهربائية وحيدة و فعالة مباشرة على العضلة أو على العصب الذي يعصبها »».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ه عند تطبيق إهاجة كهربائية وحيدة و فعالة مباشرة على العضلة أو على العصب الذي يعصبها » يتم الحصول على تسجيلعضلي"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «diy ye العضلة محدودة عندما يؤدي التمديد القوي للعضلة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ه تكون diy ye العضلة محدودة عندما يؤدي التمديد القوي للعضلة إلى إتلاف مكوناتها."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الثالثة ثانوي إعدادي إعدادية الحسن الثانياعطاوية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الثالثة ثانوي إعدادي إعدادية الحسن الثانيالعطاوية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الوائق 1 - 2 -3 ص 68 00رابط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الوثائق 1 - 2 -3 ص 68 00رابط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «لها بطن مغلي الشكل - لها بطن مسطح وهي نوعان:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لها بطن مغزلي الشكل - لها بطن مسطح وهي نوعان:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «3 - دور العلات و المفاصل في انجاز الحركة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "3 - دور العضلات و المفاصل في انجاز الحركة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ه عند تطبيق إهاجة كهربائية وحيدة و فعالة مباشرة على العضلة أو على العصب الذي يعصبها » يتم الحصول على تسجيعضلي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ه عند تطبيق إهاجة كهربائية وحيدة و فعالة مباشرة على العضلة أو على العصب الذي يعصبها » يتم الحصول على تسجيلعضلي"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ه تكون diy ye العضلة محدودة عندما يؤدي التمديد القوي للعضلة إلى إتلاف مكونتها.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ه تكون diy ye العضلة محدودة عندما يؤدي التمديد القوي للعضلة إلى إتلاف مكوناتها."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الثالثة ثانوي إعدادي إعدادية الحسن الثانيالعطاوية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الثالثة ثانوي إعدادي إعدادية الحسن الثانيالعطاوية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الوثائق 1 - 2 -3 ص 68 00رابط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الوثائق 1 - 2 -3 ص 68 00رابط"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «لها بطن مغزلي الشكل - لها بطن مسطح وهي نوعان».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لها بطن مغزلي الشكل - لها بطن مسطح وهي نوعان:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «3 - دور العضلات و المفاصل في انجاز الحركة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "3 - دور العضلات و المفاصل في انجاز الحركة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ه عند تطبيق إهاجة كهربائية وحيدة و فعالة مباشرة على العضلة أو على العصب الذي يعصبها » يتم الحصول على تسجيلعضلي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ه عند تطبيق إهاجة كهربائية وحيدة و فعالة مباشرة على العضلة أو على العصب الذي يعصبها » يتم الحصول على تسجيلعضلي"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ه تكون diy ye العضلة محدودة عندما يؤدي التمديد القوي للعضلة إلى إتلاف مكوناتها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ه تكون diy ye العضلة محدودة عندما يؤدي التمديد القوي للعضلة إلى إتلاف مكوناتها."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تثبت العضلات على العظام بواسطة الأوتار».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تثبت العضلات على العظام بواسطة الأوتار"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الثالثة ثانوي إعدادي إعدادية الحسن الثانيالعطاوية"
+            ],
+            [
+              "ه عند تطبيق إهاجة كهربائية وحيدة و فعالة مباشرة على العضلة أو على العصب الذي يعصبها » يتم الحصول على تسجيلعضلي"
+            ],
+            [
+              "تستعمل هذه الطاقة في التقلص العضلي و تساهم في الحفاض على حرارة الجسم."
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "source": "aljhaz-alasbi-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": true,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الجزء الثاني : و ظائف الربط الثالثة ثانويإعدادي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الجزء الثاني : و ظائف الربط الثالثة ثانويإعدادي"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «- تتكون القشرة المخية أساسا من شبكات خلوية من العصبونات المستديرة أو الهرمية تتواصل فيما بينها بواسطة سينابسات.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتكون القشرة المخية أساسا من شبكات خلوية من العصبونات المستديرة أو الهرمية تتواصل فيما بينها بواسطة سينابسات."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «العصبون neurone هو الوحدة التركيبية للنسيج العصبي8».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "العصبون neurone هو الوحدة التركيبية للنسيج العصبي8"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «ب - ما هي الأعضاء التي تتدخل في حساسية الإبصار؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب - ما هي الأعضاء التي تتدخل في حساسية الإبصار؟"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «ملحوظة : ترتبط الباحة الحركية لنصف كرة مخية معينة بالتحركية الإرادية لنصف الجسم الموجود في الجهةالمعاكسة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة : ترتبط الباحة الحركية لنصف كرة مخية معينة بالتحركية الإرادية لنصف الجسم الموجود في الجهةالمعاكسة"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «2 - العناصر المتدخلة في الحركاتالانعكاسية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2 - العناصر المتدخلة في الحركاتالانعكاسية"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «مستجيب حركي :حيث تؤدي السيالة العصبية إلى حدوثحركة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مستجيب حركي :حيث تؤدي السيالة العصبية إلى حدوثحركة."
+            ]
+          ],
+          "expected_page": 5
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «١ 0 | بواسطةهذاالعصب الجدر cee):».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "١ 0 | بواسطةهذاالعصب الجدر cee):"
+            ]
+          ],
+          "expected_page": 6
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «عضلات الطرف العلوي 0 حت عين : شبكية (مخاريط 5(Glee».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عضلات الطرف العلوي 0 حت عين : شبكية (مخاريط 5(Glee"
+            ]
+          ],
+          "expected_page": 7
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الثاني : و ظائف الربط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الجزء الثاني : و ظائف الربط الثالثة ثانويإعدادي"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «المخية أساسا من شبكات خلوية من العصبونات المستديرة أو الهرمية تتواصل فيما».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتكون القشرة المخية أساسا من شبكات خلوية من العصبونات المستديرة أو الهرمية تتواصل فيما بينها بواسطة سينابسات."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «neurone هو الوحدة التركيبية للنسيج».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "العصبون neurone هو الوحدة التركيبية للنسيج العصبي8"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «ما هي الأعضاء التي تتدخل في».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب - ما هي الأعضاء التي تتدخل في حساسية الإبصار؟"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الباحة الحركية لنصف كرة مخية معينة بالتحركية الإرادية لنصف الجسم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة : ترتبط الباحة الحركية لنصف كرة مخية معينة بالتحركية الإرادية لنصف الجسم الموجود في الجهةالمعاكسة"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «2 - العناصر المتدخلة في الحركاتالانعكاسية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2 - العناصر المتدخلة في الحركاتالانعكاسية"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الجزء الثاني : و ظائف الربط الثالثة ثانويعدادي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الجزء الثاني : و ظائف الربط الثالثة ثانويإعدادي"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «- تتكون القشرة المخية أساسا من شبكات خلوية من العصونات المستديرة أو الهرمية تتواصل فيما بينها بواسطة سينابسات.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتكون القشرة المخية أساسا من شبكات خلوية من العصبونات المستديرة أو الهرمية تتواصل فيما بينها بواسطة سينابسات."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «العصبون neurone هو الوحدة التريبية للنسيج العصبي8».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "العصبون neurone هو الوحدة التركيبية للنسيج العصبي8"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ب - ما هي الأضاء التي تتدخل في حساسية الإبصار؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب - ما هي الأعضاء التي تتدخل في حساسية الإبصار؟"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ملحوظة : ترتبط الباحة الحركية لنصف كرة مخية معينة بالتحركية الإرادية لنصف الجسم الموجود في الجهةامعاكسة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة : ترتبط الباحة الحركية لنصف كرة مخية معينة بالتحركية الإرادية لنصف الجسم الموجود في الجهةالمعاكسة"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «2 - العناصر المتدخلة في الحركاتاانعكاسية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2 - العناصر المتدخلة في الحركاتالانعكاسية"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الجزء الثاني و ظائف الربط الثالثة ثانويإعدادي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الجزء الثاني : و ظائف الربط الثالثة ثانويإعدادي"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- تتكون القشرة المخية أساسا من شبكات خلوية من العصبونات المستديرة أو الهرمية تتواصل فيما بينها بواسطة سينابسات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتكون القشرة المخية أساسا من شبكات خلوية من العصبونات المستديرة أو الهرمية تتواصل فيما بينها بواسطة سينابسات."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «العصبون neurone هو الوحدة التركيبية للنسيج العصبي8».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "العصبون neurone هو الوحدة التركيبية للنسيج العصبي8"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ب - ما هي الأعضاء التي تتدخل في حساسية الإبصار؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ب - ما هي الأعضاء التي تتدخل في حساسية الإبصار؟"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ملحوظة ترتبط الباحة الحركية لنصف كرة مخية معينة بالتحركية الإرادية لنصف الجسم الموجود في الجهةالمعاكسة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ملحوظة : ترتبط الباحة الحركية لنصف كرة مخية معينة بالتحركية الإرادية لنصف الجسم الموجود في الجهةالمعاكسة"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «2 - العناصر المتدخلة في الحركاتالانعكاسية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2 - العناصر المتدخلة في الحركاتالانعكاسية"
+            ]
+          ],
+          "expected_page": 4
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «مستجيب حركي حيث تؤدي السيالة العصبية إلى حدوثحركة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مستجيب حركي :حيث تؤدي السيالة العصبية إلى حدوثحركة."
+            ]
+          ],
+          "expected_page": 5
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الجزء الثاني : و ظائف الربط الثالثة ثانويإعدادي"
+            ],
+            [
+              "ملحوظة : ترتبط الباحة الحركية لنصف كرة مخية معينة بالتحركية الإرادية لنصف الجسم الموجود في الجهةالمعاكسة"
+            ],
+            [
+              "عضلات الطرف العلوي 0 حت عين : شبكية (مخاريط 5(Glee"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "source": "aljrathim-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": false,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «المتعضي المجهري هو كائن حي صغير لا يرى إلا بالمجهر، ويسمى أيضا جرثوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المتعضي المجهري هو كائن حي صغير لا يرى إلا بالمجهر، ويسمى أيضا جرثوم"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «عند البعض الجرثوم هو متعضي مجهري ممرض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عند البعض الجرثوم هو متعضي مجهري ممرض"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «توجد المتعضيات المجهرية في جميع الأوساط الخارجية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "توجد المتعضيات المجهرية في جميع الأوساط الخارجية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الماء والهواء والتربة والأطعمة وداخل الأمعاء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الماء والهواء والتربة والأطعمة وداخل الأمعاء"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «تصنف المتعضيات المجهرية إلى أربع مجموعات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تصنف المتعضيات المجهرية إلى أربع مجموعات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «الحيوانات الأولية والبكتريات والفطريات المجهرية والحمات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحيوانات الأولية والبكتريات والفطريات المجهرية والحمات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «بكتريا في حالة انقسام».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بكتريا في حالة انقسام"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «خبز - حلويات – مشروبات كحولية - جبن -».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "خبز - حلويات – مشروبات كحولية - جبن -"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «- خميرات –بكتريات -عصيات لبنية-».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- خميرات –بكتريات -عصيات لبنية-"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «هو كائن حي صغير لا يرى إلا بالمجهر،».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المتعضي المجهري هو كائن حي صغير لا يرى إلا بالمجهر، ويسمى أيضا جرثوم"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «البعض الجرثوم هو متعضي مجهري».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عند البعض الجرثوم هو متعضي مجهري ممرض"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «المتعضيات المجهرية في جميع الأوساط».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "توجد المتعضيات المجهرية في جميع الأوساط الخارجية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الماء والهواء والتربة والأطعمة وداخل الأمعاء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الماء والهواء والتربة والأطعمة وداخل الأمعاء"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «تصنف المتعضيات المجهرية إلى أربع مجموعات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تصنف المتعضيات المجهرية إلى أربع مجموعات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الحيوانات الأولية والبكتريات والفطريات المجهرية والحمات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحيوانات الأولية والبكتريات والفطريات المجهرية والحمات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «المعضي المجهري هو كائن حي صغير لا يرى إلا بالمجهر، ويسمى أيضا جرثوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المتعضي المجهري هو كائن حي صغير لا يرى إلا بالمجهر، ويسمى أيضا جرثوم"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «عند البعض الجثوم هو متعضي مجهري ممرض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عند البعض الجرثوم هو متعضي مجهري ممرض"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «توجد المتضيات المجهرية في جميع الأوساط الخارجية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "توجد المتعضيات المجهرية في جميع الأوساط الخارجية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الماء والهواء والتربة والأعمة وداخل الأمعاء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الماء والهواء والتربة والأطعمة وداخل الأمعاء"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تصنف المتضيات المجهرية إلى أربع مجموعات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تصنف المتعضيات المجهرية إلى أربع مجموعات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الحيوانات الأولية والبكريات والفطريات المجهرية والحمات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحيوانات الأولية والبكتريات والفطريات المجهرية والحمات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «المتعضي المجهري هو كائن حي صغير لا يرى إلا بالمجهر ويسمى أيضا جرثوم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المتعضي المجهري هو كائن حي صغير لا يرى إلا بالمجهر، ويسمى أيضا جرثوم"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «عند البعض الجرثوم هو متعضي مجهري ممرض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "عند البعض الجرثوم هو متعضي مجهري ممرض"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «توجد المتعضيات المجهرية في جميع الأوساط الخارجية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "توجد المتعضيات المجهرية في جميع الأوساط الخارجية"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الماء والهواء والتربة والأطعمة وداخل الأمعاء».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الماء والهواء والتربة والأطعمة وداخل الأمعاء"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تصنف المتعضيات المجهرية إلى أربع مجموعات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تصنف المتعضيات المجهرية إلى أربع مجموعات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الحيوانات الأولية والبكتريات والفطريات المجهرية والحمات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الحيوانات الأولية والبكتريات والفطريات المجهرية والحمات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «بكتريا في حالة انقسام».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "بكتريا في حالة انقسام"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "المتعضي المجهري هو كائن حي صغير لا يرى إلا بالمجهر، ويسمى أيضا جرثوم"
+            ],
+            [
+              "تصنف المتعضيات المجهرية إلى أربع مجموعات"
+            ],
+            [
+              "- خميرات –بكتريات -عصيات لبنية-"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "source": "sha-aljsm-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": true,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «- تتعدد أجهزة الجسم ( الجهاز الهضميء الجهاز التنفسيء الجهاز البولي» الجهاز العصبي.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتعدد أجهزة الجسم ( الجهاز الهضميء الجهاز التنفسيء الجهاز البولي» الجهاز العصبي."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «تسوس GLA) | - تحطيم بنية الأسنان فوق الأسنان - تنظيف الأسنان بالفرشاة و المعجونبطريقة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تسوس GLA) | - تحطيم بنية الأسنان فوق الأسنان - تنظيف الأسنان بالفرشاة و المعجونبطريقة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «| - التدخين: من بين عواقب التدخين على الجهاز التنفسي:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "| - التدخين: من بين عواقب التدخين على الجهاز التنفسي:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «ج - تلوث الهواء: بعض ملوثات الهواء الناتجة عن الأنشطة الصناعية تؤدي إلى التهاب القصبات الهوائية و الإصابةبالربو.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ج - تلوث الهواء: بعض ملوثات الهواء الناتجة عن الأنشطة الصناعية تؤدي إلى التهاب القصبات الهوائية و الإصابةبالربو."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «- الغعبطة و الكآبة - الغبطة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- الغعبطة و الكآبة - الغبطة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «| التشنج العضلي: يكون مؤقتا بسبب نقص في مورد pall ناجم عن إصابة مرض أو مرض تصلب الشرايين و أحيانا ينجم عنقلة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "| التشنج العضلي: يكون مؤقتا بسبب نقص في مورد pall ناجم عن إصابة مرض أو مرض تصلب الشرايين و أحيانا ينجم عنقلة"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «- حرقة حادة عند التبول - العقم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- حرقة حادة عند التبول - العقم"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «- تتم العدوى بهذه الأمراض عن طريق الاتصال الجنسي مع شريك مصاب.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتم العدوى بهذه الأمراض عن طريق الاتصال الجنسي مع شريك مصاب."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «7 العلاج بواسطة المضادات الحيوية وفقا لوصفةالطبيب.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "7 العلاج بواسطة المضادات الحيوية وفقا لوصفةالطبيب."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «أجهزة الجسم ( الجهاز الهضميء الجهاز التنفسيء الجهاز».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتعدد أجهزة الجسم ( الجهاز الهضميء الجهاز التنفسيء الجهاز البولي» الجهاز العصبي."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «| - تحطيم بنية الأسنان فوق الأسنان - تنظيف الأسنان».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تسوس GLA) | - تحطيم بنية الأسنان فوق الأسنان - تنظيف الأسنان بالفرشاة و المعجونبطريقة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «التدخين: من بين عواقب التدخين على».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "| - التدخين: من بين عواقب التدخين على الجهاز التنفسي:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الهواء: بعض ملوثات الهواء الناتجة عن الأنشطة الصناعية تؤدي إلى التهاب القصبات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ج - تلوث الهواء: بعض ملوثات الهواء الناتجة عن الأنشطة الصناعية تؤدي إلى التهاب القصبات الهوائية و الإصابةبالربو."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «- الغعبطة و الكآبة - الغبطة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- الغعبطة و الكآبة - الغبطة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «مؤقتا بسبب نقص في مورد pall ناجم عن إصابة مرض أو مرض تصلب الشرايين».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "| التشنج العضلي: يكون مؤقتا بسبب نقص في مورد pall ناجم عن إصابة مرض أو مرض تصلب الشرايين و أحيانا ينجم عنقلة"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «- تتعدد أجهزة الجسم ( الجهاز الهضميء الجهاز التنسيء الجهاز البولي» الجهاز العصبي.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتعدد أجهزة الجسم ( الجهاز الهضميء الجهاز التنفسيء الجهاز البولي» الجهاز العصبي."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «تسوس GLA) | - تحطيم بنية الأسنان فوق الأسنان - تنظيف الأسنان بالفرشاة و المعجوبطريقة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تسوس GLA) | - تحطيم بنية الأسنان فوق الأسنان - تنظيف الأسنان بالفرشاة و المعجونبطريقة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «| - التخين: من بين عواقب التدخين على الجهاز التنفسي:».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "| - التدخين: من بين عواقب التدخين على الجهاز التنفسي:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «ج - تلوث الهواء: بعض ملوثات الهواء الناتجة عن الأنشطة الصناعية تؤدي إلى التهاب القصبات الهوائية و الإصاببالربو.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ج - تلوث الهواء: بعض ملوثات الهواء الناتجة عن الأنشطة الصناعية تؤدي إلى التهاب القصبات الهوائية و الإصابةبالربو."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «- الغبطة و الكآبة - الغبطة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- الغعبطة و الكآبة - الغبطة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «| التشنج العضلي: يكون مؤقتا بسبب نقص في مورد pall ناجم عن إصابة مرض أو مرض تصلب الشريين و أحيانا ينجم عنقلة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "| التشنج العضلي: يكون مؤقتا بسبب نقص في مورد pall ناجم عن إصابة مرض أو مرض تصلب الشرايين و أحيانا ينجم عنقلة"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- تتعدد أجهزة الجسم الجهاز الهضميء الجهاز التنفسيء الجهاز البولي» الجهاز العصبي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتعدد أجهزة الجسم ( الجهاز الهضميء الجهاز التنفسيء الجهاز البولي» الجهاز العصبي."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «تسوس GLA | - تحطيم بنية الأسنان فوق الأسنان - تنظيف الأسنان بالفرشاة و المعجونبطريقة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "تسوس GLA) | - تحطيم بنية الأسنان فوق الأسنان - تنظيف الأسنان بالفرشاة و المعجونبطريقة"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «| - التدخين من بين عواقب التدخين على الجهاز التنفسي».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "| - التدخين: من بين عواقب التدخين على الجهاز التنفسي:"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «ج - تلوث الهواء بعض ملوثات الهواء الناتجة عن الأنشطة الصناعية تؤدي إلى التهاب القصبات الهوائية و الإصابةبالربو».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "ج - تلوث الهواء: بعض ملوثات الهواء الناتجة عن الأنشطة الصناعية تؤدي إلى التهاب القصبات الهوائية و الإصابةبالربو."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- الغعبطة و الكآبة - الغبطة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- الغعبطة و الكآبة - الغبطة."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «| التشنج العضلي يكون مؤقتا بسبب نقص في مورد pall ناجم عن إصابة مرض أو مرض تصلب الشرايين و أحيانا ينجم عنقلة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "| التشنج العضلي: يكون مؤقتا بسبب نقص في مورد pall ناجم عن إصابة مرض أو مرض تصلب الشرايين و أحيانا ينجم عنقلة"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- حرقة حادة عند التبول - العقم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- حرقة حادة عند التبول - العقم"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- تتعدد أجهزة الجسم ( الجهاز الهضميء الجهاز التنفسيء الجهاز البولي» الجهاز العصبي."
+            ],
+            [
+              "- الغعبطة و الكآبة - الغبطة."
+            ],
+            [
+              "7 العلاج بواسطة المضادات الحيوية وفقا لوصفةالطبيب."
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "source": "thaqn-aldm-oalmshakl-almnaaaa-alti-atrhha-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": true,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «درس : التحاقن الدموي وبعض المشاكل التييطرحها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : التحاقن الدموي وبعض المشاكل التييطرحها"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «- في سنة 1901 أخذ Landsteiner عينات من دم موظفي co pide ثم عزل المصل عنالكريات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- في سنة 1901 أخذ Landsteiner عينات من دم موظفي co pide ثم عزل المصل عنالكريات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «كريات حمراء 8 2 | الأجسام الموجودة في مصل عمر مع مولد المضادالموجود».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كريات حمراء 8 2 | الأجسام الموجودة في مصل عمر مع مولد المضادالموجود"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «G6) عدم حدوث لكداو».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "G6) عدم حدوث لكداو"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «هناك نوعان من اللكدين مضاد: اللكدين مضاد A و اللكدين مضادB».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هناك نوعان من اللكدين مضاد: اللكدين مضاد A و اللكدين مضادB"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «التعرف على نوع الفصيلة الدمويةللشخص.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "التعرف على نوع الفصيلة الدمويةللشخص."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «© القاعدة العامة للتحاقن الدموى.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "© القاعدة العامة للتحاقن الدموى."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «2- لخص جميع التحقينات الممكنة فيخطاطة.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2- لخص جميع التحقينات الممكنة فيخطاطة."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «لا يوجد أي مضاد (Rh) في مصل كلتا الحالتين (* ط2) و (Rh) إلا أن هذا المضاد يتكون في دم شخص (Rho) إذا حقنبدم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لا يوجد أي مضاد (Rh) في مصل كلتا الحالتين (* ط2) و (Rh) إلا أن هذا المضاد يتكون في دم شخص (Rho) إذا حقنبدم"
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «: التحاقن الدموي وبعض المشاكل».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : التحاقن الدموي وبعض المشاكل التييطرحها"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «1901 أخذ Landsteiner عينات من دم موظفي co pide ثم».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- في سنة 1901 أخذ Landsteiner عينات من دم موظفي co pide ثم عزل المصل عنالكريات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «8 2 | الأجسام الموجودة في مصل عمر».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كريات حمراء 8 2 | الأجسام الموجودة في مصل عمر مع مولد المضادالموجود"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «G6) عدم حدوث لكداو».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "G6) عدم حدوث لكداو"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «من اللكدين مضاد: اللكدين مضاد A و».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هناك نوعان من اللكدين مضاد: اللكدين مضاد A و اللكدين مضادB"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «التعرف على نوع الفصيلة الدمويةللشخص.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "التعرف على نوع الفصيلة الدمويةللشخص."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «درس : التحاقن الدموي وبعض المشاكل التييرحها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : التحاقن الدموي وبعض المشاكل التييطرحها"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «- في سنة 1901 أخذ Landsteiner عينات من دم موظفي co pide ثم عزل المصل عنالريات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- في سنة 1901 أخذ Landsteiner عينات من دم موظفي co pide ثم عزل المصل عنالكريات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «كريات حمراء 8 2 | الأجسام الموجودة في مصل عمر مع مولد المضادلموجود».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كريات حمراء 8 2 | الأجسام الموجودة في مصل عمر مع مولد المضادالموجود"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «G6) عدم حدوث لكاو».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "G6) عدم حدوث لكداو"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «هناك نوعان من اللدين مضاد: اللكدين مضاد A و اللكدين مضادB».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هناك نوعان من اللكدين مضاد: اللكدين مضاد A و اللكدين مضادB"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «التعرف على نوع الفصيلة الدمويللشخص.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "التعرف على نوع الفصيلة الدمويةللشخص."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «درس التحاقن الدموي وبعض المشاكل التييطرحها».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : التحاقن الدموي وبعض المشاكل التييطرحها"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «- في سنة 1901 أخذ Landsteiner عينات من دم موظفي co pide ثم عزل المصل عنالكريات».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "- في سنة 1901 أخذ Landsteiner عينات من دم موظفي co pide ثم عزل المصل عنالكريات"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «كريات حمراء 8 2 | الأجسام الموجودة في مصل عمر مع مولد المضادالموجود».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كريات حمراء 8 2 | الأجسام الموجودة في مصل عمر مع مولد المضادالموجود"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «G6 عدم حدوث لكداو».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "G6) عدم حدوث لكداو"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «هناك نوعان من اللكدين مضاد اللكدين مضاد A و اللكدين مضادB».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "هناك نوعان من اللكدين مضاد: اللكدين مضاد A و اللكدين مضادB"
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «التعرف على نوع الفصيلة الدمويةللشخص».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "التعرف على نوع الفصيلة الدمويةللشخص."
+            ]
+          ],
+          "expected_page": 2
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «© القاعدة العامة للتحاقن الدموى».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "© القاعدة العامة للتحاقن الدموى."
+            ]
+          ],
+          "expected_page": 3
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : التحاقن الدموي وبعض المشاكل التييطرحها"
+            ],
+            [
+              "هناك نوعان من اللكدين مضاد: اللكدين مضاد A و اللكدين مضادB"
+            ],
+            [
+              "لا يوجد أي مضاد (Rh) في مصل كلتا الحالتين (* ط2) و (Rh) إلا أن هذا المضاد يتكون في دم شخص (Rho) إذا حقنبدم"
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "source": "trq-tdaim-alastjaba-almnaatia-aldrs-1.pdf",
+      "semester": "S2",
+      "ocr": true,
+      "tests": [
+        {
+          "test": 1,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «درس : طرق تدعيم الاستجابةالمناعتية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : طرق تدعيم الاستجابةالمناعتية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 2,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «كيف نعالج الجسم في حالة تطور الخمجالجرثومي؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كيف نعالج الجسم في حالة تطور الخمجالجرثومي؟"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 3,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «الكحول ¢ cle جافيل مخفف.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الكحول ¢ cle جافيل مخفف."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 4,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «مثال : التلقيح ضد الكزاز باستعمال ذوفان الكزاز ( سمين وهن).».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مثال : التلقيح ضد الكزاز باستعمال ذوفان الكزاز ( سمين وهن)."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 5,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «جاهزة صادرة عن أشخاص ممنعين ضد نفسالمرض.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "جاهزة صادرة عن أشخاص ممنعين ضد نفسالمرض."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 6,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «لتحديد المضاد الحيوي الأكثر فعالية في محاربة بكتيريا مسببة>—».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لتحديد المضاد الحيوي الأكثر فعالية في محاربة بكتيريا مسببة>—"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 7,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، انسخ المعلومة المرتبطة بالمقطع «الزرع أقراصا صغيرة متساوية القطر مبللة بمضادات حيوية بمضاد حيوم 0 عدع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الزرع أقراصا صغيرة متساوية القطر مبللة بمضادات حيوية بمضاد حيوم 0 عدع"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 8,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "اعثر في الوثيقة على المعلومة التالية «2- استنتج أهمية المضاد الحيوي.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "2- استنتج أهمية المضاد الحيوي."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 9,
+          "category": "Document evidence",
+          "endpoint": "/ask",
+          "question": "ما المعلومة التي توافق هذا المقطع «* ملحوظة: تعمل المضادات الحيوية على وقف ISS البكتيريا مما يسهل عمل البلعميات في بلعمتهاوهضمها.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "* ملحوظة: تعمل المضادات الحيوية على وقف ISS البكتيريا مما يسهل عمل البلعميات في بلعمتهاوهضمها."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 10,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «درس : طرق تدعيم الاستجابةالمناعتية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : طرق تدعيم الاستجابةالمناعتية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 11,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «نعالج الجسم في حالة تطور».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كيف نعالج الجسم في حالة تطور الخمجالجرثومي؟"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 12,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «الكحول ¢ cle جافيل مخفف.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الكحول ¢ cle جافيل مخفف."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 13,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «التلقيح ضد الكزاز باستعمال ذوفان الكزاز (».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مثال : التلقيح ضد الكزاز باستعمال ذوفان الكزاز ( سمين وهن)."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 14,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «صادرة عن أشخاص ممنعين ضد».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "جاهزة صادرة عن أشخاص ممنعين ضد نفسالمرض."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 15,
+          "category": "Partial evidence retrieval",
+          "endpoint": "/ask",
+          "question": "اعثر على المقطع الكامل الموافق لهذا الجزء «المضاد الحيوي الأكثر فعالية في محاربة».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لتحديد المضاد الحيوي الأكثر فعالية في محاربة بكتيريا مسببة>—"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 16,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «درس : طرق تدعيم الاستجابةلمناعتية.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : طرق تدعيم الاستجابةالمناعتية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 17,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «كيف نعالج الجسم في حالة تطور الخمجاجرثومي؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كيف نعالج الجسم في حالة تطور الخمجالجرثومي؟"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 18,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «الكول ¢ cle جافيل مخفف.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الكحول ¢ cle جافيل مخفف."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 19,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «مثال : التلقيح ضد الكزاز باستمال ذوفان الكزاز ( سمين وهن).».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مثال : التلقيح ضد الكزاز باستعمال ذوفان الكزاز ( سمين وهن)."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 20,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «جاهزة صادرة عن أشخاص ممنعين ضد نفسامرض.».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "جاهزة صادرة عن أشخاص ممنعين ضد نفسالمرض."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 21,
+          "category": "Spelling tolerance",
+          "endpoint": "/ask",
+          "question": "اعثر على المعلومة رغم وجود خطأ في هذا المقطع «لتحديد المضاد الحيوي الأكثر فعالية في محاربة بكتريا مسببة>—».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لتحديد المضاد الحيوي الأكثر فعالية في محاربة بكتيريا مسببة>—"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 22,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «درس طرق تدعيم الاستجابةالمناعتية».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : طرق تدعيم الاستجابةالمناعتية."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 23,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «كيف نعالج الجسم في حالة تطور الخمجالجرثومي؟».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "كيف نعالج الجسم في حالة تطور الخمجالجرثومي؟"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 24,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الكحول ¢ cle جافيل مخفف».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الكحول ¢ cle جافيل مخفف."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 25,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «مثال التلقيح ضد الكزاز باستعمال ذوفان الكزاز سمين وهن».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "مثال : التلقيح ضد الكزاز باستعمال ذوفان الكزاز ( سمين وهن)."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 26,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «جاهزة صادرة عن أشخاص ممنعين ضد نفسالمرض».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "جاهزة صادرة عن أشخاص ممنعين ضد نفسالمرض."
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 27,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «لتحديد المضاد الحيوي الأكثر فعالية في محاربة بكتيريا مسببة>—».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "لتحديد المضاد الحيوي الأكثر فعالية في محاربة بكتيريا مسببة>—"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 28,
+          "category": "Formatting tolerance",
+          "endpoint": "/ask",
+          "question": "حسب الوثيقة، اعثر على المقطع حتى إن تغير التنسيق أو علامات الترقيم «الزرع أقراصا صغيرة متساوية القطر مبللة بمضادات حيوية بمضاد حيوم 0 عدع».",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "الزرع أقراصا صغيرة متساوية القطر مبللة بمضادات حيوية بمضاد حيوم 0 عدع"
+            ]
+          ],
+          "expected_page": 1
+        },
+        {
+          "test": 29,
+          "category": "Summary coverage",
+          "endpoint": "/summarize",
+          "question": "لخص محتوى هذا الدرس مع الحفاظ على المعلومات الرياضية المهمة.",
+          "expected_status": "success",
+          "required_groups": [
+            [
+              "درس : طرق تدعيم الاستجابةالمناعتية."
+            ],
+            [
+              "جاهزة صادرة عن أشخاص ممنعين ضد نفسالمرض."
+            ],
+            [
+              "* ملحوظة: تعمل المضادات الحيوية على وقف ISS البكتيريا مما يسهل عمل البلعميات في بلعمتهاوهضمها."
+            ]
+          ]
+        },
+        {
+          "test": 30,
+          "category": "Out of scope refusal",
+          "endpoint": "/ask",
+          "question": "حسب هذا الدرس، ما أسباب الحرب العالمية الأولى؟",
+          "expected_status": "insufficient_context",
+          "required_groups": []
+        }
+      ]
+    }
+  ]
+}

@@ -20334,6 +20334,61 @@ def is_obviously_out_of_scope_for_physique_chimie(
     )
 
 
+
+
+# ============================================================
+# SVT ARABE OUT-OF-SCOPE SUPPORT
+# ============================================================
+
+def is_obviously_out_of_scope_for_svt_arabe(
+    question: str,
+) -> bool:
+    """
+    Reject clear history/geography questions before
+    answering from a Programme marocain SVT arabe lesson.
+    """
+
+    q = _normalize_math_arabe_ocr_match(
+        question or ""
+    )
+
+    signals = (
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629",
+
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629 "
+        "\u0627\u0644\u0627\u0648\u0644\u0649",
+
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0639\u0627\u0644\u0645\u064a\u0629 "
+        "\u0627\u0644\u062b\u0627\u0646\u064a\u0629",
+
+        "\u0645\u0639\u0627\u0647\u062f\u0629 "
+        "\u0641\u0631\u0633\u0627\u064a",
+
+        "\u0627\u0644\u0627\u0633\u062a\u0639\u0645\u0627\u0631",
+
+        "\u0627\u0644\u062d\u0631\u0628 "
+        "\u0627\u0644\u0628\u0627\u0631\u062f\u0629",
+
+        "premiere guerre mondiale",
+        "seconde guerre mondiale",
+        "guerre mondiale",
+        "traite de versailles",
+        "revolution francaise",
+        "guerre froide",
+    )
+
+    return any(
+        _normalize_math_arabe_ocr_match(
+            signal
+        )
+        in q
+        for signal in signals
+    )
+
+
 def extract_physique_chimie_quoted_answer(
     question: str,
     passages: list[dict],
@@ -20967,6 +21022,48 @@ def generate_answer(
     # --------------------------------------------------------
     # --------------------------------------------------------
     # --------------------------------------------------------
+    # --------------------------------------------------------
+    # Programme marocain - SVT arabe:
+    # refuse obvious unrelated history/geography questions.
+    # --------------------------------------------------------
+
+    svt_arabe_source_scope = any(
+        normalize_text(
+            passage.get(
+                "program",
+                "",
+            )
+        )
+        == normalize_text(
+            "Programme marocain"
+        )
+        and normalize_text(
+            passage.get(
+                "subject",
+                "",
+            )
+        )
+        == normalize_text(
+            "SVT arabe"
+        )
+        for passage in passages
+    )
+
+    if svt_arabe_source_scope:
+
+        if (
+            is_obviously_out_of_scope_for_svt_arabe(
+                cleaned_question
+            )
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+
     # Programme marocain - Physique-Chimie:
     # deterministic quoted evidence handling.
     # --------------------------------------------------------

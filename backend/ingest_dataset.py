@@ -683,10 +683,17 @@ def prepare_document_chunks(
     )
 
     # --------------------------------------------------------
-    # OCR fallback for scanned PDFs.
-    # Native text always has priority.
+    # OCR sidecar support.
+    # Explicit sidecars override corrupted native text layers.
     # --------------------------------------------------------
-    if native_pages_with_text == 0:
+    sidecar_path = pdf_path.with_suffix(
+        ".ocr.txt"
+    )
+
+    if (
+        native_pages_with_text == 0
+        or sidecar_path.exists()
+    ):
         pages = load_ocr_sidecar_pages(
             pdf_path=pdf_path,
             original_pages=pages,
