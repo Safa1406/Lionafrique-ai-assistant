@@ -8095,6 +8095,9 @@ def generate_summary(
             normalize_text(
                 "Math\u00e9matiques arabe"
             ),
+            normalize_text(
+                "Physique-Chimie"
+            ),
         }
     ]
 

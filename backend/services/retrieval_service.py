@@ -1362,6 +1362,9 @@ def retrieve_relevant_passages(
             normalize_text(
                 "Math\u00e9matiques arabe"
             ),
+            normalize_text(
+                "Physique-Chimie"
+            ),
         }
     )
 
@@ -1499,6 +1502,9 @@ def retrieve_relevant_passages(
             ),
             normalize_text(
                 "Math\u00e9matiques arabe"
+            ),
+            normalize_text(
+                "Physique-Chimie"
             ),
         }
     )

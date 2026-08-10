@@ -1,0 +1,155 @@
+[
+  {
+    "index": 1,
+    "source": "seance-1-quelques-materiaux-au-quotidien (1).pdf",
+    "semester": "S1",
+    "pages": 9,
+    "text_pages": 9,
+    "strong_candidates": 66,
+    "sha256": "9168bf5d482bf880ef020c8e09b14ae5265a6afcd423dec544df8aed8238bb15"
+  },
+  {
+    "index": 2,
+    "source": "seance-2-les-atomes-et-les-ions (1).pdf",
+    "semester": "S1",
+    "pages": 7,
+    "text_pages": 7,
+    "strong_candidates": 63,
+    "sha256": "3445713c2f79a4274ab3c0f52c7a183c1d2cdad8e551fd00d082e936e12048ff"
+  },
+  {
+    "index": 3,
+    "source": "seance-3-oxydation-des-metaux-dans-l-air (1).pdf",
+    "semester": "S1",
+    "pages": 6,
+    "text_pages": 6,
+    "strong_candidates": 77,
+    "sha256": "de2b1131365282804de782293526604d3a10b4f942f1ac699ba8ef83314ee7db"
+  },
+  {
+    "index": 4,
+    "source": "seance-4-combustion-des-materiaux-organiques-dans-l-air-1 (1).pdf",
+    "semester": "S1",
+    "pages": 6,
+    "text_pages": 6,
+    "strong_candidates": 69,
+    "sha256": "f23ffa035d92f92f820b5eba9cdf6df55ee7bd66f4debd32678da0cb657b8603"
+  },
+  {
+    "index": 5,
+    "source": "seance-5-les-solutions-acides-et-les-solutions-basiques-1 (1).pdf",
+    "semester": "S1",
+    "pages": 7,
+    "text_pages": 7,
+    "strong_candidates": 62,
+    "sha256": "51e11c1bfc5d9840c21b1f2bba5def970b77f5f2e31862b13de1219fe87cd5ea"
+  },
+  {
+    "index": 6,
+    "source": "seance-6-tests-de-reconnaissance-de-quelques-ions-1 (1).pdf",
+    "semester": "S1",
+    "pages": 7,
+    "text_pages": 7,
+    "strong_candidates": 53,
+    "sha256": "fec8bd1935d69527b54ad317a26cb98a0ddc07af6dcdded763eec048f1a09196"
+  },
+  {
+    "index": 7,
+    "source": "seance-7-reactions-de-quelques-metaux-avec-les-solutions-acides-et-basiques-1 (1).pdf",
+    "semester": "S1",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 49,
+    "sha256": "cd9eda6877984dc0ceebb5f660122de3dd0a92f0e2ed03257a8de5253b6c8dd1"
+  },
+  {
+    "index": 8,
+    "source": "seance-8-danger-de-quelques-materiaux-utilises-dans-la-vie-quotidienne-sur-la-sante-et-l-environnement-1 (1).pdf",
+    "semester": "S1",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 41,
+    "sha256": "3d9a1db44e734a99af1b31fa29422d4838c2389852be78f55048ec60e2459703"
+  },
+  {
+    "index": 9,
+    "source": "seance-10-la-vitesse-moyenne-1.pdf",
+    "semester": "S2",
+    "pages": 6,
+    "text_pages": 6,
+    "strong_candidates": 47,
+    "sha256": "ee50a94d12c72936f35f782ce1725744b511ab304b1620b4f6d4dceb93747105"
+  },
+  {
+    "index": 10,
+    "source": "seance-11-les-actions-mecaniques-1.pdf",
+    "semester": "S2",
+    "pages": 6,
+    "text_pages": 6,
+    "strong_candidates": 43,
+    "sha256": "222ae82bb7bfd3b91ee9d6f412835e0aace47df3f58c0149991c28c0ae21e5c1"
+  },
+  {
+    "index": 11,
+    "source": "seance-12-les-forces-1.pdf",
+    "semester": "S2",
+    "pages": 9,
+    "text_pages": 9,
+    "strong_candidates": 76,
+    "sha256": "e5613839542f4c75a3e8b4aa855fa05657741116ed12579f5e9448cb2dee809b"
+  },
+  {
+    "index": 12,
+    "source": "seance-13-equilibre-d-un-solide-soumis-a-deux-forces-1.pdf",
+    "semester": "S2",
+    "pages": 4,
+    "text_pages": 4,
+    "strong_candidates": 19,
+    "sha256": "299a13a405302ed0a75ac0ac977a7fd1e01f1f3ddd2591303e9c2b48c552dc01"
+  },
+  {
+    "index": 13,
+    "source": "seance-14-le-poids-et-la-masse-1.pdf",
+    "semester": "S2",
+    "pages": 6,
+    "text_pages": 6,
+    "strong_candidates": 46,
+    "sha256": "3f2be67f0d44df6121e0f84172b4e38b933a423a1f98ad706fa167440a3e829d"
+  },
+  {
+    "index": 14,
+    "source": "seance-15-la-loi-d-ohm-1.pdf",
+    "semester": "S2",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 40,
+    "sha256": "c92ad8208012621ff582f5910a43fe78dbb4ec28480f062d4a1956435056dd5a"
+  },
+  {
+    "index": 15,
+    "source": "seance-16-la-puissance-electrique-1.pdf",
+    "semester": "S2",
+    "pages": 6,
+    "text_pages": 6,
+    "strong_candidates": 65,
+    "sha256": "eb16c3f9371d10522e49ad83a4bb189464ccafdc202893edcfa9089bd6fcbdf6"
+  },
+  {
+    "index": 16,
+    "source": "seance-17-l-energie-electrique-1.pdf",
+    "semester": "S2",
+    "pages": 5,
+    "text_pages": 5,
+    "strong_candidates": 54,
+    "sha256": "e40f3d7a4cee4a79857a8751ec7ee5b4799cf2336bdc96a2bf5e81d286b880d0"
+  },
+  {
+    "index": 17,
+    "source": "seance-9-le-mouvement-et-le-repos-1.pdf",
+    "semester": "S2",
+    "pages": 7,
+    "text_pages": 6,
+    "strong_candidates": 30,
+    "sha256": "73efd55366cbd03652bae677872b7a643ed114240f355848a996693666295963"
+  }
+]

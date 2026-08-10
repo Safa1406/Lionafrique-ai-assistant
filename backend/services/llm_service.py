@@ -20218,6 +20218,650 @@ def is_obviously_out_of_scope_for_math_documents(
     )
 
 
+
+# ============================================================
+# PHYSIQUE-CHIMIE DETERMINISTIC QUOTED SUPPORT
+# ============================================================
+
+def is_programme_marocain_physique_chimie_passage(
+    passage: dict,
+) -> bool:
+    """
+    Limit Physique-Chimie deterministic matching to the
+    selected Programme marocain subject.
+    """
+
+    return (
+        normalize_text(
+            passage.get(
+                "program",
+                "",
+            )
+        )
+        == normalize_text(
+            "Programme marocain"
+        )
+        and
+        normalize_text(
+            passage.get(
+                "subject",
+                "",
+            )
+        )
+        == normalize_text(
+            "Physique-Chimie"
+        )
+    )
+
+
+def is_obviously_out_of_scope_for_physique_chimie(
+    question: str,
+) -> bool:
+    """
+    Reject obvious history/geography questions before
+    document extraction for Physique-Chimie.
+    """
+
+    q = normalize_text(
+        question or ""
+    )
+
+    signals = (
+        "premiere guerre mondiale",
+        "seconde guerre mondiale",
+        "guerre mondiale",
+        "revolution francaise",
+        "colonisation",
+        "decolonisation",
+        "traite de versailles",
+        "empire ottoman",
+        "guerre froide",
+        "histoire",
+    )
+
+    return any(
+        signal in q
+        for signal in signals
+    )
+
+
+def extract_physique_chimie_quoted_answer(
+    question: str,
+    passages: list[dict],
+) -> dict | None:
+    """
+    Reuse the already validated Math quoted matcher for
+    Physique-Chimie.
+
+    The matcher itself is domain-independent. Its only
+    Math-specific part is the metadata guard, so we pass
+    shallow copies whose subject is temporarily adapted.
+    """
+
+    adapted_passages = []
+
+    for passage in passages:
+
+        if not (
+            is_programme_marocain_physique_chimie_passage(
+                passage
+            )
+        ):
+            continue
+
+        adapted = dict(
+            passage
+        )
+
+        adapted[
+            "subject"
+        ] = "Math\u00e9matiques"
+
+        adapted_passages.append(
+            adapted
+        )
+
+    if not adapted_passages:
+        return None
+
+    result = extract_math_quoted_answer(
+        question=question,
+        passages=adapted_passages,
+    )
+
+    # The Math matcher returns an explicit refusal dictionary
+    # when the strict quoted match fails. For Physique-Chimie,
+    # that refusal must still be allowed to enter the fuzzy
+    # typo-recovery path.
+    if (
+        result is None
+        or not result.get(
+            "answerable",
+            False,
+        )
+    ):
+
+        # ----------------------------------------------------
+        # Physique-Chimie fuzzy quoted recovery
+        #
+        # Example:
+        #   question : "mouil?e"
+        #   document : "mouill?e"
+        #
+        # Only activates after the strict matcher has failed,
+        # and only accepts a very high similarity score.
+        # ----------------------------------------------------
+
+        import difflib as _pc_difflib
+        import re as _pc_fuzzy_re
+        import unicodedata as _pc_fuzzy_unicode
+
+        def _pc_fuzzy_normalize(value):
+
+            value = _pc_fuzzy_unicode.normalize(
+                "NFKD",
+                str(
+                    value
+                    or ""
+                ),
+            )
+
+            value = "".join(
+                char
+                for char in value
+                if not _pc_fuzzy_unicode.combining(
+                    char
+                )
+            )
+
+            value = value.lower()
+
+            value = _pc_fuzzy_re.sub(
+                r"\s+",
+                " ",
+                value,
+            )
+
+            value = _pc_fuzzy_re.sub(
+                r"[^a-z0-9%+\- ]+",
+                "",
+                value,
+            )
+
+            return value.strip()
+
+        quoted_match = _pc_fuzzy_re.search(
+            r"\u00ab([^\u00bb]+)\u00bb",
+            question or "",
+        )
+
+        if quoted_match is None:
+            quoted_match = _pc_fuzzy_re.search(
+                r'"([^"]+)"',
+                question or "",
+            )
+
+        if quoted_match is not None:
+
+            quoted_text = (
+                quoted_match.group(
+                    1
+                ).strip()
+            )
+
+            normalized_quote = (
+                _pc_fuzzy_normalize(
+                    quoted_text
+                )
+            )
+
+            if len(
+                normalized_quote
+            ) >= 20:
+
+                best_candidate = None
+                best_source = None
+                best_page = None
+                best_score = 0.0
+
+                for passage in passages:
+
+                    if not (
+                        is_programme_marocain_physique_chimie_passage(
+                            passage
+                        )
+                    ):
+                        continue
+
+                    passage_text = (
+                        passage.get(
+                            "text"
+                        )
+                        or passage.get(
+                            "content"
+                        )
+                        or passage.get(
+                            "document"
+                        )
+                        or ""
+                    )
+
+                    # Keep both lines and sentence-like spans.
+                    candidate_parts = []
+
+                    candidate_parts.extend(
+                        str(
+                            passage_text
+                        ).splitlines()
+                    )
+
+                    flat_text = _pc_fuzzy_re.sub(
+                        r"\s+",
+                        " ",
+                        str(
+                            passage_text
+                        ),
+                    ).strip()
+
+                    candidate_parts.extend(
+                        _pc_fuzzy_re.findall(
+                            r"[^.!?]+[.!?]?",
+                            flat_text,
+                        )
+                    )
+
+                    seen = set()
+
+                    for candidate in candidate_parts:
+
+                        candidate = _pc_fuzzy_re.sub(
+                            r"\s+",
+                            " ",
+                            candidate,
+                        ).strip()
+
+                        if not candidate:
+                            continue
+
+                        if candidate in seen:
+                            continue
+
+                        seen.add(
+                            candidate
+                        )
+
+                        normalized_candidate = (
+                            _pc_fuzzy_normalize(
+                                candidate
+                            )
+                        )
+
+                        if len(
+                            normalized_candidate
+                        ) < 15:
+                            continue
+
+                        score = (
+                            _pc_difflib.SequenceMatcher(
+                                None,
+                                normalized_quote,
+                                normalized_candidate,
+                            ).ratio()
+                        )
+
+                        if score > best_score:
+
+                            best_score = score
+                            best_candidate = candidate
+
+                            best_source = (
+                                passage.get(
+                                    "source"
+                                )
+                                or ""
+                            )
+
+                            best_page = (
+                                passage.get(
+                                    "page"
+                                )
+                            )
+
+                # A one-letter typo normally scores around
+                # 0.98-0.99. 0.93 stays deliberately strict.
+                if (
+                    best_candidate is not None
+                    and best_score >= 0.93
+                ):
+
+                    # The candidate already comes directly
+                    # from the selected Physique-Chimie
+                    # document and passed a strict fuzzy
+                    # threshold. Returning it directly avoids
+                    # losing a valid typo recovery by sending
+                    # it through the strict matcher again.
+
+                    result = {
+                        "answerable": True,
+                        "answer": best_candidate,
+                        "sources": (
+                            [
+                                {
+                                    "file": best_source,
+                                    "page": best_page,
+                                }
+                            ]
+                            if best_source
+                            else []
+                        ),
+                        "evidence": [
+                            best_candidate
+                        ],
+                    }
+
+        if result is None:
+            return None
+
+    # --------------------------------------------------------
+    # Physique-Chimie worksheets often contain answer blanks
+    # such as:
+    #
+    #   ... est +Ze. : __________
+    #
+    # The generic matcher correctly identifies the statement,
+    # but may trim the blank placeholder as punctuation/noise.
+    # Preserve the complete original line when the matched
+    # evidence is followed by a worksheet blank.
+    # --------------------------------------------------------
+
+    import re as _pc_re
+    import unicodedata as _pc_unicodedata
+
+    def _pc_clean_line(value):
+        value = _pc_unicodedata.normalize(
+            "NFKC",
+            str(
+                value
+                or ""
+            ),
+        )
+
+        value = value.replace(
+            "\u00a0",
+            " ",
+        )
+
+        value = _pc_re.sub(
+            r"\s+",
+            " ",
+            value,
+        )
+
+        return value.strip()
+
+    base_evidence = ""
+
+    evidence_items = result.get(
+        "evidence",
+        [],
+    )
+
+    if evidence_items:
+        base_evidence = _pc_clean_line(
+            evidence_items[0]
+        )
+
+    if not base_evidence:
+        base_evidence = _pc_clean_line(
+            result.get(
+                "answer",
+                "",
+            )
+        )
+
+    best_full_line = None
+
+    # --------------------------------------------------------
+    # Physique-Chimie question continuation
+    #
+    # Some worksheets contain a question immediately followed
+    # by a parenthetical instruction:
+    #
+    #   ... en m?me temps?
+    #   (justifier ta r?ponse)
+    #
+    # The strict matcher may stop at "?". Preserve the
+    # parenthetical continuation when it exists directly after
+    # the matched evidence in the selected source.
+    # --------------------------------------------------------
+
+    if (
+        base_evidence
+        and base_evidence.rstrip().endswith(
+            (
+                "?",
+                "!",
+            )
+        )
+    ):
+
+        best_question_continuation = None
+
+        for passage in passages:
+
+            if not (
+                is_programme_marocain_physique_chimie_passage(
+                    passage
+                )
+            ):
+                continue
+
+            passage_text = (
+                passage.get(
+                    "text"
+                )
+                or passage.get(
+                    "content"
+                )
+                or passage.get(
+                    "document"
+                )
+                or ""
+            )
+
+            flat_passage = _pc_clean_line(
+                passage_text
+            )
+
+            if not flat_passage:
+                continue
+
+            position = flat_passage.find(
+                base_evidence
+            )
+
+            if position < 0:
+                continue
+
+            evidence_end = (
+                position
+                + len(
+                    base_evidence
+                )
+            )
+
+            suffix = flat_passage[
+                evidence_end:
+            ]
+
+            continuation_match = _pc_re.match(
+                r"^\s*(\([^)]*\))",
+                suffix,
+            )
+
+            if continuation_match is None:
+                continue
+
+            continuation = continuation_match.group(
+                1
+            ).strip()
+
+            candidate = (
+                base_evidence
+                + " "
+                + continuation
+            ).strip()
+
+            if (
+                best_question_continuation is None
+                or len(candidate)
+                > len(best_question_continuation)
+            ):
+                best_question_continuation = candidate
+
+        if best_question_continuation:
+
+            result = dict(
+                result
+            )
+
+            result[
+                "answer"
+            ] = best_question_continuation
+
+            result[
+                "evidence"
+            ] = [
+                best_question_continuation
+            ]
+
+            base_evidence = (
+                best_question_continuation
+            )
+
+    if base_evidence:
+
+        for passage in passages:
+
+            if not (
+                is_programme_marocain_physique_chimie_passage(
+                    passage
+                )
+            ):
+                continue
+
+            passage_text = (
+                passage.get(
+                    "text"
+                )
+                or passage.get(
+                    "content"
+                )
+                or passage.get(
+                    "document"
+                )
+                or ""
+            )
+
+            # ------------------------------------------------
+            # Flatten line breaks before searching.
+            #
+            # In several Physique-Chimie worksheets the PDF
+            # extraction produces:
+            #
+            #   statement
+            #   :
+            #   __________
+            #
+            # although visually this is one complete exercise
+            # line. Keep underscores intact while collapsing
+            # whitespace.
+            # ------------------------------------------------
+
+            flat_passage = _pc_clean_line(
+                passage_text
+            )
+
+            if not flat_passage:
+                continue
+
+            position = flat_passage.find(
+                base_evidence
+            )
+
+            if position < 0:
+                continue
+
+            evidence_end = (
+                position
+                + len(
+                    base_evidence
+                )
+            )
+
+            suffix = flat_passage[
+                evidence_end:
+            ]
+
+            # Accept only a short worksheet continuation after
+            # the evidence. This prevents us from returning the
+            # rest of a whole paragraph.
+            blank_match = _pc_re.match(
+                r"^\s*(?::\s*)?_{3,}",
+                suffix,
+            )
+
+            if blank_match is None:
+                continue
+
+            continuation = blank_match.group(
+                0
+            )
+
+            candidate = (
+                base_evidence
+                + continuation
+            )
+
+            candidate = _pc_re.sub(
+                r"\s+",
+                " ",
+                candidate,
+            ).strip()
+
+            # Normalize spacing around the exercise colon.
+            candidate = _pc_re.sub(
+                r"\s*:\s*",
+                " : ",
+                candidate,
+            ).strip()
+
+            if (
+                best_full_line is None
+                or len(candidate)
+                < len(best_full_line)
+            ):
+                best_full_line = candidate
+
+    if best_full_line:
+
+        result = dict(
+            result
+        )
+
+        result[
+            "answer"
+        ] = best_full_line
+
+        result[
+            "evidence"
+        ] = [
+            best_full_line
+        ]
+
+    return result
+
+
 def generate_answer(
     question: str,
     passages: list[dict],
@@ -20256,6 +20900,43 @@ def generate_answer(
 
     # --------------------------------------------------------
     # --------------------------------------------------------
+    # --------------------------------------------------------
+    # Programme marocain - Physique-Chimie:
+    # deterministic quoted evidence handling.
+    # --------------------------------------------------------
+
+    pc_source_scope = any(
+        is_programme_marocain_physique_chimie_passage(
+            passage
+        )
+        for passage in passages
+    )
+
+    if pc_source_scope:
+
+        if (
+            is_obviously_out_of_scope_for_physique_chimie(
+                cleaned_question
+            )
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        pc_quoted_result = (
+            extract_physique_chimie_quoted_answer(
+                question=cleaned_question,
+                passages=passages,
+            )
+        )
+
+        if pc_quoted_result is not None:
+            return pc_quoted_result
+
+
     # --------------------------------------------------------
     # Programme marocain - Mathematiques:
     # deterministic evidence handling before legacy extractors.
