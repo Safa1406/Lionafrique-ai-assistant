@@ -1,892 +1,2075 @@
-import { useEffect, useMemo, useState } from 'react'
-import './App.css'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-const API_BASE = 'http://127.0.0.1:8000'
+import "./App.css";
+import LearningTools from "./LearningTools";
 
-const DEFAULT_CONTEXT = {
-  program: 'Programme marocain',
-  subject: 'Arabe',
-  semester: 'Non défini',
-  source: 'alnsba (1).pdf',
-}
 
-function cycleQuestionTypes(count) {
-  const base = ['mcq', 'true_false', 'short_answer']
-  return Array.from({ length: count }, (_, index) => base[index % base.length])
-}
+const API_URL =
+  "http://127.0.0.1:8000";
 
-function normalizeOption(option) {
-  if (typeof option === 'string') {
-    return { value: option, label: option }
-  }
+const HISTORY_STORAGE_KEY =
+  "lionafrique-question-history";
 
-  if (option && typeof option === 'object') {
-    const value =
-      option.value ??
-      option.label ??
-      option.text ??
-      option.answer ??
-      JSON.stringify(option)
+const MAX_HISTORY_ITEMS = 6;
 
-    const label =
-      option.label ??
-      option.text ??
-      option.value ??
-      option.answer ??
-      String(value)
+const REQUEST_TIMEOUT = 120000;
 
-    return {
-      value: String(value ?? ''),
-      label: String(label ?? ''),
-    }
-  }
 
-  return {
-    value: String(option ?? ''),
-    label: String(option ?? ''),
-  }
-}
-
-async function apiRequest(path, options = {}) {
-  const response = await fetch(`${API_BASE}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {}),
-    },
-    ...options,
-  })
-
-  let body = null
-
+function readStoredHistory() {
   try {
-    body = await response.json()
-  } catch {
-    body = null
-  }
+    const storedHistory =
+      sessionStorage.getItem(
+        HISTORY_STORAGE_KEY
+      );
 
-  if (!response.ok) {
-    const detail =
-      body?.detail ??
-      body?.message ??
-      `HTTP ${response.status}`
+    if (!storedHistory) {
+      return [];
+    }
 
-    throw new Error(
-      typeof detail === 'string'
-        ? detail
-        : JSON.stringify(detail),
+    const parsedHistory =
+      JSON.parse(storedHistory);
+
+    return Array.isArray(
+      parsedHistory
     )
+      ? parsedHistory
+      : [];
+  } catch (error) {
+    console.error(
+      "Erreur pendant la lecture de l’historique :",
+      error
+    );
+
+    return [];
+  }
+}
+
+
+function formatHistoryDate(
+  dateValue
+) {
+  try {
+    return new Intl.DateTimeFormat(
+      "fr-FR",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    ).format(
+      new Date(dateValue)
+    );
+  } catch {
+    return "";
+  }
+}
+
+
+async function readJsonResponse(
+  response
+) {
+  try {
+    return await response.json();
+  } catch {
+    return {};
+  }
+}
+
+
+function normalizeRequestText(
+  value
+) {
+  return (value || "")
+    .normalize("NFKD")
+    .replace(
+      /[\u0300-\u036f\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06ed]/g,
+      ""
+    )
+    .toLowerCase()
+    .replace(
+      /[-–—_'’"“”()[\]{}:؛،,.!?؟]+/g,
+      " "
+    )
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+
+function isSummaryRequest(
+  value
+) {
+  const normalizedText =
+    normalizeRequestText(
+      value
+    );
+
+  if (!normalizedText) {
+    return false;
   }
 
-  return body
+  const summaryPrefixes = [
+    "لخص",
+    "تلخيص",
+    "ملخص",
+    "اعطني ملخص",
+    "اعطيني ملخص",
+    "قدم ملخص",
+    "resume",
+    "resumer",
+    "fais moi un resume",
+    "donne moi un resume",
+    "summarize",
+    "summarise",
+  ];
+
+  return summaryPrefixes.some(
+    (prefix) =>
+      normalizedText === prefix ||
+      normalizedText.startsWith(
+        `${prefix} `
+      )
+  );
 }
+
 
 function App() {
-  const [activeTab, setActiveTab] = useState('assistant')
-  const [backendStatus, setBackendStatus] = useState('checking')
+  const [
+    metadataOptions,
+    setMetadataOptions,
+  ] = useState([]);
 
-  const [context, setContext] = useState(DEFAULT_CONTEXT)
-  const [studentId, setStudentId] = useState('demo-student')
+  const [
+    programs,
+    setPrograms,
+  ] = useState([]);
 
-  const [question, setQuestion] = useState('')
-  const [assistantMode, setAssistantMode] = useState('ask')
-  const [assistantLoading, setAssistantLoading] = useState(false)
-  const [assistantError, setAssistantError] = useState('')
-  const [assistantResult, setAssistantResult] = useState(null)
+  const [
+    selectedProgram,
+    setSelectedProgram,
+  ] = useState("");
 
-  const [quizCount, setQuizCount] = useState(9)
-  const [quizLoading, setQuizLoading] = useState(false)
-  const [quizError, setQuizError] = useState('')
-  const [quiz, setQuiz] = useState(null)
-  const [quizAnswers, setQuizAnswers] = useState({})
-  const [quizSubmitting, setQuizSubmitting] = useState(false)
-  const [quizResult, setQuizResult] = useState(null)
+  const [
+    selectedSubject,
+    setSelectedSubject,
+  ] = useState("");
 
-  const [orientationLoading, setOrientationLoading] = useState(false)
-  const [orientationError, setOrientationError] = useState('')
-  const [orientation, setOrientation] = useState(null)
+  const [
+    selectedSemester,
+    setSelectedSemester,
+  ] = useState("");
 
-  const [exerciseForm, setExerciseForm] = useState({
-    subject: 'Mathématiques',
-    lesson: 'Équations',
-    concept: 'Équations du premier degré',
-    score: 4,
-    total: 10,
-    source: 'equations.pdf',
-  })
-  const [exerciseLoading, setExerciseLoading] = useState(false)
-  const [exerciseMessage, setExerciseMessage] = useState('')
+  const [
+    question,
+    setQuestion,
+  ] = useState("");
+
+  const [
+    answer,
+    setAnswer,
+  ] = useState("");
+
+  const [
+    sources,
+    setSources,
+  ] = useState([]);
+
+  const [
+    evidence,
+    setEvidence,
+  ] = useState([]);
+
+  const [
+    summary,
+    setSummary,
+  ] = useState("");
+
+  const [
+    summarySources,
+    setSummarySources,
+  ] = useState([]);
+
+  const [
+    summaryEvidence,
+    setSummaryEvidence,
+  ] = useState([]);
+
+  const [
+    summaryStatus,
+    setSummaryStatus,
+  ] = useState("");
+
+  const [
+    summaryLoading,
+    setSummaryLoading,
+  ] = useState(false);
+
+  const [
+    summaryError,
+    setSummaryError,
+  ] = useState("");
+
+  const [
+    responseStatus,
+    setResponseStatus,
+  ] = useState("");
+
+  const [
+    selection,
+    setSelection,
+  ] = useState(null);
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(false);
+
+  const [
+    metadataLoading,
+    setMetadataLoading,
+  ] = useState(true);
+
+  const [
+    metadataError,
+    setMetadataError,
+  ] = useState("");
+
+  const [
+    requestError,
+    setRequestError,
+  ] = useState("");
+
+  const [
+    lastRequest,
+    setLastRequest,
+  ] = useState(null);
+
+  const [
+    lastRequestType,
+    setLastRequestType,
+  ] = useState("");
+
+  const [
+    questionHistory,
+    setQuestionHistory,
+  ] = useState(
+    readStoredHistory
+  );
+
+  const [
+    message,
+    setMessage,
+  ] = useState(
+    "Sélectionnez votre programme et votre matière."
+  );
+
+
+  const loadMetadataOptions =
+    useCallback(async () => {
+      setMetadataLoading(true);
+      setMetadataError("");
+
+      try {
+        const response = await fetch(
+          `${API_URL}/metadata/options`
+        );
+
+        const data =
+          await readJsonResponse(
+            response
+          );
+
+        if (!response.ok) {
+          throw new Error(
+            data.detail ||
+              "Le chargement des options pédagogiques a échoué."
+          );
+        }
+
+        setPrograms(
+          Array.isArray(
+            data.programs
+          )
+            ? data.programs
+            : []
+        );
+
+        setMetadataOptions(
+          Array.isArray(
+            data.options
+          )
+            ? data.options
+            : []
+        );
+
+        setMessage(
+          "Sélectionnez votre programme et votre matière."
+        );
+      } catch (error) {
+        console.error(
+          "Erreur pendant le chargement des options pédagogiques :",
+          error
+        );
+
+        const errorMessage =
+          error instanceof TypeError
+            ? (
+              "Impossible de joindre le serveur. "
+              + "Vérifiez que FastAPI est démarré."
+            )
+            : (
+              error.message ||
+              "La connexion avec le serveur a échoué."
+            );
+
+        setMetadataError(
+          errorMessage
+        );
+
+        setMessage(
+          "Les options pédagogiques n’ont pas pu être chargées."
+        );
+      } finally {
+        setMetadataLoading(false);
+      }
+    }, []);
+
 
   useEffect(() => {
-    apiRequest('/health')
-      .then(() => setBackendStatus('online'))
-      .catch(() => setBackendStatus('offline'))
-  }, [])
+    loadMetadataOptions();
+  }, [
+    loadMetadataOptions,
+  ]);
 
-  const selectionLabel = useMemo(
-    () =>
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(
+        HISTORY_STORAGE_KEY,
+        JSON.stringify(
+          questionHistory
+        )
+      );
+    } catch (error) {
+      console.error(
+        "Erreur pendant l’enregistrement de l’historique :",
+        error
+      );
+    }
+  }, [
+    questionHistory,
+  ]);
+
+
+  const availableSubjects =
+    useMemo(() => {
+      if (!selectedProgram) {
+        return [];
+      }
+
+      const subjects =
+        metadataOptions
+          .filter(
+            (option) =>
+              option.program ===
+              selectedProgram
+          )
+          .map(
+            (option) =>
+              option.subject
+          )
+          .filter(Boolean);
+
+      return [
+        ...new Set(subjects),
+      ].sort(
+        (
+          firstSubject,
+          secondSubject
+        ) =>
+          firstSubject.localeCompare(
+            secondSubject,
+            "fr",
+            {
+              sensitivity: "base",
+            }
+          )
+      );
+    }, [
+      metadataOptions,
+      selectedProgram,
+    ]);
+
+
+  const availableSemesters =
+    useMemo(() => {
+      if (
+        !selectedProgram ||
+        !selectedSubject
+      ) {
+        return [];
+      }
+
+      const semesters =
+        metadataOptions
+          .filter(
+            (option) =>
+              option.program ===
+                selectedProgram &&
+              option.subject ===
+                selectedSubject
+          )
+          .flatMap(
+            (option) =>
+              Array.isArray(
+                option.semesters
+              )
+                ? option.semesters
+                : []
+          )
+          .filter(Boolean);
+
+      return [
+        ...new Set(semesters),
+      ].sort(
+        (
+          firstSemester,
+          secondSemester
+        ) =>
+          firstSemester.localeCompare(
+            secondSemester,
+            "fr",
+            {
+              sensitivity: "base",
+            }
+          )
+      );
+    }, [
+      metadataOptions,
+      selectedProgram,
+      selectedSubject,
+    ]);
+
+
+  const summaryRequestDetected =
+    useMemo(
+      () =>
+        isSummaryRequest(
+          question
+        ),
       [
-        context.program,
-        context.subject,
-        context.semester,
-        context.source,
+        question,
       ]
-        .filter(Boolean)
-        .join(' • '),
-    [context],
-  )
+    );
 
-  function updateContext(key, value) {
-    setContext((current) => ({
-      ...current,
-      [key]: value,
-    }))
-  }
 
-  async function runAssistant(event) {
-    event.preventDefault()
+  const isBusy =
+    loading ||
+    summaryLoading;
 
-    if (!question.trim()) {
-      setAssistantError('Écris une question ou un sujet à résumer.')
-      return
-    }
 
-    setAssistantLoading(true)
-    setAssistantError('')
-    setAssistantResult(null)
+  const canSubmit =
+    useMemo(() => {
+      return Boolean(
+        selectedProgram &&
+        selectedSubject &&
+        question.trim().length >= 2 &&
+        !isBusy &&
+        !metadataLoading &&
+        !metadataError
+      );
+    }, [
+      selectedProgram,
+      selectedSubject,
+      question,
+      isBusy,
+      metadataLoading,
+      metadataError,
+    ]);
 
-    const endpoint =
-      assistantMode === 'summary'
-        ? '/summarize'
-        : '/ask'
+
+  const canGenerateSummary =
+    useMemo(() => {
+      return Boolean(
+        answer &&
+        responseStatus === "success" &&
+        lastRequest &&
+        !isBusy
+      );
+    }, [
+      answer,
+      responseStatus,
+      lastRequest,
+      isBusy,
+    ]);
+
+
+  const resetSummary = () => {
+    setSummary("");
+    setSummarySources([]);
+    setSummaryEvidence([]);
+    setSummaryStatus("");
+    setSummaryError("");
+  };
+
+
+  const resetResponse = () => {
+    setAnswer("");
+    setSources([]);
+    setEvidence([]);
+    setResponseStatus("");
+    setSelection(null);
+    setRequestError("");
+    resetSummary();
+  };
+
+
+  const handleProgramChange = (
+    event
+  ) => {
+    setSelectedProgram(
+      event.target.value
+    );
+
+    setSelectedSubject("");
+    setSelectedSemester("");
+
+    resetResponse();
+
+    setMessage(
+      "Sélectionnez maintenant votre matière."
+    );
+  };
+
+
+  const handleSubjectChange = (
+    event
+  ) => {
+    setSelectedSubject(
+      event.target.value
+    );
+
+    setSelectedSemester("");
+
+    resetResponse();
+
+    setMessage(
+      "Vous pouvez sélectionner un semestre puis poser votre question."
+    );
+  };
+
+
+  const handleSemesterChange = (
+    event
+  ) => {
+    setSelectedSemester(
+      event.target.value
+    );
+
+    resetResponse();
+
+    setMessage(
+      "Vous pouvez maintenant poser votre question."
+    );
+  };
+
+
+  const saveQuestionToHistory = (
+    requestData,
+    status,
+    requestType = "question"
+  ) => {
+    const signature = [
+      requestType,
+      requestData.question,
+      requestData.program,
+      requestData.subject,
+      requestData.semester || "",
+    ].join("|");
+
+    const historyItem = {
+      id: (
+        `${Date.now()}-`
+        + Math.random()
+          .toString(16)
+          .slice(2)
+      ),
+      signature,
+      question:
+        requestData.question,
+      program:
+        requestData.program,
+      subject:
+        requestData.subject,
+      semester:
+        requestData.semester,
+      status,
+      requestType,
+      createdAt:
+        new Date().toISOString(),
+    };
+
+    setQuestionHistory(
+      (previousHistory) => {
+        const historyWithoutDuplicate =
+          previousHistory.filter(
+            (item) =>
+              item.signature !==
+              signature
+          );
+
+        return [
+          historyItem,
+          ...historyWithoutDuplicate,
+        ].slice(
+          0,
+          MAX_HISTORY_ITEMS
+        );
+      }
+    );
+  };
+
+
+  const sendQuestion = async (
+    requestData
+  ) => {
+    const controller =
+      new AbortController();
+
+    const timeoutId =
+      window.setTimeout(
+        () => {
+          controller.abort();
+        },
+        REQUEST_TIMEOUT
+      );
+
+    setLoading(true);
+    resetResponse();
+
+    setLastRequest(
+      requestData
+    );
+
+    setLastRequestType(
+      "question"
+    );
+
+    setMessage(
+      "Recherche des preuves documentaires en cours..."
+    );
 
     try {
-      const data = await apiRequest(endpoint, {
-        method: 'POST',
-        body: JSON.stringify({
-          question: question.trim(),
-          number_of_results: 5,
-          program: context.program || null,
-          subject: context.subject || null,
-          semester: context.semester || null,
-          source: context.source || null,
-        }),
-      })
+      const response = await fetch(
+        `${API_URL}/ask`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            question:
+              requestData.question,
+            number_of_results: 5,
+            program:
+              requestData.program,
+            subject:
+              requestData.subject,
+            semester:
+              requestData.semester,
+          }),
+          signal:
+            controller.signal,
+        }
+      );
 
-      setAssistantResult(data)
+      const data =
+        await readJsonResponse(
+          response
+        );
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail ||
+            "Une erreur est survenue pendant la génération de la réponse."
+        );
+      }
+
+      setAnswer(
+        data.answer || ""
+      );
+
+      setSources(
+        Array.isArray(
+          data.sources
+        )
+          ? data.sources
+          : []
+      );
+
+      setEvidence(
+        Array.isArray(
+          data.evidence
+        )
+          ? data.evidence
+          : []
+      );
+
+      setResponseStatus(
+        data.status || ""
+      );
+
+      setSelection(
+        data.selection || {
+          program:
+            requestData.program,
+          subject:
+            requestData.subject,
+          semester:
+            requestData.semester,
+        }
+      );
+
+      saveQuestionToHistory(
+        requestData,
+        data.status || "success",
+        "question"
+      );
+
+      if (
+        data.status ===
+        "insufficient_context"
+      ) {
+        setMessage(
+          "Aucune preuve suffisamment précise n’a été trouvée dans les documents sélectionnés."
+        );
+      } else {
+        setMessage(
+          "La réponse a été générée à partir des documents pédagogiques."
+        );
+      }
     } catch (error) {
-      setAssistantError(error.message)
-    } finally {
-      setAssistantLoading(false)
-    }
-  }
+      console.error(
+        "Erreur pendant la génération de la réponse :",
+        error
+      );
 
-  async function generateQuiz() {
-    setQuizLoading(true)
-    setQuizError('')
-    setQuiz(null)
-    setQuizAnswers({})
-    setQuizResult(null)
+      let errorMessage;
+
+      if (
+        error.name ===
+        "AbortError"
+      ) {
+        errorMessage = (
+          "Le serveur met trop de temps à répondre. "
+          + "Vérifiez qu’Ollama est démarré puis réessayez."
+        );
+      } else if (
+        error instanceof TypeError
+      ) {
+        errorMessage = (
+          "Impossible de joindre le serveur FastAPI. "
+          + "Vérifiez qu’il est démarré sur le port 8000."
+        );
+      } else {
+        errorMessage =
+          error.message ||
+          "La connexion avec le serveur a échoué.";
+      }
+
+      resetResponse();
+
+      setRequestError(
+        errorMessage
+      );
+
+      setMessage(
+        errorMessage
+      );
+    } finally {
+      window.clearTimeout(
+        timeoutId
+      );
+
+      setLoading(false);
+    }
+  };
+
+
+  const sendSummary = async (
+    requestData,
+    replaceResponse = false,
+    saveInHistory = false
+  ) => {
+    const controller =
+      new AbortController();
+
+    const timeoutId =
+      window.setTimeout(
+        () => {
+          controller.abort();
+        },
+        REQUEST_TIMEOUT
+      );
+
+    if (replaceResponse) {
+      setAnswer("");
+      setSources([]);
+      setEvidence([]);
+      setResponseStatus("");
+      setRequestError("");
+    }
+
+    setSummaryLoading(true);
+    resetSummary();
+
+    setLastRequest(
+      requestData
+    );
+
+    setLastRequestType(
+      "summary"
+    );
+
+    setSelection({
+      program:
+        requestData.program,
+      subject:
+        requestData.subject,
+      semester:
+        requestData.semester,
+    });
+
+    setMessage(
+      "Génération du résumé pédagogique en cours..."
+    );
 
     try {
-      const count = Math.max(1, Math.min(12, Number(quizCount) || 9))
+      const response = await fetch(
+        `${API_URL}/summarize`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            question:
+              requestData.question,
+            number_of_results: 5,
+            program:
+              requestData.program,
+            subject:
+              requestData.subject,
+            semester:
+              requestData.semester,
+          }),
+          signal:
+            controller.signal,
+        }
+      );
 
-      const data = await apiRequest('/quiz/generate', {
-        method: 'POST',
-        body: JSON.stringify({
-          program: context.program,
-          subject: context.subject,
-          semester: context.semester,
-          source: context.source,
-          difficulty: 'medium',
-          count,
-          question_types: cycleQuestionTypes(count),
-        }),
-      })
+      const data =
+        await readJsonResponse(
+          response
+        );
 
-      setQuiz(data)
+      if (!response.ok) {
+        throw new Error(
+          data.detail ||
+            "Une erreur est survenue pendant la génération du résumé."
+        );
+      }
+
+      setSummary(
+        data.summary || ""
+      );
+
+      setSummarySources(
+        Array.isArray(
+          data.sources
+        )
+          ? data.sources
+          : []
+      );
+
+      setSummaryEvidence(
+        Array.isArray(
+          data.evidence
+        )
+          ? data.evidence
+          : []
+      );
+
+      setSummaryStatus(
+        data.status || ""
+      );
+
+      setSelection(
+        data.selection || {
+          program:
+            requestData.program,
+          subject:
+            requestData.subject,
+          semester:
+            requestData.semester,
+        }
+      );
+
+      if (saveInHistory) {
+        saveQuestionToHistory(
+          requestData,
+          data.status || "success",
+          "summary"
+        );
+      }
+
+      if (
+        data.status ===
+        "insufficient_context"
+      ) {
+        setMessage(
+          "Le résumé n’a pas pu être produit avec les preuves disponibles."
+        );
+      } else {
+        setMessage(
+          "Le résumé a été produit à partir des documents pédagogiques."
+        );
+      }
     } catch (error) {
-      setQuizError(error.message)
+      console.error(
+        "Erreur pendant la génération du résumé :",
+        error
+      );
+
+      let errorMessage;
+
+      if (
+        error.name ===
+        "AbortError"
+      ) {
+        errorMessage = (
+          "Le serveur met trop de temps à produire le résumé. "
+          + "Vérifiez qu’Ollama est démarré puis réessayez."
+        );
+      } else if (
+        error instanceof TypeError
+      ) {
+        errorMessage = (
+          "Impossible de joindre le serveur FastAPI. "
+          + "Vérifiez qu’il est démarré sur le port 8000."
+        );
+      } else {
+        errorMessage =
+          error.message ||
+          "La génération du résumé a échoué.";
+      }
+
+      resetSummary();
+
+      setSummaryError(
+        errorMessage
+      );
+
+      setMessage(
+        errorMessage
+      );
     } finally {
-      setQuizLoading(false)
+      window.clearTimeout(
+        timeoutId
+      );
+
+      setSummaryLoading(false);
     }
-  }
+  };
 
-  function setQuizAnswer(questionId, answer) {
-    setQuizAnswers((current) => ({
-      ...current,
-      [questionId]: answer,
-    }))
-  }
 
-  async function submitQuiz() {
-    if (!quiz?.quiz_id) {
-      return
+  const handleGenerateSummary =
+    async () => {
+      if (
+        !lastRequest ||
+        isBusy
+      ) {
+        return;
+      }
+
+      await sendSummary(
+        lastRequest,
+        (
+          lastRequestType ===
+            "summary" &&
+          !answer
+        ),
+        false
+      );
+    };
+
+
+  const handleClearSummary = () => {
+    if (summaryLoading) {
+      return;
     }
 
-    setQuizSubmitting(true)
-    setQuizError('')
+    resetSummary();
 
-    try {
-      const answers = (quiz.questions || []).map((item) => ({
-        question_id: item.id,
-        answer: String(quizAnswers[item.id] ?? ''),
-      }))
+    setMessage(
+      "Le résumé a été masqué."
+    );
+  };
 
-      const data = await apiRequest('/quiz/submit', {
-        method: 'POST',
-        body: JSON.stringify({
-          quiz_id: quiz.quiz_id,
-          student_id: studentId.trim() || 'demo-student',
-          answers,
-        }),
-      })
 
-      setQuizResult(data)
-      await loadOrientation()
-    } catch (error) {
-      setQuizError(error.message)
-    } finally {
-      setQuizSubmitting(false)
+  const handleSubmit = async (
+    event
+  ) => {
+    event.preventDefault();
+
+    const cleanedQuestion =
+      question.trim();
+
+    if (!selectedProgram) {
+      resetResponse();
+
+      setMessage(
+        "Veuillez sélectionner un programme."
+      );
+
+      return;
     }
-  }
 
-  async function loadOrientation() {
-    const id = studentId.trim() || 'demo-student'
+    if (!selectedSubject) {
+      resetResponse();
 
-    setOrientationLoading(true)
-    setOrientationError('')
+      setMessage(
+        "Veuillez sélectionner une matière."
+      );
 
-    try {
-      const data = await apiRequest(
-        `/orientation/${encodeURIComponent(id)}`,
+      return;
+    }
+
+    if (
+      cleanedQuestion.length < 2
+    ) {
+      resetResponse();
+
+      setMessage(
+        "Veuillez saisir une question valide."
+      );
+
+      return;
+    }
+
+    const requestData = {
+      question:
+        cleanedQuestion,
+      program:
+        selectedProgram,
+      subject:
+        selectedSubject,
+      semester:
+        selectedSemester || null,
+    };
+
+    if (
+      isSummaryRequest(
+        cleanedQuestion
       )
+    ) {
+      await sendSummary(
+        requestData,
+        true,
+        true
+      );
 
-      setOrientation(data)
-    } catch (error) {
-      setOrientationError(error.message)
-    } finally {
-      setOrientationLoading(false)
+      return;
     }
-  }
 
-  async function addExerciseResult(event) {
-    event.preventDefault()
+    await sendQuestion(
+      requestData
+    );
+  };
 
-    setExerciseLoading(true)
-    setExerciseMessage('')
-    setOrientationError('')
 
-    try {
-      await apiRequest('/orientation/result', {
-        method: 'POST',
-        body: JSON.stringify({
-          student_id: studentId.trim() || 'demo-student',
-          subject: exerciseForm.subject,
-          lesson: exerciseForm.lesson,
-          concept: exerciseForm.concept,
-          score: Number(exerciseForm.score),
-          total: Number(exerciseForm.total),
-          activity_type: 'exercise',
-          source: exerciseForm.source,
-        }),
-      })
-
-      setExerciseMessage('Résultat d’exercice enregistré.')
-      await loadOrientation()
-    } catch (error) {
-      setOrientationError(error.message)
-    } finally {
-      setExerciseLoading(false)
+  const handleRetry = async () => {
+    if (
+      !lastRequest ||
+      isBusy
+    ) {
+      return;
     }
-  }
 
-  const assistantText =
-    assistantMode === 'summary'
-      ? assistantResult?.summary
-      : assistantResult?.answer
+    if (
+      lastRequestType ===
+      "summary"
+    ) {
+      await sendSummary(
+        lastRequest,
+        !answer,
+        false
+      );
 
-  const sources =
-    assistantResult?.sources ??
-    assistantResult?.evidence ??
-    []
+      return;
+    }
+
+    await sendQuestion(
+      lastRequest
+    );
+  };
+
+
+  const handleClear = () => {
+    if (isBusy) {
+      return;
+    }
+
+    setQuestion("");
+    setLastRequest(null);
+    setLastRequestType("");
+
+    resetResponse();
+
+    setMessage(
+      "La question et la réponse ont été effacées."
+    );
+  };
+
+
+  const handleHistorySelection = (
+    historyItem
+  ) => {
+    if (isBusy) {
+      return;
+    }
+
+    setSelectedProgram(
+      historyItem.program
+    );
+
+    setSelectedSubject(
+      historyItem.subject
+    );
+
+    setSelectedSemester(
+      historyItem.semester || ""
+    );
+
+    setQuestion(
+      historyItem.question
+    );
+
+    setLastRequest(null);
+    setLastRequestType("");
+
+    resetResponse();
+
+    setMessage(
+      "La question a été restaurée. Vous pouvez la modifier ou l’envoyer."
+    );
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+
+  const handleClearHistory = () => {
+    if (isBusy) {
+      return;
+    }
+
+    setQuestionHistory([]);
+  };
+
+
+  const handleQuestionKeyDown = (
+    event
+  ) => {
+    if (
+      (
+        event.ctrlKey ||
+        event.metaKey
+      ) &&
+      event.key === "Enter" &&
+      canSubmit
+    ) {
+      event.preventDefault();
+
+      event.currentTarget.form
+        ?.requestSubmit();
+    }
+  };
+
+
+  const getSourceUrl = (
+    source
+  ) => {
+    if (!source?.relative_path) {
+      return "";
+    }
+
+    const parameters =
+      new URLSearchParams({
+        relative_path:
+          source.relative_path,
+      });
+
+    const pageNumber = Math.max(
+      Number(source.page) || 1,
+      1
+    );
+
+    return (
+      `${API_URL}/documents/open?`
+      + `${parameters.toString()}`
+      + `#page=${pageNumber}`
+    );
+  };
+
+
+  const getSemesterLabel = (
+    semester
+  ) => {
+    if (
+      semester === "Non défini"
+    ) {
+      return (
+        "Semestre non précisé"
+      );
+    }
+
+    return semester;
+  };
+
+
+  const renderSources = (
+    sourceList
+  ) => {
+    if (
+      !Array.isArray(sourceList) ||
+      sourceList.length === 0
+    ) {
+      return null;
+    }
+
+    return (
+      <div className="sources-section">
+        <h3>
+          Sources utilisées
+        </h3>
+
+        <ul className="sources-list">
+          {sourceList.map(
+            (
+              source,
+              index
+            ) => (
+              <li
+                key={
+                  `${source.file}-`
+                  + `${source.page}-`
+                  + `${index}`
+                }
+              >
+                <div className="source-information">
+                  <span className="source-index">
+                    {index + 1}
+                  </span>
+
+                  <div className="source-details">
+                    <strong>
+                      {source.file}
+                    </strong>
+
+                    <span>
+                      Document pédagogique
+                    </span>
+                  </div>
+                </div>
+
+                <div className="source-actions">
+                  <span className="source-page">
+                    Page {source.page}
+                  </span>
+
+                  {source.relative_path ? (
+                    <a
+                      className="source-open-button"
+                      href={
+                        getSourceUrl(
+                          source
+                        )
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Ouvrir la source
+                    </a>
+                  ) : (
+                    <span className="source-unavailable">
+                      Source indisponible
+                    </span>
+                  )}
+                </div>
+              </li>
+            )
+          )}
+        </ul>
+      </div>
+    );
+  };
+
+
+  const renderEvidence = (
+    evidenceList
+  ) => {
+    if (
+      !Array.isArray(evidenceList) ||
+      evidenceList.length === 0
+    ) {
+      return null;
+    }
+
+    return (
+      <details className="evidence-section">
+        <summary>
+          Voir les preuves
+          documentaires
+        </summary>
+
+        <ul>
+          {evidenceList.map(
+            (
+              quote,
+              index
+            ) => (
+              <li
+                key={
+                  `${index}-${quote}`
+                }
+              >
+                « {quote} »
+              </li>
+            )
+          )}
+        </ul>
+      </details>
+    );
+  };
+
+
+  const statusClassName =
+    requestError ||
+    summaryError
+      ? (
+        "status-message "
+        + "status-error"
+      )
+      : isBusy
+        ? (
+          "status-message "
+          + "status-loading"
+        )
+        : (
+          responseStatus ===
+            "insufficient_context" ||
+          summaryStatus ===
+            "insufficient_context"
+        )
+          ? (
+            "status-message "
+            + "status-warning"
+          )
+          : (
+            answer ||
+            summary
+          )
+            ? (
+              "status-message "
+              + "status-success"
+            )
+            : "status-message";
+
 
   return (
-    <div className="app-shell">
-      <header className="topbar">
-        <div>
-          <p className="eyebrow">LIONAFRIQUE</p>
-          <h1>AI Learning Assistant</h1>
-          <p className="subtitle">
-            Cours, résumé, quiz intelligent et orientation pédagogique.
+    <main className="app">
+      <section className="assistant-container">
+        <header className="assistant-header">
+          <div className="header-badge">
+            Assistant documentaire
+          </div>
+
+          <p className="school-name">
+            LIONAFRIQUE
           </p>
-        </div>
 
-        <div
-          className={`backend-pill backend-${backendStatus}`}
-          title={`Backend: ${backendStatus}`}
+          <h1>
+            Assistant pédagogique intelligent
+          </h1>
+
+          <p className="header-description">
+            Posez une question et obtenez
+            une réponse fondée sur les
+            documents pédagogiques
+            sélectionnés.
+          </p>
+        </header>
+
+        <form
+          className="assistant-form"
+          onSubmit={handleSubmit}
         >
-          <span className="status-dot" />
-          {backendStatus === 'online'
-            ? 'Backend connecté'
-            : backendStatus === 'offline'
-              ? 'Backend hors ligne'
-              : 'Connexion...'}
-        </div>
-      </header>
-
-      <main className="workspace">
-        <section className="context-card">
-          <div className="section-title-row">
-            <div>
-              <p className="section-kicker">Contexte d’apprentissage</p>
-              <h2>Sélection du cours</h2>
-            </div>
-            <span className="context-summary">{selectionLabel}</span>
-          </div>
-
-          <div className="context-grid">
-            <label>
-              Programme
-              <input
-                value={context.program}
-                onChange={(event) =>
-                  updateContext('program', event.target.value)
-                }
-              />
-            </label>
-
-            <label>
-              Matière
-              <input
-                value={context.subject}
-                onChange={(event) =>
-                  updateContext('subject', event.target.value)
-                }
-              />
-            </label>
-
-            <label>
-              Semestre
-              <input
-                value={context.semester}
-                onChange={(event) =>
-                  updateContext('semester', event.target.value)
-                }
-              />
-            </label>
-
-            <label>
-              Source / PDF
-              <input
-                value={context.source}
-                onChange={(event) =>
-                  updateContext('source', event.target.value)
-                }
-              />
-            </label>
-          </div>
-
-          <label className="student-field">
-            Identifiant élève
-            <input
-              value={studentId}
-              onChange={(event) => setStudentId(event.target.value)}
-              placeholder="demo-student"
-            />
-          </label>
-        </section>
-
-        <nav className="tabs" aria-label="Modules">
-          {[
-            ['assistant', 'Assistant'],
-            ['summary', 'Résumé'],
-            ['quiz', 'Quiz'],
-            ['orientation', 'Orientation'],
-          ].map(([id, label]) => (
-            <button
-              key={id}
-              type="button"
-              className={activeTab === id ? 'tab active' : 'tab'}
-              onClick={() => {
-                setActiveTab(id)
-
-                if (id === 'summary') {
-                  setAssistantMode('summary')
-                }
-
-                if (id === 'assistant') {
-                  setAssistantMode('ask')
-                }
-
-                if (id === 'orientation') {
-                  loadOrientation()
-                }
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </nav>
-
-        {(activeTab === 'assistant' || activeTab === 'summary') && (
-          <section className="panel">
-            <div className="panel-heading">
+          <section className="filters-card">
+            <div className="section-heading">
               <div>
-                <p className="section-kicker">
-                  {activeTab === 'summary'
-                    ? 'Synthèse pédagogique'
-                    : 'Question / Réponse'}
+                <p className="section-number">
+                  Étape 1
                 </p>
+
                 <h2>
-                  {activeTab === 'summary'
-                    ? 'Résumer le cours'
-                    : 'Interroger le cours'}
+                  Sélection pédagogique
                 </h2>
+              </div>
+
+              <p>
+                Choisissez le contexte
+                documentaire de la
+                recherche.
+              </p>
+            </div>
+
+            <div className="filters-section">
+              <div className="field-group">
+                <label htmlFor="program">
+                  Programme
+                </label>
+
+                <select
+                  id="program"
+                  value={selectedProgram}
+                  onChange={
+                    handleProgramChange
+                  }
+                  disabled={
+                    metadataLoading ||
+                    isBusy
+                  }
+                >
+                  <option value="">
+                    Sélectionnez un programme
+                  </option>
+
+                  {programs.map(
+                    (program) => (
+                      <option
+                        key={program}
+                        value={program}
+                      >
+                        {program}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+
+              <div className="field-group">
+                <label htmlFor="subject">
+                  Matière
+                </label>
+
+                <select
+                  id="subject"
+                  value={selectedSubject}
+                  onChange={
+                    handleSubjectChange
+                  }
+                  disabled={
+                    !selectedProgram ||
+                    metadataLoading ||
+                    isBusy
+                  }
+                >
+                  <option value="">
+                    Sélectionnez une matière
+                  </option>
+
+                  {availableSubjects.map(
+                    (subject) => (
+                      <option
+                        key={subject}
+                        value={subject}
+                      >
+                        {subject}
+                      </option>
+                    )
+                  )}
+                </select>
+              </div>
+
+              <div className="field-group">
+                <label htmlFor="semester">
+                  Semestre
+                </label>
+
+                <select
+                  id="semester"
+                  value={selectedSemester}
+                  onChange={
+                    handleSemesterChange
+                  }
+                  disabled={
+                    !selectedSubject ||
+                    metadataLoading ||
+                    isBusy
+                  }
+                >
+                  <option value="">
+                    Tous les semestres
+                  </option>
+
+                  {availableSemesters.map(
+                    (semester) => (
+                      <option
+                        key={semester}
+                        value={semester}
+                      >
+                        {getSemesterLabel(
+                          semester
+                        )}
+                      </option>
+                    )
+                  )}
+                </select>
               </div>
             </div>
 
-            <form onSubmit={runAssistant} className="assistant-form">
-              <textarea
-                value={question}
-                onChange={(event) => setQuestion(event.target.value)}
-                placeholder={
-                  activeTab === 'summary'
-                    ? 'Exemple : Résume ce cours et donne les idées essentielles.'
-                    : 'Pose une question basée sur le PDF sélectionné...'
-                }
-                rows={5}
-              />
+            {metadataLoading && (
+              <div className="metadata-state">
+                <span
+                  className="mini-spinner"
+                  aria-hidden="true"
+                />
 
-              <button
-                className="primary-button"
-                disabled={assistantLoading}
-              >
-                {assistantLoading
-                  ? 'Traitement...'
-                  : activeTab === 'summary'
-                    ? 'Générer le résumé'
-                    : 'Poser la question'}
-              </button>
-            </form>
-
-            {assistantError && (
-              <div className="message error">{assistantError}</div>
+                <p>
+                  Chargement des options
+                  pédagogiques...
+                </p>
+              </div>
             )}
 
-            {assistantResult && (
-              <div className="result-card">
-                <div className="result-heading">
-                  <span className="result-badge">Réponse</span>
-                  <strong>
-                    {assistantResult.status || 'success'}
-                  </strong>
-                </div>
+            {metadataError && (
+              <div className="metadata-error">
+                <p>
+                  {metadataError}
+                </p>
 
-                <div className="result-text">
-                  {assistantText ||
-                    assistantResult.message ||
-                    'Aucun texte retourné.'}
-                </div>
+                <button
+                  type="button"
+                  className="small-button"
+                  onClick={
+                    loadMetadataOptions
+                  }
+                  disabled={
+                    metadataLoading
+                  }
+                >
+                  Réessayer
+                </button>
+              </div>
+            )}
+          </section>
 
-                {Array.isArray(sources) && sources.length > 0 && (
-                  <details className="sources-box">
-                    <summary>Sources utilisées</summary>
-                    <ul>
-                      {sources.map((source, index) => (
-                        <li key={`${index}-${source?.file ?? ''}`}>
-                          <strong>
-                            {source?.file ??
-                              source?.source ??
-                              `Source ${index + 1}`}
-                          </strong>
-                          {source?.page != null && (
-                            <span>Page {source.page}</span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
+          <section className="question-card">
+            <div className="section-heading">
+              <div>
+                <p className="section-number">
+                  Étape 2
+                </p>
+
+                <h2>
+                  Votre question
+                </h2>
+              </div>
+
+              <p>
+                Utilisez une question
+                précise pour obtenir une
+                réponse mieux ciblée.
+              </p>
+            </div>
+
+            <div className="question-section">
+              <div className="question-label-row">
+                <label htmlFor="question">
+                  Question
+                </label>
+
+                <span>
+                  {question.length}
+                  {" "}
+                  caractère
+                  {question.length > 1
+                    ? "s"
+                    : ""}
+                </span>
+              </div>
+
+              <textarea
+                id="question"
+                name="question"
+                value={question}
+                onChange={(event) =>
+                  setQuestion(
+                    event.target.value
+                  )
+                }
+                onKeyDown={
+                  handleQuestionKeyDown
+                }
+                placeholder="Exemple : Quels sont les rôles des aliments ? ou لخص درس أسلوب المدح والذم"
+                rows="5"
+                maxLength="600"
+                disabled={isBusy}
+              />
+
+              <p className="keyboard-hint">
+                Utilisez Ctrl + Entrée
+                pour envoyer la question.
+              </p>
+            </div>
+
+            <div className="form-actions">
+              <button
+                className="submit-button"
+                type="submit"
+                disabled={!canSubmit}
+              >
+                {isBusy ? (
+                  <>
+                    <span
+                      className="button-spinner"
+                      aria-hidden="true"
+                    />
+
+                    {summaryLoading
+                      ? "Génération du résumé..."
+                      : "Génération en cours..."}
+                  </>
+                ) : summaryRequestDetected ? (
+                  "Générer le résumé"
+                ) : (
+                  "Envoyer la question"
+                )}
+              </button>
+
+              <button
+                className="clear-button"
+                type="button"
+                onClick={handleClear}
+                disabled={
+                  isBusy ||
+                  (
+                    !question &&
+                    !answer &&
+                    !requestError
+                  )
+                }
+              >
+                Effacer
+              </button>
+            </div>
+          </section>
+        </form>
+
+        <p
+          className={
+            statusClassName
+          }
+          aria-live="polite"
+        >
+          {message}
+        </p>
+
+        {loading && (
+          <section
+            className="loading-card"
+            aria-live="polite"
+          >
+            <span
+              className="loading-spinner"
+              aria-hidden="true"
+            />
+
+            <div>
+              <h2>
+                Analyse des documents
+              </h2>
+
+              <p>
+                Recherche des passages,
+                validation des preuves et
+                préparation de la réponse.
+              </p>
+            </div>
+          </section>
+        )}
+
+        {requestError &&
+          !loading && (
+          <section className="error-card">
+            <div>
+              <p className="card-label">
+                Erreur de connexion
+              </p>
+
+              <h2>
+                La réponse n’a pas pu être
+                générée
+              </h2>
+
+              <p>
+                {requestError}
+              </p>
+            </div>
+
+            {lastRequest && (
+              <button
+                type="button"
+                className="retry-button"
+                onClick={handleRetry}
+              >
+                Réessayer
+              </button>
+            )}
+          </section>
+        )}
+
+        {selection && (
+          <section className="selection-summary">
+            <span>
+              {selection.program}
+            </span>
+
+            <span>
+              {selection.subject}
+            </span>
+
+            {selection.semester && (
+              <span>
+                {getSemesterLabel(
+                  selection.semester
+                )}
+              </span>
+            )}
+          </section>
+        )}
+
+        {answer && (
+          <section
+            className={`answer-card ${
+              responseStatus ===
+              "insufficient_context"
+                ? "answer-card-warning"
+                : "answer-card-success"
+            }`}
+          >
+            <div className="answer-header">
+              <div>
+                <p className="card-label">
+                  Résultat documentaire
+                </p>
+
+                <h2>
+                  {responseStatus ===
+                  "insufficient_context"
+                    ? "Information insuffisante"
+                    : "Réponse"}
+                </h2>
+              </div>
+
+              <span
+                className={`answer-status ${
+                  responseStatus ===
+                  "insufficient_context"
+                    ? "answer-status-warning"
+                    : "answer-status-success"
+                }`}
+              >
+                {responseStatus ===
+                "insufficient_context"
+                  ? "Preuve insuffisante"
+                  : "Réponse vérifiée"}
+              </span>
+            </div>
+
+            <div className="answer-text">
+              {answer}
+            </div>
+
+            {renderSources(
+              sources
+            )}
+
+            {renderEvidence(
+              evidence
+            )}
+
+            {responseStatus ===
+              "success" && (
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="submit-button"
+                  onClick={
+                    handleGenerateSummary
+                  }
+                  disabled={
+                    !canGenerateSummary
+                  }
+                >
+                  {summaryLoading ? (
+                    <>
+                      <span
+                        className="button-spinner"
+                        aria-hidden="true"
+                      />
+
+                      Génération du résumé...
+                    </>
+                  ) : summary ? (
+                    "Régénérer le résumé"
+                  ) : (
+                    "Générer un résumé"
+                  )}
+                </button>
+
+                {summary && (
+                  <button
+                    type="button"
+                    className="clear-button"
+                    onClick={
+                      handleClearSummary
+                    }
+                    disabled={
+                      summaryLoading
+                    }
+                  >
+                    Masquer le résumé
+                  </button>
                 )}
               </div>
             )}
           </section>
         )}
 
-        {activeTab === 'quiz' && (
-          <section className="panel">
-            <div className="panel-heading">
-              <div>
-                <p className="section-kicker">Gemini + Grounding</p>
-                <h2>Quiz intelligent</h2>
-                <p>
-                  Les réponses restent validées par le moteur grounded de
-                  LIONAFRIQUE. Gemini améliore la génération des questions.
-                </p>
-              </div>
+        {summaryLoading && (
+          <section
+            className="loading-card"
+            aria-live="polite"
+          >
+            <span
+              className="loading-spinner"
+              aria-hidden="true"
+            />
 
-              <div className="quiz-controls">
-                <label>
-                  Questions
-                  <input
-                    type="number"
-                    min="3"
-                    max="12"
-                    value={quizCount}
-                    onChange={(event) =>
-                      setQuizCount(event.target.value)
-                    }
-                  />
-                </label>
+            <div>
+              <h2>
+                Création du résumé
+              </h2>
 
-                <button
-                  type="button"
-                  className="primary-button"
-                  onClick={generateQuiz}
-                  disabled={quizLoading}
-                >
-                  {quizLoading ? 'Génération...' : 'Générer le quiz'}
-                </button>
-              </div>
+              <p>
+                Sélection des idées
+                importantes et validation
+                des preuves documentaires.
+              </p>
+            </div>
+          </section>
+        )}
+
+        {summaryError &&
+          !summaryLoading && (
+          <section className="error-card">
+            <div>
+              <p className="card-label">
+                Erreur de génération
+              </p>
+
+              <h2>
+                Le résumé n’a pas pu être
+                produit
+              </h2>
+
+              <p>
+                {summaryError}
+              </p>
             </div>
 
-            {quizError && (
-              <div className="message error">{quizError}</div>
-            )}
-
-            {quiz && (
-              <>
-                <div className="quiz-meta">
-                  <span>
-                    Moteur :{' '}
-                    <strong>
-                      {quiz.generation_engine ||
-                        'lionafrique-grounded'}
-                    </strong>
-                  </span>
-                  <span>
-                    Gemini :{' '}
-                    <strong>{quiz.gemini_status || 'fallback'}</strong>
-                  </span>
-                  <span>
-                    Questions Gemini :{' '}
-                    <strong>
-                      {quiz.gemini_questions_generated ?? 0}
-                    </strong>
-                  </span>
-                </div>
-
-                <div className="question-list">
-                  {(quiz.questions || []).map((item, index) => {
-                    const options = Array.isArray(item.options)
-                      ? item.options.map(normalizeOption)
-                      : []
-
-                    return (
-                      <article className="quiz-card" key={item.id}>
-                        <div className="quiz-card-top">
-                          <span>Question {index + 1}</span>
-                          <span className="type-badge">{item.type}</span>
-                        </div>
-
-                        <h3>{item.question}</h3>
-
-                        {options.length > 0 ? (
-                          <div className="options-list">
-                            {options.map((option) => (
-                              <label
-                                className="option-row"
-                                key={`${item.id}-${option.value}`}
-                              >
-                                <input
-                                  type="radio"
-                                  name={`question-${item.id}`}
-                                  checked={
-                                    quizAnswers[item.id] === option.value
-                                  }
-                                  onChange={() =>
-                                    setQuizAnswer(
-                                      item.id,
-                                      option.value,
-                                    )
-                                  }
-                                />
-                                <span>{option.label}</span>
-                              </label>
-                            ))}
-                          </div>
-                        ) : (
-                          <textarea
-                            rows={3}
-                            value={quizAnswers[item.id] ?? ''}
-                            onChange={(event) =>
-                              setQuizAnswer(
-                                item.id,
-                                event.target.value,
-                              )
-                            }
-                            placeholder="Écris ta réponse..."
-                          />
-                        )}
-
-                        <div className="question-source">
-                          {item.source && <span>{item.source}</span>}
-                          {item.page != null && (
-                            <span>Page {item.page}</span>
-                          )}
-                        </div>
-                      </article>
-                    )
-                  })}
-                </div>
-
-                <button
-                  type="button"
-                  className="primary-button submit-quiz"
-                  onClick={submitQuiz}
-                  disabled={quizSubmitting}
-                >
-                  {quizSubmitting
-                    ? 'Correction...'
-                    : 'Valider mes réponses'}
-                </button>
-              </>
-            )}
-
-            {quizResult && (
-              <div className="score-card">
-                <div>
-                  <p className="section-kicker">Résultat</p>
-                  <h3>
-                    {quizResult.score} / {quizResult.total}
-                  </h3>
-                </div>
-                <div className="score-percent">
-                  {quizResult.total
-                    ? Math.round(
-                        (Number(quizResult.score) /
-                          Number(quizResult.total)) *
-                          100,
-                      )
-                    : 0}
-                  %
-                </div>
-                <p>
-                  Le résultat a été envoyé automatiquement au module
-                  Orientation pour mettre à jour les priorités de révision.
-                </p>
-              </div>
+            {lastRequest && (
+              <button
+                type="button"
+                className="retry-button"
+                onClick={
+                  handleGenerateSummary
+                }
+                disabled={isBusy}
+              >
+                Réessayer
+              </button>
             )}
           </section>
         )}
 
-        {activeTab === 'orientation' && (
-          <section className="panel">
-            <div className="panel-heading orientation-heading">
+        {summary && (
+          <section
+            className={`answer-card ${
+              summaryStatus ===
+              "insufficient_context"
+                ? "answer-card-warning"
+                : "answer-card-success"
+            }`}
+          >
+            <div className="answer-header">
               <div>
-                <p className="section-kicker">
-                  Orientation pédagogique adaptative
+                <p className="card-label">
+                  Accompagnement pédagogique
                 </p>
-                <h2>Plan de progression</h2>
-                <p>
-                  Basé uniquement sur les résultats de quiz et exercices.
+
+                <h2>
+                  {summaryStatus ===
+                  "insufficient_context"
+                    ? "Résumé indisponible"
+                    : "Résumé"}
+                </h2>
+              </div>
+
+              <span
+                className={`answer-status ${
+                  summaryStatus ===
+                  "insufficient_context"
+                    ? "answer-status-warning"
+                    : "answer-status-success"
+                }`}
+              >
+                {summaryStatus ===
+                "insufficient_context"
+                  ? "Preuve insuffisante"
+                  : "Résumé vérifié"}
+              </span>
+            </div>
+
+            <div className="answer-text">
+              {summary}
+            </div>
+
+            {renderSources(
+              summarySources
+            )}
+
+            {renderEvidence(
+              summaryEvidence
+            )}
+          </section>
+        )}
+
+
+        <LearningTools
+          metadataOptions={metadataOptions}
+          selectedProgram={selectedProgram}
+          selectedSubject={selectedSubject}
+          selectedSemester={selectedSemester}
+          isParentBusy={isBusy}
+        />
+
+        {questionHistory.length > 0 && (
+          <section className="history-section">
+            <div className="history-header">
+              <div>
+                <p className="card-label">
+                  Session actuelle
                 </p>
+
+                <h2>
+                  Questions récentes
+                </h2>
               </div>
 
               <button
                 type="button"
-                className="secondary-button"
-                onClick={loadOrientation}
-                disabled={orientationLoading}
+                className="text-button"
+                onClick={
+                  handleClearHistory
+                }
+                disabled={isBusy}
               >
-                {orientationLoading ? 'Analyse...' : 'Actualiser'}
+                Vider l’historique
               </button>
             </div>
 
-            {orientationError && (
-              <div className="message error">{orientationError}</div>
-            )}
-
-            {orientation && (
-              <>
-                <div className="orientation-overview">
-                  <div className="metric-card">
-                    <span>Maîtrise globale</span>
-                    <strong>
-                      {orientation.overall_mastery == null
-                        ? '—'
-                        : `${orientation.overall_mastery}%`}
-                    </strong>
-                  </div>
-
-                  <div className="metric-card">
-                    <span>Activités analysées</span>
-                    <strong>{orientation.attempt_count ?? 0}</strong>
-                  </div>
-
-                  <div className="metric-card">
-                    <span>Points à renforcer</span>
-                    <strong>{orientation.weak_areas?.length ?? 0}</strong>
-                  </div>
-                </div>
-
-                <div className="ai-guidance-card">
-                  <div className="ai-heading">
-                    <div>
-                      <p className="section-kicker">Gemini guidance</p>
-                      <h3>Conseil personnalisé</h3>
-                    </div>
-                    <span
-                      className={
-                        orientation.ai_status === 'success'
-                          ? 'ai-pill success'
-                          : 'ai-pill fallback'
-                      }
-                    >
-                      {orientation.ai_status || 'fallback'}
+            <div className="history-list">
+              {questionHistory.map(
+                (historyItem) => (
+                  <button
+                    type="button"
+                    className="history-item"
+                    key={historyItem.id}
+                    onClick={() =>
+                      handleHistorySelection(
+                        historyItem
+                      )
+                    }
+                    disabled={isBusy}
+                  >
+                    <span className="history-question">
+                      {historyItem.question}
                     </span>
-                  </div>
 
-                  <p>
-                    {orientation.ai_guidance ||
-                      orientation.message ||
-                      'Pas encore assez de résultats pour générer un conseil.'}
-                  </p>
-                </div>
+                    <span className="history-details">
+                      {historyItem.subject}
+                      {" · "}
+                      {historyItem.semester ||
+                        "Tous les semestres"}
+                      {" · "}
+                      {formatHistoryDate(
+                        historyItem.createdAt
+                      )}
+                    </span>
 
-                <div className="revision-grid">
-                  {(orientation.revision_plan || []).map((item) => (
-                    <article className="revision-card" key={`${item.rank}-${item.subject}-${item.concept}`}>
-                      <div className="revision-top">
-                        <span>Priorité #{item.rank}</span>
-                        <span className={`priority priority-${item.priority}`}>
-                          {item.priority}
-                        </span>
-                      </div>
-
-                      <h3>{item.subject}</h3>
-                      <p className="concept">{item.concept}</p>
-
-                      <div className="mastery-row">
-                        <span>Actuel : {item.current_mastery}%</span>
-                        <span>Cible : {item.target_mastery}%</span>
-                      </div>
-
-                      <div className="progress-track">
-                        <span
-                          style={{
-                            width: `${Math.max(
-                              0,
-                              Math.min(
-                                100,
-                                Number(item.current_mastery) || 0,
-                              ),
-                            )}%`,
-                          }}
-                        />
-                      </div>
-
-                      <ul>
-                        {(item.actions || []).map((action) => (
-                          <li key={action}>
-                            {action.replaceAll('_', ' ')}
-                          </li>
-                        ))}
-                      </ul>
-
-                      <p className="recommendation">
-                        {item.recommendation}
-                      </p>
-                    </article>
-                  ))}
-                </div>
-              </>
-            )}
-
-            <form
-              className="exercise-card"
-              onSubmit={addExerciseResult}
-            >
-              <div>
-                <p className="section-kicker">Test rapide</p>
-                <h3>Ajouter un résultat d’exercice</h3>
-              </div>
-
-              <div className="exercise-grid">
-                {[
-                  ['subject', 'Matière'],
-                  ['lesson', 'Leçon'],
-                  ['concept', 'Concept'],
-                  ['source', 'Source'],
-                ].map(([key, label]) => (
-                  <label key={key}>
-                    {label}
-                    <input
-                      value={exerciseForm[key]}
-                      onChange={(event) =>
-                        setExerciseForm((current) => ({
-                          ...current,
-                          [key]: event.target.value,
-                        }))
-                      }
-                    />
-                  </label>
-                ))}
-
-                <label>
-                  Score
-                  <input
-                    type="number"
-                    min="0"
-                    value={exerciseForm.score}
-                    onChange={(event) =>
-                      setExerciseForm((current) => ({
-                        ...current,
-                        score: event.target.value,
-                      }))
-                    }
-                  />
-                </label>
-
-                <label>
-                  Total
-                  <input
-                    type="number"
-                    min="1"
-                    value={exerciseForm.total}
-                    onChange={(event) =>
-                      setExerciseForm((current) => ({
-                        ...current,
-                        total: event.target.value,
-                      }))
-                    }
-                  />
-                </label>
-              </div>
-
-              <button
-                className="secondary-button"
-                disabled={exerciseLoading}
-              >
-                {exerciseLoading
-                  ? 'Enregistrement...'
-                  : 'Enregistrer et analyser'}
-              </button>
-
-              {exerciseMessage && (
-                <div className="message success">
-                  {exerciseMessage}
-                </div>
+                    <span
+                      className={`history-status ${
+                        historyItem.status ===
+                        "insufficient_context"
+                          ? "history-status-warning"
+                          : "history-status-success"
+                      }`}
+                    >
+                      {historyItem.requestType ===
+                      "summary"
+                        ? (
+                          historyItem.status ===
+                          "insufficient_context"
+                            ? "Résumé indisponible"
+                            : "Résumé trouvé"
+                        )
+                        : (
+                          historyItem.status ===
+                          "insufficient_context"
+                            ? "Information insuffisante"
+                            : "Réponse trouvée"
+                        )}
+                    </span>
+                  </button>
+                )
               )}
-            </form>
+            </div>
           </section>
         )}
-      </main>
-
-      <footer>
-        LIONAFRIQUE AI Assistant • Grounded learning • Gemini enhanced
-      </footer>
-    </div>
-  )
+      </section>
+    </main>
+  );
 }
 
-export default App
+
+export default App;
