@@ -25,6 +25,10 @@ from services.retrieval_service import (
 from services.summary_service import (
     generate_summary,
 )
+from services.quiz_service import (
+    generate_quiz,
+    submit_quiz,
+)
 from services.vector_store_service import (
     get_metadata_options,
     search_similar_chunks,
@@ -61,7 +65,7 @@ app = FastAPI(
         "de génération de réponses "
         "et de résumés pédagogiques."
     ),
-    version="1.3.0",
+    version="1.4.0",
 )
 
 
@@ -412,6 +416,71 @@ def resolve_document_path(
     raise FileNotFoundError(
         "Le document demandé est introuvable."
     )
+
+
+
+# QUIZ_API_MODELS_V1
+
+class QuizGenerateRequest(BaseModel):
+
+    program: str = Field(
+        min_length=1,
+    )
+
+    subject: str = Field(
+        min_length=1,
+    )
+
+    semester: str = Field(
+        min_length=1,
+    )
+
+    source: str = Field(
+        min_length=1,
+    )
+
+    difficulty: str = Field(
+        default="medium",
+    )
+
+    count: int = Field(
+        default=5,
+        ge=1,
+        le=12,
+    )
+
+    question_types: list[str] = Field(
+        default_factory=lambda: [
+            "mcq",
+            "true_false",
+            "short_answer",
+        ]
+    )
+
+
+class QuizAnswerItem(BaseModel):
+
+    question_id: int = Field(
+        ge=1,
+    )
+
+    answer: str = Field(
+        default="",
+    )
+
+
+class QuizSubmitRequest(BaseModel):
+
+    quiz_id: str = Field(
+        min_length=1,
+    )
+
+    answers: list[
+        QuizAnswerItem
+    ] = Field(
+        default_factory=list,
+    )
+    student_id: str | None = None
 
 
 @app.get("/")
@@ -906,3 +975,277 @@ def summarize_documents(
                 "la génération du résumé."
             ),
         ) from error
+
+
+# QUIZ_API_ROUTES_V1
+
+@app.post(
+    "/quiz/generate"
+)
+def generate_quiz_endpoint(
+    request: QuizGenerateRequest,
+):
+
+    try:
+
+        result = generate_quiz(
+            program=request.program,
+            subject=request.subject,
+            semester=request.semester,
+            source=request.source,
+            difficulty=(
+                request.difficulty
+            ),
+            count=request.count,
+            question_types=(
+                request.question_types
+            ),
+        )
+
+        # ORIENTATION_V2_GENERATE_METADATA
+        orientation_quiz_id_v2 = str(
+            result.get("quiz_id", "")
+            or ""
+        )
+
+        if orientation_quiz_id_v2:
+            orientation_quiz_entry_v2 = (
+                ORIENTATION_QUIZ_STORE_V2.get(
+                    orientation_quiz_id_v2
+                )
+            )
+
+            if isinstance(
+                orientation_quiz_entry_v2,
+                dict,
+            ):
+                orientation_quiz_entry_v2.update(
+                    {
+                        "program": request.program,
+                        "subject": request.subject,
+                        "semester": request.semester,
+                        "source": request.source,
+                        "lesson": request.source,
+                        "concept": request.source,
+                    }
+                )
+
+        return {
+            "status": "success",
+            **result,
+        }
+
+    except ValueError as error:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(
+                error
+            ),
+        ) from error
+
+    except Exception as error:
+
+        traceback.print_exc()
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(
+                error
+            ),
+        ) from error
+
+
+@app.post(
+    "/quiz/submit"
+)
+def submit_quiz_endpoint(
+    request: QuizSubmitRequest,
+):
+
+    try:
+
+        result = submit_quiz(
+            quiz_id=(
+                request.quiz_id
+            ),
+            answers=[
+                {
+                    "question_id": (
+                        item.question_id
+                    ),
+                    "answer": (
+                        item.answer
+                    ),
+                }
+                for item
+                in request.answers
+            ],
+        )
+
+        # ORIENTATION_V2_AUTO_RECORD_QUIZ
+        if request.student_id:
+            orientation_meta_v2 = (
+                ORIENTATION_QUIZ_STORE_V2.get(
+                    request.quiz_id,
+                    {},
+                )
+                or {}
+            )
+
+            orientation_total_v2 = float(
+                result.get("total", 0)
+                or 0
+            )
+
+            if orientation_total_v2 > 0:
+                orientation_source_v2 = str(
+                    orientation_meta_v2.get(
+                        "source",
+                        "",
+                    )
+                    or ""
+                )
+
+                orientation_subject_v2 = str(
+                    orientation_meta_v2.get(
+                        "subject",
+                        "Non défini",
+                    )
+                    or "Non défini"
+                )
+
+                orientation_lesson_v2 = str(
+                    orientation_meta_v2.get(
+                        "lesson",
+                        orientation_source_v2
+                        or "الدرس",
+                    )
+                    or orientation_source_v2
+                    or "الدرس"
+                )
+
+                orientation_concept_v2 = str(
+                    orientation_meta_v2.get(
+                        "concept",
+                        orientation_lesson_v2,
+                    )
+                    or orientation_lesson_v2
+                )
+
+                record_orientation_result_v2(
+                    student_id=request.student_id,
+                    subject=orientation_subject_v2,
+                    lesson=orientation_lesson_v2,
+                    concept=orientation_concept_v2,
+                    score=float(
+                        result.get("score", 0)
+                        or 0
+                    ),
+                    total=orientation_total_v2,
+                    activity_type="quiz",
+                    source=orientation_source_v2,
+                )
+
+        return {
+            "status": "success",
+            **result,
+        }
+
+    except KeyError as error:
+
+        raise HTTPException(
+            status_code=404,
+            detail=str(
+                error
+            ),
+        ) from error
+
+    except ValueError as error:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(
+                error
+            ),
+        ) from error
+
+    except Exception as error:
+
+        traceback.print_exc()
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(
+                error
+            ),
+        ) from error
+
+# ORIENTATION_V2_API
+
+from services.quiz_service import QUIZ_STORE as ORIENTATION_QUIZ_STORE_V2
+from services.orientation_service import (
+    analyze_student_orientation_v2,
+    record_orientation_result_v2,
+)
+
+
+class OrientationResultRequestV2(BaseModel):
+    student_id: str
+    subject: str
+    lesson: str
+    concept: str
+    score: float
+    total: float
+    activity_type: str = "exercise"
+    source: str = ""
+    timestamp: str | None = None
+
+
+class OrientationAnalyzeRequestV2(BaseModel):
+    student_id: str
+    target_mastery: float = 85.0
+    max_plan_items: int = 5
+
+
+@app.post("/orientation/result")
+def orientation_record_result_v2(
+    request: OrientationResultRequestV2,
+):
+    try:
+        return record_orientation_result_v2(
+            student_id=request.student_id,
+            subject=request.subject,
+            lesson=request.lesson,
+            concept=request.concept,
+            score=request.score,
+            total=request.total,
+            activity_type=request.activity_type,
+            source=request.source,
+            timestamp=request.timestamp,
+        )
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        ) from error
+
+
+@app.post("/orientation/analyze")
+def orientation_analyze_v2(
+    request: OrientationAnalyzeRequestV2,
+):
+    return analyze_student_orientation_v2(
+        request.student_id,
+        target_mastery=request.target_mastery,
+        max_plan_items=request.max_plan_items,
+    )
+
+
+@app.get("/orientation/{student_id}")
+def orientation_get_student_v2(
+    student_id: str,
+):
+    return analyze_student_orientation_v2(
+        student_id
+    )

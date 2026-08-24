@@ -303,3 +303,111 @@ def analyze_orientation(
         "revision_plan": revision_plan,
         "message": message,
     }
+
+# ORIENTATION_V2_RESULT_STORE
+
+ORIENTATION_RESULT_STORE_V2: dict[str, list[dict]] = {}
+
+
+def record_orientation_result_v2(
+    *,
+    student_id: str,
+    subject: str,
+    lesson: str,
+    concept: str,
+    score: float,
+    total: float,
+    activity_type: str = "quiz",
+    source: str = "",
+    timestamp=None,
+) -> dict:
+    student_id = str(student_id or "").strip()
+
+    if not student_id:
+        raise ValueError("student_id is required.")
+
+    item = _normalize_attempt(
+        {
+            "subject": subject,
+            "lesson": lesson,
+            "concept": concept,
+            "score": score,
+            "total": total,
+            "activity_type": activity_type,
+            "source": source,
+            "timestamp": timestamp,
+        }
+    )
+
+    ORIENTATION_RESULT_STORE_V2.setdefault(
+        student_id,
+        [],
+    ).append(item)
+
+    return {
+        "status": "success",
+        "student_id": student_id,
+        "stored_count": len(
+            ORIENTATION_RESULT_STORE_V2[student_id]
+        ),
+        "result": item,
+    }
+
+
+def get_orientation_results_v2(
+    student_id: str,
+) -> list[dict]:
+    student_id = str(student_id or "").strip()
+
+    if not student_id:
+        return []
+
+    return list(
+        ORIENTATION_RESULT_STORE_V2.get(
+            student_id,
+            [],
+        )
+    )
+
+
+def analyze_student_orientation_v2(
+    student_id: str,
+    *,
+    target_mastery: float = 85.0,
+    max_plan_items: int = 5,
+) -> dict:
+    output = analyze_orientation(
+        get_orientation_results_v2(student_id),
+        target_mastery=target_mastery,
+        max_plan_items=max_plan_items,
+    )
+
+    output["student_id"] = str(
+        student_id or ""
+    ).strip()
+
+    return output
+
+
+def reset_orientation_results_v2(
+    student_id: str,
+) -> dict:
+    student_id = str(student_id or "").strip()
+
+    removed = len(
+        ORIENTATION_RESULT_STORE_V2.get(
+            student_id,
+            [],
+        )
+    )
+
+    ORIENTATION_RESULT_STORE_V2.pop(
+        student_id,
+        None,
+    )
+
+    return {
+        "status": "success",
+        "student_id": student_id,
+        "removed": removed,
+    }
