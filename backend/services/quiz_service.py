@@ -15342,6 +15342,369 @@ def quiz_arabic_mixed_disjoint_pools_v25h(
     )
 
 
+
+# QUIZ_MATH_AR_SOURCE_QUALITY_GUARD_V25W
+
+def quiz_math_ar_source_quality_guard_v25w(
+    program: str,
+    subject: str,
+    semester: str,
+    source: str,
+    requested_count: int,
+) -> dict:
+
+    normalized_subject_v25w = normalize_text(
+        str(subject or "")
+    )
+
+    math_ar_subjects_v25w = {
+        "mathematiques arabe",
+        "math arabe",
+        "maths arabe",
+        "mathematique arabe",
+    }
+
+    if normalized_subject_v25w not in math_ar_subjects_v25w:
+        return {
+            "enabled": False,
+            "clean_count": None,
+            "required_count": None,
+            "source": str(source or ""),
+        }
+
+    try:
+        required_count_v25w = max(
+            1,
+            int(requested_count or 1),
+        )
+    except Exception:
+        required_count_v25w = 1
+
+    passages_v25w = get_lesson_passages(
+        program=program,
+        subject=subject,
+        semester=semester,
+        source=source,
+    )
+
+    bad_markers_v25w = (
+        "المح عة",
+        "إالحصيص",
+        "إلحصيص",
+        "الاحصانية",
+        "الإحصانية",
+        "كر +",
+        "كر+",
+        ",بر",
+        "،بر",
+        "حب إذن",
+        "حب اذن",
+        "SI Gal",
+        "لقيمة",
+        "تيبا",
+        "الحمصيص",
+        "لدينا أكبر حصيص",
+        "لدينا اكبر حصيص",
+        "ومعدل مريم",
+    )
+
+    bad_answer_endings_v25w = (
+        "عن طريق",
+        "يقسم",
+        "تقسم",
+        "حيث",
+        "مثل",
+        "على",
+        "من",
+        "إلى",
+        "الى",
+    )
+
+    arabic_word_pattern_v25w = re.compile(
+        r"[\u0621-\u064A]{2,}"
+    )
+
+    latin_word_pattern_v25w = re.compile(
+        r"\b[A-Za-z]{2,}\b"
+    )
+
+    allowed_latin_v25w = {
+        "cm",
+        "mm",
+        "km",
+    }
+
+    plain_numeric_pattern_v25w = re.compile(
+        r"^\s*[+\-−]?\d+(?:[.,]\d+)?(?:\s*[%°])?\s*$"
+    )
+
+    orphan_numeric_pattern_v25w = re.compile(
+        r"[:،,]\s*\d(?:\s|$)"
+    )
+
+    def is_clean_v25w(
+        question_v25w: str,
+        answer_v25w: str,
+        fact_v25w: str,
+    ) -> bool:
+
+        question_v25w = str(question_v25w or "").strip()
+        answer_v25w = str(answer_v25w or "").strip()
+        fact_v25w = str(fact_v25w or "").strip()
+
+        if (
+            not question_v25w
+            or not answer_v25w
+            or not fact_v25w
+        ):
+            return False
+
+        blob_v25w = (
+            question_v25w
+            + " "
+            + answer_v25w
+            + " "
+            + fact_v25w
+        )
+
+        normalized_blob_v25w = normalize_text(
+            blob_v25w
+        )
+
+        for marker_v25w in bad_markers_v25w:
+            if (
+                normalize_text(marker_v25w)
+                in normalized_blob_v25w
+            ):
+                return False
+
+        if "\ufffd" in blob_v25w:
+            return False
+
+        if orphan_numeric_pattern_v25w.search(
+            blob_v25w
+        ):
+            return False
+
+        if (
+            question_v25w.count("(")
+            != question_v25w.count(")")
+            or answer_v25w.count("(")
+            != answer_v25w.count(")")
+            or fact_v25w.count("(")
+            != fact_v25w.count(")")
+        ):
+            return False
+
+        latin_tokens_v25w = (
+            latin_word_pattern_v25w.findall(
+                blob_v25w
+            )
+        )
+
+        for latin_token_v25w in latin_tokens_v25w:
+            if (
+                latin_token_v25w.lower()
+                not in allowed_latin_v25w
+            ):
+                return False
+
+        prefix_v25w = "ما المقصود بمصطلح "
+
+        if question_v25w.startswith(
+            prefix_v25w
+        ):
+            term_v25w = (
+                question_v25w[
+                    len(prefix_v25w):
+                ].strip(" ؟?")
+            )
+
+            normalized_term_v25w = normalize_text(
+                term_v25w
+            )
+
+            if re.search(
+                r"\d",
+                term_v25w,
+            ):
+                return False
+
+            if (
+                normalized_term_v25w.startswith(
+                    "اذن "
+                )
+                or normalized_term_v25w.startswith(
+                    "الاجابة"
+                )
+                or normalized_term_v25w.startswith(
+                    "لدينا "
+                )
+                or normalized_term_v25w.startswith(
+                    "ومعدل "
+                )
+                or normalized_term_v25w.startswith(
+                    "ا -"
+                )
+                or normalized_term_v25w.startswith(
+                    "ب -"
+                )
+            ):
+                return False
+
+        normalized_answer_v25w = normalize_text(
+            answer_v25w
+        ).rstrip(
+            " .،,؛;:!?؟()[]{}"
+        )
+
+        for ending_v25w in bad_answer_endings_v25w:
+            normalized_ending_v25w = normalize_text(
+                ending_v25w
+            )
+
+            if (
+                normalized_answer_v25w
+                == normalized_ending_v25w
+                or normalized_answer_v25w.endswith(
+                    " " + normalized_ending_v25w
+                )
+            ):
+                return False
+
+        if (
+            not plain_numeric_pattern_v25w.fullmatch(
+                answer_v25w
+            )
+            and len(
+                arabic_word_pattern_v25w.findall(
+                    answer_v25w
+                )
+            ) < 3
+        ):
+            return False
+
+        return True
+
+    seen_questions_v25w = set()
+    clean_items_v25w = []
+
+    for passage_v25w in passages_v25w:
+        evidence_text_v25w = str(
+            passage_v25w.get(
+                "text",
+                "",
+            )
+            or ""
+        )
+
+        if not evidence_text_v25w:
+            continue
+
+        source_facts_v25w = (
+            quiz_source_fact_candidates_v17(
+                evidence_text=evidence_text_v25w,
+                arabic_expected=True,
+            )
+        )
+
+        for fact_v25w in source_facts_v25w:
+            (
+                question_v25w,
+                answer_v25w,
+            ) = quiz_source_first_qa_v17b(
+                fact=fact_v25w,
+                arabic_expected=True,
+            )
+
+            question_v25w = str(
+                question_v25w or ""
+            ).strip()
+
+            answer_v25w = str(
+                answer_v25w or ""
+            ).strip()
+
+            fact_v25w = str(
+                fact_v25w or ""
+            ).strip()
+
+            if not is_clean_v25w(
+                question_v25w,
+                answer_v25w,
+                fact_v25w,
+            ):
+                continue
+
+            normalized_question_v25w = (
+                normalize_text(
+                    question_v25w
+                )
+            )
+
+            if (
+                not normalized_question_v25w
+                or normalized_question_v25w
+                in seen_questions_v25w
+            ):
+                continue
+
+            seen_questions_v25w.add(
+                normalized_question_v25w
+            )
+
+            clean_items_v25w.append(
+                {
+                    "question": question_v25w,
+                    "answer": answer_v25w,
+                    "fact": fact_v25w,
+                    "page": passage_v25w.get(
+                        "page",
+                        0,
+                    ),
+                }
+            )
+
+    clean_count_v25w = len(
+        clean_items_v25w
+    )
+
+    result_v25w = {
+        "enabled": True,
+        "clean_count": clean_count_v25w,
+        "required_count": required_count_v25w,
+        "source": str(source or ""),
+        "clean_preview": clean_items_v25w[:5],
+    }
+
+    print(
+        "QUIZ V25W MATH-AR SOURCE QUALITY:",
+        "clean=",
+        clean_count_v25w,
+        "required=",
+        required_count_v25w,
+        "source=",
+        repr(str(source or "")),
+    )
+
+    if clean_count_v25w < required_count_v25w:
+        raise RuntimeError(
+            (
+                "QUIZ_SOURCE_QUALITY_INSUFFICIENT_V25W: "
+                "Le texte extrait de ce cours de mathematiques "
+                "en arabe n'est pas assez propre pour generer "
+                "un quiz fiable. "
+                f"clean={clean_count_v25w}/"
+                f"{required_count_v25w}; "
+                f"source={source!r}. "
+                "Re-OCR/re-ingest the lesson or choose another "
+                "source/count. No ungrounded questions were generated."
+            )
+        )
+
+    return result_v25w
+
+
 def generate_quiz(
     program: str,
     subject: str,
@@ -15351,6 +15714,15 @@ def generate_quiz(
     count: int = 5,
     question_types: list[str] | None = None,
 ) -> dict:
+
+    # QUIZ_MATH_AR_SOURCE_QUALITY_GUARD_CALL_V25W
+    quiz_math_ar_source_quality_guard_v25w(
+        program=program,
+        subject=subject,
+        semester=semester,
+        source=source,
+        requested_count=count,
+    )
 
     clean_expired_quizzes()
 
