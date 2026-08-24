@@ -386,7 +386,9 @@ def analyze_student_orientation_v2(
         student_id or ""
     ).strip()
 
-    return output
+    return _attach_gemini_guidance_v3(
+        output
+    )
 
 
 def reset_orientation_results_v2(
@@ -411,3 +413,34 @@ def reset_orientation_results_v2(
         "student_id": student_id,
         "removed": removed,
     }
+
+# ORIENTATION_GEMINI_GUIDANCE_V3
+
+def _attach_gemini_guidance_v3(
+    output: dict,
+) -> dict:
+    try:
+        from services.gemini_service import (
+            gemini_orientation_guidance_v2,
+        )
+
+        output["ai_guidance"] = (
+            gemini_orientation_guidance_v2(
+                output
+            )
+        )
+
+        output["ai_engine"] = (
+            "gemini-3.1-flash-lite"
+        )
+
+        output["ai_status"] = "success"
+
+    except Exception:
+        output["ai_guidance"] = None
+        output["ai_engine"] = (
+            "deterministic-fallback"
+        )
+        output["ai_status"] = "fallback"
+
+    return output

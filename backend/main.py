@@ -1030,6 +1030,22 @@ def generate_quiz_endpoint(
                     }
                 )
 
+        # GEMINI_QUIZ_CALL_V2
+        try:
+            result = gemini_enhance_quiz_result_v2(
+                result,
+                ORIENTATION_QUIZ_STORE_V2,
+            )
+        except Exception as gemini_error_v2:
+            print(
+                'GEMINI QUIZ FALLBACK:',
+                type(gemini_error_v2).__name__,
+                str(gemini_error_v2),
+            )
+            result['gemini_status'] = 'fallback'
+            result['generation_engine'] = 'lionafrique-grounded'
+            result['gemini_questions_generated'] = 0
+
         return {
             "status": "success",
             **result,
@@ -1249,3 +1265,9 @@ def orientation_get_student_v2(
     return analyze_student_orientation_v2(
         student_id
     )
+
+# GEMINI_QUIZ_INTEGRATION_V2
+
+from services.gemini_service import (
+    gemini_enhance_quiz_result_v2,
+)
