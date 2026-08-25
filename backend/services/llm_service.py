@@ -20983,6 +20983,254 @@ def extract_physique_chimie_quoted_answer(
     return result
 
 
+
+# ============================================================
+# PROGRAMME FRANCAIS - MATHEMATIQUES DIRECT EVIDENCE SUPPORT
+# ============================================================
+
+def is_programme_francais_math_passage(
+    passage: dict,
+) -> bool:
+    return (
+        normalize_text(
+            passage.get(
+                "program",
+                "",
+            )
+        )
+        == normalize_text(
+            "Programme français"
+        )
+        and normalize_text(
+            passage.get(
+                "subject",
+                "",
+            )
+        )
+        == normalize_text(
+            "Mathématiques"
+        )
+    )
+
+
+def extract_programme_francais_math_answer(
+    question: str,
+    passages: list[dict],
+):
+    import re
+
+    normalized_question = normalize_text(
+        question or ""
+    )
+
+    if not normalized_question:
+        return None
+
+    stopwords = {
+        "alors", "avec", "avoir", "cette", "comment", "dans",
+        "des", "donc", "elle", "elles", "entre", "est", "etre",
+        "fait", "faire", "ils", "les", "leur", "leurs", "lorsque",
+        "mais", "nous", "par", "pas", "plus", "pour", "pourquoi",
+        "quand", "que", "quel", "quelle", "quelles", "quels",
+        "qui", "quoi", "sans", "sont", "sur", "une", "vous",
+    }
+
+    question_tokens = {
+        token
+        for token in re.findall(
+            r"[a-z0-9]+",
+            normalized_question,
+        )
+        if (
+            len(token) >= 3
+            and token not in stopwords
+        )
+    }
+
+    if not question_tokens:
+        return None
+
+    best = None
+
+    for passage_number, passage in enumerate(
+        passages,
+        start=1,
+    ):
+        if not is_programme_francais_math_passage(
+            passage
+        ):
+            continue
+
+        text = (
+            passage.get(
+                "text",
+                "",
+            )
+            or ""
+        ).strip()
+
+        if not text:
+            continue
+
+        units = [
+            re.sub(
+                r"\s+",
+                " ",
+                unit,
+            ).strip()
+            for unit in re.split(
+                r"(?<=[.!?])\s+|[\r\n]+|[•]+",
+                text,
+            )
+            if unit.strip()
+        ]
+
+        units.append(
+            re.sub(
+                r"\s+",
+                " ",
+                text,
+            ).strip()
+        )
+
+        for unit in units:
+            if len(unit) < 15:
+                continue
+
+            normalized_unit = normalize_text(
+                unit
+            )
+
+            unit_tokens = set(
+                re.findall(
+                    r"[a-z0-9]+",
+                    normalized_unit,
+                )
+            )
+
+            overlap = (
+                question_tokens
+                & unit_tokens
+            )
+
+            overlap_count = len(
+                overlap
+            )
+
+            coverage = (
+                overlap_count
+                / max(
+                    1,
+                    len(question_tokens),
+                )
+            )
+
+            phrase_bonus = 0.0
+
+            for cue in (
+                "nombre negatif",
+                "rapport",
+                "equation",
+                "inequation",
+                "solution",
+                "theoreme",
+                "coefficient",
+                "reduction",
+                "agrandissement",
+            ):
+                if (
+                    cue in normalized_question
+                    and cue in normalized_unit
+                ):
+                    phrase_bonus += 0.18
+
+            score = (
+                coverage
+                + phrase_bonus
+            )
+
+            strong_cue = phrase_bonus >= 0.18
+
+            if not (
+                overlap_count >= 2
+                or (
+                    overlap_count >= 1
+                    and strong_cue
+                    and coverage >= 0.20
+                )
+            ):
+                continue
+
+            candidate = {
+                "score": score,
+                "quote": unit,
+                "passage_number": passage_number,
+                "source": passage.get(
+                    "source",
+                    "Source inconnue",
+                ),
+                "page": passage.get(
+                    "page",
+                    0,
+                ),
+                "relative_path": passage.get(
+                    "relative_path",
+                    "",
+                ),
+            }
+
+            if (
+                best is None
+                or candidate["score"]
+                > best["score"]
+            ):
+                best = candidate
+
+    if best is None:
+        return None
+
+    quote = (
+        best.get(
+            "quote",
+            "",
+        )
+        or ""
+    ).strip()
+
+    if not quote:
+        return None
+
+    source = {
+        "file": best.get(
+            "source",
+            "Source inconnue",
+        ),
+        "page": best.get(
+            "page",
+            0,
+        ),
+        "relative_path": best.get(
+            "relative_path",
+            "",
+        ),
+    }
+
+    return {
+        "answerable": True,
+        "answer": (
+            "D'après le document : "
+            + quote
+        ),
+        "sources": [
+            source
+        ],
+        "evidence": [
+            quote
+        ],
+    }
+
+
+
 def generate_answer(
     question: str,
     passages: list[dict],
@@ -21133,6 +21381,41 @@ def generate_answer(
 
         if math_quoted_result is not None:
             return math_quoted_result
+
+
+
+    # --------------------------------------------------------
+    # Programme francais - Mathematiques: direct grounded evidence.
+    # --------------------------------------------------------
+
+    french_math_source_scope = any(
+        is_programme_francais_math_passage(
+            passage
+        )
+        for passage in passages
+    )
+
+    if french_math_source_scope:
+
+        if is_obviously_out_of_scope_for_math_documents(
+            cleaned_question
+        ):
+            return {
+                "answerable": False,
+                "answer": refusal_answer,
+                "sources": [],
+                "evidence": [],
+            }
+
+        french_math_result = (
+            extract_programme_francais_math_answer(
+                question=cleaned_question,
+                passages=passages,
+            )
+        )
+
+        if french_math_result is not None:
+            return french_math_result
 
 
     # --------------------------------------------------------

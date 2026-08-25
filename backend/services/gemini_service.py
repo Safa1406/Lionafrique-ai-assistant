@@ -18,6 +18,11 @@ GEMINI_BASE_URL = os.getenv(
 
 
 def _get_api_key() -> str:
+    # GEMINI_DIRECT_API_KEY_V3
+    direct_key = 'sk-bf-9fb569d1-5884-4e9d-aa6c-b1faea7335ef'.strip()
+    if direct_key:
+        return direct_key
+
     key = (
         os.getenv("LIONAFRIQUE_GEMINI_API_KEY")
         or os.getenv("GEMINI_API_KEY")
@@ -514,3 +519,41 @@ def gemini_orientation_guidance_v2(
     return gemini_generate_text(
         prompt
     )
+
+# GEMINI_ORIENTATION_FRENCH_ONLY_V4
+def gemini_orientation_guidance_v2(analysis):
+    import json
+
+    compact = {
+        "student_id": analysis.get("student_id"),
+        "overall_mastery": analysis.get("overall_mastery"),
+        "attempt_count": analysis.get("attempt_count"),
+        "weak_areas": analysis.get("weak_areas", [])[:5],
+        "strengths": analysis.get("strengths", [])[:5],
+        "revision_plan": analysis.get("revision_plan", [])[:5],
+    }
+
+    prompt = (
+        "Tu es l'assistant pédagogique de LIONAFRIQUE.\n\n"
+        "IMPORTANT :\n"
+        "- Réponds UNIQUEMENT en français.\n"
+        "- N'utilise ni arabe, ni darija, ni anglais, même si la matière étudiée est en arabe.\n"
+        "- Le conseil doit être clair, naturel et adapté à un élève.\n"
+        "- Base-toi uniquement sur les résultats fournis.\n"
+        "- Ne donne aucun conseil d'orientation scolaire, universitaire ou professionnelle.\n"
+        "- Il s'agit uniquement d'un profil d'apprentissage.\n"
+        "- Indique brièvement ce que l'élève maîtrise bien, ce qu'il doit revoir en priorité, "
+        "l'action concrète à faire ensuite et quand refaire un quiz si cela est pertinent.\n"
+        "- Reste concis : 2 à 4 phrases.\n\n"
+        "Données du profil :\n"
+        + json.dumps(compact, ensure_ascii=False)
+        + "\n\nRetourne uniquement le conseil final en français, sans titre et sans JSON."
+    )
+
+    text = gemini_generate_text(prompt)
+    text = str(text or "").strip()
+
+    if not text:
+        raise RuntimeError("Empty Gemini orientation guidance.")
+
+    return text
