@@ -106,7 +106,20 @@ function extractSources(
       continue;
     }
 
+    // PDF_DROPDOWN_BY_SEMESTER_V1
+    const semesterSources =
+      Array.isArray(
+        option?.sources_by_semester?.[
+          semester
+        ]
+      )
+        ? option.sources_by_semester[
+            semester
+          ]
+        : [];
+
     const possibleSources = [
+      ...semesterSources,
       option?.source,
       option?.file,
       option?.pdf,
@@ -196,22 +209,90 @@ function toPercent(
   );
 }
 
+function learningActionLabel(action) {
+  const labels = {
+    "review_lesson": "Revoir le cours",
+    "review lesson": "Revoir le cours",
+
+    "review_summary": "Revoir le résumé",
+    "review summary": "Revoir le résumé",
+
+    "practice_easy": "Faire des exercices faciles",
+    "practice easy": "Faire des exercices faciles",
+
+    "practice_medium": "Faire des exercices moyens",
+    "practice medium": "Faire des exercices moyens",
+
+    "practice_hard": "Faire des exercices difficiles",
+    "practice hard": "Faire des exercices difficiles",
+
+    "retake_quiz": "Refaire le quiz",
+    "retake quiz": "Refaire le quiz",
+  };
+
+  const key = String(
+    action ?? ""
+  )
+    .trim()
+    .toLowerCase();
+
+  return labels[key] ?? action;
+}
+
+function lessonDisplayName(value) {
+  const raw = String(
+    value ?? ""
+  ).trim();
+
+  if (!raw) {
+    return "Le?on";
+  }
+
+  const filename =
+    raw.split(/[\\/]/).pop() ||
+    raw;
+
+  if (
+    filename.toLowerCase() ===
+    "alihsaa-aldrs-1-2.pdf"
+  ) {
+    return "\u0627\u0644\u0625\u062d\u0635\u0627\u0621";
+  }
+
+  return filename
+    .replace(/\.pdf$/i, "")
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function humanizeLearningText(value) {
+  return String(
+    value ?? ""
+  ).replace(
+    /[^\s"'<>]+\.pdf/gi,
+    (filename) =>
+      lessonDisplayName(filename)
+  );
+}
+
 function profileItemLabel(
   item
 ) {
-  if (
+  const value =
     typeof item === "string"
-  ) {
-    return item;
-  }
+      ? item
+      : (
+          item?.concept ??
+          item?.lesson ??
+          item?.subject ??
+          item?.name ??
+          item?.label ??
+          "?l?ment"
+        );
 
-  return (
-    item?.concept ??
-    item?.lesson ??
-    item?.subject ??
-    item?.name ??
-    item?.label ??
-    "Élément"
+  return lessonDisplayName(
+    value
   );
 }
 
@@ -806,26 +887,10 @@ function LearningTools({
       <div
         className="learning-context"
       >
-        <label>
-          Identifiant élève
-          <input
-            value={
-              studentId
-            }
-            onChange={(
-              event
-            ) =>
-              setStudentId(
-                event.target.value
-              )
-            }
-          />
-        </label>
-
         {availableSources.length >
         0 ? (
           <label>
-            Source PDF
+            Cours / PDF
             <select
               value={
                 selectedSource ||
@@ -857,24 +922,14 @@ function LearningTools({
               )}
             </select>
           </label>
-        ) : (
-          <label>
-            Source PDF
-            <input
-              value={
-                manualSource
-              }
-              onChange={(
-                event
-              ) =>
-                setManualSource(
-                  event.target.value
-                )
-              }
-              placeholder="Nom du fichier PDF"
-            />
-          </label>
-        )}
+        ) : selectedProgram &&
+          selectedSubject &&
+          selectedSemester ? (
+          <p className="learning-note">
+            Aucun cours disponible pour
+            cette s?lection.
+          </p>
+        ) : null}
       </div>
 
       {!selectedProgram ||
@@ -1175,12 +1230,6 @@ function LearningTools({
           <div
             className="student-profile-hero"
           >
-            <div
-              className="student-avatar"
-              aria-hidden="true"
-            >
-              {initials}
-            </div>
 
             <div
               className="student-profile-main"
@@ -1192,8 +1241,7 @@ function LearningTools({
               </p>
 
               <h3>
-                {studentId.trim() ||
-                  "demo-student"}
+                Mon profil d’apprentissage
               </h3>
 
               <p>
@@ -1529,17 +1577,7 @@ function LearningTools({
                   </h3>
                 </div>
 
-                <span
-                  className={
-                    orientation.ai_status ===
-                    "success"
-                      ? "gemini-status gemini-status-success"
-                      : "gemini-status"
-                  }
-                >
-                  {orientation.ai_status ||
-                    "fallback"}
-                </span>
+
 
                 <p>
                   {orientation.ai_guidance ||
@@ -1580,7 +1618,7 @@ function LearningTools({
                       <article
                         className="revision-item"
                         key={
-                          `${item.rank}-${item.subject}-${item.concept}`
+                          `${item.rank}-${item.subject}-${lessonDisplayName(item.concept)}`
                         }
                       >
                         <div
@@ -1605,7 +1643,7 @@ function LearningTools({
                         </div>
 
                         <p>
-                          {item.concept}
+                          {lessonDisplayName(item.concept)}
                         </p>
 
                         <div
@@ -1641,10 +1679,7 @@ function LearningTools({
                                   action
                                 }
                               >
-                                {action.replaceAll(
-                                  "_",
-                                  " "
-                                )}
+                                {learningActionLabel(action)}
                               </li>
                             )
                           )}
@@ -1653,7 +1688,7 @@ function LearningTools({
                         <p
                           className="revision-recommendation"
                         >
-                          {item.recommendation}
+                          {humanizeLearningText(item.recommendation)}
                         </p>
                       </article>
                     )

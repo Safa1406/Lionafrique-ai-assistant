@@ -403,9 +403,10 @@ def get_metadata_options() -> list[dict]:
         [],
     )
 
+    # METADATA_SOURCES_BY_SEMESTER_V2
     grouped_options: dict[
         tuple[str, str],
-        set[str],
+        dict[str, set[str]],
     ] = {}
 
     for metadata in metadatas:
@@ -414,18 +415,26 @@ def get_metadata_options() -> list[dict]:
 
         program = metadata.get(
             "program",
-            "Non défini",
+            "Non d?fini",
         )
 
         subject = metadata.get(
             "subject",
-            "Non définie",
+            "Non d?finie",
         )
 
         semester = metadata.get(
             "semester",
-            "Non défini",
+            "Non d?fini",
         )
+
+        source = str(
+            metadata.get(
+                "source",
+                "",
+            )
+            or ""
+        ).strip()
 
         option_key = (
             program,
@@ -435,27 +444,53 @@ def get_metadata_options() -> list[dict]:
         if option_key not in grouped_options:
             grouped_options[
                 option_key
-            ] = set()
+            ] = {}
 
-        grouped_options[
-            option_key
-        ].add(
+        if (
             semester
-        )
+            not in grouped_options[
+                option_key
+            ]
+        ):
+            grouped_options[
+                option_key
+            ][semester] = set()
+
+        if source:
+            grouped_options[
+                option_key
+            ][semester].add(
+                source
+            )
 
     options = []
 
     for (
         program,
         subject,
-    ), semesters in grouped_options.items():
+    ), semester_sources in grouped_options.items():
+
+        semesters = sorted(
+            semester_sources.keys()
+        )
+
+        sources_by_semester = {
+            semester: sorted(
+                semester_sources[
+                    semester
+                ]
+            )
+            for semester
+            in semesters
+        }
+
         options.append(
             {
                 "program": program,
                 "subject": subject,
-                "semesters": sorted(
-                    semesters
-                ),
+                "semesters": semesters,
+                "sources_by_semester":
+                    sources_by_semester,
             }
         )
 
