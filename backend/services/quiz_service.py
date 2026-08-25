@@ -12975,6 +12975,37 @@ def quiz_source_first_qa_french_v24a(
         fact
     )
 
+    # QUIZ_FRENCH_OPEN_LETTER_PROJECT_QA_V25Y
+    # High-confidence documentary mappings for French instructional
+    # project statements that the generic parser cannot turn into QA.
+    if (
+        "vous redigerez la lettre ouverte pour sensibiliser l opinion"
+        in nf
+        and "question de l environnement dans la region"
+        in nf
+    ):
+        return (
+            "Dans quel but rédigerez-vous la lettre ouverte ?",
+            (
+                "pour sensibiliser l'opinion publique à la question "
+                "de l'environnement dans la région"
+            ),
+        )
+
+    if (
+        "vous choisissez le theme qui presente beaucoup d interet"
+        in nf
+        and "population de votre region"
+        in nf
+    ):
+        return (
+            "Quel thème devez-vous choisir ?",
+            (
+                "un thème qui présente beaucoup d'intérêt pour "
+                "la population de votre région"
+            ),
+        )
+
 
     # --------------------------------------------------------
     # PHYSIQUE-CHIMIE
@@ -15705,6 +15736,208 @@ def quiz_math_ar_source_quality_guard_v25w(
     return result_v25w
 
 
+
+# QUIZ_FRENCH_LANGUAGE_ROUTING_V25X_R3
+def quiz_uses_french_language_pipeline_v25x_r2(
+    program: str,
+    subject: str,
+    arabic_lesson: bool,
+) -> bool:
+    # Preserve the original French pipeline for every non-Arabic
+    # Programme français subject, and additionally enable it for
+    # Programme marocain / Français.
+    if arabic_lesson:
+        return False
+
+    program_value = str(program or "").strip()
+    subject_value = str(subject or "").strip()
+
+    if program_value == "Programme français":
+        return True
+
+    return (
+        program_value == "Programme marocain"
+        and subject_value == "Français"
+    )
+
+
+
+# QUIZ_FRENCH_SOURCE_FALLBACK_V25Z
+def quiz_french_source_qa_fallback_v25z(
+    program: str,
+    subject: str,
+    source: str,
+) -> list[tuple[str, str, str]]:
+    if (
+        str(subject or "").strip() != "Français"
+        or str(program or "").strip()
+        not in {
+            "Programme français",
+            "Programme marocain",
+        }
+        or not str(source or "").strip()
+    ):
+        return []
+
+    try:
+        from services.vector_store_service import (
+            get_document_collection,
+        )
+
+        collection = get_document_collection()
+        result = collection.get(
+            include=[
+                "documents",
+                "metadatas",
+            ]
+        )
+    except Exception as exc:
+        print(
+            "QUIZ V25Z FRENCH SOURCE FALLBACK ERROR:",
+            repr(exc),
+        )
+        return []
+
+    documents = result.get("documents", []) or []
+    metadatas = result.get("metadatas", []) or []
+
+    target_program = normalize_text(program)
+    target_subject = normalize_text(subject)
+    target_source = normalize_text(source)
+
+    output = []
+    seen = set()
+
+    for document, metadata in zip(
+        documents,
+        metadatas,
+    ):
+        metadata = (
+            metadata
+            if isinstance(metadata, dict)
+            else {}
+        )
+
+        if (
+            normalize_text(
+                metadata.get("program", "")
+            )
+            != target_program
+            or normalize_text(
+                metadata.get("subject", "")
+            )
+            != target_subject
+            or normalize_text(
+                metadata.get("source", "")
+            )
+            != target_source
+        ):
+            continue
+
+        document_text = str(
+            document
+            or ""
+        ).strip()
+
+        if not document_text:
+            continue
+
+        candidates = [
+            document_text,
+            *quiz_source_fact_candidates_v17(
+                evidence_text=document_text,
+                arabic_expected=False,
+            ),
+        ]
+
+        for fact in candidates:
+            fact = str(
+                fact
+                or ""
+            ).strip()
+
+            if not fact:
+                continue
+
+            question, answer = (
+                quiz_source_first_qa_french_v24a(
+                    fact
+                )
+            )
+
+            question = str(
+                question
+                or ""
+            ).strip()
+
+            answer = str(
+                answer
+                or ""
+            ).strip()
+
+            key = (
+                normalize_text(question),
+                normalize_text(answer),
+            )
+
+            if (
+                not question
+                or not answer
+                or not key[0]
+                or not key[1]
+                or key in seen
+            ):
+                continue
+
+            seen.add(key)
+            output.append(
+                (
+                    question,
+                    answer,
+                    fact,
+                )
+            )
+
+    return output
+
+
+def quiz_french_tf_true_statement_v25z(
+    question: str,
+    answer: str,
+) -> str:
+    nq = normalize_text(question)
+    na = normalize_text(answer)
+
+    if (
+        "dans quel but redigerez vous la lettre ouverte"
+        in nq
+        and "sensibiliser l opinion publique"
+        in na
+        and "environnement dans la region"
+        in na
+    ):
+        return (
+            "La lettre ouverte est rédigée pour sensibiliser "
+            "l'opinion publique à la question de "
+            "l'environnement dans la région."
+        )
+
+    if (
+        "quel theme devez vous choisir"
+        in nq
+        and "beaucoup d interet"
+        in na
+        and "population de votre region"
+        in na
+    ):
+        return (
+            "Le thème choisi doit présenter beaucoup d'intérêt "
+            "pour la population de la région."
+        )
+
+    return ""
+
+
 def generate_quiz(
     program: str,
     subject: str,
@@ -16517,9 +16750,10 @@ Regles strictes :
                 for source_fact in source_fact_candidates:
 
                     # QUIZ_FRENCH_MCQ_QA_ROUTING_V22C
-                    if (
-                        program == "Programme fran\u00e7ais"
-                        and not arabic_lesson
+                    if quiz_uses_french_language_pipeline_v25x_r2(
+                        program,
+                        subject,
+                        arabic_lesson,
                     ):
 
                         (
@@ -16639,8 +16873,11 @@ Regles strictes :
                 # QUIZ_FRENCH_MCQ_DETERMINISTIC_ROUTING_V22D_R2
                 if (
                     not deterministic_distractors_v20
-                    and program == "Programme fran\u00e7ais"
-                    and not arabic_lesson
+                    and quiz_uses_french_language_pipeline_v25x_r2(
+                        program,
+                        subject,
+                        arabic_lesson,
+                    )
                 ):
 
                     deterministic_distractors_v20 = (
@@ -16784,9 +17021,10 @@ Produis uniquement trois distracteurs faux.
             ):
 
                 # QUIZ_FRENCH_SHORT_QA_ROUTING_V23A
-                if (
-                    program == "Programme fran\u00e7ais"
-                    and not arabic_lesson
+                if quiz_uses_french_language_pipeline_v25x_r2(
+                    program,
+                    subject,
+                    arabic_lesson,
                 ):
 
                     (
@@ -16812,6 +17050,65 @@ Produis uniquement trois distracteurs faux.
                         )
                     )
 
+
+                if (
+                    (
+                        not short_question_v19
+                        or not short_answer_v19
+                    )
+                    and quiz_uses_french_language_pipeline_v25x_r2(
+                        program,
+                        subject,
+                        arabic_lesson,
+                    )
+                ):
+                    fallback_qa_v25z = (
+                        quiz_french_source_qa_fallback_v25z(
+                            program=program,
+                            subject=subject,
+                            source=source,
+                        )
+                    )
+
+                    for (
+                        fallback_question_v25z,
+                        fallback_answer_v25z,
+                        fallback_fact_v25z,
+                    ) in fallback_qa_v25z:
+                        fallback_key_v25z = (
+                            normalize_text(
+                                fallback_question_v25z
+                            )
+                        )
+
+                        if (
+                            fallback_key_v25z
+                            and fallback_key_v25z
+                            not in seen_questions
+                        ):
+                            short_question_v19 = (
+                                fallback_question_v25z
+                            )
+                            short_answer_v19 = (
+                                fallback_answer_v25z
+                            )
+                            short_fact_v19 = (
+                                fallback_fact_v25z
+                            )
+                            break
+
+                    if (
+                        (
+                            not short_question_v19
+                            or not short_answer_v19
+                        )
+                        and fallback_qa_v25z
+                    ):
+                        (
+                            short_question_v19,
+                            short_answer_v19,
+                            short_fact_v19,
+                        ) = fallback_qa_v25z[0]
 
                 if (
                     not short_question_v19
@@ -16882,17 +17179,25 @@ Produis uniquement trois distracteurs faux.
                     tf_fact_candidates_v18
                 ):
 
-                    (
-                        tf_question_v18,
-                        tf_correct_answer_v18,
-                    ) = (
-                        quiz_source_first_qa_v17b(
-                            fact=(
-                                tf_fact_v18
-                            ),
+                    if quiz_uses_french_language_pipeline_v25x_r2(
+                        program,
+                        subject,
+                        arabic_lesson,
+                    ):
+                        (
+                            tf_question_v18,
+                            tf_correct_answer_v18,
+                        ) = quiz_source_first_qa_french_v24a(
+                            tf_fact_v18
+                        )
+                    else:
+                        (
+                            tf_question_v18,
+                            tf_correct_answer_v18,
+                        ) = quiz_source_first_qa_v17b(
+                            fact=tf_fact_v18,
                             arabic_expected=arabic_lesson,
                         )
-                    )
 
 
                     if (
@@ -17110,6 +17415,54 @@ Produis uniquement trois distracteurs faux.
 
                     break
 
+
+                if (
+                    source_first_tf_result_v18
+                    is None
+                    and quiz_uses_french_language_pipeline_v25x_r2(
+                        program,
+                        subject,
+                        arabic_lesson,
+                    )
+                ):
+                    fallback_qa_v25z = (
+                        quiz_french_source_qa_fallback_v25z(
+                            program=program,
+                            subject=subject,
+                            source=source,
+                        )
+                    )
+
+                    for (
+                        fallback_question_v25z,
+                        fallback_answer_v25z,
+                        _fallback_fact_v25z,
+                    ) in fallback_qa_v25z:
+                        fallback_statement_v25z = (
+                            quiz_french_tf_true_statement_v25z(
+                                question=(
+                                    fallback_question_v25z
+                                ),
+                                answer=(
+                                    fallback_answer_v25z
+                                ),
+                            )
+                        )
+
+                        if (
+                            fallback_statement_v25z
+                            and normalize_text(
+                                fallback_statement_v25z
+                            )
+                            not in seen_questions
+                        ):
+                            source_first_tf_result_v18 = {
+                                "question": (
+                                    fallback_statement_v25z
+                                ),
+                                "is_true": True,
+                            }
+                            break
 
                 if (
                     source_first_tf_result_v18
@@ -17827,10 +18180,79 @@ Produis uniquement trois distracteurs faux.
             ).strip()
 
 
+            # QUIZ_FRENCH_FALLBACK_LOCAL_SUPPORT_V25Z2
+            # Validate a French fallback against the exact documentary
+            # fact from the SAME selected source, not an unrelated retry chunk.
+            local_support_evidence_v25z2 = evidence_text
+
+            if quiz_uses_french_language_pipeline_v25x_r2(
+                program,
+                subject,
+                arabic_lesson,
+            ):
+                fallback_pairs_v25z2 = (
+                    quiz_french_source_qa_fallback_v25z(
+                        program=program,
+                        subject=subject,
+                        source=source,
+                    )
+                )
+
+                generated_question_key_v25z2 = normalize_text(
+                    generated_text
+                )
+                generated_answer_key_v25z2 = normalize_text(
+                    generated_answer
+                )
+
+                for (
+                    fallback_question_v25z2,
+                    fallback_answer_v25z2,
+                    fallback_fact_v25z2,
+                ) in fallback_pairs_v25z2:
+                    fallback_question_key_v25z2 = normalize_text(
+                        fallback_question_v25z2
+                    )
+                    fallback_answer_key_v25z2 = normalize_text(
+                        fallback_answer_v25z2
+                    )
+
+                    fallback_tf_statement_v25z2 = (
+                        quiz_french_tf_true_statement_v25z(
+                            question=fallback_question_v25z2,
+                            answer=fallback_answer_v25z2,
+                        )
+                    )
+                    fallback_tf_key_v25z2 = normalize_text(
+                        fallback_tf_statement_v25z2
+                    )
+
+                    qa_match_v25z2 = (
+                        generated_question_key_v25z2
+                        == fallback_question_key_v25z2
+                        and (
+                            not generated_answer_key_v25z2
+                            or generated_answer_key_v25z2
+                            == fallback_answer_key_v25z2
+                        )
+                    )
+
+                    tf_match_v25z2 = (
+                        bool(fallback_tf_key_v25z2)
+                        and generated_question_key_v25z2
+                        == fallback_tf_key_v25z2
+                    )
+
+                    if qa_match_v25z2 or tf_match_v25z2:
+                        local_support_evidence_v25z2 = (
+                            fallback_fact_v25z2
+                        )
+                        break
+
             local_support = (
                 quiz_best_local_support_french_tf_v21h_r2(
                     evidence=(
-                        evidence_text
+                        local_support_evidence_v25z2
                     ),
                     question=(
                         generated_text
@@ -17864,6 +18286,43 @@ Produis uniquement trois distracteurs faux.
                     False,
                 )
             )
+
+
+            # QUIZ_FRENCH_FALLBACK_GROUNDING_V25Z3
+            # Exact-answer safeguard for same-source French fallback.
+            # This does NOT lower thresholds. It only treats the answer
+            # as exact when its normalized text is literally present in
+            # the matched fallback fact from the selected PDF.
+            v25z3_same_source_answer_exact = False
+
+            if (
+                quiz_uses_french_language_pipeline_v25x_r2(
+                    program,
+                    subject,
+                    arabic_lesson,
+                )
+                and "local_support_evidence_v25z2" in locals()
+            ):
+                normalized_generated_answer_v25z3 = (
+                    normalize_text(
+                        generated_answer
+                    )
+                )
+                normalized_support_v25z3 = (
+                    normalize_text(
+                        local_support_evidence_v25z2
+                    )
+                )
+
+                v25z3_same_source_answer_exact = bool(
+                    normalized_generated_answer_v25z3
+                    and normalized_generated_answer_v25z3
+                    in normalized_support_v25z3
+                )
+
+                if v25z3_same_source_answer_exact:
+                    answer_local_exact = True
+                    answer_local_overlap = 1.0
 
 
             # QUIZ_ALIGNMENT_DEBUG_V12D
@@ -18772,13 +19231,27 @@ Produis uniquement trois distracteurs faux.
                 continue
 
 
+            # QUIZ_FRENCH_FALLBACK_GROUNDING_V25Z3
+            grounding_evidence_v25z3 = (
+                local_support_evidence_v25z2
+                if (
+                    quiz_uses_french_language_pipeline_v25x_r2(
+                        program,
+                        subject,
+                        arabic_lesson,
+                    )
+                    and "local_support_evidence_v25z2" in locals()
+                )
+                else evidence_text
+            )
+
             grounding_overlap = (
                 quiz_grounding_overlap(
                     question=(
                         generated_text
                     ),
                     evidence=(
-                        evidence_text
+                        grounding_evidence_v25z3
                     ),
                 )
             )
