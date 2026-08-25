@@ -520,9 +520,44 @@ def gemini_orientation_guidance_v2(
         prompt
     )
 
-# GEMINI_ORIENTATION_FRENCH_ONLY_V4
+# GEMINI_ORIENTATION_FRENCH_ONLY_V5_DETERMINISTIC
 def gemini_orientation_guidance_v2(analysis):
     import json
+    import re
+
+    if not isinstance(analysis, dict):
+        raise ValueError("analysis must be a dictionary.")
+
+    arabic_re = re.compile(
+        r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]"
+    )
+
+    def sanitize_for_french(value):
+        if isinstance(value, dict):
+            return {
+                key: sanitize_for_french(item)
+                for key, item in value.items()
+            }
+
+        if isinstance(value, list):
+            return [
+                sanitize_for_french(item)
+                for item in value
+            ]
+
+        if isinstance(value, tuple):
+            return [
+                sanitize_for_french(item)
+                for item in value
+            ]
+
+        if isinstance(value, str):
+            cleaned = value.strip()
+            if arabic_re.search(cleaned):
+                return "[élément source à reformuler en français sans le citer]"
+            return cleaned
+
+        return value
 
     compact = {
         "student_id": analysis.get("student_id"),
@@ -533,27 +568,74 @@ def gemini_orientation_guidance_v2(analysis):
         "revision_plan": analysis.get("revision_plan", [])[:5],
     }
 
-    prompt = (
+    safe_compact = sanitize_for_french(compact)
+
+    base_prompt = (
         "Tu es l'assistant pédagogique de LIONAFRIQUE.\n\n"
-        "IMPORTANT :\n"
-        "- Réponds UNIQUEMENT en français.\n"
-        "- N'utilise ni arabe, ni darija, ni anglais, même si la matière étudiée est en arabe.\n"
-        "- Le conseil doit être clair, naturel et adapté à un élève.\n"
-        "- Base-toi uniquement sur les résultats fournis.\n"
-        "- Ne donne aucun conseil d'orientation scolaire, universitaire ou professionnelle.\n"
-        "- Il s'agit uniquement d'un profil d'apprentissage.\n"
-        "- Indique brièvement ce que l'élève maîtrise bien, ce qu'il doit revoir en priorité, "
-        "l'action concrète à faire ensuite et quand refaire un quiz si cela est pertinent.\n"
-        "- Reste concis : 2 à 4 phrases.\n\n"
+        "RÈGLE ABSOLUE : réponds uniquement en français.\n"
+        "N'écris aucun caractère arabe et ne recopie aucun intitulé arabe "
+        "présent dans les données sources. Si un intitulé source n'est pas "
+        "en français, reformule-le de manière générique en français.\n"
+        "N'utilise ni arabe, ni darija, ni anglais.\n"
+        "Base-toi uniquement sur les résultats fournis et ne modifie aucun "
+        "score ni aucune priorité.\n"
+        "Il s'agit uniquement d'un profil d'apprentissage, jamais d'une "
+        "orientation scolaire, universitaire ou professionnelle.\n"
+        "En 2 à 4 phrases, indique ce que l'élève maîtrise, ce qu'il doit "
+        "revoir en priorité, l'action concrète suivante et quand refaire "
+        "un quiz si cela est pertinent.\n"
+        "Retourne uniquement le conseil final, sans titre et sans JSON.\n\n"
         "Données du profil :\n"
-        + json.dumps(compact, ensure_ascii=False)
-        + "\n\nRetourne uniquement le conseil final en français, sans titre et sans JSON."
+        + json.dumps(safe_compact, ensure_ascii=False)
     )
 
-    text = gemini_generate_text(prompt)
-    text = str(text or "").strip()
+    last_text = ""
 
-    if not text:
+    for attempt in range(2):
+        prompt = base_prompt
+
+        if attempt:
+            prompt += (
+                "\n\nRAPPEL FINAL : la réponse précédente contenait des "
+                "caractères non autorisés. Produis une nouvelle réponse "
+                "entièrement en français, sans aucun caractère arabe."
+            )
+
+        text = gemini_generate_text(prompt)
+        text = str(text or "").strip()
+
+        if not text:
+            continue
+
+        last_text = text
+
+        if not arabic_re.search(text):
+            return text
+
+    if not last_text:
         raise RuntimeError("Empty Gemini orientation guidance.")
 
-    return text
+    weak_count = len(analysis.get("weak_areas", []) or [])
+    strength_count = len(analysis.get("strengths", []) or [])
+
+    if weak_count:
+        first_sentence = (
+            "Le profil montre des acquis à consolider sur certains points "
+            "identifiés comme prioritaires."
+        )
+    elif strength_count:
+        first_sentence = (
+            "Le profil montre des acquis globalement satisfaisants."
+        )
+    else:
+        first_sentence = (
+            "Le profil d'apprentissage doit encore être consolidé à partir "
+            "des prochaines activités."
+        )
+
+    return (
+        first_sentence
+        + " Commence par revoir les points signalés dans le plan de révision "
+        "et réalise quelques exercices ciblés. "
+        "Refais ensuite un quiz après cette révision afin de vérifier les progrès."
+    )
