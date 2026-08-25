@@ -7818,6 +7818,29 @@ def quiz_source_first_qa_v17b(
 
 
 
+    # QUIZ_ARABIC_FACT_PREFIX_CLEANUP_V25Y
+    #
+    # OCR/source passages often preserve exercise numbering:
+    #   "1) ??????? ????????? ?? ..."
+    #   "2) ?????? ????????? ?? ..."
+    # and solution markers:
+    #   "??? ??? ... ?? ..."
+    #
+    # These prefixes are not part of the mathematical concept.
+    # Remove only a leading list number / solution marker before
+    # deterministic Arabic QA parsing. The source fact itself is
+    # left unchanged for grounding and validation.
+    raw = re.sub(
+        r"^\s*[\d\u0660-\u0669]+\s*[\)\(]\s*",
+        "",
+        raw,
+    )
+    raw = re.sub(
+        r"^\s*(?:\u0625\u0630\u0646|\u0627\u0630\u0646)\s+",
+        "",
+        raw,
+    ).strip()
+
     # --------------------------------------------------------
     # A) COMPOSITION
     #
@@ -8550,6 +8573,105 @@ def quiz_source_first_qa_v17b(
                 answer,
             )
 
+
+    # QUIZ_MATH_AR_DETERMINISTIC_STATS_QA_V25Z3
+    # --------------------------------------------------------
+    # A) Numeric statistical value
+    #
+    # Example:
+    #   ???? ????? ]30;40[ ?? :0,375
+    # --------------------------------------------------------
+    match = re.match(
+        (
+            r"^(.+?)"
+            r"\s+\u0647\u0648"
+            r"\s*:\s*"
+            r"([+\-\u2212]?\d+(?:[.,]\d+)?(?:\s*[%\u00b0])?)"
+            r"$"
+        ),
+        raw,
+    )
+
+    if match:
+        subject = str(
+            match.group(1) or ""
+        ).strip(
+            " \t\r\n.,;:"
+        )
+
+        answer = str(
+            match.group(2) or ""
+        ).strip()
+
+        if (
+            subject
+            and answer
+            and contains_arabic(subject)
+        ):
+            return (
+                "\u0645\u0627 "
+                "\u0642\u064a\u0645\u0629 "
+                + subject
+                + "\u061f",
+                answer,
+            )
+
+    # --------------------------------------------------------
+    # B) Statistical dispersion rule
+    #
+    # Example:
+    #   ???? ... ??? ?????? ??? ???? ...
+    # --------------------------------------------------------
+    match = re.match(
+        (
+            r"^\u062a\u0643\u0648\u0646"
+            r"\s+(.+?)"
+            r"\s+\u0623\u0642\u0644"
+            r"\s+\u062a\u0634\u062a\u062a\S*"
+            r"\s+\u0625\u0630\u0627"
+            r"\s+\u0643\u0627\u0646\u062a"
+            r"\s+(.+)$"
+        ),
+        raw,
+    )
+
+    if match:
+        subject = str(
+            match.group(1) or ""
+        ).strip(
+            " \t\r\n.,;:"
+        )
+
+        condition = (
+            clean_arabic_answer_v25e_r3(
+                match.group(2)
+            )
+        )
+
+        if (
+            subject
+            and condition
+            and contains_arabic(subject)
+            and contains_arabic(condition)
+            and len(
+                quiz_content_tokens(subject)
+            ) <= 18
+            and len(
+                quiz_content_tokens(condition)
+            ) <= 24
+        ):
+            return (
+                "\u0645\u062a\u0649 "
+                "\u062a\u0643\u0648\u0646 "
+                + subject
+                + " "
+                "\u0623\u0642\u0644 "
+                "\u062a\u0634\u062a\u062a\u0627\u064b"
+                + "\u061f",
+                "\u0625\u0630\u0627 "
+                "\u0643\u0627\u0646\u062a "
+                + condition,
+            )
 
     # ========================================================
     # F) GENERIC SIMPLE DEFINITION
@@ -15431,7 +15553,6 @@ def quiz_math_ar_source_quality_guard_v25w(
         "حب إذن",
         "حب اذن",
         "SI Gal",
-        "لقيمة",
         "تيبا",
         "الحمصيص",
         "لدينا أكبر حصيص",
@@ -15483,6 +15604,22 @@ def quiz_math_ar_source_quality_guard_v25w(
         answer_v25w = str(answer_v25w or "").strip()
         fact_v25w = str(fact_v25w or "").strip()
 
+        # QUIZ_MATH_AR_VALIDATION_NORMALIZATION_V25Z
+        # Validate a harmlessly-normalized view of the source fact.
+        # The original fact_v25w remains untouched and is still
+        # returned/stored for source grounding.
+        fact_validation_v25z = re.sub(
+            r"^\s*[\d\u0660-\u0669]+\s*[\)\(]\s*",
+            "",
+            fact_v25w,
+        ).strip()
+
+        fact_validation_v25z = re.sub(
+            r"^\s*(?:\u0625\u0630\u0646|\u0627\u0630\u0646)\s+",
+            "",
+            fact_validation_v25z,
+        ).strip()
+
         if (
             not question_v25w
             or not answer_v25w
@@ -15495,16 +15632,35 @@ def quiz_math_ar_source_quality_guard_v25w(
             + " "
             + answer_v25w
             + " "
-            + fact_v25w
+            + fact_validation_v25z
         )
 
         normalized_blob_v25w = normalize_text(
             blob_v25w
         )
 
+        # QUIZ_MATH_AR_FALSE_POSITIVE_FIX_V25Z2
         for marker_v25w in bad_markers_v25w:
+            marker_text_v25z2 = str(
+                marker_v25w or ""
+            )
+
+            # QUIZ_MATH_AR_LITERAL_ELHASSIS_V25Z4
+            # QUIZ_MATH_AR_LITERAL_KR_PLUS_V25Z5
+            # QUIZ_MATH_AR_LITERAL_KR_COMPACT_V25Z6
+            if marker_text_v25z2 in {
+                ",\u0628\u0631",
+                "\u060c\u0628\u0631",
+                "\u0625\u0644\u062d\u0635\u064a\u0635",
+                "\u0643\u0631 +",
+                "\u0643\u0631+",
+            }:
+                if marker_text_v25z2 in blob_v25w:
+                    return False
+                continue
+
             if (
-                normalize_text(marker_v25w)
+                normalize_text(marker_text_v25z2)
                 in normalized_blob_v25w
             ):
                 return False
@@ -15522,8 +15678,8 @@ def quiz_math_ar_source_quality_guard_v25w(
             != question_v25w.count(")")
             or answer_v25w.count("(")
             != answer_v25w.count(")")
-            or fact_v25w.count("(")
-            != fact_v25w.count(")")
+            or fact_validation_v25z.count("(")
+            != fact_validation_v25z.count(")")
         ):
             return False
 
@@ -15603,10 +15759,17 @@ def quiz_math_ar_source_quality_guard_v25w(
             ):
                 return False
 
+        numeric_with_arabic_unit_v25z = re.fullmatch(
+            r"\s*[+\-\u2212]?\d+(?:[.,]\d+)?"
+            r"\s+(?:[\u0621-\u064A][\u064B-\u065F\u0670]*){2,}\s*",
+            answer_v25w,
+        )
+
         if (
             not plain_numeric_pattern_v25w.fullmatch(
                 answer_v25w
             )
+            and numeric_with_arabic_unit_v25z is None
             and len(
                 arabic_word_pattern_v25w.findall(
                     answer_v25w
@@ -15706,6 +15869,7 @@ def quiz_math_ar_source_quality_guard_v25w(
         "required_count": required_count_v25w,
         "source": str(source or ""),
         "clean_preview": clean_items_v25w[:5],
+        "clean_items": list(clean_items_v25w),
     }
 
     print(
@@ -15949,7 +16113,7 @@ def generate_quiz(
 ) -> dict:
 
     # QUIZ_MATH_AR_SOURCE_QUALITY_GUARD_CALL_V25W
-    quiz_math_ar_source_quality_guard_v25w(
+    math_ar_quality_v25w = quiz_math_ar_source_quality_guard_v25w(
         program=program,
         subject=subject,
         semester=semester,
@@ -16327,6 +16491,132 @@ def generate_quiz(
             )
         )
 
+
+        # QUIZ_MATH_AR_CLEAN_MIXED_SHORT_V25Z7
+        if (
+            math_ar_quality_v25w.get(
+                "enabled",
+                False,
+            )
+            and desired_types.count(
+                "short_answer"
+            ) > 0
+        ):
+            clean_items_v25z7 = list(
+                math_ar_quality_v25w.get(
+                    "clean_items",
+                    [],
+                )
+                or []
+            )
+
+            reserved_questions_v25z7 = set()
+
+            for reserved_item_v25z7 in (
+                list(arabic_mixed_mcq_items_v25h)
+                + list(arabic_mixed_tf_items_v25h)
+            ):
+                reserved_question_v25z7 = str(
+                    reserved_item_v25z7.get(
+                        "v25h_question",
+                        "",
+                    )
+                    or ""
+                ).strip()
+
+                reserved_key_v25z7 = normalize_text(
+                    reserved_question_v25z7
+                )
+
+                if reserved_key_v25z7:
+                    reserved_questions_v25z7.add(
+                        reserved_key_v25z7
+                    )
+
+            clean_short_items_v25z7 = []
+
+            for clean_item_v25z7 in clean_items_v25z7:
+                clean_question_v25z7 = str(
+                    clean_item_v25z7.get(
+                        "question",
+                        "",
+                    )
+                    or ""
+                ).strip()
+
+                clean_answer_v25z7 = str(
+                    clean_item_v25z7.get(
+                        "answer",
+                        "",
+                    )
+                    or ""
+                ).strip()
+
+                clean_fact_v25z7 = str(
+                    clean_item_v25z7.get(
+                        "fact",
+                        "",
+                    )
+                    or ""
+                ).strip()
+
+                clean_key_v25z7 = normalize_text(
+                    clean_question_v25z7
+                )
+
+                if (
+                    not clean_question_v25z7
+                    or not clean_answer_v25z7
+                    or not clean_fact_v25z7
+                    or not clean_key_v25z7
+                    or clean_key_v25z7
+                    in reserved_questions_v25z7
+                ):
+                    continue
+
+                clean_short_items_v25z7.append(
+                    {
+                        "text": clean_fact_v25z7,
+                        "page": clean_item_v25z7.get(
+                            "page",
+                            0,
+                        ),
+                        "source": source,
+                        "program": program,
+                        "subject": subject,
+                        "semester": semester,
+                        "v25h_question": (
+                            clean_question_v25z7
+                        ),
+                        "v25h_answer": (
+                            clean_answer_v25z7
+                        ),
+                        "v25w_fact": (
+                            clean_fact_v25z7
+                        ),
+                        "v25w_clean_short": True,
+                    }
+                )
+
+                reserved_questions_v25z7.add(
+                    clean_key_v25z7
+                )
+
+                if len(
+                    clean_short_items_v25z7
+                ) >= desired_types.count(
+                    "short_answer"
+                ):
+                    break
+
+            if len(
+                clean_short_items_v25z7
+            ) >= desired_types.count(
+                "short_answer"
+            ):
+                arabic_mixed_short_items_v25h = (
+                    clean_short_items_v25z7
+                )
 
         print(
             "QUIZ V25H ARABIC MIXED POOLS:",
@@ -17020,8 +17310,44 @@ Produis uniquement trois distracteurs faux.
                 question_type == "short_answer"
             ):
 
+                # QUIZ_MATH_AR_CLEAN_MIXED_SHORT_V25Z7
+                # QUIZ_MATH_AR_CLEAN_SHORT_EXECUTION_V25Z7
+                if (
+                    arabic_lesson
+                    and arabic_mixed_mode_v25h
+                    and bool(
+                        evidence.get(
+                            "v25w_clean_short",
+                            False,
+                        )
+                    )
+                ):
+                    short_question_v19 = str(
+                        evidence.get(
+                            "v25h_question",
+                            "",
+                        )
+                        or ""
+                    ).strip()
+
+                    short_answer_v19 = str(
+                        evidence.get(
+                            "v25h_answer",
+                            "",
+                        )
+                        or ""
+                    ).strip()
+
+                    short_fact_v19 = str(
+                        evidence.get(
+                            "v25w_fact",
+                            "",
+                        )
+                        or ""
+                    ).strip()
+
                 # QUIZ_FRENCH_SHORT_QA_ROUTING_V23A
-                if quiz_uses_french_language_pipeline_v25x_r2(
+                elif quiz_uses_french_language_pipeline_v25x_r2(
                     program,
                     subject,
                     arabic_lesson,
